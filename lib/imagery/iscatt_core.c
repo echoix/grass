@@ -690,19 +690,24 @@ int I_compute_scatts(struct Cell_head *region, struct scCats *scatt_conds,
     const char *mapset;
     char header[1024];
 
-    int *fd_cats_rasts = G_malloc(scatt_conds->n_a_cats * sizeof(int));
-    FILE **f_cats_rasts_conds =
-        G_malloc(scatt_conds->n_a_cats * sizeof(FILE *));
-
-    struct rast_row *bands_rows = G_malloc(n_bands * sizeof(struct rast_row));
+    int *fd_cats_rasts;
+    FILE **f_cats_rasts_conds;
+    struct rast_row *bands_rows;
+    int *fd_bands;
+    int *bands_ids;
+    int *b_needed_bands;
 
     RASTER_MAP_TYPE data_type;
     int nrows, i_band, n_a_bands, band_id;
     int i_row, head_nchars, i_cat, id_cat;
 
-    int *fd_bands = G_malloc(n_bands * sizeof(int));
-    int *bands_ids = G_malloc(n_bands * sizeof(int));
-    int *b_needed_bands = G_malloc(n_bands * sizeof(int));
+    fd_cats_rasts = calloc(scatt_conds->n_a_cats, sizeof(*fd_cats_rasts));
+    f_cats_rasts_conds =
+        calloc(scatt_conds->n_a_cats, sizeof(*f_cats_rasts_conds));
+    bands_rows = calloc(n_bands, sizeof(*bands_rows));
+    fd_bands = calloc(n_bands, sizeof(*fd_bands));
+    bands_ids = calloc(n_bands, sizeof(*bands_ids));
+    b_needed_bands = calloc(n_bands, sizeof(*b_needed_bands));
 
     Rast_set_window(region);
 
