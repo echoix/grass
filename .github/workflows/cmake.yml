@@ -81,7 +81,7 @@ jobs:
       working-directory: ${{ github.workspace }}
     - name: Configure
       run: |
-        cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build -G ${{ matrix.cmake_generator }}
+        cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build -G "${{ matrix.cmake_generator }}"
     - name: Build
       run: |
         cd $GITHUB_WORKSPACE/build
