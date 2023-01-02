@@ -24,12 +24,16 @@ permissions:
   contents: read  #  to fetch code (actions/checkout)
 
 jobs:
-
-  build-linux-ubuntu-focal:
-    runs-on: ubuntu-20.04
+  cmake-build-linux:
+    strategy:
+      fail-fast: false
+      matrix: 
+        os: [ubuntu-20.04]
+        cmake_generator: ["UNIX Makefiles", Ninja]
+    runs-on: ${{ matrix.os }}
     env:
       CMAKE_OPTIONS: -DPython_LOOKUP_VERSION=3.8 -DUSE_CCACHE=ON
-      cache-name: cmake-ubuntu-focal
+      cache-name: cmake-${{ matrix.os }}-${{ matrix.cmake_generator }}
     steps:
     - name: Checkout GRASS
       uses: actions/checkout@v3
@@ -77,11 +81,11 @@ jobs:
       working-directory: ${{ github.workspace }}
     - name: Configure
       run: |
-        cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build
+        cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build -G ${{ matrix.cmake_generator }}
     - name: Build
       run: |
         cd $GITHUB_WORKSPACE/build
-        cmake --build . -j$(nproc)
+        cmake --build . -v -j$(nproc)
     - name: ccache statistics
       run: ccache -s
 
