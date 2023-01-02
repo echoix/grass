@@ -18,7 +18,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef _WIN32
+#ifdef __MINGW32__
 #include <windows.h>
 #else
 #include <sys/mman.h>
@@ -41,16 +41,16 @@ static void map_file(void)
     if (fd < 0)
         return;
 
-#ifdef _WIN32
-    png.handle = CreateFileMapping((HANDLE) _get_osfhandle(fd),
-                                   NULL, PAGE_READWRITE, 0, size, NULL);
+#ifdef __MINGW32__
+    png.handle = CreateFileMapping((HANDLE)_get_osfhandle(fd), NULL,
+                                   PAGE_READWRITE, 0, size, NULL);
     if (!png.handle)
         return;
     ptr = MapViewOfFile(png.handle, FILE_MAP_WRITE, 0, 0, size);
     if (!ptr)
         return;
 #else
-    ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, (off_t) 0);
+    ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, (off_t)0);
     if (ptr == MAP_FAILED)
         return;
 #endif
@@ -75,7 +75,7 @@ static void map_file(void)
    coordinate system used by the applications programs has the (0,0) origin
    in the upper left-hand corner.  Hence,
    screen_left < screen_right
-   screen_top  < screen_bottom 
+   screen_top  < screen_bottom
  */
 
 int PNG_Graph_set(void)
@@ -133,8 +133,7 @@ int PNG_Graph_set(void)
     if (p && *p &&
         (sscanf(p, "%02x%02x%02x", &red, &grn, &blu) == 3 ||
          G_str_to_color(p, (int *)&red, (int *)&grn, (int *)&blu) == 1)) {
-        png.background =
-            png_get_color(red, grn, blu, png.has_alpha ? 255 : 0);
+        png.background = png_get_color(red, grn, blu, png.has_alpha ? 255 : 0);
     }
     else {
         /* 0xffffff = white, 0x000000 = black */
