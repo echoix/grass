@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix: 
         os: [ubuntu-20.04]
-        cmake_generator: ["UNIX Makefiles", Ninja]
+        cmake_generator: ["Unix Makefiles", Ninja]
     runs-on: ${{ matrix.os }}
     env:
       CMAKE_OPTIONS: -DPython_LOOKUP_VERSION=3.8 -DUSE_CCACHE=ON
