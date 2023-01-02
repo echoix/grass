@@ -5,13 +5,17 @@
 #   	    	 Read the file COPYING that comes with GRASS for details.
 
 cmake_minimum_required(VERSION 3.13)
+project(GRASSGIS)
+
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
-#if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
-#  set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
-#endif()
+# Set policies for compatibility
 
-project(GRASSGIS)
+# Install rules order
+if(POLICY CMP0082)
+  # The NEW behavior for this policy is to run all install rules in the order they are declared.
+  cmake_policy(SET CMP0082 NEW)
+endif()
 
 set(BUILD_SHARED_LIBS ON)
 #message(FATAL_ERROR "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
