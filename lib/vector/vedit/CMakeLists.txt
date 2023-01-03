@@ -1,3 +1,4 @@
+
 # MODULE_TOPDIR = ../../..
 
 # LIB = VEDIT
@@ -15,7 +16,4 @@
 # # doxygen
 # DOXNAME=vedit
 
-
-build_module(NAME grass_vedit
-  DEPENDS grass_vector GDAL GEOS)
-
+build_module(NAME grass_vedit DEPENDS grass_vector GDAL GEOS)

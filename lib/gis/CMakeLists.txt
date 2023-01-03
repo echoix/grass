@@ -33,36 +33,60 @@ if(MSVC)
   set(grass_gis_DEFS "${grass_gis_DEFS};-D_USE_MATH_DEFINES=1")
 endif()
 
-build_module(NAME grass_gis SOURCES "${gislib_SRCS}"
+build_module(
+  NAME grass_gis
+  SOURCES "${gislib_SRCS}"
   DEPENDS grass_datetime ZLIB
   OPTIONAL_DEPENDS PTHREAD BZIP2 ICONV POSTGRES
   DEFS "${grass_gis_DEFS}"
-  )
+)
 
-add_custom_command(TARGET grass_gis POST_BUILD
+add_custom_command(
+  TARGET grass_gis
+  POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/etc/proj
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/colors ${GISBASE}/etc/colors/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/ellipse.table ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/datum.table ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/datumtransform.table ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/FIPS.code ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/state27 ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/state83 ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/projections ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/ellipse.table.solar.system ${GISBASE}/etc/proj/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/colors.desc ${GISBASE}/etc/
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/renamed_options ${GISBASE}/etc/
-  )
-  install(DIRECTORY colors DESTINATION etc/colors)
-  install(FILES ellipse.table ellipse.table.solar.system
-	datum.table datumtransform.table
-	FIPS.code state27 state83 projections DESTINATION etc/proj)
-  install(FILES colors.desc renamed_options DESTINATION etc)
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/colors
+          ${GISBASE}/etc/colors/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/ellipse.table
+          ${GISBASE}/etc/proj/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/datum.table
+          ${GISBASE}/etc/proj/
+  COMMAND ${CMAKE_COMMAND} -E copy
+          ${CMAKE_CURRENT_SOURCE_DIR}/datumtransform.table ${GISBASE}/etc/proj/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/FIPS.code
+          ${GISBASE}/etc/proj/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/state27
+          ${GISBASE}/etc/proj/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/state83
+          ${GISBASE}/etc/proj/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/projections
+          ${GISBASE}/etc/proj/
+  COMMAND
+    ${CMAKE_COMMAND} -E copy
+    ${CMAKE_CURRENT_SOURCE_DIR}/ellipse.table.solar.system ${GISBASE}/etc/proj/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/colors.desc
+          ${GISBASE}/etc/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/renamed_options
+          ${GISBASE}/etc/
+)
+install(DIRECTORY colors DESTINATION etc/colors)
+install(
+  FILES ellipse.table
+        ellipse.table.solar.system
+        datum.table
+        datumtransform.table
+        FIPS.code
+        state27
+        state83
+        projections
+  DESTINATION etc/proj
+)
+install(FILES colors.desc renamed_options DESTINATION etc)
 
 if(UNIX)
   target_link_libraries(grass_gis LIBM)
 endif()
 
 if(MSVC)
-target_link_libraries(grass_gis PCRE)
+  target_link_libraries(grass_gis PCRE)
 endif()

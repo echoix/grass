@@ -1,11 +1,29 @@
 set(MODULES
-  date gis raster gmath proj imagery vector rtree display
-  stats dbmi raster3d arraystats cluster vedit segment rowio temporal)
+    date
+    gis
+    raster
+    gmath
+    proj
+    imagery
+    vector
+    rtree
+    display
+    stats
+    dbmi
+    raster3d
+    arraystats
+    cluster
+    vedit
+    segment
+    rowio
+    temporal
+)
 
 if(WITH_OPENGL)
   list(APPEND MODULES ogsf nviz)
 endif()
 
+# cmake-format: off
 set(date_HDRS         datetime.h defs/datetime.h)
 set(date_LIBS         grass_datetime)
 set(date_TARGET_NAME  grass_datetime_py)
@@ -15,7 +33,9 @@ set(raster_HDRS       raster.h defs/raster.h)
 set(gmath_HDRS        gmath.h defs/gmath.h)
 set(proj_HDRS         gprojects.h defs/gprojects.h)
 set(proj_LIBS         grass_gproj)
-set(vector_HDRS       vector.h defs/vector.h vect/dig_structs.h vect/dig_defines.h vect/dig_externs.h )
+set(vector_HDRS       vector.h defs/vector.h vect/dig_structs.h 
+                      vect/dig_defines.h vect/dig_externs.h 
+)
 set(display_HDRS      display.h defs/display.h )
 set(dbmi_HDRS         dbmi.h defs/dbmi.h )
 set(dbmi_LIBS         grass_dbmibase grass_dbmiclient )
@@ -37,6 +57,7 @@ set(cluster_HDRS      cluster.h defs/cluster.h)
 # set(proj_INC        "${PROJ_INCLUDE_DIR}")
 # set(vector_INC      "${PQINCPATH};${GDAL_INCLUDE_DIR}")
 # set(vedit_INC       "${GDAL_INCLUDE_DIR}")
+# cmake-format: on
 
 foreach(module ${MODULES})
   if(NOT ${module}_LIBS)
@@ -47,8 +68,8 @@ foreach(module ${MODULES})
     message(FATAL_ERROR "${module}_HDRS is not set")
   endif()
 
-  foreach(${module}_LIB  ${${module}_LIBS})
-    if(NOT TARGET ${${module}_LIB} )
+  foreach(${module}_LIB ${${module}_LIBS})
+    if(NOT TARGET ${${module}_LIB})
       message(FATAL_ERROR "${${module}_LIB} is not a target")
     endif()
   endforeach()
@@ -64,23 +85,21 @@ foreach(module ${MODULES})
 
   set(output_file "${GISBASE}/etc/python/grass/lib/${module}.py")
 
-  add_custom_command(OUTPUT ${output_file}
+  add_custom_command(
+    OUTPUT ${output_file}
     DEPENDS ${${module}_LIBS}
-    COMMAND ${CMAKE_COMMAND}
-	-DCTYPESGEN_PY=${CMAKE_CURRENT_SOURCE_DIR}/ctypesgen.py
-	-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
-	-DCOMPILER=${CMAKE_C_COMPILER}
-	-DBIN_DIR=${GISBASE}
-	-DHDRS=${${module}_HDRS}
-	-DLIBS=${${module}_LIBS}
-	-DOUT_FILE=${output_file}
-	-DGRASS_VERSION_NUMBER=${GRASS_VERSION_NUMBER}
-	-P ${CMAKE_SOURCE_DIR}/cmake/ctypesgen.cmake
-	COMMENT "Generating ${output_file}"
-	VERBATIM)
+    COMMAND
+      ${CMAKE_COMMAND} -DCTYPESGEN_PY=${CMAKE_CURRENT_SOURCE_DIR}/ctypesgen.py
+      -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DCOMPILER=${CMAKE_C_COMPILER}
+      -DBIN_DIR=${GISBASE} -DHDRS=${${module}_HDRS} -DLIBS=${${module}_LIBS}
+      -DOUT_FILE=${output_file} -DGRASS_VERSION_NUMBER=${GRASS_VERSION_NUMBER}
+      -P ${CMAKE_SOURCE_DIR}/cmake/ctypesgen.cmake
+    COMMENT "Generating ${output_file}"
+    VERBATIM
+  )
 
   add_custom_target(${${module}_TARGET_NAME} ALL DEPENDS ${output_file})
-  set_target_properties (${${module}_TARGET_NAME} PROPERTIES FOLDER lib/python)
+  set_target_properties(${${module}_TARGET_NAME} PROPERTIES FOLDER lib/python)
   install(FILES ${output_file} DESTINATION etc/python/grass/lib)
 
 endforeach()

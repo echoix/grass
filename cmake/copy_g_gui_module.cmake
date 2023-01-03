@@ -1,8 +1,10 @@
-# AUTHOR(S): Rashad Kanavath <rashad km gmail>
-# PURPOSE:  Copy g.gui script plus .bat file if on windows
-# COPYRIGHT: (C) 2020 by the GRASS Development Team
-#   	    	 This program is free software under the GPL (>=v2)
-#   	    	 Read the file COPYING that comes with GRASS for details.
+# #############################################################################
+# AUTHOR(S):  Rashad Kanavath <rashad km gmail>
+# PURPOSE:    Copy g.gui script and .bat file if on Windows
+# COPYRIGHT:  (C) 2020 by the GRASS Development Team
+#             This program is free software under the GPL (>=v2)
+#             Read the file COPYING that comes with GRASS for details.
+# #############################################################################
 # -DSOURCE_DIR
 # -DGISBASE
 # -DG_NAME
@@ -17,8 +19,9 @@ endif()
 if(WIN32)
   set(PGM_NAME ${G_NAME})
   configure_file(
-    ${SOURCE_DIR}/cmake/windows_launch.bat.in
-    ${GISBASE}/scripts/${G_NAME}.bat @ONLY)
+    ${SOURCE_DIR}/cmake/windows_launch.bat.in ${GISBASE}/scripts/${G_NAME}.bat
+    @ONLY
+  )
 endif(WIN32)
 
 set(TMP_SCRIPT_FILE ${BINARY_DIR}/CMakeFiles/${G_NAME}${SCRIPT_EXT})
@@ -27,9 +30,13 @@ file(
   COPY ${TMP_SCRIPT_FILE}
   DESTINATION ${GISBASE}/scripts/
   FILE_PERMISSIONS
-  OWNER_READ OWNER_WRITE OWNER_EXECUTE
-  GROUP_READ GROUP_EXECUTE
-  WORLD_READ WORLD_EXECUTE)
-
+    OWNER_READ
+    OWNER_WRITE
+    OWNER_EXECUTE
+    GROUP_READ
+    GROUP_EXECUTE
+    WORLD_READ
+    WORLD_EXECUTE
+)
 
 file(REMOVE ${TMP_SCRIPT_FILE})
