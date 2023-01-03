@@ -21,36 +21,35 @@
 # $(DGLINC)/%.h: %.h | $(DGLINC)
 # 	$(INSTALL_DATA) $< $@
 
+
 set(DGL_headers
-  avl.h
-  tavl.h
-  graph.h
-  heap.h
-  tree.h
-  type.h
-  helpers.h
-  graph_v1.h
-  graph_v2.h
+    avl.h
+    tavl.h
+    graph.h
+    heap.h
+    tree.h
+    type.h
+    helpers.h
+    graph_v1.h
+    graph_v2.h
 )
 foreach(DGL_header ${DGL_headers})
-  file(COPY ${DGL_header} DESTINATION  ${CMAKE_BINARY_DIR}/include/grass/dgl)
+  file(COPY ${DGL_header} DESTINATION ${CMAKE_BINARY_DIR}/include/grass/dgl)
 endforeach()
 
 set(graphlib_SRCS
-  avl.c
-  graph.c
-  graph_v2.c
-  helpers.c
-  tree.c
-  graph_v1.c
-  heap.c
-  tavl.c
-  )
+    avl.c
+    graph.c
+    graph_v2.c
+    helpers.c
+    tree.c
+    graph_v1.c
+    heap.c
+    tavl.c
+)
 
 build_module(
   NAME grass_graph
   SOURCES "${graphlib_SRCS}"
   HEADERS "dgl.h"
-  )
-
-
+)

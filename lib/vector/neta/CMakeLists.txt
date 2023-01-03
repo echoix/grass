@@ -14,11 +14,7 @@
 
 # DOXNAME=neta
 
-build_module(NAME grass_neta
-DEPENDS GDAL GEOS
-grass_dbmiclient
-grass_gis
-grass_graph
-grass_vector
+build_module(
+  NAME grass_neta DEPENDS GDAL GEOS grass_dbmiclient grass_gis grass_graph
+                          grass_vector
 )
-
