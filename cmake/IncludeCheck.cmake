@@ -1,0 +1,27 @@
+include(CheckIncludeFile)
+
+#AC_CHECK_HEADERS(limits.h termio.h termios.h unistd.h values.h f2c.h g2c.h)
+#AC_CHECK_HEADERS(sys/ioctl.h sys/mtio.h sys/resource.h sys/time.h)
+#AC_CHECK_HEADERS(sys/timeb.h sys/types.h sys/utsname.h)
+#AC_CHECK_HEADERS(libintl.h iconv.h)
+#AC_CHECK_HEADERS(langinfo.h)
+
+check_include_file(limits.h HAVE_LIMITS_H)
+check_include_file(termio.h HAVE_TERMIO_H)
+check_include_file(termios.h HAVE_TERMIOS_H)
+check_include_file(unistd.h HAVE_UNISTD_H)
+check_include_file(values.h HAVE_VALUES_H)
+check_include_file(f2c.h HAVE_F2C_H)
+check_include_file(g2c.h HAVE_G2C_H)
+
+check_include_file(sys/ioctl.h HAVE_SYS_IOCTL_H)
+check_include_file(sys/mtio.h HAVE_SYS_MTIO_H)
+check_include_file(sys/resource.h HAVE_SYS_RESOURCE_H)
+check_include_file(sys/time.h HAVE_SYS_TIME_H)
+check_include_file(sys/timeb.h HAVE_SYS_TIMEB_H)
+check_include_file(sys/types.h HAVE_SYS_TYPES_H)
+check_include_file(sys/utsname.h HAVE_SYS_UTSNAME_H)
+
+check_include_file(libintl.h   HAVE_libintl_H)
+check_include_file(iconv.h HAVE_iconv_H)
+check_include_file(langinfo.h HAVE_langinfo_H)
