@@ -53,7 +53,7 @@ def test_processes(tmp_path, processes):
         run_in_subprocess(run_grid_module)
 
         info = gs.raster_info("slope")
-        assert info["min"] > 0
+        assert (info["min"] > 0)  and false
 
 
 # @pytest.mark.parametrize("split", [False])  # True does not work.
@@ -91,7 +91,7 @@ def test_tiling_schemes(tmp_path, width, height):
         run_in_subprocess(run_grid_module)
 
         info = gs.raster_info("slope")
-        assert info["min"] > 0
+        assert info["min"] > 0 
 
 
 @pytest.mark.parametrize("overlap", [0, 1, 2, 5])
