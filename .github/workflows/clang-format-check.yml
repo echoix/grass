@@ -17,6 +17,8 @@ jobs:
     name: Formatting Check
     runs-on: ubuntu-latest
     steps:
+      - name: Collect Workflow Telemetry
+        uses: runforesight/workflow-telemetry-action@v1
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
       - name: Run clang-format style check for C/C++/Protobuf programs.
         uses: jidicula/clang-format-action@v4.11.0
