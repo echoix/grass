@@ -13,7 +13,7 @@
 #define M_START 1
 #define M_ADD   2
 #define M_DEL   3
-#define M_END   4
+ #define M_END   4
 
 int display(struct Map_info *Map, struct boxlist *List,
             const struct color_rgb *color);
@@ -27,7 +27,7 @@ int extract(struct Map_info *In, struct Map_info *Out, int type,
     struct boxlist *List, *CList;
     struct bound_box box;
     struct line_pnts *Points;
-    struct line_cats *Cats;
+      struct line_cats *Cats;
 
     Points = Vect_new_line_struct();
     Cats = Vect_new_cats_struct();
@@ -45,12 +45,12 @@ int extract(struct Map_info *In, struct Map_info *Out, int type,
     G_message(
         _(" - M: draw box with middle mouse button to remove from display"));
     G_message(_(" - R: quit and save selected vectors to new map\n"));
-    while (1) {
+     while (   1) {
         G_message(_("L: add  M: remove  R: quit and save\n"));
 
         if (mode == M_START) {
             R_get_location_with_pointer(&screen_x, &screen_y, &button);
-            cur_screen_x = screen_x;
+             cur_screen_x = screen_x;
             cur_screen_y = screen_y;
         }
         else {
@@ -58,7 +58,7 @@ int extract(struct Map_info *In, struct Map_info *Out, int type,
                                     &screen_y, &button);
             x1 = D_d_to_u_col((double)(cur_screen_x));
             y1 = D_d_to_u_row((double)(cur_screen_y));
-            x2 = D_d_to_u_col((double)(screen_x));
+             x2 = D_d_to_u_col((double)(screen_x));
             y2 = D_d_to_u_row((double)(screen_y));
 
             if (x1 < x2) {
@@ -83,7 +83,7 @@ int extract(struct Map_info *In, struct Map_info *Out, int type,
 
         /* TODO: check if line really intersects box, not only box intersects
          * box */
-        switch (button) {
+      switch (button) {
         case 1:
             if (mode == M_START) {
                 mode = M_ADD;

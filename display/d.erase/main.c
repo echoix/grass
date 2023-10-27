@@ -19,14 +19,14 @@
 int main(int argc, char *argv[])
 {
     struct Option *color;
-    struct Flag *eraseframe;
+    struct  Flag *   eraseframe;
     struct GModule *module;
 
     G_gisinit(argv[0]);
 
     module = G_define_module();
     G_add_keyword(_("display"));
-    G_add_keyword(_("graphics"));
+    G_add_keyword(_("graphics")) ;
     G_add_keyword(_("monitors"));
     module->description = _("Erases the contents of the active graphics "
                             "display frame with user defined color.");
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     color = G_define_standard_option(G_OPT_C);
     color->key = "bgcolor";
     color->label = _("Background color");
-    color->answer = DEFAULT_BG_COLOR;
+    color-> answer = DEFAULT_BG_COLOR;
 
     eraseframe = G_define_flag();
     eraseframe->key = 'f';
@@ -43,11 +43,11 @@ int main(int argc, char *argv[])
     if (G_parser(argc, argv))
         exit(EXIT_FAILURE);
 
-    D_open_driver();
+  D_open_driver();
 
     D_setup_unity(0);
 
-    D_erase(color->answer);
+      D_erase(color->answer);
 
     if (eraseframe->answer)
         D__erase();
