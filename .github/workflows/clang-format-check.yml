@@ -43,5 +43,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: ${{ steps.verify-changed-files.outputs.changed_files }}"
+          path: |
+            .clang-format
+            ${{ steps.verify-changed-files.outputs.changed_files }}"
 
