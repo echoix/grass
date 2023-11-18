@@ -17,6 +17,9 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    - name: Create URL to the run output
+      id: vars
+      run: echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> $GITHUB_OUTPUT
     - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: "Check that autoconf scripts are up-to-date:"
       run: |
@@ -37,7 +40,7 @@ jobs:
         labels: "CI,packaging,configure"
         body: |
           This updates config.guess and config.sub to their latest versions.
-          If the two files are deleted in this PR, please check the logs of the workflow here: https://github.com/${{ $GITHUB_REPOSITORY }}/actions/runs/${{ $GITHUB_RUN_ID }}
+          If the two files are deleted in this PR, please check the logs of the workflow here: [Workflow run summary](${{ steps.vars.outputs.run-url }})
 
           Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
     - name: Check outputs
