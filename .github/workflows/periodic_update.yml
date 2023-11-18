@@ -37,7 +37,7 @@ jobs:
         labels: "CI,packaging,configure"
         body: |
           This updates config.guess and config.sub to their latest versions.
-          If the two files are deleted in this PR, please check the logs of the workflow here: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+          If the two files are deleted in this PR, please check the logs of the workflow here: https://github.com/${{ $GITHUB_REPOSITORY }}/actions/runs/${{ $GITHUB_RUN_ID }}
 
           Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
     - name: Check outputs
