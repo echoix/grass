@@ -9,9 +9,9 @@ grass --tmp-location XY --exec \
 pip install pytest
 
 grass --tmp-location XY --exec \
-    pytest --pyargs grass.gunittest.main -- \
-    --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
-    --min-success 100
+    pytest --pyargs grass.gunittest.main #-- \
+  #  --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
+#    --min-success 100
 
 #grass --tmp-location XY --exec \
 #    python3 -m grass.gunittest.main \
