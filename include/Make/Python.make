@@ -1,5 +1,5 @@
 
 PY_SOURCES := $(wildcard *.py)
 
-#%.pyc: %.py
-#	$(PYTHON) -m compileall $^
+%.pyc: %.py
+	$(PYTHON) -m compileall $^
