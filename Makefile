@@ -63,8 +63,8 @@ default:
 	@echo "Errors in:"                                         >> $(ERRORLOG)
 	-$(CHMOD) 755 install-sh
 	$(MAKE) subdirs
-	$(PYTHON) -m compileall $(ARCH_DISTDIR)
 	$(MAKE) $(FILES_DST)
+	$(PYTHON) -m compileall $(ARCH_DISTDIR)
 	$(MAKE) manifests
 	@if [ `wc -l < "$(ERRORLOG)"` -gt 5 ] ; then \
 		echo "--"     >> $(ERRORLOG) ; \
@@ -105,8 +105,8 @@ LIBDIRS = \
 libs:
 	$(MAKE) -C include
 	$(MAKE) subdirs SUBDIRS=$(LIBDIRS)
-	$(PYTHON) -m compileall $(ARCH_DISTDIR)
 	$(MAKE) $(FILES_DST)
+	$(PYTHON) -m compileall $(ARCH_DISTDIR)
 
 cleandistdirs:
 	-rm -rf $(ARCH_DISTDIR)
