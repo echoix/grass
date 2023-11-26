@@ -58,8 +58,7 @@ jobs:
 
       - name: Set number of cores for compilation
         run: |
-          #echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
-          echo "MAKEFLAGS=-j6" >> $GITHUB_ENV
+          echo "MAKEFLAGS=-j$(nproc +1)" >> $GITHUB_ENV
 
       - name: Set LD_LIBRARY_PATH for compilation
         run: |
