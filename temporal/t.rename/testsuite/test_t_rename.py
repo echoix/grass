@@ -31,7 +31,7 @@ class TestRenameSTDS(TestCase):
         tgis.init()
         cls.use_temp_region()
         cls.runModule(
-            "g.region", s=0, n=80, w=0, e=120, b=0, t=50, res=10, res3=10, flags="p3"
+            "g.region", s=20, n=40, w=30, e=60, b=10, t=50, res=10, res3=10, flags="p3"
         )
 
         # Generate data
