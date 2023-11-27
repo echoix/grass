@@ -62,7 +62,7 @@ jobs:
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
-      - if: startsWith(${{ matrix.python-version }}, 'pypy')
+      - if: startsWith(matrix.python-version , 'pypy')
         run: |
           echo "PYTHON=pypy3" >> $GITHUB_ENV
 
