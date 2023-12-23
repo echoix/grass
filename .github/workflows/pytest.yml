@@ -80,7 +80,7 @@ jobs:
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-          pytest --verbose --durations=30 --numprocesses logical . --dist load --color=yes --log-cli-level=WARNING
+          pytest --verbose --durations=30 --numprocesses logical . --dist load --color=yes
 
       - name: Print installed versions
         if: always()
