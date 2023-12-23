@@ -89,6 +89,19 @@ jobs:
           # patterns to process.
           # See @actions/glob for supported patterns.
           path: test-results.xml
+          
+          # (Optional) Add a summary of the results at the top of the report
+          summary: true
+
+          # (Optional) Select which results should be included in the report.
+          # Follows the same syntax as `pytest -r`
+          display-options: fEX
+
+          # (Optional) Fail the workflow if no JUnit XML was found.
+          fail-on-empty: true
+
+          # (Optional) Title of the test results section in the workflow summary
+          title: Test results
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
