@@ -35,6 +35,8 @@ jobs:
         uses: hendrikmuhs/ccache-action@main
         with:
           create-symlink: true
+          verbose: 1
+          key: ccache-build_${{ matrix.os }}.sh-$RUNNER_OS-python-${{ matrix.python-version }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
