@@ -80,8 +80,15 @@ jobs:
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-          pytest --verbose --durations=30 --numprocesses logical . --dist load --color=yes
-
+          pytest --verbose --durations=30 --numprocesses logical . --dist load --color=yes --junit-xml=test-results.xml
+      - name: Surface failing tests
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          # A list of JUnit XML files, directories containing the former, and wildcard
+          # patterns to process.
+          # See @actions/glob for supported patterns.
+          path: test-results.xml
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
