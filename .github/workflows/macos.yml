@@ -19,6 +19,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   macos_build:
+    needs: macOS_grass_conda
     name: macOS build
     runs-on: macos-latest
     steps:
@@ -85,3 +86,14 @@ jobs:
           name: testreport-macOS
           path: testreport
           retention-days: 3
+  macOS_grass_conda:
+    name: macOS grass-conda
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          repository: 'nilason/grass-conda'
+          path: grass-conda
+      - run: |
+          ./grass-conda/build-grass.sh --grassdir . 
