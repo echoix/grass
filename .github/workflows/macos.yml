@@ -98,7 +98,7 @@ jobs:
       - name: Get macOS SDK path
         id: sdk-path
         run: |
-          MACOS_SDK_PATH=$(xcrun --show-sdk-path)
+          export MACOS_SDK_PATH=$(xcrun --show-sdk-path)
           echo "MACOS_SDK_PATH=$MACOS_SDK_PATH" >> $GITHUB_OUTPUT
           echo $MACOS_SDK_PATH
       - run: |
