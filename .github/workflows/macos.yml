@@ -98,10 +98,10 @@ jobs:
       - name: Get macOS SDK path
         id: sdk-path
         run: |
-          export MACOS_SDK_PATH=$(xcrun --show-sdk-path)
+          MACOS_SDK_PATH=$(xcrun --show-sdk-path)
           echo "MACOS_SDK_PATH=$MACOS_SDK_PATH" >> $GITHUB_OUTPUT
           echo $MACOS_SDK_PATH
       - run: |
           ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH"
         env:
-          MACOS_SDK_PATH: ${{ steps.sdk-path.MACOS_SDK_PATH }}
+          MACOS_SDK_PATH: ${{ steps.sdk-path.outputs.MACOS_SDK_PATH }}
