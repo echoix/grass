@@ -104,4 +104,4 @@ jobs:
       - run: |
           ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH"
         env:
-          MACOS_SDK_PATH: ${{ sdk-path.MACOS_SDK_PATH }}
+          MACOS_SDK_PATH: ${{ steps.sdk-path.MACOS_SDK_PATH }}
