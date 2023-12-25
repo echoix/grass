@@ -102,6 +102,9 @@ jobs:
           echo "MACOS_SDK_PATH=$MACOS_SDK_PATH" >> $GITHUB_OUTPUT
           echo $MACOS_SDK_PATH
       - run: |
-          ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH"
+          ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH" --dmg-out-dir ./dmg
         env:
           MACOS_SDK_PATH: ${{ steps.sdk-path.outputs.MACOS_SDK_PATH }}
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ./dmg
