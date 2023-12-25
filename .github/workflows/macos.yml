@@ -106,10 +106,7 @@ jobs:
           ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH"
         env:
           MACOS_SDK_PATH: ${{ steps.sdk-path.outputs.MACOS_SDK_PATH }}
-      - name: Check installed version
-        shell: bash -l {0}
-        run: source ./.github/workflows/print_versions.sh
-      - run: ./grass-conda/build-grass.sh --dmg-out-dir ./dmg-out --repackage
+      - run: ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH" --dmg-out-dir ./dmg-out --repackage
         env:
           MACOS_SDK_PATH: ${{ steps.sdk-path.outputs.MACOS_SDK_PATH }}
       - uses: actions/upload-artifact@v4
