@@ -103,9 +103,10 @@ jobs:
           echo $MACOS_SDK_PATH
       - run: mkdir dmg-out
       - run: |
-          ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH" --dmg-out-dir ./dmg-out
+          ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH"
         env:
           MACOS_SDK_PATH: ${{ steps.sdk-path.outputs.MACOS_SDK_PATH }}
+      - run: ./grass-conda/build-grass.sh --dmg-out-dir ./dmg-out --repackage
       - uses: actions/upload-artifact@v4
         with:
           path: ./dmg-out
