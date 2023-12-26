@@ -34,3 +34,6 @@ addopts = """
     --ignore='raster/r.category/test_rcategory_doctest.txt'
 """
 timeout = 300
+
+[tool.ruff]
+builtins = ["_"]
