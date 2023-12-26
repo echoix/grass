@@ -1,3 +1,13 @@
+[project]
+requires-python = ">= 3.8"
+dependencies = [
+  "matplotlib>=3.6",
+  "numpy>=1.19",
+  "python-dateutil", # needed for the tgrass modules `t.*`
+  "Pillow>=8",
+  "ply",
+]
+
 [tool.black]
 line-length = 88
 target-version = ['py37', 'py38', 'py39', 'py310']
