@@ -167,9 +167,11 @@ jobs:
       - python-other
       - python-skip
     runs-on: ubuntu-latest
-    if: ${{ success() }}
+    if: ${{ always() }}
     steps:
-      - run: echo '${{ toJSON(needs) }}'
+      - run: echo '\n${{ toJSON(needs) }}'
+      - run: exit 3
+        if: ${{ (always() && cancelled()) }}
       - run: exit 1
         if: ${{ failure() }}
       - run: exit 2
