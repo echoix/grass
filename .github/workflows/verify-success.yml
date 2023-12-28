@@ -68,9 +68,9 @@ jobs:
         id: needs
         run: |
           {
-            echo 'needs_result1<<EOF
+            echo 'needs_result1<<EOF'
             ${{ fromJson(inputs.needs_context).*.result }}
-            EOF
+            echo EOF
           } >> "$GITHUB_OUTPUT"
         # echo "needs_result1='$ {{ toJson(fromJson(inputs.needs_context).*.result) }}'" >> $GITHUB_OUTPUT
         # echo "needs=$ {{ toJSON(fromJson(inputs.needs_context)) }}" >> $GITHUB_OUTPUT
