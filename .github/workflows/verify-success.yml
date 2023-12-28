@@ -24,6 +24,7 @@ on:
         type: boolean
         default: true
         description: If true, this workflow will fail if no job from 'needs_context' was successful
+      
 
 jobs:
   verify-success:
@@ -38,6 +39,12 @@ jobs:
       M1: 'Some jobs' # Common message if result is true
       M2: 'No jobs' # Common message if result is false
     steps:
+      - name: Create needs outputs
+        id: needs
+        run: |
+          echo "needs=${{ toJSON(fromJson(inputs.needs_context)) }}" >> $GITHUB_OUTPUT
+          echo "needs_result=${{ toJson(fromJson(inputs.needs_context).*.result) }}" >> $GITHUB_OUTPUT
+          echo "a step is ${{ steps.needs.outputs.needs_result}}"
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       - name: Check for failed jobs
