@@ -197,25 +197,17 @@ jobs:
         run: echo "Results of needed jobs:\n$NEEDS_RESULT"
         env:
           NEEDS_RESULT: ${{ toJson(needs.*.result) }}
-      - name: Contains failure
-        run: echo '${{ contains(needs.*.result, 'failure')}}'
-      - name: Contains cancelled
-        run: echo '${{ contains(needs.*.result, 'cancelled')}}'
-      - name: Contains skipped
-        run: echo '${{ contains(needs.*.result, 'skipped')}}'
-      - name: Contains success
-        run: echo '${{ contains(needs.*.result, 'success')}}'
-      - name: If failure
+      - name: Check for failed jobs
         if: ${{ contains(needs.*.result, 'failure') }}
-        run: exit 1
-      - name: If cancelled
+        run: echo "Some jobs failed" && exit 1
+      - name: Check for cancelled jobs
         if: ${{ contains(needs.*.result, 'cancelled') }}
-        run: exit 1
-      - name: If skipped
+        run: echo "Some jobs were cancelled" && exit 1
+      - name: Check for skipped jobs
         if: ${{ contains(needs.*.result, 'skipped') }}
-        run: exit 1
-      - name: If success
-        if: ${{ contains(needs.*.result, 'success') }}
-        run: exit 0
+        run: echo "Some jobs were skipped" && exit 1
+      - name: Check for successful jobs
+        if: ${{ !contains(needs.*.result, 'skipped') }}
+        run: echo "No job results were successful" && exit 1
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
