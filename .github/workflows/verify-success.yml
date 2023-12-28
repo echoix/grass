@@ -41,14 +41,14 @@ jobs:
     steps:
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
-      - name: Set the value in bash
-        id: step_one
-        run: |
-          {
-            echo 'JSON_RESPONSE<<EOF'
-            curl https://example.com
-            echo EOF
-          } >> "$GITHUB_ENV"
+      # - name: Set the value in bash
+      #   id: step_one
+      #   run: |
+      #     {
+      #       echo 'JSON_RESPONSE<<EOF'
+      #       curl https://example.com
+      #       echo EOF
+      #     } >> "$GITHUB_ENV"
       - name: Set the value in bash
         id: step_one1
         run: |
@@ -57,6 +57,10 @@ jobs:
             curl https://example.com
             echo EOF
           } >> "$GITHUB_OUTPUT"
+      - name: Get step_one1 JSON_RESPONSE
+        env:
+          JSON_RESPONSE: ${{ steps.step_one1.outputs.JSON_RESPONSE }}
+        run: echo "The selected color is $JSON_RESPONSE"
       - name: Set color
         id: color-selector
         run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
@@ -67,11 +71,17 @@ jobs:
       - name: Create needs outputs
         id: needs
         run: |
-          {
-            echo 'needs_result1<<EOF'
-            ${{ toJson(fromJson(inputs.needs_context).*.result) }}
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
+          cat <<EOF >> $GITHUB_OUTPUT"
+          ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+          EOF
+      # - name: Create needs outputs
+      #   id: needs
+      #   run: |
+      #     {
+      #       echo 'needs_result1<<EOF'
+      #       ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+      #       echo EOF
+      #     } >> "$GITHUB_OUTPUT"
         # echo "needs_result1='$ {{ toJson(fromJson(inputs.needs_context).*.result) }}'" >> $GITHUB_OUTPUT
         # echo "needs=$ {{ toJSON(fromJson(inputs.needs_context)) }}" >> $GITHUB_OUTPUT
         # echo "needs_result=$ {{ toJson(fromJson(inputs.needs_context).*.result) }}" >> $GITHUB_OUTPUT
