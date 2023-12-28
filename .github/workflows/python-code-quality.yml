@@ -181,5 +181,5 @@ jobs:
         run: exit 1
       - name: The demo step has failed
         if: ${{ failure() && steps.demo.conclusion == 'failure' }}
-        run: echo "The demo step has failed"
+        # run: echo "The demo step has failed"
 
