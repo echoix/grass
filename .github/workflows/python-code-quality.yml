@@ -181,20 +181,21 @@ jobs:
     name: Python Code Quality Success
     needs: 
       - python-checks
-      - python-other
+      # - python-other
       - python-skip
-      - python-skip2
-      - python-other2
-      - python-pass1
+      # - python-skip2
+      # - python-other2
+      # - python-pass1
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
       - name: Contexts of needed jobs
-        run: echo "Contexts of needed jobs:\n$NEEDS"
+        run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
         env:
           NEEDS: ${{ toJSON(needs) }}
+          NEEDS_RESULT: ${{ toJson(needs.*.result) }}
       - name: Results of needed jobs
-        run: echo "Results of needed jobs:\n$NEEDS_RESULT"
+        run: echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
         env:
           NEEDS_RESULT: ${{ toJson(needs.*.result) }}
       - name: Check for failed jobs
@@ -211,3 +212,5 @@ jobs:
         run: echo "No job results were successful" && exit 1
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
+      - run: echo "Checks failed"
+        if: ${{ !success() }}
