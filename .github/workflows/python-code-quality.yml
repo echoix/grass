@@ -167,7 +167,7 @@ jobs:
       - python-other
       - python-skip
     runs-on: ubuntu-latest
-    if: ${{ always() }}
+    # if: ${{ always() }}
     steps:
       - run: echo '${{ toJSON(needs) }}'
       - run: exit 1
