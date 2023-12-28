@@ -41,6 +41,22 @@ jobs:
     steps:
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
+      - name: Set the value in bash
+        id: step_one
+        run: |
+          {
+            echo 'JSON_RESPONSE<<EOF'
+            curl https://example.com
+            echo EOF
+          } >> "$GITHUB_ENV"
+      - name: Set the value in bash
+        id: step_one1
+        run: |
+          {
+            echo 'JSON_RESPONSE<<EOF'
+            curl https://example.com
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
       - name: Create needs outputs
         id: needs
         run: |
