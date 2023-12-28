@@ -71,7 +71,7 @@ jobs:
       - name: Create needs outputs
         id: needs
         run: |
-          cat <<EOF >> $GITHUB_OUTPUT"
+          cat <<EOF >> $GITHUB_OUTPUT
           ${{ toJson(fromJson(inputs.needs_context).*.result) }}
           EOF
       # - name: Create needs outputs
