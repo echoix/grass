@@ -172,15 +172,15 @@ jobs:
       - run: echo '${{ toJSON(needs) }}'
       - run: echo $NEEDS
         env:
-          NEEDS: needs
+          NEEDS: toJSON(needs)
       - name: Contains failure
-        run: echo '${{ contains(needs.*.result, 'failure')}}' 
+        run: echo '${{ contains(needs.*.result, 'failure')}}' && echo '${{ toJson(needs.*.result) }}'
       - name: Contains cancelled
-        run: echo '${{ contains(needs.*.result, 'cancelled')}}'
+        run: echo '${{ contains(needs.*.result, 'cancelled')}}' && echo '${{ toJson(needs.*.result) }}'
       - name: Contains skipped
-        run: echo '${{ contains(needs.*.result, 'skipped')}}'
+        run: echo '${{ contains(needs.*.result, 'skipped')}}' && echo '${{ toJson(needs.*.result) }}'
       - name: Contains success
-        run: echo '${{ contains(needs.*.result, 'success')}}'
+        run: echo '${{ contains(needs.*.result, 'success')}}' && echo '${{ toJson(needs.*.result) }}'
       - run: exit 4
         if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
       - run: exit 3
