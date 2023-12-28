@@ -11,7 +11,7 @@ on:
 
 jobs:
   verify-success:
-    name: Verify Success
+    name: Success
     runs-on: ubuntu-latest
     env:
       NEEDS: ${{ toJSON(fromJson(inputs.needs_context)) }}
@@ -21,7 +21,8 @@ jobs:
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       - name: Check for failed jobs
         if: ${{ contains(env.NEEDS_RESULT, 'failure') }}
-        run: echo "Some jobs failed" && exit 1
+        # run: echo "Some jobs failed" && exit 1
+        run: echo "::error file={name},line={line},endLine={endLine},title={title}::{Some jobs failed}"
       - name: Check for cancelled jobs
         if: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
         run: echo "Some jobs were cancelled" && exit 1
