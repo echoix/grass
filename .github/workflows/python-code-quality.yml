@@ -54,10 +54,10 @@ jobs:
 
       - name: Install non-Python dependencies
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y wget git gawk findutils
+          sudo apt update -y
+          sudo apt install -y wget git gawk findutils
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
-              sudo apt-get install -y --no-install-recommends --no-install-suggests
+              sudo apt install -y --no-install-recommends --no-install-suggests
 
       - name: Install Python dependencies
         run: |
