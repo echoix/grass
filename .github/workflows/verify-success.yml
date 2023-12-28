@@ -1,0 +1,37 @@
+---
+name: Verify Success
+
+on:
+  workflow_call:
+    inputs:
+      needs_context:
+        type: string
+        required: true
+        description: In the calling job that defines all the needed jobs, use ${{ '${{toJson(needs)}}' }}
+
+jobs:
+  verify-success:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Contexts of needed jobs
+        run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
+        env:
+          NEEDS: ${{ toJSON(fromJson(inputs.needs_context)) }}
+          NEEDS_RESULT: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+      # - name: Check for failed jobs
+      #   if: ${{ contains(needs.*.result, 'failure') }}
+      #   run: echo "Some jobs failed" && exit 1
+      # - name: Check for cancelled jobs
+      #   if: ${{ contains(needs.*.result, 'cancelled') }}
+      #   run: echo "Some jobs were cancelled" && exit 1
+      # - name: Check for skipped jobs
+      #   if: ${{ contains(needs.*.result, 'skipped') }}
+      #   run: echo "Some jobs were skipped" && exit 1
+      # - name: Check for successful jobs
+      #   if: ${{ !contains(needs.*.result, 'success') }}
+      #   run: echo "No job results were successful" && exit 1
+      # - run: echo "Checks passed successfully"
+      #   if: ${{ success() }}
+      # - run: echo "Checks failed"
+      #   if: ${{ !success() }}
+    

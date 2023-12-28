@@ -58,10 +58,6 @@ jobs:
           sudo apt-get install -y wget git gawk findutils
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
-          sudo apt-cache rdepends --installed python3-sympy
-          sudo apt-cache rdepends --installed python3-kiwisolver
-          sudo apt-cache rdepends --installed python3-scipy
-          sudo apt-cache rdepends --installed python3-fonttools
 
       - name: Install Python dependencies
         run: |
@@ -181,6 +177,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: exit 0
+  python-success2:
+    name: Python Code Quality Success
+    needs: 
+      - python-checks
+      # - python-other
+      # - python-skip
+      # - python-skip2
+      # - python-other2
+      - python-pass1
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - uses: verify-success.yml
+        with:
+          needs_context: ${{ toJson(needs) }}
   python-success:
     name: Python Code Quality Success
     needs: 
