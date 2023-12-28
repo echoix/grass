@@ -35,7 +35,6 @@ jobs:
         # run: echo "$MESSAGE_PREFIX$MESSAGE" && exit $EXIT_CODE
         run: |
           echo "${{ format('{0}{1} were cancelled', inputs.fail_if_cancelled && env.RESULT && '::error ::' || '', env.RESULT && 'Some jobs' || 'No jobs') }}" 
-          # echo "$ {{ env.MESSAGE_PREFIX}}$ {{ env.MESSAGE}}"
           exit ${{ inputs.fail_if_cancelled && env.RESULT && 1 || 0 }}
         env:
           RESULT: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}

@@ -190,6 +190,7 @@ jobs:
     uses: ./.github/workflows/verify-success.yml
     with:
       needs_context: ${{ toJson(needs) }}
+      fail_if_cancelled: false
   python-success:
     name: Python Code Quality Success
     needs: 
