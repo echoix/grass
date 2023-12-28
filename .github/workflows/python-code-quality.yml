@@ -61,6 +61,7 @@ jobs:
           sudo apt-cache rdepends --installed python3-sympy
           sudo apt-cache rdepends --installed python3-kiwisolver
           sudo apt-cache rdepends --installed python3-scipy
+          sudo apt-cache rdepends --installed python3-fonttools
 
       - name: Install Python dependencies
         run: |
