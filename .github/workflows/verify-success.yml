@@ -8,6 +8,14 @@ on:
         type: string
         required: true
         description: In the calling job that defines all the needed jobs, use $ {{ '$ {{toJson(needs)}}' }}
+      fail_if_failure:
+        type: boolean
+        default: true
+        description: If true, this workflow will fail if any job from 'needs_context was failed
+      fail_if_cancelled:
+          type: boolean
+          default: true
+          description: If true, this workflow will fail if any job from 'needs_context' was cancelled.
 
 jobs:
   verify-success:
@@ -21,11 +29,16 @@ jobs:
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       - name: Check for failed jobs
         if: ${{ contains(env.NEEDS_RESULT, 'failure') }}
-        # run: echo "Some jobs failed" && exit 1
         run: echo "::error ::Some jobs failed" && exit 1
       - name: Check for cancelled jobs
-        if: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
-        run: echo "::error ::Some jobs were cancelled" && exit 1
+        if: ${{ inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') }}
+        run: echo "::error ::$MESSAGE" && exit $EXIT_CODE3
+        env:
+          RESULT: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
+          MESSAGE: ${{ env.RESULT && 'Some jobs were cancelled' || 'No jobs were cancelled' }}
+          EXIT_CODE: ${{ inputs.fail_if_cancelled && env.RESULT }}
+          EXIT_CODE2: ${{ (inputs.fail_if_cancelled && env.RESULT) }}
+          EXIT_CODE3: ${{ 0 }}
       - name: Check for skipped jobs
         if: ${{ contains(env.NEEDS_RESULT, 'skipped') }}
         run: echo "::error ::Some jobs were skipped" && exit 1
