@@ -189,7 +189,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
-      - uses: ./verify-success.yml
+      - uses: ./.github/workflows/verify-success.yml
         with:
           needs_context: ${{ toJson(needs) }}
   python-success:
