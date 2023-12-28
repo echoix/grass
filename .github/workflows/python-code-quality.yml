@@ -146,12 +146,22 @@ jobs:
       #     name: sphinx-grass
       #     path: sphinx-grass
       #     retention-days: 3
+  python-other:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Should run"
+      - run: echo "Skipped"
+        if: ${{ false }}
+      - run: echo "Shouldn't be run"
+      - run: exit 1
   
   python-status:
     name: Python Code Quality Passed
     needs: 
       - python-checks
+      - python-other
     runs-on: ubuntu-latest
     steps:
       - run: echo '${{ toJSON(needs) }}'
+
 
