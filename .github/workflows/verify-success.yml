@@ -72,7 +72,7 @@ jobs:
         id: needs
         run: |
           echo 'needs2="$NEEDSTWO"' >> "$GITHUB_OUTPUT"
-        #echo "needs3='$NEEDSTWO'" >> "$GITHUB_OUTPUT"
+          echo 'needs3="$NEEDSTHREE"' >> "$GITHUB_OUTPUT"
         env:
           NEEDSTWO: ${{ toJSON(fromJson(inputs.needs_context)) }}
           NEEDSTHREE: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
