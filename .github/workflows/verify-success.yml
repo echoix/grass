@@ -69,7 +69,7 @@ jobs:
         run: |
           {
             echo 'needs_result1<<EOF'
-            ${{ fromJson(inputs.needs_context).*.result }}
+            ${{ toJson(fromJson(inputs.needs_context).*.result) }}
             echo EOF
           } >> "$GITHUB_OUTPUT"
         # echo "needs_result1='$ {{ toJson(fromJson(inputs.needs_context).*.result) }}'" >> $GITHUB_OUTPUT
