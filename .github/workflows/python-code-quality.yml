@@ -169,7 +169,18 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
-      - run: echo '\n${{ toJSON(needs) }}'
+      - run: echo '${{ toJSON(needs) }}'
+      - run: echo $NEEDS
+        env:
+          NEEDS: needs
+      - name: Contains failure
+        run: echo '${{ contains(needs.*.result, 'failure')}}' 
+      - name: Contains cancelled
+        run: echo '${{ contains(needs.*.result, 'cancelled')}}'
+      - name: Contains skipped
+        run: echo '${{ contains(needs.*.result, 'skipped')}}'
+      - name: Contains success
+        run: echo '${{ contains(needs.*.result, 'success')}}'
       - run: exit 4
         if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
       - run: exit 3
