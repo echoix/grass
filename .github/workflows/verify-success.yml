@@ -7,7 +7,7 @@ on:
       needs_context:
         type: string
         required: true
-        description: In the calling job that defines all the needed jobs, use ${{ '${{toJson(needs)}}' }}
+        description: In the calling job that defines all the needed jobs, use $ {{ '$ {{toJson(needs)}}' }}
 
 jobs:
   verify-success:

@@ -186,12 +186,11 @@ jobs:
       # - python-skip2
       # - python-other2
       - python-pass1
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
     if: ${{ always() }}
-    steps:
-      - uses: ./.github/workflows/verify-success.yml
-        with:
-          needs_context: ${{ toJson(needs) }}
+    uses: ./.github/workflows/verify-success.yml
+    with:
+      needs_context: ${{ toJson(needs) }}
   python-success:
     name: Python Code Quality Success
     needs: 
