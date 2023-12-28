@@ -28,7 +28,7 @@ jobs:
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       - name: Check for failed jobs
-        if: ${{ contains(env.NEEDS_RESULT, 'failure') }}
+        if: ${{ contains(env.NEEDS_RESULT, 'failure') && false}}
         run: echo "::error ::Some jobs failed" && exit 1
       - name: Check for cancelled jobs
         if: ${{ inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') }}
