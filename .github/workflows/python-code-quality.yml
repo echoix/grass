@@ -178,15 +178,14 @@ jobs:
     steps:
       - run: exit 0
   python-success2:
-    name: Python Code Quality Success
+    name: Python Code Quality Result
     needs: 
       - python-checks
-      # - python-other
-      # - python-skip
-      # - python-skip2
-      # - python-other2
+      - python-other
+      - python-skip
+      - python-skip2
+      - python-other2
       - python-pass1
-    # runs-on: ubuntu-latest
     if: ${{ always() }}
     uses: ./.github/workflows/verify-success.yml
     with:

@@ -18,20 +18,20 @@ jobs:
         env:
           NEEDS: ${{ toJSON(fromJson(inputs.needs_context)) }}
           NEEDS_RESULT: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
-      # - name: Check for failed jobs
-      #   if: ${{ contains(needs.*.result, 'failure') }}
-      #   run: echo "Some jobs failed" && exit 1
-      # - name: Check for cancelled jobs
-      #   if: ${{ contains(needs.*.result, 'cancelled') }}
-      #   run: echo "Some jobs were cancelled" && exit 1
-      # - name: Check for skipped jobs
-      #   if: ${{ contains(needs.*.result, 'skipped') }}
-      #   run: echo "Some jobs were skipped" && exit 1
-      # - name: Check for successful jobs
-      #   if: ${{ !contains(needs.*.result, 'success') }}
-      #   run: echo "No job results were successful" && exit 1
-      # - run: echo "Checks passed successfully"
-      #   if: ${{ success() }}
-      # - run: echo "Checks failed"
-      #   if: ${{ !success() }}
+      - name: Check for failed jobs
+        if: ${{ contains(inputs.needs_context.*.result, 'failure') }}
+        run: echo "Some jobs failed" && exit 1
+      - name: Check for cancelled jobs
+        if: ${{ contains(inputs.needs_context.*.result, 'cancelled') }}
+        run: echo "Some jobs were cancelled" && exit 1
+      - name: Check for skipped jobs
+        if: ${{ contains(needs.*.result, 'skipped') }}
+        run: echo "Some jobs were skipped" && exit 1
+      - name: Check for successful jobs
+        if: ${{ !contains(needs.*.result, 'success') }}
+        run: echo "No job results were successful" && exit 1
+      - run: echo "Checks passed successfully"
+        if: ${{ success() }}
+      - run: echo "Checks failed"
+        if: ${{ !success() }}
     
