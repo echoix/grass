@@ -152,15 +152,16 @@ jobs:
       - run: echo "Should run"
       - run: echo "Skipped"
         if: ${{ false }}
-      - run: echo "Shouldn't be run"
       - run: exit 1
+      - run: echo "Shouldn't be run"
   
-  python-status:
-    name: Python Code Quality Passed
+  python-success:
+    name: Python Code Quality Success
     needs: 
       - python-checks
       - python-other
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     steps:
       - run: echo '${{ toJSON(needs) }}'
 
