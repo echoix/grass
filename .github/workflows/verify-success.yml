@@ -22,7 +22,7 @@ jobs:
       - name: Check for failed jobs
         if: ${{ contains(env.NEEDS_RESULT, 'failure') }}
         # run: echo "Some jobs failed" && exit 1
-        run: echo "::error file={name},line={line},endLine={endLine},title={title}::{Some jobs failed}"
+        run: echo "::error Some jobs failed" && exit 1
       - name: Check for cancelled jobs
         if: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
         run: echo "Some jobs were cancelled" && exit 1
