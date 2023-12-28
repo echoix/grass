@@ -71,15 +71,17 @@ jobs:
       - name: Create needs outputs
         id: needs
         run: |
-          cat <<EOF >> $GITHUB_OUTPUT
-          ${{ toJson(fromJson(inputs.needs_context).*.result) }}
-          EOF
+          echo "needs2=$NEEDSTWO" >> "$GITHUB_OUTPUT"
+          echo "needs3=$NEEDSTHREE" >> "$GITHUB_OUTPUT"
+        env:
+          NEEDSTWO: ${{ toJSON(fromJson(inputs.needs_context)) }}
+          NEEDSTHREE: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
       # - name: Create needs outputs
       #   id: needs
       #   run: |
       #     {
       #       echo 'needs_result1<<EOF'
-      #       ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+      #       $ {{ toJson(fromJson(inputs.needs_context).*.result) }}
       #       echo EOF
       #     } >> "$GITHUB_OUTPUT"
         # echo "needs_result1='$ {{ toJson(fromJson(inputs.needs_context).*.result) }}'" >> $GITHUB_OUTPUT
