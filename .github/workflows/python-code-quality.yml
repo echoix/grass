@@ -167,7 +167,7 @@ jobs:
       - python-other
       - python-skip
     runs-on: ubuntu-latest
-    # if: ${{ always() }}
+    if: ${{ always() }}
     steps:
       - run: echo '${{ toJSON(needs) }}'
       - run: exit 1
@@ -176,5 +176,10 @@ jobs:
         if: ${{ cancelled() }}
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
-
+      - name: Failing step
+        id: demo
+        run: exit 1
+      - name: The demo step has failed
+        if: ${{ failure() && steps.demo.conclusion == 'failure' }}
+        run: echo "The demo step has failed"
 
