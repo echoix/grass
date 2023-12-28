@@ -208,7 +208,7 @@ jobs:
         if: ${{ contains(needs.*.result, 'skipped') }}
         run: echo "Some jobs were skipped" && exit 1
       - name: Check for successful jobs
-        if: ${{ !contains(needs.*.result, 'skipped') }}
+        if: ${{ !contains(needs.*.result, 'success') }}
         run: echo "No job results were successful" && exit 1
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
