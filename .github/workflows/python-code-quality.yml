@@ -146,3 +146,9 @@ jobs:
           name: sphinx-grass
           path: sphinx-grass
           retention-days: 3
+  
+  python-status:
+    name: Python Code Quality Passed
+    needs: "python-checks"
+    runs-on: ubuntu-latest
+
