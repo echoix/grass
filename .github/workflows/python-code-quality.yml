@@ -170,6 +170,8 @@ jobs:
     if: ${{ always() }}
     steps:
       - run: echo '\n${{ toJSON(needs) }}'
+      - run: exit 4
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
       - run: exit 3
         if: ${{ (always() && cancelled()) }}
       - run: exit 1
