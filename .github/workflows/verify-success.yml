@@ -22,16 +22,16 @@ jobs:
       - name: Check for failed jobs
         if: ${{ contains(env.NEEDS_RESULT, 'failure') }}
         # run: echo "Some jobs failed" && exit 1
-        run: echo "::error Some jobs failed" && exit 1
+        run: echo "::error ::Some jobs failed" && exit 1
       - name: Check for cancelled jobs
         if: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
-        run: echo "::error Some jobs were cancelled" && exit 1
+        run: echo "::error ::Some jobs were cancelled" && exit 1
       - name: Check for skipped jobs
         if: ${{ contains(env.NEEDS_RESULT, 'skipped') }}
-        run: echo "::error Some jobs were skipped" && exit 1
+        run: echo "::error ::Some jobs were skipped" && exit 1
       - name: Check for successful jobs
         if: ${{ !contains(env.NEEDS_RESULT, 'success') }}
-        run: echo "::error No job results were successful" && exit 1
+        run: echo "::error ::No job results were successful" && exit 1
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
       - run: echo "Checks failed"
