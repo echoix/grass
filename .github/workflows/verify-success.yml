@@ -39,14 +39,20 @@ jobs:
       M1: 'Some jobs' # Common message if result is true
       M2: 'No jobs' # Common message if result is false
     steps:
+      - name: Contexts of needed jobs
+        run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       - name: Create needs outputs
         id: needs
         run: |
+          {
+            echo 'needs_result1<<EOF'
+            ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+          echo "needs_result1='${{ toJson(fromJson(inputs.needs_context).*.result) }}'" >> $GITHUB_OUTPUT
           echo "needs=${{ toJSON(fromJson(inputs.needs_context)) }}" >> $GITHUB_OUTPUT
           echo "needs_result=${{ toJson(fromJson(inputs.needs_context).*.result) }}" >> $GITHUB_OUTPUT
-          echo "a step is ${{ steps.needs.outputs.needs_result}}"
-      - name: Contexts of needed jobs
-        run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
+          # echo "a step is $ {{ steps.needs.outputs.needs_result}}"
       - name: Check for failed jobs
         run: |
           echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
