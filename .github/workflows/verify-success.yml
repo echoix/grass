@@ -73,6 +73,7 @@ jobs:
         run: |
           echo 'needs2="$NEEDSTWO"' >> "$GITHUB_OUTPUT"
           echo 'needs3="$NEEDSTHREE"' >> "$GITHUB_OUTPUT"
+          echo 'needs4="$NEEDSTHREE"' >> "$GITHUB_OUTPUT"
         env:
           NEEDSTWO: ${{ toJSON(fromJson(inputs.needs_context)) }}
           NEEDSTHREE: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
@@ -88,9 +89,16 @@ jobs:
         # echo "needs=$ {{ toJSON(fromJson(inputs.needs_context)) }}" >> $GITHUB_OUTPUT
         # echo "needs_result=$ {{ toJson(fromJson(inputs.needs_context).*.result) }}" >> $GITHUB_OUTPUT
         # # echo "a step is $ {{ steps.needs.outputs.needs_result}}"
-      - run: echo "Needs result"
+      - run: |
+          echo "Needs result4 $NEEDS_RESULT4"
+          echo "sep"
+          echo "Needs result3 $NEEDS_RESULT3"
+          echo "sep"
+          echo "Needs result2 $NEEDS_RESULT2"
         env:
-          NEEDS_RESULT1: ${{ steps.needs.outputs.needs_result1}}
+          NEEDS_RESULT2: ${{ steps.needs.outputs.needs2}}
+          NEEDS_RESULT3: ${{ steps.needs.outputs.needs3}}
+          NEEDS_RESULT4: ${{ steps.needs.outputs.needs4}}
       - name: Check for failed jobs
         run: |
           echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
