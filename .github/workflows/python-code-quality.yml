@@ -189,25 +189,33 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
-      - run: echo '${{ toJSON(needs) }}'
-      - run: echo $NEEDS
+      - name: Contexts of needed jobs
+        run: echo "Contexts of needed jobs:\n$NEEDS"
         env:
           NEEDS: ${{ toJSON(needs) }}
+      - name: Results of needed jobs
+        run: echo "Results of needed jobs:\n$NEEDS_RESULT"
+        env:
+          NEEDS_RESULT: ${{ toJson(needs.*.result) }}
       - name: Contains failure
-        run: echo '${{ contains(needs.*.result, 'failure')}}' && echo '${{ toJson(needs.*.result) }}'
+        run: echo '${{ contains(needs.*.result, 'failure')}}'
       - name: Contains cancelled
-        run: echo '${{ contains(needs.*.result, 'cancelled')}}' && echo '${{ toJson(needs.*.result) }}'
+        run: echo '${{ contains(needs.*.result, 'cancelled')}}'
       - name: Contains skipped
-        run: echo '${{ contains(needs.*.result, 'skipped')}}' && echo '${{ toJson(needs.*.result) }}'
+        run: echo '${{ contains(needs.*.result, 'skipped')}}'
       - name: Contains success
-        run: echo '${{ contains(needs.*.result, 'success')}}' && echo '${{ toJson(needs.*.result) }}'
-      - run: exit 4
-        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
-      - run: exit 3
-        if: ${{ (always() && cancelled()) }}
-      - run: exit 1
-        if: ${{ failure() }}
-      - run: exit 2
-        if: ${{ cancelled() }}
+        run: echo '${{ contains(needs.*.result, 'success')}}'
+      - name: If failure
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+      - name: If cancelled
+        if: ${{ contains(needs.*.result, 'cancelled') }}
+        run: exit 1
+      - name: If skipped
+        if: ${{ contains(needs.*.result, 'skipped') }}
+        run: exit 1
+      - name: If success
+        if: ${{ contains(needs.*.result, 'success') }}
+        run: exit 0
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
