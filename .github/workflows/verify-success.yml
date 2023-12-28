@@ -13,43 +13,60 @@ on:
         default: true
         description: If true, this workflow will fail if any job from 'needs_context was failed
       fail_if_cancelled:
-          type: boolean
-          default: true
-          description: If true, this workflow will fail if any job from 'needs_context' was cancelled.
+        type: boolean
+        default: true
+        description: If true, this workflow will fail if any job from 'needs_context' was cancelled
+      fail_if_skipped:
+        type: boolean
+        default: false
+        description: If true, this workflow will fail if any job from 'needs_context' was skipped
+      require_success:
+        type: boolean
+        default: true
+        description: If true, this workflow will fail if no job from 'needs_context' was successful
 
 jobs:
   verify-success:
     name: Success
     runs-on: ubuntu-latest
+    continue-on-error: true
     env:
       NEEDS: ${{ toJSON(fromJson(inputs.needs_context)) }}
       NEEDS_RESULT: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+      P1: '::error ::' # Common message prefix if step will fail
+      P2: 'Ignored: ' # Common message prefix if step will not fail
+      M1: 'Some jobs' # Common message if result is true
+      M2: 'No jobs' # Common message if result is false
     steps:
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       - name: Check for failed jobs
-        if: ${{ contains(env.NEEDS_RESULT, 'failure') && false}}
-        run: echo "::error ::Some jobs failed" && exit 1
-      - name: Check for cancelled jobs
-        # if: ${{ inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') }}
-        # run: echo "$MESSAGE_PREFIX$MESSAGE" && exit $EXIT_CODE
         run: |
-          echo "${{ format('{0}{1} were cancelled', inputs.fail_if_cancelled && env.RESULT && '::error ::' || '', env.RESULT && 'Some jobs' || 'No jobs') }}" 
+          echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
+          exit ${{ inputs.fail_if_failure && env.RESULT && 1 || 0 }}
+        env:
+          RESULT: ${{ contains(env.NEEDS_RESULT, 'failure') }}
+      - name: Check for cancelled jobs
+        run: |
+          echo "${{ format('{0}{1} were cancelled', inputs.fail_if_cancelled && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
           exit ${{ inputs.fail_if_cancelled && env.RESULT && 1 || 0 }}
         env:
           RESULT: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
-          # MESSAGE: ${{ contains(env.NEEDS_RESULT, 'cancelled')  && 'Some jobs were cancelled' || 'No jobs were cancelled' }}
-          # MESSAGE_PREFIX: ${{  inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') && '::error ::' || '' }}
-          # EXIT_CODE: ${{ inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') && 1 || 0 }}
-  
       - name: Check for skipped jobs
-        if: ${{ contains(env.NEEDS_RESULT, 'skipped') }}
-        run: echo "::error ::Some jobs were skipped" && exit 1
+        run: |
+          echo "${{ format('{0}{1} were skipped', inputs.fail_if_skipped && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
+          exit ${{ inputs.fail_if_skipped && env.RESULT && 1 || 0 }}
+        env:
+          RESULT: ${{ contains(env.NEEDS_RESULT, 'skipped') }}
       - name: Check for successful jobs
-        if: ${{ !contains(env.NEEDS_RESULT, 'success') }}
-        run: echo "::error ::No job results were successful" && exit 1
+        # if: ${{ !contains(env.NEEDS_RESULT, 'success') }}
+        # run: echo "::error ::No job results were successful" && exit 1
+        run: |
+          echo "${{ format('{0}{1} were successfull', inputs.require_success && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
+          exit ${{ inputs.require_success && env.RESULT && 1 || 0 }}
+        env:
+          RESULT: ${{ !contains(env.NEEDS_RESULT, 'success') }}
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
       - run: echo "Checks failed"
         if: ${{ !success() }}
-    
