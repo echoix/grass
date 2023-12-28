@@ -151,4 +151,6 @@ jobs:
     name: Python Code Quality Passed
     needs: "python-checks"
     runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
 
