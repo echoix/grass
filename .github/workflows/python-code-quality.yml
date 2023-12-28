@@ -155,24 +155,47 @@ jobs:
         if: ${{ false }}
       - run: exit 1
       - run: echo "Shouldn't be run"
+  python-other2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Should run"
+      - run: echo "Skipped"
+        if: ${{ false }}
+      - run: exit 1
+      - run: echo "Shouldn't be run"
   python-skip:
     runs-on: ubuntu-latest
     if: 1 != 1
     steps:
       - run: exit 1
+  python-skip2:
+    runs-on: ubuntu-latest
+    if: 1 != 1
+    steps:
+      - run: exit 1
+  python-pass1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
   python-success:
     name: Python Code Quality Success
     needs: 
       - python-checks
       - python-other
       - python-skip
+      - python-skip2
+      - python-other2
+      - python-pass1
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
       - run: echo '${{ toJSON(needs) }}'
       - run: echo $NEEDS
         env:
-          NEEDS: toJSON(needs)
+          NEEDS: ${{ needs }}
+      - run: echo $NEEDS
+        env:
+          NEEDS: ${{ toJSON(needs) }}
       - name: Contains failure
         run: echo '${{ contains(needs.*.result, 'failure')}}' && echo '${{ toJson(needs.*.result) }}'
       - name: Contains cancelled
