@@ -182,10 +182,10 @@ jobs:
     needs: 
       - python-checks
       # - python-other
-      - python-skip
+      # - python-skip
       # - python-skip2
       # - python-other2
-      # - python-pass1
+      - python-pass1
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
