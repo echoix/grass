@@ -33,14 +33,13 @@ jobs:
       - name: Check for cancelled jobs
         # if: ${{ inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') }}
         # run: echo "$MESSAGE_PREFIX$MESSAGE" && exit $EXIT_CODE
-        run: echo "${{ env.MESSAGE_PREFIX}}$MESSAGE" && exit $EXIT_CODE
+        run: echo "${{ env.MESSAGE_PREFIX}}${{ env.MESSAGE}}" && exit ${{ env.EXIT_CODE}}
         env:
           RESULT: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
           MESSAGE: ${{ contains(env.NEEDS_RESULT, 'cancelled')  && 'Some jobs were cancelled' || 'No jobs were cancelled' }}
           MESSAGE_PREFIX: ${{  inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') && '::error ::' || '' }}
           EXIT_CODE: ${{ inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') && 1 || 0 }}
-          EXIT_CODE2: ${{ (inputs.fail_if_cancelled && contains(env.NEEDS_RESULT, 'cancelled') ) }}
-          EXIT_CODE3: ${{ 0 }}
+          RESULT2: ${{ env.RESULT}}
       - name: Check for skipped jobs
         if: ${{ contains(env.NEEDS_RESULT, 'skipped') }}
         run: echo "::error ::Some jobs were skipped" && exit 1
