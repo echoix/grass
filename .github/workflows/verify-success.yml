@@ -24,7 +24,9 @@ on:
         type: boolean
         default: true
         description: If true, this workflow will fail if no job from 'needs_context' was successful
-      
+    # outputs:
+    #   failA:
+        
 
 jobs:
   verify-success:
@@ -32,13 +34,36 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     env:
-      NEEDS: ${{ toJSON(fromJson(inputs.needs_context)) }}
-      NEEDS_RESULT: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
       P1: '::error ::' # Common message prefix if step will fail
       P2: 'Ignored: ' # Common message prefix if step will not fail
       M1: 'Some jobs' # Common message if result is true
       M2: 'No jobs' # Common message if result is false
     steps:
+      - name: Set outputs for has result
+        id: has-result
+        run: |
+          echo "failure=${{ contains(env.NEEDS_RESULT, 'failure') }}" >> "$GITHUB_OUTPUT"
+          echo "cancelled=${{ contains(env.NEEDS_RESULT, 'cancelled') }}" >> "$GITHUB_OUTPUT"
+          echo "skipped=${{ contains(env.NEEDS_RESULT, 'skipped') }}" >> "$GITHUB_OUTPUT"
+          echo "success=${{ contains(env.NEEDS_RESULT, 'success') }}" >> "$GITHUB_OUTPUT"
+        env:
+          NEEDS_RESULT: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+          # NEEDS: ${{ toJSON(fromJson(inputs.needs_context)) }}
+      - name: Set exit codes
+        id: exit-code  
+        run: |
+          echo "failure=${{ inputs.fail_if_failure && steps.has-result.outputs.failure && 1 || 0 }}" >> "$GITHUB_OUTPUT"
+          echo "cancelled=${{ inputs.fail_if_cancelled && steps.has-result.outputs.cancelled && 1 || 0 }}" >> "$GITHUB_OUTPUT"
+          echo "skipped=${{ inputs.fail_if_skipped && steps.has-result.outputs.skipped && 1 || 0 }}" >> "$GITHUB_OUTPUT"
+          echo "success=${{ inputs.require_success && !steps.has-result.outputs.success && 1 || 0 }}" >> "$GITHUB_OUTPUT"
+      - name: Set messages
+        run: echo 1
+      - name: Check for failed jobs
+        run: |
+          echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}"
+          exit ${{ steps.exit-code.outputs.failure }}
+        env:
+          RESULT: ${{ steps.has-result.outputs.failure }}
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       # - name: Set the value in bash
@@ -49,82 +74,86 @@ jobs:
       #       curl https://example.com
       #       echo EOF
       #     } >> "$GITHUB_ENV"
-      - name: Set the value in bash
-        id: step_one1
-        run: |
-          {
-            echo 'JSON_RESPONSE<<EOF'
-            curl https://example.com
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
-      - name: Get step_one1 JSON_RESPONSE
-        env:
-          JSON_RESPONSE: ${{ steps.step_one1.outputs.JSON_RESPONSE }}
-        run: echo "The selected color is $JSON_RESPONSE"
-      - name: Set color
-        id: color-selector
-        run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
-      - name: Get color
-        env:
-          SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
-        run: echo "The selected color is $SELECTED_COLOR"
-      - name: Create needs outputs
-        id: needs
-        run: |
-          echo 'needs2="$NEEDSTWO"' >> "$GITHUB_OUTPUT"
-          echo 'needs3="$NEEDSTHREE"' >> "$GITHUB_OUTPUT"
-          echo "needs4=$NEEDSTHREE" >> "$GITHUB_OUTPUT"
-        env:
-          NEEDSTWO: ${{ toJSON(fromJson(inputs.needs_context)) }}
-          NEEDSTHREE: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+      # - name: Set the value in bash
+      #   id: step_one1
+      #   run: |
+      #     {
+      #       echo 'JSON_RESPONSE<<EOF'
+      #       curl https://example.com
+      #       echo EOF
+      #     } >> "$GITHUB_OUTPUT"
+      # - name: Get step_one1 JSON_RESPONSE
+      #   env:
+      #     JSON_RESPONSE: $ {{ steps.step_one1.outputs.JSON_RESPONSE }}
+      #   run: echo "The selected color is $JSON_RESPONSE"
+      # - name: Set color
+      #   id: color-selector
+      #   run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
+      # - name: Get color
+      #   env:
+      #     SELECTED_COLOR: $ {{ steps.color-selector.outputs.SELECTED_COLOR }}
+      #   run: echo "The selected color is $SELECTED_COLOR"
       # - name: Create needs outputs
       #   id: needs
       #   run: |
-      #     {
-      #       echo 'needs_result1<<EOF'
-      #       $ {{ toJson(fromJson(inputs.needs_context).*.result) }}
-      #       echo EOF
-      #     } >> "$GITHUB_OUTPUT"
-        # echo "needs_result1='$ {{ toJson(fromJson(inputs.needs_context).*.result) }}'" >> $GITHUB_OUTPUT
-        # echo "needs=$ {{ toJSON(fromJson(inputs.needs_context)) }}" >> $GITHUB_OUTPUT
-        # echo "needs_result=$ {{ toJson(fromJson(inputs.needs_context).*.result) }}" >> $GITHUB_OUTPUT
-        # # echo "a step is $ {{ steps.needs.outputs.needs_result}}"
-      - run: |
-          echo "Needs result4 $NEEDS_RESULT4"
-          echo "sep"
-          echo "Needs result3 $NEEDS_RESULT3"
-          echo "sep"
-          echo "Needs result2 $NEEDS_RESULT2"
-        env:
-          NEEDS_RESULT2: ${{ steps.needs.outputs.needs2}}
-          NEEDS_RESULT3: ${{ steps.needs.outputs.needs3}}
-          NEEDS_RESULT4: ${{ steps.needs.outputs.needs4}}
-      - name: Check for failed jobs
-        run: |
-          echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
-          exit ${{ inputs.fail_if_failure && env.RESULT && 1 || 0 }}
-        env:
-          RESULT: ${{ contains(env.NEEDS_RESULT, 'failure') }}
-      - name: Check for cancelled jobs
-        run: |
-          echo "${{ format('{0}{1} were cancelled', inputs.fail_if_cancelled && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
-          exit ${{ inputs.fail_if_cancelled && env.RESULT && 1 || 0 }}
-        env:
-          RESULT: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
-      - name: Check for skipped jobs
-        run: |
-          echo "${{ format('{0}{1} were skipped', inputs.fail_if_skipped && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
-          exit ${{ inputs.fail_if_skipped && env.RESULT && 1 || 0 }}
-        env:
-          RESULT: ${{ contains(env.NEEDS_RESULT, 'skipped') }}
-      - name: Check for successful jobs
-        # if: ${{ !contains(env.NEEDS_RESULT, 'success') }}
-        # run: echo "::error ::No job results were successful" && exit 1
-        run: |
-          echo "${{ format('{0}{1} were successfull', inputs.require_success && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
-          exit ${{ inputs.require_success && env.RESULT && 1 || 0 }}
-        env:
-          RESULT: ${{ !contains(env.NEEDS_RESULT, 'success') }}
+      #     echo 'needs2="$NEEDSTWO"' >> "$GITHUB_OUTPUT"
+      #     echo 'needs3="$NEEDSTHREE"' >> "$GITHUB_OUTPUT"
+      #     echo "needs4=$NEEDSTHREE" >> "$GITHUB_OUTPUT"
+      #   env:
+      #     NEEDSTWO: ${{ toJSON(fromJson(inputs.needs_context)) }}
+      #     NEEDSTHREE: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
+      # # - name: Create needs outputs
+      # #   id: needs
+      # #   run: |
+      # #     {
+      # #       echo 'needs_result1<<EOF'
+      # #       $ {{ toJson(fromJson(inputs.needs_context).*.result) }}
+      # #       echo EOF
+      # #     } >> "$GITHUB_OUTPUT"
+      #   # echo "needs_result1='$ {{ toJson(fromJson(inputs.needs_context).*.result) }}'" >> $GITHUB_OUTPUT
+      #   # echo "needs=$ {{ toJSON(fromJson(inputs.needs_context)) }}" >> $GITHUB_OUTPUT
+      #   # echo "needs_result=$ {{ toJson(fromJson(inputs.needs_context).*.result) }}" >> $GITHUB_OUTPUT
+      #   # # echo "a step is $ {{ steps.needs.outputs.needs_result}}"
+      # - run: |
+      #     echo "Needs result4 $NEEDS_RESULT4"
+      #     echo "sep"
+      #     echo "Needs result3 $NEEDS_RESULT3"
+      #     echo "sep"
+      #     echo "Needs result2 $NEEDS_RESULT2"
+      #   env:
+      #     NEEDS_RESULT2: ${{ steps.needs.outputs.needs2}}
+      #     NEEDS_RESULT3: ${{ steps.needs.outputs.needs3}}
+      #     NEEDS_RESULT4: ${{ steps.needs.outputs.needs4}}
+      
+      
+      # - name: Check for failed jobs
+      #   run: |
+      #     echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}"
+      #     exit ${{ inputs.fail_if_failure && env.RESULT && 1 || 0 }}
+      #   env:
+      #     RESULT: ${{ contains(env.NEEDS_RESULT, 'failure') }}
+      # - name: Check for cancelled jobs
+      #   run: |
+      #     echo "${{ format('{0}{1} were cancelled', inputs.fail_if_cancelled && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
+      #     exit ${{ inputs.fail_if_cancelled && env.RESULT && 1 || 0 }}
+      #   env:
+      #     RESULT: ${{ contains(env.NEEDS_RESULT, 'cancelled') }}
+      # - name: Check for skipped jobs
+      #   run: |
+      #     echo "${{ format('{0}{1} were skipped', inputs.fail_if_skipped && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
+      #     exit ${{ inputs.fail_if_skipped && env.RESULT && 1 || 0 }}
+      #   env:
+      #     RESULT: ${{ contains(env.NEEDS_RESULT, 'skipped') }}
+      # - name: Check for successful jobs
+      #   # if: ${{ !contains(env.NEEDS_RESULT, 'success') }}
+      #   # run: echo "::error ::No job results were successful" && exit 1
+      #   run: |
+      #     echo "${{ format('{0}{1} were successfull', inputs.require_success && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}" 
+      #     exit ${{ inputs.require_success && env.RESULT && 1 || 0 }}
+      #   env:
+      #     RESULT: ${{ !contains(env.NEEDS_RESULT, 'success') }}
+
+
       - run: echo "Checks passed successfully"
         if: ${{ success() }}
       - run: echo "Checks failed"
