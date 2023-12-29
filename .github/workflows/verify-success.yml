@@ -7,7 +7,8 @@ on:
       needs_context:
         type: string
         required: true
-        description: In the calling job that defines all the needed jobs, send `\$\{{ toJson(needs) }}`
+        # Can't escape the handlebars in the description
+        description: In the calling job that defines all the needed jobs, send `toJson(needs)` inside `$` followed by `{{ }}`.
       fail_if_failure:
         type: boolean
         default: true
@@ -44,6 +45,7 @@ jobs:
       - name: Set exit codes
         id: exit-code  
         run: |
+          echo "failure=${{ inputs.needs_context && steps.has-result.outputs.failure && 1 || 0 }}" >> "$GITHUB_OUTPUT"
           echo "failure=${{ inputs.fail_if_failure && steps.has-result.outputs.failure && 1 || 0 }}" >> "$GITHUB_OUTPUT"
           echo "cancelled=${{ inputs.fail_if_cancelled && steps.has-result.outputs.cancelled && 1 || 0 }}" >> "$GITHUB_OUTPUT"
           echo "skipped=${{ inputs.fail_if_skipped && steps.has-result.outputs.skipped && 1 || 0 }}" >> "$GITHUB_OUTPUT"
@@ -61,8 +63,8 @@ jobs:
                               steps.exit-code.outputs.skipped && env.P1 || env.P2, 
                               steps.has-result.outputs.skipped && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
           echo "success=${{ format('{0}{1} were successful', 
-                              !steps.exit-code.outputs.success && env.P1 || env.P2, 
-                              steps.has-result.outputs.success && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+                              steps.exit-code.outputs.success && env.P1 || env.P2, 
+                              !steps.has-result.outputs.success && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
         env:
           P1: '::error ::' # Common message prefix if step will fail
           P2: '' # Common message prefix if step will not fail
