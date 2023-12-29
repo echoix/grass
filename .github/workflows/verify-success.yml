@@ -54,16 +54,16 @@ jobs:
         run: |
           echo "failure=${{ format('{0}{1} were failed', 
                             steps.exit-code.outputs.failure == 1 && env.P1 || env.P2, 
-                            (steps.has-result.outputs.failure == true) && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+                            (steps.has-result.outputs.failure == 'true') && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
           echo "cancelled=${{ format('{0}{1} were cancelled', 
                               steps.exit-code.outputs.cancelled == 1 && env.P1 || env.P2, 
-                              steps.has-result.outputs.cancelled == true && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+                              steps.has-result.outputs.cancelled == 'true' && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
           echo "skipped=${{ format('{0}{1} were skipped', 
                               steps.exit-code.outputs.skipped == 1 && env.P1 || env.P2, 
-                              steps.has-result.outputs.skipped == true && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+                              steps.has-result.outputs.skipped == 'true' && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
           echo "success=${{ format('{0}{1} were successful', 
                               steps.exit-code.outputs.success == 1 && env.P1 || env.P2, 
-                              steps.has-result.outputs.success == true && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+                              steps.has-result.outputs.success == 'true' && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
         env:
           P1: '::error ::' # Common message prefix if step will fail
           P2: '' # Common message prefix if step will not fail
