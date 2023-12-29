@@ -76,9 +76,9 @@ jobs:
       - name: Check for skipped jobs
         run: echo "${{ steps.message.outputs.skipped }}" && exit ${{ steps.exit-code.outputs.skipped }}
       - name: Check for successful jobs
-        run: echo "${{ steps.message.outputs.success }}" && exit ${{ steps.exit-code.outputs.success }}|
+        run: echo "${{ steps.message.outputs.success }}" && exit ${{ steps.exit-code.outputs.success }}
 
-        
+
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       # - name: Set the value in bash
