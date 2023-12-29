@@ -203,6 +203,58 @@ jobs:
       fail_if_cancelled: ${{ matrix.fail_if_cancelled }}
       fail_if_skipped: ${{ matrix.fail_if_skipped }}
       require_success:  ${{ matrix.require_success }}
+  python-success3:
+    name: Python Code Quality Result 3 no skip
+    needs: 
+      - python-checks
+      - python-other
+      # - python-skip
+      # - python-skip2
+      - python-other2
+      - python-pass1
+    if: ${{ always() }}
+    uses: ./.github/workflows/verify-success.yml
+    strategy:
+      matrix: 
+        fail_if_failure: [true, false]
+        fail_if_cancelled: [true, false]
+        fail_if_skipped: [true, false]
+        require_success: [true, false]
+    with:
+      needs_context: ${{ toJson(needs) }}
+      # fail_if_failure: false
+      # fail_if_cancelled: false
+      # require_success: false    
+      fail_if_failure: ${{ matrix.fail_if_failure }}
+      fail_if_cancelled: ${{ matrix.fail_if_cancelled }}
+      fail_if_skipped: ${{ matrix.fail_if_skipped }}
+      require_success:  ${{ matrix.require_success }}
+  python-success4:
+    name: Python Code Quality Result 4 no pass
+    needs: 
+      # - python-checks
+      - python-other
+      - python-skip
+      - python-skip2
+      - python-other2
+      # - python-pass1
+    if: ${{ always() }}
+    uses: ./.github/workflows/verify-success.yml
+    strategy:
+      matrix: 
+        fail_if_failure: [true, false]
+        fail_if_cancelled: [true, false]
+        fail_if_skipped: [true, false]
+        require_success: [true, false]
+    with:
+      needs_context: ${{ toJson(needs) }}
+      # fail_if_failure: false
+      # fail_if_cancelled: false
+      # require_success: false    
+      fail_if_failure: ${{ matrix.fail_if_failure }}
+      fail_if_cancelled: ${{ matrix.fail_if_cancelled }}
+      fail_if_skipped: ${{ matrix.fail_if_skipped }}
+      require_success:  ${{ matrix.require_success }}
   python-success:
     name: Python Code Quality Success
     needs: 
