@@ -82,10 +82,14 @@ jobs:
       - name: Set outputs for each job result type
         id: has-result
         run: |
-          echo "failure=${{ contains(env.NEEDS_RESULT, 'failure') }}" >> "$GITHUB_OUTPUT"
-          echo "cancelled=${{ contains(env.NEEDS_RESULT, 'cancelled') }}" >> "$GITHUB_OUTPUT"
-          echo "skipped=${{ contains(env.NEEDS_RESULT, 'skipped') }}" >> "$GITHUB_OUTPUT"
-          echo "success=${{ contains(env.NEEDS_RESULT, 'success') }}" >> "$GITHUB_OUTPUT"
+          echo "failure=${{
+            contains(env.NEEDS_RESULT, 'failure') }}" >> "$GITHUB_OUTPUT"
+          echo "cancelled=${{
+            contains(env.NEEDS_RESULT, 'cancelled') }}" >> "$GITHUB_OUTPUT"
+          echo "skipped=${{
+            contains(env.NEEDS_RESULT, 'skipped') }}" >> "$GITHUB_OUTPUT"
+          echo "success=${{
+            contains(env.NEEDS_RESULT, 'success') }}" >> "$GITHUB_OUTPUT"
         env:
           NEEDS_RESULT: ${{ toJson(fromJson(inputs.needs_context).*.result) }}
       - name: Set exit codes for each job result type
