@@ -185,7 +185,7 @@ jobs:
       - python-skip
       - python-skip2
       - python-other2
-      # - python-pass1
+      - python-pass1
     if: ${{ always() }}
     uses: ./.github/workflows/verify-success.yml
     with:
