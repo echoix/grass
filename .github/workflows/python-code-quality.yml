@@ -45,7 +45,6 @@ jobs:
           echo Pylint: ${{ matrix.pylint-version }}
 
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - run: exit 1
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -155,4 +154,3 @@ jobs:
     uses: ./.github/workflows/verify-success.yml
     with:
       needs_context: ${{ toJson(needs) }}
-      fail_if_failure: false
