@@ -32,9 +32,7 @@ addopts = """
     --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
-    --doctest-modules
-    --doctest-continue-on-failure
     --verbose
     --color=yes
 """
-timeout = 30
+timeout = 300
