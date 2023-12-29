@@ -54,7 +54,7 @@ jobs:
         run: |
           echo "failure=${{ format('{0}{1} were failed', 
                             steps.exit-code.outputs.failure == 1 && env.P1 || env.P2, 
-                            steps.has-result.outputs.failure == true && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+                            (steps.has-result.outputs.failure == true) && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
           echo "cancelled=${{ format('{0}{1} were cancelled', 
                               steps.exit-code.outputs.cancelled == 1 && env.P1 || env.P2, 
                               steps.has-result.outputs.cancelled == true && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
