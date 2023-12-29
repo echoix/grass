@@ -7,7 +7,7 @@ on:
       needs_context:
         type: string
         required: true
-        description: In the calling job that defines all the needed jobs, use $ {{ '$ {{toJson(needs)}}' }}
+        description: In the calling job that defines all the needed jobs, 'toJson(needs)' inside $ and {{ }}
       fail_if_failure:
         type: boolean
         default: true
@@ -24,20 +24,12 @@ on:
         type: boolean
         default: true
         description: If true, this workflow will fail if no job from 'needs_context' was successful
-    # outputs:
-    #   failA:
-        
 
 jobs:
   verify-success:
     name: Success
     runs-on: ubuntu-latest
     continue-on-error: true
-    env:
-      P1: '::error ::' # Common message prefix if step will fail
-      P2: 'Ignored: ' # Common message prefix if step will not fail
-      M1: 'Some jobs' # Common message if result is true
-      M2: 'No jobs' # Common message if result is false
     steps:
       - name: Set outputs for has result
         id: has-result
@@ -60,18 +52,33 @@ jobs:
         id: message
         run: |
           echo "failure=${{ format('{0}{1} were failed', 
-            steps.exit-code.outputs.failure && env.P1 || env.P2, 
-            steps.has-result.outputs.failure && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
-        # echo "cancelled=${{ inputs.fail_if_cancelled && steps.has-result.outputs.cancelled && 1 || 0 }}" >> "$GITHUB_OUTPUT"
-        # echo "skipped=${{ inputs.fail_if_skipped && steps.has-result.outputs.skipped && 1 || 0 }}" >> "$GITHUB_OUTPUT"
-        # echo "success=${{ inputs.require_success && !steps.has-result.outputs.success && 1 || 0 }}" >> "$GITHUB_OUTPUT"
-      - name: Check for failed jobs
-        run: |
-          echo "${{ steps.message.outputs.failure }}"
-          echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}"
-          exit ${{ steps.exit-code.outputs.failure }}
+                            steps.exit-code.outputs.failure && env.P1 || env.P2, 
+                            steps.has-result.outputs.failure && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+          echo "cancelled=${{ format('{0}{1} were cancelled', 
+                              steps.exit-code.outputs.cancelled && env.P1 || env.P2, 
+                              steps.has-result.outputs.cancelled && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+          echo "skipped=${{ format('{0}{1} were skipped', 
+                              steps.exit-code.outputs.skipped && env.P1 || env.P2, 
+                              steps.has-result.outputs.skipped && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+          echo "success=${{ format('{0}{1} were successful', 
+                              steps.exit-code.outputs.success && env.P1 || env.P2, 
+                              steps.has-result.outputs.success && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
         env:
-          RESULT: ${{ steps.has-result.outputs.failure }}
+          P1: '::error ::' # Common message prefix if step will fail
+          P2: 'Ignored: ' # Common message prefix if step will not fail
+          M1: 'Some jobs' # Common message if result is true
+          M2: 'No jobs' # Common message if result is false
+
+      - name: Check for failed jobs
+        run: echo "${{ steps.message.outputs.failure }}" && exit ${{ steps.exit-code.outputs.failure }}
+      - name: Check for cancelled jobs
+        run: echo "${{ steps.message.outputs.cancelled }}" && exit ${{ steps.exit-code.outputs.cancelled }}
+      - name: Check for skipped jobs
+        run: echo "${{ steps.message.outputs.skipped }}" && exit ${{ steps.exit-code.outputs.skipped }}
+      - name: Check for successful jobs
+        run: echo "${{ steps.message.outputs.success }}" && exit ${{ steps.exit-code.outputs.success }}|
+
+        
       - name: Contexts of needed jobs
         run: echo "Contexts of needed jobs:" && echo "$NEEDS" && echo "Results of needed jobs:" && echo "$NEEDS_RESULT"
       # - name: Set the value in bash
