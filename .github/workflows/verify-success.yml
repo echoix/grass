@@ -65,7 +65,7 @@ jobs:
                               steps.has-result.outputs.success && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
         env:
           P1: '::error ::' # Common message prefix if step will fail
-          P2: 'Ignored: ' # Common message prefix if step will not fail
+          P2: '' # Common message prefix if step will not fail
           M1: 'Some jobs' # Common message if result is true
           M2: 'No jobs' # Common message if result is false
 
