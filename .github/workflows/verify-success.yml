@@ -63,7 +63,7 @@ jobs:
                               steps.has-result.outputs.skipped && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
           echo "success=${{ format('{0}{1} were successful', 
                               steps.exit-code.outputs.success == 1 && env.P1 || env.P2, 
-                              steps.has-result.outputs.success && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+                              steps.has-result.outputs.success == true && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
         env:
           P1: '::error ::' # Common message prefix if step will fail
           P2: '' # Common message prefix if step will not fail
