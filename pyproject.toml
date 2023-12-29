@@ -34,5 +34,7 @@ addopts = """
     --ignore='raster/r.category/test_rcategory_doctest.txt'
     --doctest-modules
     --doctest-continue-on-failure
+    --verbose
+    --color=yes
 """
 timeout = 300
