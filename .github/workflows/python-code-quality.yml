@@ -87,65 +87,65 @@ jobs:
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
 
-      # - name: Build
-      #   run: .github/workflows/build_${{ matrix.os }}.sh $HOME/install
+      - name: Build
+        run: .github/workflows/build_${{ matrix.os }}.sh $HOME/install
 
-      # - name: Add the bin directory to PATH
-      #   run: |
-      #     echo "$HOME/install/bin" >> $GITHUB_PATH
+      - name: Add the bin directory to PATH
+        run: |
+          echo "$HOME/install/bin" >> $GITHUB_PATH
 
-      # - name: Test executing of the grass command
-      #   run: .github/workflows/test_simple.sh
+      - name: Test executing of the grass command
+        run: .github/workflows/test_simple.sh
 
-      # - name: Run Pylint on grass package
-      #   run: |
-      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-      #     export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-      #     cd python
-      #     pylint --persistent=no --py-version=${{ matrix.min-python-version }} --jobs=$(nproc) grass
+      - name: Run Pylint on grass package
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          cd python
+          pylint --persistent=no --py-version=${{ matrix.min-python-version }} --jobs=$(nproc) grass
 
-      # - name: Run Pylint on wxGUI
-      #   run: |
-      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-      #     export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-      #     cd gui/wxpython
-      #     pylint --persistent=no --py-version=${{ matrix.min-python-version }} --jobs=$(nproc) *
+      - name: Run Pylint on wxGUI
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          cd gui/wxpython
+          pylint --persistent=no --py-version=${{ matrix.min-python-version }} --jobs=$(nproc) *
 
-      # - name: Run Pylint on other files using pytest
-      #   run: |
-      #     pip install pytest pytest-pylint==0.19
-      #     echo "::warning file=.github/workflows/python-code-quality.yml,line=116,col=42,endColumn=48::\
-      #       Temporarily downgraded pytest-pylint to allow merging other PRs. The errors reported\
-      #       with a newer version seem legitimite and should be fixed (2023-10-18,\
-      #       see https://github.com/OSGeo/grass/pull/3205)"
-      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-      #     export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-      #     pytest --pylint -m pylint --pylint-rcfile=.pylintrc --pylint-jobs=$(nproc) \
-      #       --pylint-ignore-patterns="${{ env.PylintIgnore }}"
-      #   env:
-      #     PylintIgnore: "python/.*,gui/wxpython/.*,doc/.*,man/.*,utils/.*,locale/.*,raster/.*,\
-      #       imagery/.*,scripts/r.in.wms/wms_drv.py,scripts/g.extension/g.extension.py,\
-      #       temporal/t.rast.accdetect/t.rast.accdetect.py,temporal/t.rast.accumulate/t.rast.accumulate.py,\
-      #       scripts/d.rast.edit/d.rast.edit.py"
+      - name: Run Pylint on other files using pytest
+        run: |
+          pip install pytest pytest-pylint==0.19
+          echo "::warning file=.github/workflows/python-code-quality.yml,line=116,col=42,endColumn=48::\
+            Temporarily downgraded pytest-pylint to allow merging other PRs. The errors reported\
+            with a newer version seem legitimite and should be fixed (2023-10-18,\
+            see https://github.com/OSGeo/grass/pull/3205)"
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          pytest --pylint -m pylint --pylint-rcfile=.pylintrc --pylint-jobs=$(nproc) \
+            --pylint-ignore-patterns="${{ env.PylintIgnore }}"
+        env:
+          PylintIgnore: "python/.*,gui/wxpython/.*,doc/.*,man/.*,utils/.*,locale/.*,raster/.*,\
+            imagery/.*,scripts/r.in.wms/wms_drv.py,scripts/g.extension/g.extension.py,\
+            temporal/t.rast.accdetect/t.rast.accdetect.py,temporal/t.rast.accumulate/t.rast.accumulate.py,\
+            scripts/d.rast.edit/d.rast.edit.py"
 
-      # - name: Test compiling example modules
-      #   run: |
-      #     ( cd doc/raster/r.example/ && make )
-      #     ( cd doc/vector/v.example/ && make )
+      - name: Test compiling example modules
+        run: |
+          ( cd doc/raster/r.example/ && make )
+          ( cd doc/vector/v.example/ && make )
 
-      # - name: Run Sphinx to check API documentation build
-      #   run: |
-      #     pip install sphinx
-      #     make sphinxdoclib
-      #     ARCH=$(cat include/Make/Platform.make | grep ^ARCH | cut -d'=' -f2 | xargs)
-      #     cp -rp dist.$ARCH/docs/html/libpython sphinx-grass
+      - name: Run Sphinx to check API documentation build
+        run: |
+          pip install sphinx
+          make sphinxdoclib
+          ARCH=$(cat include/Make/Platform.make | grep ^ARCH | cut -d'=' -f2 | xargs)
+          cp -rp dist.$ARCH/docs/html/libpython sphinx-grass
 
-      # - name: Make Sphinx documentation available
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: sphinx-grass
-      #     path: sphinx-grass
-      #     retention-days: 3
+      - name: Make Sphinx documentation available
+        uses: actions/upload-artifact@v4
+        with:
+          name: sphinx-grass
+          path: sphinx-grass
+          retention-days: 3
   python-success:
     name: Python Code Quality Result
     needs: 
