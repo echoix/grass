@@ -57,9 +57,17 @@ jobs:
           echo "skipped=${{ inputs.fail_if_skipped && steps.has-result.outputs.skipped && 1 || 0 }}" >> "$GITHUB_OUTPUT"
           echo "success=${{ inputs.require_success && !steps.has-result.outputs.success && 1 || 0 }}" >> "$GITHUB_OUTPUT"
       - name: Set messages
-        run: echo 1
+        id: message
+        run: |
+          echo "failure=${{ format('{0}{1} were failed', 
+            steps.exit-code.outputs.failure && env.P1 || env.P2, 
+            steps.has-result.outputs.failure && env.M1 || env.M2) }}" >> "$GITHUB_OUTPUT"
+        # echo "cancelled=${{ inputs.fail_if_cancelled && steps.has-result.outputs.cancelled && 1 || 0 }}" >> "$GITHUB_OUTPUT"
+        # echo "skipped=${{ inputs.fail_if_skipped && steps.has-result.outputs.skipped && 1 || 0 }}" >> "$GITHUB_OUTPUT"
+        # echo "success=${{ inputs.require_success && !steps.has-result.outputs.success && 1 || 0 }}" >> "$GITHUB_OUTPUT"
       - name: Check for failed jobs
         run: |
+          echo "${{ steps.message.outputs.failure }}"
           echo "${{ format('{0}{1} were failed', inputs.fail_if_failure && env.RESULT && env.P1 || env.P2, env.RESULT && env.M1 || env.M2) }}"
           exit ${{ steps.exit-code.outputs.failure }}
         env:
