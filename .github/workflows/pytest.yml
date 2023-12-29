@@ -82,7 +82,6 @@ jobs:
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
           pytest --verbose --durations=0 --numprocesses logical . --dist load --color=yes --junit-xml=test-results.xml \
           --doctest-modules \
-          --doctest-continue-on-failure \
           --timeout=25
       - name: Surface failing tests
         if: always()
