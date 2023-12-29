@@ -4,11 +4,6 @@ name: Verify Success reusable workflow
 on:
   workflow_call:
     inputs:
-      needs_context:
-        type: string
-        required: true
-        # Can't escape the handlebars in the description
-        description: In the calling job that defines all the needed jobs, send `toJson(needs)` inside `$` followed by `{{ }}`.
       fail_if_failure:
         type: boolean
         default: true
@@ -25,6 +20,11 @@ on:
         type: boolean
         default: true
         description: If true, this workflow will fail if no job from 'needs_context' was successful
+      needs_context:
+        type: string
+        required: true
+        # Can't escape the handlebars in the description
+        description: In the calling job that defines all the needed jobs, send `toJson(needs)` inside `$` followed by `{{ }}`.
 
 jobs:
   verify-success:
