@@ -37,4 +37,4 @@ addopts = """
     --verbose
     --color=yes
 """
-timeout = 300
+timeout = 30
