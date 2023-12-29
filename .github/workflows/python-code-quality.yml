@@ -242,18 +242,27 @@ jobs:
     uses: ./.github/workflows/verify-success.yml
     strategy:
       matrix: 
-        fail_if_failure: [true, false]
-        fail_if_cancelled: [true, false]
-        fail_if_skipped: [true, false]
-        require_success: [true, false]
-        # fail_if_failure: [false]
-        # fail_if_cancelled: [false]
-        # fail_if_skipped: [false]
+        # fail_if_failure: [true, false]
+        # fail_if_cancelled: [true, false]
+        # fail_if_skipped: [true, false]
         # require_success: [true, false]
-        # include:
-        #   - fail_if_failure: true
-        #   - fail_if_cancelled: true
-        #   - fail_if_skipped: true
+        fail_if_failure: [false]
+        fail_if_cancelled: [false]
+        fail_if_skipped: [false]
+        require_success: [true, false]
+        include:
+          - fail_if_failure: true
+            fail_if_cancelled: false
+            fail_if_skipped: false
+            require_success: false
+          - fail_if_cancelled: true
+            fail_if_failure: false
+            fail_if_skipped: false
+            require_success: false
+          - fail_if_skipped: true
+            fail_if_failure: false
+            fail_if_cancelled: false
+            require_success: false
 
     with:
       needs_context: ${{ toJson(needs) }}
