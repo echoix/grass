@@ -84,7 +84,7 @@ jobs:
           echo "failure=${{ inputs.fail_if_failure && fromJson(steps.has-result.outputs.failure) && 1 || 0 }}" >> "$GITHUB_OUTPUT"
           echo "cancelled=${{ inputs.fail_if_cancelled && fromJson(steps.has-result.outputs.cancelled) && 1 || 0 }}" >> "$GITHUB_OUTPUT"
           echo "skipped=${{ inputs.fail_if_skipped && fromJson(steps.has-result.outputs.skipped) && 1 || 0 }}" >> "$GITHUB_OUTPUT"
-          echo "success=${{ inputs.require_success && fromJson(steps.has-result.outputs.success) && 1 || 0 }}" >> "$GITHUB_OUTPUT"
+          echo "success=${{ inputs.require_success && !fromJson(steps.has-result.outputs.success) && 1 || 0 }}" >> "$GITHUB_OUTPUT"
       - name: Set messages for each job result type
         id: message
         run: |
