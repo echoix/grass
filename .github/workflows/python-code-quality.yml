@@ -192,6 +192,7 @@ jobs:
       needs_context: ${{ toJson(needs) }}
       fail_if_failure: false
       fail_if_cancelled: false
+      require_success: false
   python-success:
     name: Python Code Quality Success
     needs: 
