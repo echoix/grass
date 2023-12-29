@@ -80,7 +80,10 @@ jobs:
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-          pytest --verbose --durations=0 --numprocesses logical . --dist load --color=yes --junit-xml=test-results.xml
+          pytest --verbose --durations=0 --numprocesses logical . --dist load --color=yes --junit-xml=test-results.xml \
+          --doctest-modules \
+          --doctest-continue-on-failure \
+          --timeout=25
       - name: Surface failing tests
         if: always()
         uses: pmeier/pytest-results-action@main
