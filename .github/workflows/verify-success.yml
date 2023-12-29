@@ -1,9 +1,49 @@
 ---
 name: Verify Success reusable workflow
 
+# Use this reusable workflow as a job of workflow to check that
+# all jobs, including ones ran through a matrix, were successful.
+# This job can then be used as a required status check in the
+# repo's rulesets, that allows to change the required jobs or 
+# the matrix values of a required job without needing to change
+# the rulesets settings. In the future, GitHub might have a 
+# solution to this natively.
+
+# This reusable workflow has inputs to change what is required
+# to have this workflow pass. It handles the cases were there were
+# skipped jobs, and no successful jobs.
+
+# The jobs to check must set as the `needs` for the job calling this 
+# reusable workflow. This also means that the job ids should be in the
+# same workflow file. Then, set the `needs_context` input like:
+# `needs_context: ${{ toJson(needs) }}`
+
+# Example usage, as a job inside a workflow:
+# ```
+# jobs:
+#   a-job-id:
+#     ...
+#   another-job-id:
+#     ...
+#   some-job-success:
+#     name: Some Job Result
+#     needs:
+#       - a-job-id
+#       - another-job-id
+#     if: ${{ always() }}
+#     uses: ./.github/workflows/verify-success.yml
+#     with:
+#       needs_context: ${{ toJson(needs) }}
+# ```
+
 on:
   workflow_call:
     inputs:
+      needs_context:
+        type: string
+        required: true
+        # Can't escape the handlebars in the description
+        description: In the calling job that defines all the needed jobs, send `toJson(needs)` inside `$` followed by `{{ }}`.
       fail_if_failure:
         type: boolean
         default: true
@@ -20,11 +60,6 @@ on:
         type: boolean
         default: true
         description: If true, this workflow will fail if no job from 'needs_context' was successful
-      needs_context:
-        type: string
-        required: true
-        # Can't escape the handlebars in the description
-        description: In the calling job that defines all the needed jobs, send `toJson(needs)` inside `$` followed by `{{ }}`.
 
 jobs:
   verify-success:
