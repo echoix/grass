@@ -90,7 +90,7 @@ jobs:
         # echo "needs_result=$ {{ toJson(fromJson(inputs.needs_context).*.result) }}" >> $GITHUB_OUTPUT
         # # echo "a step is $ {{ steps.needs.outputs.needs_result}}"
       - run: |
-          echo 'Needs result4 $NEEDS_RESULT4'
+          echo "Needs result4 $NEEDS_RESULT4"
           echo "sep"
           echo "Needs result3 $NEEDS_RESULT3"
           echo "sep"
