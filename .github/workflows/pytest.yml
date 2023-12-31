@@ -81,6 +81,13 @@ jobs:
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
           pytest --verbose --durations=0 --numprocesses logical . --dist load --color=yes --junit-xml=test-results.xml \
+          --timeout=25
+      - name: Run pytest
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          grass --tmp-location XY --exec \
+          pytest --verbose --durations=0 --numprocesses logical . --dist load --color=yes --junit-xml=test-results-doctest.xml \
           --doctest-modules \
           --timeout=25
       - name: Surface failing tests
@@ -90,7 +97,7 @@ jobs:
           # A list of JUnit XML files, directories containing the former, and wildcard
           # patterns to process.
           # See @actions/glob for supported patterns.
-          path: test-results.xml
+          path: test-results*.xml
           
           # (Optional) Add a summary of the results at the top of the report
           summary: true
