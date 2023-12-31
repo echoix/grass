@@ -100,10 +100,14 @@ jobs:
         shell: pwsh
         env:
           PackageDir: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+      - run: Get-ChildItem -Path ${{ env.PackageDir }} -File 
+        shell: pwsh
+        env:
+          PackageDir: "${{ env.TEMP }}/"
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
         shell: pwsh
         env:
-          PackageDir: "${{ env.TEMP }}/http*/"
+          PackageDir: "${{ env.TEMP }}/"
      # - name: Install OSGeo4W
      #   run: |
      #     $exe = 'osgeo4w-setup.exe'
