@@ -39,6 +39,9 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
         shell: pwsh
+        env:
+          tempdir2: ${{ env.TEMP }}
+          tempdir3: ${{ runner.temp }}
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
