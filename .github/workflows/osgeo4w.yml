@@ -42,6 +42,9 @@ jobs:
         env:
           tempdir2: ${{ env.TEMP }}
           tempdir3: ${{ runner.temp }}
+      - run: echo %TEMP%
+        shell: cmd
+      - run: exit 1
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
