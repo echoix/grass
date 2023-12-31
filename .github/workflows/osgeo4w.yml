@@ -99,7 +99,11 @@ jobs:
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
         shell: pwsh
         env:
-          PackageDir: '%TEMP%/OSGeo4W_v2-Packages/'
+          PackageDir: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+      - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
+        shell: pwsh
+        env:
+          PackageDir: "${{ env.TEMP }}/http*/"
      # - name: Install OSGeo4W
      #   run: |
      #     $exe = 'osgeo4w-setup.exe'
@@ -117,7 +121,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: osgeo4w-cache
-          path: '%TEMP%/OSGeo4W_v2-Packages/'
+          path: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       - name: Compile GRASS GIS
         run: .github/workflows/build_osgeo4w.sh .
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
