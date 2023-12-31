@@ -99,7 +99,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: osgeo4w-cache
-          path: %TEMP%/OSGeo4W_v2-Packages/
+          path: '%TEMP%/OSGeo4W_v2-Packages/'
       - name: Compile GRASS GIS
         run: .github/workflows/build_osgeo4w.sh .
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
