@@ -55,7 +55,7 @@ jobs:
       - name: Download and Install OSGeo4W
         run: |
           Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
-          & "./${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -Wait
+          & "./${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }}
         shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
