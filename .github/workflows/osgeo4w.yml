@@ -54,8 +54,9 @@ jobs:
 
       - name: Download and Install OSGeo4W
         run: |
-          Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}" -OutFile "${{ env.FILE_NAME }}"
-          & "./${{ env.FILE_NAME }}" -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }}
+          Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}" \
+          -OutFile "${{ env.FILE_NAME }}"
+          & "./${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -Wait
         shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
@@ -66,20 +67,20 @@ jobs:
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-wxpython,regex-devel,zstd-devel"
 
-      - name: Install OSGeo4W
-        run: |
-          $exe = 'osgeo4w-setup.exe'
-          $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
-          (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
-            -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
-        env:
-          Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
-            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
-            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
-            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-wxpython,regex-devel,zstd-devel"
-        shell: pwsh
+     # - name: Install OSGeo4W
+     #   run: |
+     #     $exe = 'osgeo4w-setup.exe'
+     #     $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
+     #     (New-Object System.Net.WebClient).DownloadFile($url, $exe)
+     #     Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
+     #       -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
+     #   env:
+     #     Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
+     #       pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
+     #       gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
+     #       python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
+     #       python3-wxpython,regex-devel,zstd-devel"
+     #   shell: pwsh
       - name: Compile GRASS GIS
         run: .github/workflows/build_osgeo4w.sh .
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
