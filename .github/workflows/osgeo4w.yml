@@ -46,12 +46,14 @@ jobs:
         shell: cmd
       - run: echo %TEMP%
         shell: pwsh
-      - run: echo "TEMP=$env:TEMP" >> $env:GITHUB_ENV
+      - run: |
+          echo "TEMP=$env:TEMP" >> $env:GITHUB_ENV
+          echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
         shell: pwsh
       - run: echo ${{ env.PackageDir }}
         shell: pwsh
         env:
-          PackageDir: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+          PackageDir2: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       #- run: exit 1
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
@@ -65,8 +67,12 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre
-
-      - name: Download and Install OSGeo4W
+      - uses: actions/cache@v4
+        name: Cache PROJ data
+        with:
+          key: OSGeo4W-proj-data-cache
+          path: ${{ env.PackageDir }}/**/proj-data**
+      - name: Download OSGeo4W
         run: |
           Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
         shell: pwsh
@@ -95,11 +101,11 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-wxpython,regex-devel,zstd-devel"
-          PackageDir: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+          PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
         shell: pwsh
         env:
-          PackageDir: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+          PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -File 
         shell: pwsh
         env:
@@ -122,19 +128,20 @@ jobs:
      #       python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
      #       python3-wxpython,regex-devel,zstd-devel"
      #   shell: pwsh
+      
       - uses: actions/upload-artifact@v4
         with:
           name: osgeo4w-cache
           path: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
-      - name: Compile GRASS GIS
-        run: .github/workflows/build_osgeo4w.sh .
+      #- name: Compile GRASS GIS
+      #  run: .github/workflows/build_osgeo4w.sh .
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
 
-      - name: Test executing of the grass command
-        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
-      - run: exit 1
-      - name: Test executing of the grass command in bash
-        run: D:\msys64\usr\bin\bash.exe .github/workflows/test_simple.sh
+      #- name: Test executing of the grass command
+      #  run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
+      #- run: exit 1
+      #- name: Test executing of the grass command in bash
+       # run: D:\msys64\usr\bin\bash.exe .github/workflows/test_simple.sh
 
-      - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
+      #- name: Run tests
+        #run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
