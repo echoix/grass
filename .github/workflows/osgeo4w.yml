@@ -66,7 +66,10 @@ jobs:
             python3-wxpython,regex-devel,zstd-devel"
       - name: Install OSGeo4W
         run: |
-          .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }}
+          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
+            -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -PassThru -Wait
+
+     # .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }}
         shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
