@@ -26,12 +26,15 @@ jobs:
         os:
           - windows-2019
       fail-fast: false
-
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
+        shell: pwsh
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
@@ -50,7 +53,7 @@ jobs:
           $exe = 'osgeo4w-setup.exe'
           $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
           (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k \
+          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
             -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
         env:
           Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
@@ -58,13 +61,14 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-wxpython,regex-devel,zstd-devel"
-
+        shell: pwsh
       - name: Compile GRASS GIS
-        run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
+        run: .github/workflows/build_osgeo4w.sh .
+        #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
-
+      - run: exit 1
       - name: Test executing of the grass command in bash
         run: D:\msys64\usr\bin\bash.exe .github/workflows/test_simple.sh
 
