@@ -46,9 +46,13 @@ jobs:
         shell: cmd
       - run: echo %TEMP%
         shell: pwsh
-      - run: echo $env:TEMP
+      - run: echo "TEMP=$env:TEMP" >> $env:GITHUB_ENV
         shell: pwsh
-      - run: exit 1
+      - run: echo ${{ env.PackageDir }}
+        shell: pwsh
+        env:
+          PackageDir: ${{ env.TEMP '/OSGeo4W_v2-Packages/' }}
+      #- run: exit 1
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
@@ -91,7 +95,7 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-wxpython,regex-devel,zstd-devel"
-          PackageDir: '%TEMP%/OSGeo4W_v2-Packages/'
+          PackageDir: ${{ env.TEMP '/OSGeo4W_v2-Packages/' }}
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
         shell: pwsh
         env:
