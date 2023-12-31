@@ -50,7 +50,7 @@ jobs:
           $exe = 'osgeo4w-setup.exe'
           $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
           (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
+          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k \
             -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
         env:
           Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
