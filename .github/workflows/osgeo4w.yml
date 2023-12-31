@@ -67,7 +67,7 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre
-      - uses: actions/cache@v4
+      - uses: actions/cache@v3
         name: Cache PROJ data
         with:
           key: OSGeo4W-proj-data-cache
