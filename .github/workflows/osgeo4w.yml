@@ -30,6 +30,10 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
+      - name: Collect Workflow Telemetry
+        uses: catchpoint/workflow-telemetry-action@v1
+        with:
+          comment_on_pr: false
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
