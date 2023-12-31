@@ -68,7 +68,7 @@ jobs:
         run: |
           $exe = 'osgeo4w-setup.exe'
           Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
-            -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -PassThru -Wait
+            -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -NoNewWindow
 
      # .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }}
         shell: pwsh
