@@ -66,6 +66,7 @@ jobs:
             python3-wxpython,regex-devel,zstd-devel"
       - name: Install OSGeo4W
         run: |
+          $exe = 'osgeo4w-setup.exe'
           Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
             -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -PassThru -Wait
 
