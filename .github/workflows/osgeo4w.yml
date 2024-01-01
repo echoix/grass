@@ -26,9 +26,9 @@ jobs:
         os:
           - windows-2019
       fail-fast: false
-    defaults:
-      run:
-        shell: msys2 {0}
+    # defaults:
+    #   run:
+    #     shell: msys2 {0}
     steps:
       - name: Collect Workflow Telemetry
         uses: catchpoint/workflow-telemetry-action@v1
@@ -38,22 +38,20 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-        shell: pwsh
-        env:
-          tempdir2: ${{ env.TEMP }}
-          tempdir3: ${{ runner.temp }}
+        # shell: pwsh
+        # env:
+        #   # tempdir2: ${{ env.TEMP }}
+        #   tempdir3: ${{ runner.temp }}
       - run: echo %TEMP%
         shell: cmd
-      - run: echo %TEMP%
-        shell: pwsh
       - run: |
           echo "TEMP=$env:TEMP" >> $env:GITHUB_ENV
-          echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
-        shell: pwsh
+          echo "PackageDir=${{ github.workspace }}OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
+        # shell: pwsh
       - run: echo ${{ env.PackageDir }}
-        shell: pwsh
-        env:
-          PackageDir2: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+        # shell: pwsh
+        # env:
+        #   PackageDir2: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       #- run: exit 1
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
@@ -73,45 +71,56 @@ jobs:
           key: OSGeo4W-proj-data-cache
           path: ${{ env.PackageDir }}/**/proj-data**
       - name: Download OSGeo4W
-        run: |
-          Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
-        shell: pwsh
+        run: Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
+        # shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
-          Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
-            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
-            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
-            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-wxpython,regex-devel,zstd-devel"
       - name: Install OSGeo4W
         run: |
           &  .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l ${{ env.PackageDir }} | Out-Default
-  #$exe = 'osgeo4w-setup.exe'
-      #Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
-    #-s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -NoNewWindow
-     # .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }}
-        shell: pwsh
+        # shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
-          Deps: ${{'proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,regex-devel,zstd-devel'}}
-          Deps1: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
-            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
-            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
-            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-wxpython,regex-devel,zstd-devel"
-          PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+          Deps: >- 
+            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,
+            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,
+            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
+            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
+            python3-wxpython,regex-devel,zstd-devel
+          # PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
-        shell: pwsh
+      - name: Remove outdated OSGeo4W cached packages
+        shell: msys2 {0}
+        # First sed pattern: 
+        #   Filters out the lines after the [prev] section until next blank line by
+        #   keeping lines between "@ osgeo4w-package-name" and "[prev]" or a blank line.
+        # Second sed pattern:
+        #   Keeps only the path subgroup of lines starting with `install:` or `license:`
+        #   Pattern is longer to use older sed syntax
+
+        run: >-
+          find ${{ env.PackageDir }} -type f \(
+            ! -name "setup.ini"
+            $(  
+               sed -rne '/^@ .*$/,/^(\[prev\])?$/p' setup.ini | 
+               sed -n 's/^\(^install:\)\{0,1\}\(^license:\)\{0,1\}\s\{1,\}\(\S\{1,\}\)\s\{1,\}[0-9]\{1,\}\s\{1,\}\S\{1,\}/\3/p' | 
+               xargs printf ' -a ! -path ${{ env.PackageDir }}/http*/%s\n'  
+            ) 
+          \)
         env:
-          PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+          PackageDir: ${{ env.PackageDir }}
+      - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
+        # shell: pwsh
+        # env:
+        #   PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -File 
-        shell: pwsh
+        # shell: pwsh
         env:
           PackageDir: "${{ env.TEMP }}/"
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
-        shell: pwsh
+        # shell: pwsh
         env:
           PackageDir: "${{ env.TEMP }}/"
      # - name: Install OSGeo4W
@@ -129,10 +138,10 @@ jobs:
      #       python3-wxpython,regex-devel,zstd-devel"
      #   shell: pwsh
       
-      - uses: actions/upload-artifact@v4
-        with:
-          name: osgeo4w-cache
-          path: "${{ env.TEMP }}/**dd**"
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: osgeo4w-cache
+      #     path: "${{ env.TEMP }}/**dd**"
       #- name: Compile GRASS GIS
       #  run: .github/workflows/build_osgeo4w.sh .
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
