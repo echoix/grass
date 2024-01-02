@@ -65,11 +65,41 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre
-      - uses: actions/cache@v3
-        name: Cache PROJ data
+
+      - name: Restore PROJ data cache
+        id: restore-proj-data
+        uses: actions/cache/restore@v3
         with:
-          key: OSGeo4W-proj-data-cache
-          path: ${{ env.PackageDir }}/**/proj-data**
+          # The key here will never match, it will always use the restore-keys.
+          # Since we don't have a lockfile or a way of knowing which
+          # version of proj-data is needed used, we cannot have a better key.
+          key: OSGeo4W-proj-data-${{ env.PackageDir }}-
+          restore-keys: |
+            OSGeo4W-proj-data-${{ env.PackageDir }}-
+      - name: Restore OSGeo4W package cache
+        id: restore-pkgs
+        uses: actions/cache/restore@v3
+        with:
+          # The key here will never match, it will always use the restore-keys.
+          # Since we don't have a lockfile or a way of knowing which
+          # dependencies were used, we cannot use hashfiles() on files that 
+          # don't exist yet.
+          key: OSGeo4W-packages-cache-${{ env.PackageDir }}-
+          restore-keys: |
+            OSGeo4W-packages-cache-${{ env.PackageDir }}-
+      - name: Save hashes of restored cache before update
+        id: restored-cache-hash
+        run: |
+          echo "proj-data=${{ hashfiles(
+            format('{0}/**/proj-data**', env.PackageDir) )
+          }}" >> "$env:GITHUB_OUTPUT"
+          echo "packages=${{ hashfiles(
+            format('{0}/**', env.PackageDir),
+            format('!{0}/**/proj-data**', env.PackageDir),
+            format('!{0}/**/gdal-dev/**', env.PackageDir),
+            format('!{0}/**/setup.ini', env.PackageDir) )
+          }}" >> "$env:GITHUB_OUTPUT"
+      
       - run: echo "${{ hashFiles( format('{0}{1}', env.PackageDir,'/**/proj-data**')) }}"
       - name: Download OSGeo4W
         run: Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
@@ -90,7 +120,7 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
             python3-wxpython,regex-devel,zstd-devel
-          # PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
+        # PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
       - name: Remove outdated OSGeo4W cached packages
         shell: msys2 {0}
@@ -144,6 +174,35 @@ jobs:
       #   with:
       #     name: osgeo4w-cache
       #     path: "${{ env.TEMP }}/**dd**"
+      - name: Get hashes of caches to save
+        id: save-cache-hash
+        run: |
+          echo "proj-data=${{ hashfiles(
+            format('{0}/**/proj-data**', env.PackageDir) )
+          }}" >> "$env:GITHUB_OUTPUT"
+          echo "packages=${{ hashfiles(
+            format('{0}/**', env.PackageDir),
+            format('!{0}/**/proj-data**', env.PackageDir),
+            format('!{0}/**/gdal-dev/**', env.PackageDir),
+            format('!{0}/**/setup.ini', env.PackageDir) )
+          }}" >> "$env:GITHUB_OUTPUT"
+      - name: Save proj-data cache
+        if: ${{ steps.restored-cache-hash.outputs.proj-data != steps.save-cache-hash.outputs.proj-data }}
+        uses: actions/cache/save@v3
+        with:
+          key: OSGeo4W-proj-data-${{ env.PackageDir }}-${{ steps.save-cache-hash.outputs.proj-data  }}
+          path: ${{ env.PackageDir }}/**/proj-data**
+      - name: Save OSGeo4W package cache
+        if: ${{ steps.restored-cache-hash.outputs.packages != steps.save-cache-hash.outputs.packages }}
+        uses: actions/cache/save@v3
+        with:
+          key: OSGeo4W-packages-cache-${{ env.PackageDir }}-${{ steps.save-cache-hash.outputs.packages  }}
+          path: |
+            ${{ env.PackageDir }}/**
+            !${{ env.PackageDir }}/**/proj-data**
+            !${{ env.PackageDir }}/**/gdal-dev/**
+            !${{ env.PackageDir }}/**/setup.ini
+
       #- name: Compile GRASS GIS
       #  run: .github/workflows/build_osgeo4w.sh .
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
@@ -156,3 +215,4 @@ jobs:
 
       #- name: Run tests
         #run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
+      
