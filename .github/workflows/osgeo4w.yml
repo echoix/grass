@@ -47,8 +47,9 @@ jobs:
             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
-            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
+            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git
             mingw-w64-x86_64-pcre
+      # removed: mingw-w64-x86_64-libpng
       - name: Restore PROJ data cache
         id: restore-proj-data
         uses: actions/cache/restore@v3
@@ -107,7 +108,8 @@ jobs:
             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
-            python3-wxpython,regex-devel,zstd-devel
+            python3-wxpython,zstd-devel
+      # removed: regex-devel,
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length -Descending
       - name: Remove outdated OSGeo4W cached packages
         shell: msys2 {0}
@@ -181,8 +183,10 @@ jobs:
       - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
       - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
         shell: msys2 {0}
+      - run: pwd
+        shell: msys2 {0}
       - name: Compile GRASS GIS
-        run: mswindows/osgeo4w/build_osgeo4w.sh .
+        run: ./mswindows/osgeo4w/build_osgeo4w.sh .
         shell: msys2 {0}
         env:
           MAKEFLAGS: -j0
