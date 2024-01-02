@@ -194,10 +194,17 @@ jobs:
             !${{ env.PackageDir }}/**/setup.ini
 
       - name: Compile GRASS GIS
-        run: .github/workflows/build_osgeo4w.sh .
+        run: mswindows/osgeo4w/build_osgeo4w.sh .
         shell: msys2 {0}
         env:
           MAKEFLAGS: -j0
+          OSGEO4W_ROOT_MSYS: /c/OSGeo4W
+          UNITTEST: 1
+      #- name: Compile GRASS GIS
+        #run: .github/workflows/build_osgeo4w.sh .
+        #shell: msys2 {0}
+        #env:
+          #MAKEFLAGS: -j0
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
 
       - name: Test executing of the grass command
