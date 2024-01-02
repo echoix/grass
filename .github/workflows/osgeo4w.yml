@@ -70,6 +70,7 @@ jobs:
         with:
           key: OSGeo4W-proj-data-cache
           path: ${{ env.PackageDir }}/**/proj-data**
+      - run: echo "${{ hashFiles( format('{0}{1}', env.PackageDir,'/**/proj-data**')) }}"
       - name: Download OSGeo4W
         run: Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
         # shell: pwsh
@@ -110,6 +111,8 @@ jobs:
         continue-on-error: true
         env:
           PackageDir: ${{ env.PackageDir }}
+      - run: echo "${{ hashFiles( format('{0}{1}', env.PackageDir,'/**/proj-data**')) }}"
+  
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
         # shell: pwsh
         # env:
