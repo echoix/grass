@@ -78,7 +78,7 @@ jobs:
           FILE_NAME: osgeo4w-setup.exe
       - name: Install OSGeo4W
         run: |
-          &  .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l ${{ env.PackageDir }} | Out-Default
+          &  .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
         # shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
@@ -96,33 +96,32 @@ jobs:
         # First sed pattern: 
         #   Filters out the lines after the [prev] section until next blank line by
         #   keeping lines between "@ osgeo4w-package-name" and "[prev]" or a blank line.
+        #   Adapted from: https://github.com/jef-n/OSGeo4W/blob/9b26e568b5660b9e18839076327cfdade769fcd9/scripts/build-helpers#L376
         # Second sed pattern:
         #   Keeps only the path subgroup of lines starting with `install:` or `license:`
-        #   Pattern is longer to use older sed syntax
-
+        #   Adapted from https://github.com/jef-n/OSGeo4W/blob/9b26e568b5660b9e18839076327cfdade769fcd9/scripts/build-inorder.pl#L22-L23
         run: >-
-          find ${{ env.PackageDir }} -type f \(
-            ! -name "setup.ini"
-            $(  
-               sed -rne '/^@ .*$/,/^(\[prev\])?$/p' setup.ini | 
-               sed -n 's/^\(^install:\)\{0,1\}\(^license:\)\{0,1\}\s\{1,\}\(\S\{1,\}\)\s\{1,\}[0-9]\{1,\}\s\{1,\}\S\{1,\}/\3/p' | 
-               xargs printf ' -a ! -path ${{ env.PackageDir }}/http*/%s\n'  
-            ) 
-          \)
+          pwd \n
+          find ${{ env.PackageDir }} -type f \(  ! -name "setup.ini"  $(
+            sed -rne '/^@ .*$/,/^(\[prev\])?$/p' setup.ini |
+            sed -nr 's/^(install|source|license):\s+(\S+)\s+[0-9]+\s+\S+/\2/p' |
+            xargs printf ' -a ! -path ${{ env.PackageDir }}/http*/%s\n'
+          ) \)
+        continue-on-error: true
         env:
           PackageDir: ${{ env.PackageDir }}
       - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
         # shell: pwsh
         # env:
         #   PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
-      - run: Get-ChildItem -Path ${{ env.PackageDir }} -File 
-        # shell: pwsh
-        env:
-          PackageDir: "${{ env.TEMP }}/"
-      - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
-        # shell: pwsh
-        env:
-          PackageDir: "${{ env.TEMP }}/"
+      # - run: Get-ChildItem -Path ${{ env.PackageDir }} -File 
+      #   # shell: pwsh
+      #   env:
+      #     PackageDir: "${{ env.TEMP }}/"
+      # - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
+      #   # shell: pwsh
+      #   env:
+      #     PackageDir: "${{ env.TEMP }}/"
      # - name: Install OSGeo4W
      #   run: |
      #     $exe = 'osgeo4w-setup.exe'
