@@ -21,6 +21,10 @@ export C_INCLUDE_PATH=".:${OSGEO4W_ROOT_MSYS}/include:${SRC}/dist.${ARCH}/includ
 export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python39
 export ARCH=x86_64-w64-mingw32
 
+echo "Print env follows"
+printenv
+echo "Print env done"
+
 ./configure \
     --host=${ARCH} \
     --with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
