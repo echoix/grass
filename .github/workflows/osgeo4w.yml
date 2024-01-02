@@ -74,8 +74,8 @@ jobs:
           path: |
             ${{ env.PackageDir }}/*/*/*/*
             !${{ env.PackageDir }}/*/*/*/proj/proj-data
-            !${{ env.PackageDir }}/**/gdal-dev/**
-            !${{ env.PackageDir }}/**/setup.ini
+            !${{ env.PackageDir }}/*/*/*/gdal/gdal-dev
+            !${{ env.PackageDir }}/*/*/setup.ini
 
       - name: Save hashes of restored cache before update
         id: restored-cache-hash
@@ -93,14 +93,12 @@ jobs:
       - run: echo "${{ hashFiles( format('{0}{1}', env.PackageDir,'/**/proj-data**')) }}"
       - name: Download OSGeo4W
         run: Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
-        # shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
       - name: Install OSGeo4W
         run: |
           &  .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
-        # shell: pwsh
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
@@ -110,8 +108,7 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
             python3-wxpython,regex-devel,zstd-devel
-        # PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
-      - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
+      - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length -Descending
       - name: Remove outdated OSGeo4W cached packages
         shell: msys2 {0}
         # First sed pattern: 
@@ -133,18 +130,8 @@ jobs:
           PackageDir: ${{ env.PackageDir }}
       - run: echo "${{ hashFiles( format('{0}{1}', env.PackageDir,'/**/proj-data**')) }}"
   
-      - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
-        # shell: pwsh
-        # env:
-        #   PackageDir3: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
-      # - run: Get-ChildItem -Path ${{ env.PackageDir }} -File 
-      #   # shell: pwsh
-      #   env:
-      #     PackageDir: "${{ env.TEMP }}/"
-      # - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length –Descending
-      #   # shell: pwsh
-      #   env:
-      #     PackageDir: "${{ env.TEMP }}/"
+      - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length -Descending
+  
      # - name: Install OSGeo4W
      #   run: |
      #     $exe = 'osgeo4w-setup.exe'
@@ -160,10 +147,6 @@ jobs:
      #       python3-wxpython,regex-devel,zstd-devel"
      #   shell: pwsh
       
-      # - uses: actions/upload-artifact@v4
-      #   with:
-      #     name: osgeo4w-cache
-      #     path: "${{ env.TEMP }}/**dd**"
       - name: Get hashes of caches to save
         id: save-cache-hash
         run: |
@@ -188,11 +171,16 @@ jobs:
         with:
           key: OSGeo4W-packages-cache-${{ env.PackageDir }}-${{ steps.save-cache-hash.outputs.packages  }}
           path: |
-            ${{ env.PackageDir }}/**
-            !${{ env.PackageDir }}/**/proj-data**
-            !${{ env.PackageDir }}/**/gdal-dev/**
-            !${{ env.PackageDir }}/**/setup.ini
+            ${{ env.PackageDir }}/*/*/*/*
+            !${{ env.PackageDir }}/*/*/*/proj/proj-data
+            !${{ env.PackageDir }}/*/*/*/gdal/gdal-dev
+            !${{ env.PackageDir }}/*/*/setup.ini
 
+      - run: ls -la mswindows/osgeo4w/
+        shell: msys2 {0}
+      - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
+      - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
+        shell: msys2 {0}
       - name: Compile GRASS GIS
         run: mswindows/osgeo4w/build_osgeo4w.sh .
         shell: msys2 {0}
