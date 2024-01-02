@@ -27,13 +27,13 @@ printenv
 echo "Print env done"
 
 ./configure \
-    --host=${ARCH} \
+    --host="${ARCH}" \
     --with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
-    --with-includes=${OSGEO4W_ROOT_MSYS}/include \
-    --libexecdir=${OSGEO4W_ROOT_MSYS}/bin \
-    --prefix=${OSGEO4W_ROOT_MSYS}/apps/grass \
-    --bindir=${OSGEO4W_ROOT_MSYS}/bin \
-    --includedir=${OSGEO4W_ROOT_MSYS}/include \
+    --with-includes="${OSGEO4W_ROOT_MSYS}/include" \
+    --libexecdir="${OSGEO4W_ROOT_MSYS}/bin" \
+    --prefix="${OSGEO4W_ROOT_MSYS}/apps/grass" \
+    --bindir="${OSGEO4W_ROOT_MSYS}/bin" \
+    --includedir="${OSGEO4W_ROOT_MSYS}/include" \
     --without-x \
     --with-cxx \
     --enable-shared \
@@ -44,31 +44,31 @@ echo "Print env done"
     --with-readline \
     --with-blas \
     --with-lapack \
-    --with-lapack-includes=/mingw64/include/lapack \
+    --with-lapack-includes="/mingw64/include/lapack" \
     --with-freetype \
-    --with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
-    --with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
-    --with-proj-includes=${OSGEO4W_ROOT_MSYS}/include \
-    --with-proj-libs=${OSGEO4W_ROOT_MSYS}/lib \
+    --with-freetype-includes="${OSGEO4W_ROOT_MSYS}/include/freetype2" \
+    --with-proj-share="${OSGEO4W_ROOT_MSYS}/share/proj" \
+    --with-proj-includes="${OSGEO4W_ROOT_MSYS}/include" \
+    --with-proj-libs="${OSGEO4W_ROOT_MSYS}/lib" \
     --with-postgres \
-    --with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
-    --with-postgres-libs=${OSGEO4W_ROOT_MSYS}/lib \
-    --with-gdal=${SRC}/mswindows/osgeo4w/gdal-config \
-    --with-geos=${SRC}/mswindows/osgeo4w/geos-config \
+    --with-postgres-includes="${OSGEO4W_ROOT_MSYS}/include" \
+    --with-postgres-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+    --with-gdal="${SRC}/mswindows/osgeo4w/gdal-config" \
+    --with-geos="${SRC}/mswindows/osgeo4w/geos-config" \
     --with-sqlite \
-    --with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
-    --with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
+    --with-sqlite-includes="${OSGEO4W_ROOT_MSYS}/include" \
+    --with-sqlite-libs="${OSGEO4W_ROOT_MSYS}/lib" \
     --with-regex \
     --with-nls \
     --with-zstd \
     --with-odbc \
     --with-cairo \
-    --with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
-    --with-cairo-libs=${OSGEO4W_ROOT_MSYS}/lib \
+    --with-cairo-includes="${OSGEO4W_ROOT_MSYS}/include" \
+    --with-cairo-libs="${OSGEO4W_ROOT_MSYS}/lib" \
     --with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
     --with-opengl=windows \
     --with-bzlib \
-    --with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
+    --with-netcdf="${OSGEO4W_ROOT_MSYS}/bin/nc-config" \
     --without-pdal
 
 make
