@@ -26,9 +26,6 @@ jobs:
         os:
           - windows-2019
       fail-fast: false
-    # defaults:
-    #   run:
-    #     shell: msys2 {0}
     steps:
       - name: Collect Workflow Telemetry
         uses: catchpoint/workflow-telemetry-action@v1
@@ -38,21 +35,8 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-        # shell: pwsh
-        # env:
-        #   # tempdir2: ${{ env.TEMP }}
-        #   tempdir3: ${{ runner.temp }}
-      - run: echo %TEMP%
-        shell: cmd
       - run: |
-          echo "TEMP=$env:TEMP" >> $env:GITHUB_ENV
           echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
-        # shell: pwsh
-      - run: echo ${{ env.PackageDir }}
-        # shell: pwsh
-        # env:
-        #   PackageDir2: "${{ env.TEMP }}/OSGeo4W_v2-Packages/"
-      #- run: exit 1
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
@@ -65,7 +49,6 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre
-
       - name: Restore PROJ data cache
         id: restore-proj-data
         uses: actions/cache/restore@v3
@@ -89,8 +72,8 @@ jobs:
           restore-keys: |
             OSGeo4W-packages-cache-${{ env.PackageDir }}-
           path: |
-            ${{ env.PackageDir }}/**
-            !${{ env.PackageDir }}/**/proj-data**
+            ${{ env.PackageDir }}/*/*/*/*
+            !${{ env.PackageDir }}/*/*/*/proj/proj-data
             !${{ env.PackageDir }}/**/gdal-dev/**
             !${{ env.PackageDir }}/**/setup.ini
 
