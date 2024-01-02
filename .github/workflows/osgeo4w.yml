@@ -46,7 +46,7 @@ jobs:
         shell: cmd
       - run: |
           echo "TEMP=$env:TEMP" >> $env:GITHUB_ENV
-          echo "PackageDir=${{ github.workspace }}OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
+          echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
         # shell: pwsh
       - run: echo ${{ env.PackageDir }}
         # shell: pwsh
