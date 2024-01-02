@@ -193,16 +193,23 @@ jobs:
             !${{ env.PackageDir }}/**/gdal-dev/**
             !${{ env.PackageDir }}/**/setup.ini
 
-      #- name: Compile GRASS GIS
-      #  run: .github/workflows/build_osgeo4w.sh .
+      - name: Compile GRASS GIS
+        run: .github/workflows/build_osgeo4w.sh .
+        shell: msys2 {0}
+        env:
+          MAKEFLAGS: -j0
         #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
 
-      #- name: Test executing of the grass command
-      #  run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
+      - name: Test executing of the grass command
+        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
+        #shell: msys2 {0}
       #- run: exit 1
-      #- name: Test executing of the grass command in bash
+      - name: Test executing of the grass command in bash
+        run: .github/workflows/test_simple.sh
+        shell: msys2 {0}
        # run: D:\msys64\usr\bin\bash.exe .github/workflows/test_simple.sh
 
-      #- name: Run tests
+      - name: Run tests
+        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
         #run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
       
