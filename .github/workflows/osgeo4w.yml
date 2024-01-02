@@ -189,12 +189,13 @@ jobs:
       - run: pwd
         shell: msys2 {0}
       - name: Compile GRASS GIS
-        run: SRC=. ./mswindows/osgeo4w/build_osgeo4w.sh
+        run: SRC="$(pwd)" ./mswindows/osgeo4w/build_osgeo4w.sh
         shell: msys2 {0}
         env:
           MAKEFLAGS: -j0
           OSGEO4W_ROOT_MSYS: /c/OSGeo4W
           UNITTEST: 1
+
           
       #- name: Compile GRASS GIS
         #run: .github/workflows/build_osgeo4w.sh .
