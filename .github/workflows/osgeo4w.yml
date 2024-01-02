@@ -42,6 +42,7 @@ jobs:
         with:
           path-type: inherit
           location: D:\
+          msystem: mingw64
           update: true
           install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
@@ -186,7 +187,7 @@ jobs:
       - run: pwd
         shell: msys2 {0}
       - name: Compile GRASS GIS
-        run: ./mswindows/osgeo4w/build_osgeo4w.sh .
+        run: SRC=. ./mswindows/osgeo4w/build_osgeo4w.sh
         shell: msys2 {0}
         env:
           MAKEFLAGS: -j0
