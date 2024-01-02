@@ -192,6 +192,8 @@ jobs:
         shell: msys2 {0}
       - run: ls -la mswindows/osgeo4w/
         shell: msys2 {0}
+      - run: ls -la /c/OSGeo4W/bin/
+        shell: msys2 {0}
       - name: Compile GRASS GIS
         run: SRC="$(pwd)" ./mswindows/osgeo4w/build_osgeo4w.sh
         shell: msys2 {0}
@@ -200,6 +202,9 @@ jobs:
           OSGEO4W_ROOT_MSYS: /c/OSGeo4W
           UNITTEST: 1
       - run: ls -la mswindows/osgeo4w/
+        if: ${{ always() }}
+        shell: msys2 {0}
+      - run: ls -la /c/OSGeo4W/bin/
         if: ${{ always() }}
         shell: msys2 {0}
           
