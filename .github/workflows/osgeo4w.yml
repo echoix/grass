@@ -76,6 +76,7 @@ jobs:
           key: OSGeo4W-proj-data-${{ env.PackageDir }}-
           restore-keys: |
             OSGeo4W-proj-data-${{ env.PackageDir }}-
+          path: ${{ env.PackageDir }}/**/proj-data**
       - name: Restore OSGeo4W package cache
         id: restore-pkgs
         uses: actions/cache/restore@v3
@@ -87,6 +88,12 @@ jobs:
           key: OSGeo4W-packages-cache-${{ env.PackageDir }}-
           restore-keys: |
             OSGeo4W-packages-cache-${{ env.PackageDir }}-
+          path: |
+            ${{ env.PackageDir }}/**
+            !${{ env.PackageDir }}/**/proj-data**
+            !${{ env.PackageDir }}/**/gdal-dev/**
+            !${{ env.PackageDir }}/**/setup.ini
+
       - name: Save hashes of restored cache before update
         id: restored-cache-hash
         run: |
