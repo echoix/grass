@@ -38,6 +38,7 @@ export ARCH=x86_64-w64-mingw32
     --with-nls \
     --with-readline \
     --with-blas \
+    --with-lapack \
     --with-lapack-includes=/mingw64/include/lapack \
     --with-freetype \
     --with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
@@ -58,7 +59,7 @@ export ARCH=x86_64-w64-mingw32
     --with-odbc \
     --with-cairo \
     --with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
-    --with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
+    --with-cairo-libs=${OSGEO4W_ROOT_MSYS}/lib \
     --with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
     --with-opengl=windows \
     --with-bzlib \
