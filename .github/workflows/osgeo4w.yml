@@ -183,6 +183,8 @@ jobs:
 
       - run: ls -la mswindows/osgeo4w/
         shell: msys2 {0}
+      - run: ls -la /c/OSGeo4W/bin/
+        shell: msys2 {0}
       - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
       - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
         shell: msys2 {0}
