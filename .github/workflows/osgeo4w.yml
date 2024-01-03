@@ -207,7 +207,7 @@ jobs:
       - run: ls -la /c/OSGeo4W/bin/
         if: ${{ always() }}
         shell: msys2 {0}
-          
+      
       #- name: Compile GRASS GIS
         #run: .github/workflows/build_osgeo4w.sh .
         #shell: msys2 {0}
