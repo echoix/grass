@@ -101,8 +101,9 @@ jobs:
           FILE_NAME: osgeo4w-setup.exe
       - name: Install OSGeo4W
         run: |
-          Start-Process ('.\${{ env.FILE_NAME }}') -ArgumentList '-A -g -k -q --no-desktop --no-shortcuts --no-startmenu \
-            -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" ' -Wait | Out-Default
+          .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
+        # Start-Process ('.\${{ env.FILE_NAME }}') -ArgumentList '-A -g -k -q --no-desktop --no-shortcuts --no-startmenu \
+        #   -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" ' -Wait | Out-Default
         # .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
         # run: |
         #   .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
@@ -111,10 +112,16 @@ jobs:
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
-          Deps: >- 
-            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,zstd-devel
+          Deps: >-
+            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
+            ,cairo-devel,fftw,freetype-devel,gdal-ecw
+            ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
+            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
+            ,python3-wxpython,zstd-devel
             
       # removed: regex-devel,pdal-devel,
+      # Deps: >- 
+      #   proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,zstd-devel
       # Deps: >- 
       # proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,
       # netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,
