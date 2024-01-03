@@ -102,7 +102,7 @@ jobs:
       - name: Install OSGeo4W
         run: |
           Start-Process ('.\${{ env.FILE_NAME }}') -ArgumentList '-A -g -k -q --no-desktop --no-shortcuts --no-startmenu \
-            -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" ' -Wait
+            -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" ' -Wait | Out-Default
         # .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
         # run: |
         #   .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
