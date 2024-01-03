@@ -101,7 +101,9 @@ jobs:
           FILE_NAME: osgeo4w-setup.exe
       - name: Install OSGeo4W
         run: |
-          .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
+          .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
+        # run: |
+        #   .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
