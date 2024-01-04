@@ -208,7 +208,7 @@ jobs:
         run: SRC="$(pwd)" ./mswindows/osgeo4w/build_osgeo4w.sh
         shell: msys2 {0}
         env:
-          MAKEFLAGS: -j0
+          MAKEFLAGS: -j
           OSGEO4W_ROOT_MSYS: /c/OSGeo4W
           UNITTEST: 1
       - run: ls -la mswindows/osgeo4w/
