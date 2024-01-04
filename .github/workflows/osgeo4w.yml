@@ -37,91 +37,6 @@ jobs:
           git config --global core.eol lf
       - run: |
           echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
-      - run: echo $env:Deps2
-        env:
-          Deps2: >-
-            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-            ,cairo-devel,fftw,freetype-devel,gdal-ecw
-            ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-            ,python3-wxpython,zstd-devel
-      - run: echo $env:Deps2
-        env:
-          Deps2: >-
-            ${{
-            toJson( '[proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-              ,cairo-devel,fftw,freetype-devel,gdal-ecw
-              ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-              ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-              ,python3-wxpython,zstd-devel ]')
-            }}
-      - run: echo $env:Deps2
-        env:
-          Deps2: >-
-            ${{
-            toJson( 'proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-              ,cairo-devel,fftw,freetype-devel,gdal-ecw
-              ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-              ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-              ,python3-wxpython,zstd-devel')
-            }}
-      - run: echo $env:Deps2
-        env:
-          Deps2: >-
-            ${{
-            fromJson(toJson( '[proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-              ,cairo-devel,fftw,freetype-devel,gdal-ecw
-              ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-              ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-              ,python3-wxpython,zstd-devel ]' ))
-            }}
-      - run: echo "$env:Deps2"
-        env:
-          Deps2: >-
-            ${{
-            join(fromJson(toJson( '{"ab":[proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-              ,cairo-devel,fftw,freetype-devel,gdal-ecw
-              ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-              ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-              ,python3-wxpython,zstd-devel ]}' )), '_xy?')
-            }}
-      # - run: echo "$env:Deps2"
-      #   env:
-      #     Deps2: >-
-      #       ${{
-      #       toJson(fromJson('{"ab":[proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-      #         ,cairo-devel,fftw,freetype-devel,gdal-ecw
-      #         ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-      #         ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-      #         ,python3-wxpython,zstd-devel ]}' ))
-      #       }}
-      - run: echo "$env:Deps2"
-        env:
-          Deps2: >-
-            ${{
-            join('proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-              ,cairo-devel,fftw,freetype-devel,gdal-ecw
-              ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-              ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-              ,python3-wxpython,zstd-devel',  '_xy?')
-            }}
-      - run: echo "$env:Deps2"
-        env:
-          Deps2: >-
-            ${{join('proj-devel,gdal-devel,geos-devel',  '_xy?')
-            }}
-      # - run: echo "$env:Deps2"
-      #   env:
-      #     Deps2: >-
-      #       ${{fromJson('proj-devel,gdal-devel,geos-devel')}}
-      - run: echo "1"
-        env:
-          Deps1: >-
-            proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
-            ,cairo-devel, fftw,freetype-devel,gdal-ecw
-            ,gdal-mrsid, liblas-devel,libxdr libpq-devel,pdcurses
-            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-            ,python3-wxpython,zstd-devel
       - uses: actions/github-script@v7
         id: osgeo4w-pkgs
         with:
@@ -249,13 +164,6 @@ jobs:
       - name: Install OSGeo4W
         run: |
           .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
-        # Start-Process ('.\${{ env.FILE_NAME }}') -ArgumentList '-A -g -k -q --no-desktop --no-shortcuts --no-startmenu \
-        #   -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" ' -Wait | Out-Default
-        # .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
-        # run: |
-        #   .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
-        # run: |
-        #   .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
         env:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
@@ -360,24 +268,7 @@ jobs:
       - run: ls -la /c/OSGeo4W/bin/
         shell: msys2 {0}
 
-      - name: Install OSGeo4W second time
-        run: |
-          Start-Process ('.\${{ env.FILE_NAME }}') -ArgumentList '-A -g -k -q --no-desktop --no-shortcuts --no-startmenu \
-            -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" ' -Wait | Out-Default
-        # .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
-        # run: |
-        #   .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
-        # run: |
-        #   .\"${{ env.FILE_NAME }}"  -A -g -k -q -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
-        env:
-          BASE_URL: https://download.osgeo.org/osgeo4w/v2
-          FILE_NAME: osgeo4w-setup.exe
-          Deps: >- 
-            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,
-            netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,
-            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
-            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
-            python3-wxpython,zstd-devel
+    
       - run: ls -la /c/OSGeo4W/bin/
         shell: msys2 {0}
         
