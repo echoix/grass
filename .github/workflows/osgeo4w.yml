@@ -63,7 +63,7 @@ jobs:
           msystem: mingw64
           update: true
           pacboy: >-
-            tar:p libintl:p make:p bison:p flex:p diffutils:p git:p dos2unix:p zip:p toolchain:p
+            tar libintl make:p bison flex diffutils:p git dos2unix zip toolchain:p
             fftw:p lapack:p pkgconf:p gcc:p ccache:p zlib:p libiconv:p bzip2:p gettext:p 
             libsystre:p libtre-git:p libwinpthread-git:p libpng:p pcre:p
       # not removed: mingw-w64-x86_64-libpng
