@@ -62,8 +62,10 @@ jobs:
           location: D:\
           msystem: mingw64
           update: true
+          # install: tar libintl bison flex git dos2unix zip 
           pacboy: >-
-            tar libintl make:p bison flex diffutils:p git dos2unix zip toolchain:p
+            tar: libintl: bison: flex: git: dos2unix: zip:
+            make:p diffutils:p toolchain:p
             fftw:p lapack:p pkgconf:p gcc:p ccache:p zlib:p libiconv:p bzip2:p gettext:p 
             libsystre:p libtre-git:p libwinpthread-git:p libpng:p pcre:p
       # not removed: mingw-w64-x86_64-libpng
