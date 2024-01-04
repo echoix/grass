@@ -119,7 +119,7 @@ jobs:
       - uses: actions/github-script@v7
         id: osgeo4w-pkgs
         with:
-          script: return env.Deps1.split(",");
+          script: return github.env.Deps1.split(",");
         env:
           Deps1: >-
             proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
