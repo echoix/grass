@@ -153,6 +153,7 @@ jobs:
           Deps9: ${{ join( steps.osgeo4w-pkgs.outputs.result, '_') }}
           Deps10: ${{ join( steps.osgeo4w-pkgs.outputs.result[*], '_') }}
           Deps11: ${{ join( steps.osgeo4w-pkgs.outputs.result.*[0], '_') }}
+          Deps12: ${{ join( steps.osgeo4w-pkgs.outputs.result.* , '_') }}
       - run: echo '${{ env.val1  }}'
         env:
           val1: ${{ join(github.event.pull_request.labels.*.name,',')  }}
