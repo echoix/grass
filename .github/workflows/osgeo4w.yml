@@ -139,6 +139,9 @@ jobs:
       - run: echo ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
+      - run: echo '${{ join( steps.osgeo4w-pkgs.outputs.result, '_xy?') }}'
+        env:
+          Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
     
       # - run: echo "${{ fromJson( format('{"pkgs":[{0}]}', env.Deps2).pkgs ) }}"
       #   env:
