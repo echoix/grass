@@ -46,7 +46,7 @@ jobs:
             ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
             ,python3-wxpython,zstd-devel
 
-      - run: echo "${{ fromJson(env.Deps2) }}"
+      - run: echo ${{ fromJson(env.Deps2) }}
         env:
           Deps2: >-
             proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
