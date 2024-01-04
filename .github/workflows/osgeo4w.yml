@@ -37,6 +37,23 @@ jobs:
           git config --global core.eol lf
       - run: |
           echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
+      - run: echo $env:Deps2
+        env:
+          Deps2: >-
+            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
+            ,cairo-devel,fftw,freetype-devel,gdal-ecw
+            ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
+            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
+            ,python3-wxpython,zstd-devel
+
+      - run: echo "${{ fromJson(env.Deps2) }}"
+        env:
+          Deps2: >-
+            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
+            ,cairo-devel,fftw,freetype-devel,gdal-ecw
+            ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
+            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
+            ,python3-wxpython,zstd-devel
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
