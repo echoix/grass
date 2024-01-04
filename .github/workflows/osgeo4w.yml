@@ -128,9 +128,12 @@ jobs:
           # script: >-
           #   return {"pkg": process.env.Deps1
           #           .split(",").join(" ").split(" ").filter((x) => x != "")};
+          result-encoding: string
           script: >-
             return process.env.Deps1
-                    .split(",").join(" ").split(" ").filter((x) => x != "");
+                    .split(",").join(" ").split(" ")
+                    .filter((x) => x != "")
+                    .join(",");
         env:
           Deps1: >-
             proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
@@ -139,6 +142,9 @@ jobs:
             ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
             ,python3-wxpython,zstd-devel
 
+      - run: echo ${{ steps.osgeo4w-pkgs.outputs.result}}
+        env:
+          Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
       - run: echo ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
