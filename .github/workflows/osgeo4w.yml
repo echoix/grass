@@ -142,7 +142,7 @@ jobs:
       - run: echo ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
-      - run: echo "${{ env.Deps3}}"
+      - run: echo '${{ env.Deps3}}'
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
           # Deps4: ${{ join( steps.osgeo4w-pkgs.outputs.result.pkg, '_') }}
