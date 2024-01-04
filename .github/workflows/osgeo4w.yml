@@ -125,9 +125,12 @@ jobs:
       - uses: actions/github-script@v7
         id: osgeo4w-pkgs
         with:
+          # script: >-
+          #   return {"pkg": process.env.Deps1
+          #           .split(",").join(" ").split(" ").filter((x) => x != "")};
           script: >-
-            return {"pkg": process.env.Deps1
-                    .split(",").join(" ").split(" ").filter((x) => x != "")};
+            return process.env.Deps1
+                    .split(",").join(" ").split(" ").filter((x) => x != "");
         env:
           Deps1: >-
             proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
@@ -139,13 +142,14 @@ jobs:
       - run: echo ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
-      - run: echo "${{ env.Deps5}}"
+      - run: echo "${{ env.Deps3}}"
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
-          Deps4: ${{ join( steps.osgeo4w-pkgs.outputs.result.pkg, '_') }}
-          Deps5: ${{  steps.osgeo4w-pkgs.outputs.result.pkg }}
+          # Deps4: ${{ join( steps.osgeo4w-pkgs.outputs.result.pkg, '_') }}
+          # Deps5: ${{  steps.osgeo4w-pkgs.outputs.result.pkg }}
           # Deps6: ${{ join(fromJson(steps.osgeo4w-pkgs.outputs.result.pkg)) }}
-          Deps7: ${{ fromJson(steps.osgeo4w-pkgs.outputs.result.pkg) }}
+          # Deps7: ${{ fromJson(steps.osgeo4w-pkgs.outputs.result.pkg) }}
+          Deps8: ${{ fromJson(steps.osgeo4w-pkgs.outputs.result) }}
     
       # - run: echo "${{ fromJson( format('{"pkgs":[{0}]}', env.Deps2).pkgs ) }}"
       #   env:
