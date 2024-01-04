@@ -29,6 +29,7 @@ addopts = """
     --ignore-glob='dist.*'
     --ignore-glob='bin.*'
     --ignore-glob='*/tests/data/*'
+    --ignore-glob='*/testreport/*'
     --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
