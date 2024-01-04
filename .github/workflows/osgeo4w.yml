@@ -37,6 +37,8 @@ jobs:
           git config --global core.eol lf
       - run: |
           echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
       - uses: actions/github-script@v7
         id: osgeo4w-pkgs
         with:
