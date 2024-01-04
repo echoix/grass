@@ -194,6 +194,9 @@ jobs:
       #       !${{ env.PackageDir }}/*/*/*/gdal/gdal-dev
       #       !${{ env.PackageDir }}/*/*/setup.ini
 
+      - run: ccache -s -v -v
+        if: ${{ always() }}
+        shell: msys2 {0}
       - run: ls -la mswindows/osgeo4w/
         shell: msys2 {0}
       - run: ls -la /c/OSGeo4W/bin/
@@ -216,6 +219,12 @@ jobs:
         if: ${{ always() }}
         shell: msys2 {0}
       - run: ls -la /c/OSGeo4W/bin/
+        if: ${{ always() }}
+        shell: msys2 {0}
+      - run: ls -la .ccache
+        if: ${{ always() }}
+        shell: msys2 {0}
+      - run: ccache -s -v -v
         if: ${{ always() }}
         shell: msys2 {0}
       
