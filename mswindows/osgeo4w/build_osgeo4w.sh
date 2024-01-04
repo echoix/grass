@@ -43,7 +43,6 @@ echo "Print env done"
     --with-nls \
     --with-readline \
     --with-blas \
-    --with-lapack \
     --with-lapack-includes="/mingw64/include/lapack" \
     --with-freetype \
     --with-freetype-includes="${OSGEO4W_ROOT_MSYS}/include/freetype2" \
