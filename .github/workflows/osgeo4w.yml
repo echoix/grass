@@ -133,7 +133,8 @@ jobs:
             return process.env.Deps1
                     .split(",").join(" ").split(" ")
                     .filter((x) => x != "")
-                    .join(",");
+                    // .join(",");
+                    .join("-P ");
         env:
           Deps1: >-
             proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
