@@ -88,7 +88,7 @@ class BaseUnits:
 Units = BaseUnits()
 
 
-def ConvertValue(value, type, units):
+def ConvertValue(value, type, units: str):
     """Convert value from map units to given units
 
     Inspired by vector/v.to.db/units.c

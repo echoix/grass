@@ -745,12 +745,12 @@ def do_doctest_gettext_workaround():
     GRASS Python libraries.
     """
 
-    def new_displayhook(string):
+    def new_displayhook(string: str):
         """A replacement for default `sys.displayhook`"""
         if string is not None:
             sys.stdout.write("%r\n" % (string,))
 
-    def new_translator(string):
+    def new_translator(string: str):
         """A fake gettext underscore function."""
         return string
 
