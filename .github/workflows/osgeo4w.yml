@@ -105,11 +105,11 @@ jobs:
               ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
               ,python3-wxpython,zstd-devel',  '_xy?')
             }}
-            - run: echo "$env:Deps2"
-            env:
-              Deps2: >-
-                ${{join('proj-devel,gdal-devel,geos-devel',  '_xy?')
-                }}
+      - run: echo "$env:Deps2"
+        env:
+          Deps2: >-
+            ${{join('proj-devel,gdal-devel,geos-devel',  '_xy?')
+            }}
                             
     
       # - run: echo "${{ fromJson( format('{"pkgs":[{0}]}', env.Deps2).pkgs ) }}"
