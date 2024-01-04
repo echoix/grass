@@ -139,10 +139,12 @@ jobs:
       - run: echo ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
-      - run: echo '${{ join( steps.osgeo4w-pkgs.outputs.result.pkg, '_') }}'
+      - run: echo "${{ env.Deps5}}"
         env:
           Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
           Deps4: ${{ join( steps.osgeo4w-pkgs.outputs.result.pkg, '_') }}
+          Deps5: ${{  steps.osgeo4w-pkgs.outputs.result.pkg }}
+          Deps6: ${{ join(steps.osgeo4w-pkgs.outputs.result.pkg) }}
     
       # - run: echo "${{ fromJson( format('{"pkgs":[{0}]}', env.Deps2).pkgs ) }}"
       #   env:
