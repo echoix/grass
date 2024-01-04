@@ -14,4 +14,8 @@
   ]
   //pyproject.toml
   // GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c pyproject_unittest.toml
+  //GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml"
+  //GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
+  // cd /workspace/grass/python/grass/gunittest 
+  // grass --tmp-location XY --exec     python3 -m grass.gunittest.main     --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc     --min-success 100
 }
