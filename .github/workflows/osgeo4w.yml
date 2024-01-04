@@ -59,6 +59,16 @@ jobs:
         env:
           Deps2: >-
             ${{
+            toJson( 'proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
+              ,cairo-devel,fftw,freetype-devel,gdal-ecw
+              ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
+              ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
+              ,python3-wxpython,zstd-devel')
+            }}
+      - run: echo $env:Deps2
+        env:
+          Deps2: >-
+            ${{
             fromJson(toJson( '[proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
               ,cairo-devel,fftw,freetype-devel,gdal-ecw
               ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
@@ -73,7 +83,7 @@ jobs:
               ,cairo-devel,fftw,freetype-devel,gdal-ecw
               ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
               ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-              ,python3-wxpython,zstd-devel ]' ).*)
+              ,python3-wxpython,zstd-devel ]' ))
             }}
         
     
