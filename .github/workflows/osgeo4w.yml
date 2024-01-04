@@ -115,11 +115,20 @@ jobs:
       #     Deps2: >-
       #       ${{fromJson('proj-devel,gdal-devel,geos-devel')}}
       - run: echo "1"
-     
+      - uses: actions/github-script@v7
+        with:
+          script: console.log(context)
+        env:
+          Deps1: >-
+            proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
+            ,cairo-devel, fftw,freetype-devel,gdal-ecw
+            ,gdal-mrsid, liblas-devel,libxdr libpq-devel,pdcurses
+            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
+            ,python3-wxpython,zstd-devel
       - uses: actions/github-script@v7
         id: osgeo4w-pkgs
         with:
-          script: return github.env.Deps1.split(",");
+          script: process.env.Deps1.split(",")
         env:
           Deps1: >-
             proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
