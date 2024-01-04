@@ -158,6 +158,9 @@ jobs:
           Deps14: ${{ toJson( steps.osgeo4w-pkgs.outputs.result[2]) }}
           Deps15: ${{ toJson( steps.osgeo4w-pkgs.outputs.result[*]) }}
           Deps16: ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
+          Deps17: ${{ fromJson(toJson( steps.osgeo4w-pkgs.outputs.result)) }}
+          Deps18: ${{ toJson(fromJson(toJson( steps.osgeo4w-pkgs.outputs.result))) }}
+          Deps19: ${{ toJson(fromJson(toJson( steps.osgeo4w-pkgs.outputs.result))[3]) }}
       - run: echo '${{ env.val1  }}'
         env:
           val1: ${{ join(github.event.pull_request.labels.*.name,',')  }}
