@@ -194,9 +194,27 @@ jobs:
       #       !${{ env.PackageDir }}/*/*/*/gdal/gdal-dev
       #       !${{ env.PackageDir }}/*/*/setup.ini
 
-      - run: ccache -s -v -v
-        if: ${{ always() }}
-        shell: msys2 {0}
+      # - run: ccache -s -v -v
+      #   if: ${{ always() }}
+      #   shell: msys2 {0}
+      # - name: Configure ccache settings
+      #   run: |
+      #     ccache --set-config=cache_dir='${{ github.workspace }}/.ccache'
+      #     ccache --set-config=max_size=500M
+      #     ccache --set-config=compression=true
+      #     echo "ccache config:"
+      #     ccache --show-config
+      #     ccache --zero-stats
+      #   shell: msys2 {0}
+      # - name: Configure ccache settings
+      #   run: |
+      #     ccache --set-config=cache_dir='${{ github.workspace }}/.ccache'
+      #     ccache --set-config=max_size=500M
+      #     ccache --set-config=compression=true
+      #     echo "ccache config:"
+      #     ccache -p
+      #   shell: msys2 {0}
+        
       - run: ls -la mswindows/osgeo4w/
         shell: msys2 {0}
       - run: ls -la /c/OSGeo4W/bin/
@@ -221,12 +239,13 @@ jobs:
       - run: ls -la /c/OSGeo4W/bin/
         if: ${{ always() }}
         shell: msys2 {0}
-      - run: ls -la .ccache
-        if: ${{ always() }}
-        shell: msys2 {0}
-      - run: ccache -s -v -v
-        if: ${{ always() }}
-        shell: msys2 {0}
+      # - run: mkdir -p .ccache && ls -la .ccache
+      #   if: ${{ always() }}
+      #   shell: msys2 {0}
+      # - run: ccache --show-stats -v -v
+      #   if: ${{ always() }}
+      #   shell: msys2 {0}
+      
       
       #- name: Compile GRASS GIS
         #run: .github/workflows/build_osgeo4w.sh .
