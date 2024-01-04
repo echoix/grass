@@ -110,10 +110,25 @@ jobs:
           Deps2: >-
             ${{join('proj-devel,gdal-devel,geos-devel',  '_xy?')
             }}
-      - run: echo "$env:Deps2"
+      # - run: echo "$env:Deps2"
+      #   env:
+      #     Deps2: >-
+      #       ${{fromJson('proj-devel,gdal-devel,geos-devel')}}
+      - run: echo "1"
+     
+      - uses: actions/github-script@v7
+        id: osgeo4w-pkgs
+        with:
+          script: return env.Deps1.split(",");
         env:
-          Deps2: >-
-            ${{fromJson('proj-devel,gdal-devel,geos-devel')}}         
+          Deps1: >-
+            proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
+            ,cairo-devel, fftw,freetype-devel,gdal-ecw
+            ,gdal-mrsid, liblas-devel,libxdr libpq-devel,pdcurses
+            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
+            ,python3-wxpython,zstd-devel
+
+      - run: echo "${{ steps.osgeo4w-pkgs.outputs.result}}"
     
       # - run: echo "${{ fromJson( format('{"pkgs":[{0}]}', env.Deps2).pkgs ) }}"
       #   env:
