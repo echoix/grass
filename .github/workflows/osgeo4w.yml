@@ -156,7 +156,7 @@ jobs:
           val1: ${{ join(github.event.pull_request.labels.*.name,',')  }}
           val2: ${{ join(github.event.pull_request.labels.*.name)  }}
           val3: ${{ join(github.event.pull_request.labels.*.name, '_')  }}
-          val4: ${{ github.event.pull_request.labels  }}
+          # val4: ${{ github.event.pull_request.labels  }}
           val5: ${{ toJson(github.event.pull_request.labels)  }}
 
       # - run: echo "${{ fromJson( format('{"pkgs":[{0}]}', env.Deps2).pkgs ) }}"
@@ -243,13 +243,15 @@ jobs:
           BASE_URL: https://download.osgeo.org/osgeo4w/v2
           FILE_NAME: osgeo4w-setup.exe
           Deps: >-
-            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-            ,cairo-devel,fftw,freetype-devel,gdal-ecw
-            ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-            ,python3-wxpython,zstd-devel
+            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,zstd-devel
             
       # removed: regex-devel,pdal-devel,
+      # Deps: >-
+      #   proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
+      #   ,cairo-devel,fftw,freetype-devel,gdal-ecw
+      #   ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
+      #   ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
+      #   ,python3-wxpython,zstd-devel
       # Deps: >- 
       #   proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,zstd-devel
       # Deps: >- 
