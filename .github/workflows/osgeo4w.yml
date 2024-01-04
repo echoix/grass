@@ -37,8 +37,6 @@ jobs:
           git config --global core.eol lf
       - run: |
           echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
       - uses: actions/github-script@v7
         id: osgeo4w-pkgs
         with:
@@ -196,6 +194,9 @@ jobs:
       #       !${{ env.PackageDir }}/*/*/*/gdal/gdal-dev
       #       !${{ env.PackageDir }}/*/*/setup.ini
 
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
       # - run: ccache -s -v -v
       #   if: ${{ always() }}
       #   shell: msys2 {0}
@@ -216,7 +217,7 @@ jobs:
       #     echo "ccache config:"
       #     ccache -p
       #   shell: msys2 {0}
-        
+
       - run: ls -la mswindows/osgeo4w/
         shell: msys2 {0}
       - run: ls -la /c/OSGeo4W/bin/
