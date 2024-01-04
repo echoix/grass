@@ -40,65 +40,21 @@ jobs:
       - uses: actions/github-script@v7
         id: osgeo4w-pkgs
         with:
-          # script: >-
-          #   return {"pkg": process.env.Deps1
-          #           .split(",").join(" ").split(" ").filter((x) => x != "")};
           result-encoding: string
           script: >-
-            return process.env.Deps1
+            return process.env.Deps
                     .split(",").join(" ").split(" ")
                     .filter((x) => x != "")
                     // .join(",");
                     .join(" -P ");
         env:
-          Deps1: >-
-            proj-devel,gdal-devel, geos-devel     libtiff-devel ,libpng-devel,netcdf-devel
-            ,cairo-devel, fftw,freetype-devel,gdal-ecw
-            ,gdal-mrsid, liblas-devel,libxdr libpq-devel,pdcurses
-            ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-            ,python3-wxpython,zstd-devel
+          Deps: >-
+            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,
+            netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,
+            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
+            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
+            python3-wxpython,zstd-devel
 
-      - run: echo "${{ steps.osgeo4w-pkgs.outputs.result}}"
-        env:
-          Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
-      - run: echo ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
-        env:
-          Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
-      - run: echo '${{ env.Deps3}}'
-        env:
-          Deps3: ${{ steps.osgeo4w-pkgs.outputs.result}}
-          # Deps4: ${{ join( steps.osgeo4w-pkgs.outputs.result.pkg, '_') }}
-          # Deps5: ${{  steps.osgeo4w-pkgs.outputs.result.pkg }}
-          # Deps6: ${{ join(fromJson(steps.osgeo4w-pkgs.outputs.result.pkg)) }}
-          # Deps7: ${{ fromJson(steps.osgeo4w-pkgs.outputs.result.pkg) }}
-          # Deps8: ${{ fromJson(steps.osgeo4w-pkgs.outputs.result) }}
-          Deps9: ${{ join( steps.osgeo4w-pkgs.outputs.result, '_') }}
-          Deps10: ${{ join( steps.osgeo4w-pkgs.outputs.result[*], '_') }}
-          Deps11: ${{ join( steps.osgeo4w-pkgs.outputs.result.*[0], '_') }}
-          Deps12: ${{ join( steps.osgeo4w-pkgs.outputs.result.* , '_') }}
-          Deps13: ${{ toJson( steps.osgeo4w-pkgs.outputs.result.*) }}
-          Deps14: ${{ toJson( steps.osgeo4w-pkgs.outputs.result[2]) }}
-          Deps15: ${{ toJson( steps.osgeo4w-pkgs.outputs.result[*]) }}
-          Deps16: ${{ toJson( steps.osgeo4w-pkgs.outputs.result) }}
-          Deps17: ${{ fromJson(toJson( steps.osgeo4w-pkgs.outputs.result)) }}
-          Deps18: ${{ toJson(fromJson(toJson( steps.osgeo4w-pkgs.outputs.result))) }}
-          Deps19: ${{ toJson(fromJson(toJson( steps.osgeo4w-pkgs.outputs.result))[3]) }}
-      - run: echo '${{ env.val1  }}'
-        env:
-          val1: ${{ join(github.event.pull_request.labels.*.name,',')  }}
-          val2: ${{ join(github.event.pull_request.labels.*.name)  }}
-          val3: ${{ join(github.event.pull_request.labels.*.name, '_')  }}
-          # val4: ${{ github.event.pull_request.labels  }}
-          val5: ${{ toJson(github.event.pull_request.labels)  }}
-
-      # - run: echo "${{ fromJson( format('{"pkgs":[{0}]}', env.Deps2).pkgs ) }}"
-      #   env:
-      #     Deps2: >-
-      #       proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-      #       ,cairo-devel,fftw,freetype-devel,gdal-ecw
-      #       ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-      #       ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-      #       ,python3-wxpython,zstd-devel
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
@@ -172,21 +128,7 @@ jobs:
           #   proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,zstd-devel
             
       # removed: regex-devel,pdal-devel,
-      # Deps: >-
-      #   proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel
-      #   ,cairo-devel,fftw,freetype-devel,gdal-ecw
-      #   ,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses
-      #   ,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32
-      #   ,python3-wxpython,zstd-devel
-      # Deps: >- 
-      #   proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,zstd-devel
-      # Deps: >- 
-      # proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,
-      # netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,
-      # gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
-      # python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
-      # python3-wxpython,zstd-devel
-      # - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length -Descending
+    
       # - name: Remove outdated OSGeo4W cached packages
       #   shell: msys2 {0}
       #   # First sed pattern: 
@@ -206,9 +148,7 @@ jobs:
       #   continue-on-error: true
       #   env:
       #     PackageDir: ${{ env.PackageDir }}
-      # - run: echo "${{ hashFiles( format('{0}{1}', env.PackageDir,'/**/proj-data**')) }}"
-  
-      # - run: Get-ChildItem -Path ${{ env.PackageDir }} -Recurse -File | sort length -Descending
+   
   
      # - name: Install OSGeo4W
      #   run: |
@@ -258,20 +198,12 @@ jobs:
         shell: msys2 {0}
       - run: ls -la /c/OSGeo4W/bin/
         shell: msys2 {0}
-      - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
-      - run: git ls-tree HEAD mswindows/osgeo4w/gdal-config
-        shell: msys2 {0}
       - run: pwd
         shell: msys2 {0}
       - run: ls -la mswindows/osgeo4w/
         shell: msys2 {0}
       - run: ls -la /c/OSGeo4W/bin/
         shell: msys2 {0}
-
-    
-      - run: ls -la /c/OSGeo4W/bin/
-        shell: msys2 {0}
-        
       - name: Compile GRASS GIS
         run: SRC="$(pwd)" ./mswindows/osgeo4w/build_osgeo4w.sh
         shell: msys2 {0}
