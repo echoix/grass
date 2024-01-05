@@ -24,12 +24,14 @@ exclude = '''
 
 [tool.pytest.ini_options]
 minversion = "6.0"
+# python_files = "*/gunittest/testsuite/test_*.py"
 python_files = "*/testsuite/test_*.py"
 addopts = """
     --ignore-glob='dist.*'
     --ignore-glob='bin.*'
     --ignore-glob='*/tests/data/*'
     --ignore-glob='*/testreport/*'
+    --ignore-glob='*/testsuite/data/*'
     --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
@@ -54,3 +56,12 @@ timeout = 300
 #     // "6",
 #     "--timeout=30"
 #   ]
+
+
+
+# "_PYTEST_RAISE": "1",
+# "GISBASE": "/usr/local/grass84",
+# "LD_LIBRARY_PATH": "/usr/local/grass84/lib"
+
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
