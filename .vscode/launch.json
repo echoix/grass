@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "name": "Python debug pytest collecting unittest",
+      "type": "python",
+      "request": "launch",
+
+      //   "program": "pytest --co  --override-ini=pythonpath='/usr/local/grass84/etc/python' -c '/workspace/grass/pyproject_unittest.toml' 'python/grass/gunittest'",
+      "module": "pytest",
+
+      "args": [
+        "--collect-only",
+        "--override-ini=pythonpath=/usr/local/grass84/etc/python",
+        "-c",
+        "/workspace/grass/pyproject_unittest.toml",
+        "/workspace/grass/python/grass/gunittest"
+      ],
+      "env": {
+        "_PYTEST_RAISE": "1",
+        "GISBASE": "/usr/local/grass84"
+      },
+
+      "justMyCode": false
+    }
+  ]
+}
