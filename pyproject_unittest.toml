@@ -65,3 +65,17 @@ timeout = 300
 
 # GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
 # GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" PATH="$GISBASE/bin:$PATH" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" PATH="$GISBASE/bin:$PATH" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" PATH="$GISBASE/bin:$PATH" grass --exec  pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+# grass --exec  pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+# grass --exec  pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+
+
+#   "python.testing.pytestArgs": [
+#     "-c",
+#     "/workspace/grass/pyproject.toml",
+#     "--override-ini=pythonpath=/usr/local/grass84/etc/python",
+#     "--timeout=30"
+#   ],

@@ -5,9 +5,17 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": [
+    // "-c",
+    // "/workspace/grass/pyproject.toml",
+    // "--override-ini=pythonpath=/usr/local/grass84/etc/python",
+    // "--override-ini=pythonpath=/usr/local/grass84/etc/python:${env:PYTHONPATH}",
+    // "--timeout=30",
+
     "-c",
-    "/workspace/grass/pyproject.toml",
-    "--override-ini=pythonpath=/usr/local/grass84/etc/python",
-    "--timeout=30"
+
+    "/workspace/grass/pyproject_unittest.toml",
+    // "/workspace/grass/python/grass/gunittest"
+    "--continue-on-collection-errors"
   ]
- }
+  // "python.testing.pytestPath": "pytest"
+}
