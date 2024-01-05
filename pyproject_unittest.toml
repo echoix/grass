@@ -35,3 +35,22 @@ addopts = """
     --ignore='raster/r.category/test_rcategory_doctest.txt'
 """
 timeout = 300
+
+
+# pyproject.toml
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c pyproject_unittest.toml
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml"
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
+# cd /workspace/grass/python/grass/gunittest 
+# grass --tmp-location XY --exec     python3 -m grass.gunittest.main     --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc     --min-success 100
+
+# vscode settings.json:
+# "python.testing.pytestEnabled": true,
+#   "python.testing.pytestArgs": [
+#     "-c",
+#     "/workspace/grass/pyproject.toml",
+#     "--override-ini=pythonpath=/usr/local/grass84/etc/python",
+#     // "--numprocesses",
+#     // "6",
+#     "--timeout=30"
+#   ]
