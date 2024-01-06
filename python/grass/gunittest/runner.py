@@ -43,8 +43,8 @@ class TestResult(unittest.TestResult):
     # included for compatibility with unittest's TestResult
     # where are also unused, so perhaps we can remove them
     # stream set to None and not included in interface, it would not make sense
-    def __init__(self, stream=None, descriptions=None, verbosity=None):
-        super().__init__(stream=stream, descriptions=descriptions, verbosity=verbosity)
+    def __init__(self, stream=None, descriptions=None, verbosity=2, **kwargs):
+        super().__init__(stream=stream, descriptions=descriptions, verbosity=verbosity, **kwargs)
         self.successes = []
 
     def addSuccess(self, test):
@@ -60,7 +60,8 @@ class TestResult(unittest.TestResult):
         # TODO: implement this
 
 
-class TextTestResult(TestResult):
+# class TextTestResult(unittest.TextTestResult, ):
+class TextTestResult(TestResult, unittest.TextTestResult):
     """A test result class that can print formatted text results to a stream.
 
     Used by TextTestRunner.
@@ -69,91 +70,90 @@ class TextTestResult(TestResult):
     separator1 = "=" * 70
     separator2 = "-" * 70
 
-    def __init__(self, stream, descriptions, verbosity):
-        super().__init__(stream=stream, descriptions=descriptions, verbosity=verbosity)
+    def __init__(self, stream, descriptions, verbosity, **kwargs):
+        super().__init__(
+            stream=stream, descriptions=descriptions, verbosity=verbosity, **kwargs
+        )
         self.stream = _WritelnDecorator(stream)
-        self.showAll = verbosity > 1
-        self.dots = verbosity == 1
-        self.descriptions = descriptions
 
         self.start_time = None
         self.end_time = None
         self.time_taken = None
 
-    def getDescription(self, test):
-        doc_first_line = test.shortDescription()
-        if self.descriptions and doc_first_line:
-            return "\n".join((str(test), doc_first_line))
-        else:
-            return str(test)
+    # def getDescription(self, test):
+    #     doc_first_line = test.shortDescription()
+    #     if self.descriptions and doc_first_line:
+    #         return "\n".join((str(test), doc_first_line))
+    #     else:
+    #         return str(test)
 
-    def startTest(self, test):
-        super().startTest(test)
-        if self.showAll:
-            self.stream.write(self.getDescription(test))
-            self.stream.write(" ... ")
-            self.stream.flush()
+    # def startTest(self, test):
+    #     super().startTest(test)
+    #     if self.showAll:
+    #         self.stream.write(self.getDescription(test))
+    #         self.stream.write(" ... ")
+    #         self.stream.flush()
 
     def addSuccess(self, test):
         super().addSuccess(test)
-        if self.showAll:
-            self.stream.writeln("ok")
-        elif self.dots:
-            self.stream.write(".")
-            self.stream.flush()
+        # if self.showAll:
+        #     self.stream.writeln("ok")
+        # elif self.dots:
+        #     self.stream.write(".")
+        #     self.stream.flush()
 
-    def addError(self, test, err):
-        super().addError(test, err)
-        if self.showAll:
-            self.stream.writeln("ERROR")
-        elif self.dots:
-            self.stream.write("E")
-            self.stream.flush()
+    # def addError(self, test, err):
+    #     super().addError(test, err)
+    #     if self.showAll:
+    #         self.stream.writeln("ERROR")
+    #     elif self.dots:
+    #         self.stream.write("E")
+    #         self.stream.flush()
 
-    def addFailure(self, test, err):
-        super().addFailure(test, err)
-        if self.showAll:
-            self.stream.writeln("FAIL")
-        elif self.dots:
-            self.stream.write("F")
-            self.stream.flush()
+    # def addFailure(self, test, err):
+    #     super().addFailure(test, err)
+    #     if self.showAll:
+    #         self.stream.writeln("FAIL")
+    #     elif self.dots:
+    #         self.stream.write("F")
+    #         self.stream.flush()
 
-    def addSkip(self, test, reason):
-        super().addSkip(test, reason)
-        if self.showAll:
-            self.stream.writeln("skipped {0!r}".format(reason))
-        elif self.dots:
-            self.stream.write("s")
-            self.stream.flush()
+    # def addSkip(self, test, reason):
+    #     super().addSkip(test, reason)
+    #     if self.showAll:
+    #         self.stream.writeln("skipped {0!r}".format(reason))
+    #     elif self.dots:
+    #         self.stream.write("s")
+    #         self.stream.flush()
 
-    def addExpectedFailure(self, test, err):
-        super().addExpectedFailure(test, err)
-        if self.showAll:
-            self.stream.writeln("expected failure")
-        elif self.dots:
-            self.stream.write("x")
-            self.stream.flush()
+    # def addExpectedFailure(self, test, err):
+    #     super().addExpectedFailure(test, err)
+    #     if self.showAll:
+    #         self.stream.writeln("expected failure")
+    #     elif self.dots:
+    #         self.stream.write("x")
+    #         self.stream.flush()
 
-    def addUnexpectedSuccess(self, test):
-        super().addUnexpectedSuccess(test)
-        if self.showAll:
-            self.stream.writeln("unexpected success")
-        elif self.dots:
-            self.stream.write("u")
-            self.stream.flush()
+    # def addUnexpectedSuccess(self, test):
+    #     super().addUnexpectedSuccess(test)
+    #     if self.showAll:
+    #         self.stream.writeln("unexpected success")
+    #     elif self.dots:
+    #         self.stream.write("u")
+    #         self.stream.flush()
 
-    def printErrors(self):
-        if self.dots or self.showAll:
-            self.stream.writeln()
-        self.printErrorList("ERROR", self.errors)
-        self.printErrorList("FAIL", self.failures)
+    # def printErrors(self):
+    #     if self.dots or self.showAll:
+    #         self.stream.writeln()
+    #     self.printErrorList("ERROR", self.errors)
+    #     self.printErrorList("FAIL", self.failures)
 
-    def printErrorList(self, flavour, errors):
-        for test, err in errors:
-            self.stream.writeln(self.separator1)
-            self.stream.writeln("%s: %s" % (flavour, self.getDescription(test)))
-            self.stream.writeln(self.separator2)
-            self.stream.writeln("%s" % err)
+    # def printErrorList(self, flavour, errors):
+    #     for test, err in errors:
+    #         self.stream.writeln(self.separator1)
+    #         self.stream.writeln("%s: %s" % (flavour, self.getDescription(test)))
+    #         self.stream.writeln(self.separator2)
+    #         self.stream.writeln("%s" % err)
 
     def setTimes(self, start_time, end_time, time_taken):
         self.start_time = start_time
