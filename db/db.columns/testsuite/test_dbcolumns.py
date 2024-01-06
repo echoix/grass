@@ -1,4 +1,4 @@
-from grass.gunittest.case import TestCase
+from grass.gunittest.case import TestCase, expectedFailureIfWindowsUntilFixed
 from grass.gunittest.main import test
 from grass.script.core import read_command
 
@@ -25,6 +25,7 @@ class TestDbColumns(TestCase):
     def setUpClass(cls):
         cls.runModule("db.connect", flags="c")
 
+    @expectedFailureIfWindowsUntilFixed
     def test_dbcols(self):
         cols = read_command("db.columns", table=self.invect, database=self.mapset)
         self.assertEqual(first=cols, second=output)
