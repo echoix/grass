@@ -1,7 +1,12 @@
 {
   "mypy-type-checker.importStrategy": "fromEnvironment",
-  "python.testing.unittestArgs": ["-v", "-s", ".", "-p", "testsuite/test_*.py"],
-
+  "python.testing.unittestArgs": [
+    "-v",
+    "-s",
+    ".",
+    "-p",
+    "testsuite/test_*.py"
+  ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": [
@@ -10,12 +15,26 @@
     // "--override-ini=pythonpath=/usr/local/grass84/etc/python",
     // "--override-ini=pythonpath=/usr/local/grass84/etc/python:${env:PYTHONPATH}",
     // "--timeout=30",
-
+    "--numprocesses",
+    "auto",
+    "-v",
+    // "-rfE",
     "-c",
-
-    "/workspace/grass/pyproject_unittest.toml",
+    "/workspaces/grass/pyproject_unittest.toml",
     // "/workspace/grass/python/grass/gunittest"
-    "--continue-on-collection-errors"
-  ]
-  // "python.testing.pytestPath": "pytest"
+    "--continue-on-collection-errors",
+    "--color=yes"
+  ],
+  "python.envFile": "${workspaceFolder}/.env",
+  "cmake.configureOnOpen": false,
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.testing.autoTestDiscoverOnSaveEnabled": false,
+  "python.analysis.inlayHints.pytestParameters": true,
+  // "python.testing.pytestPath": "pytest",
+  // "python.testing.pytestPath": "grass --tmp-location XY --exec pytest",
+  "makefile.buildBeforeLaunch": false,
+  "makefile.clearOutputBeforeBuild": false,
+  "makefile.configureAfterCommand": false,
+  "makefile.configureOnEdit": false,
+  "makefile.configureOnOpen": false
 }
