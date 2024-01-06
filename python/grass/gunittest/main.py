@@ -36,9 +36,10 @@ class GrassTestProgram(TestProgram):
         clean_outputs=True,
         unittest_argv=None,
         module=None,
-        verbosity=1,
+        verbosity=2,
         failfast=None,
-        catchbreak=None,
+        catchbreak=True,
+        **kwargs,
     ):
         """Prepares the tests in GRASS way and then runs the tests.
 
@@ -75,6 +76,7 @@ class GrassTestProgram(TestProgram):
                 failfast=failfast,
                 catchbreak=catchbreak,
                 buffer=buffer_stdout_stderr,
+                **kwargs,
             )
 
 
@@ -99,7 +101,7 @@ def test():
 
     # TODO: enable passing omit to exclude also gunittest or nothing
     program = GrassTestProgram(
-        module="__main__", exit_at_end=False, grass_location="all"
+        module="__main__", exit_at_end=False, grass_location="all", verbosity=verbosity
     )
     # TODO: check if we are in the directory where the test file is
     # this will ensure that data directory is available when it is requested
@@ -120,8 +122,10 @@ def discovery():
     Runs using::
         python main.py discovery [start_directory]
     """
-
-    program = GrassTestProgram(grass_location="nc", exit_at_end=False)
+    aaa = 1/0
+    program = GrassTestProgram(
+        grass_location="nc", exit_at_end=False, verbosity=verbosity
+    )
 
     sys.exit(not program.result.wasSuccessful())
 
@@ -153,7 +157,11 @@ def get_config(start_directory, config_file):
     return config_parser["gunittest"]
 
 
+verbosity = 1
+
+
 def main():
+
     parser = argparse.ArgumentParser(
         description="Run test files in all testsuite directories starting"
         " from the current one"
@@ -204,6 +212,14 @@ def main():
         action="store",
         type=str,
         help=f"Path to a configuration file (default: {CONFIG_FILENAME})",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbosity",
+        action="store_const",
+        const=2,
+        help="Verbose output",
     )
     args = parser.parse_args()
     gisdbase = args.gisdbase
