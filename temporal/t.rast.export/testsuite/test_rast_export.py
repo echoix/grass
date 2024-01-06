@@ -23,7 +23,7 @@ class TestRasterExport(TestCase):
     # pack = os.path.join(tmp, "pack")
 
     def tearDown(self) -> None:
-        shutil.rmtree(self.test_dir)
+        shutil.rmtree(self.tmp)
         return super().tearDown()
 
     def setUp(self) -> None:
