@@ -36,5 +36,7 @@
   "makefile.clearOutputBeforeBuild": false,
   "makefile.configureAfterCommand": false,
   "makefile.configureOnEdit": false,
-  "makefile.configureOnOpen": false
+  "makefile.configureOnOpen": false,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true
 }
