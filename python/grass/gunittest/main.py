@@ -36,7 +36,7 @@ class GrassTestProgram(TestProgram):
         clean_outputs: bool = True,
         unittest_argv=None,
         module=None,
-        verbosity=2,
+        verbosity: int = 2,
         failfast: bool | None = None,
         catchbreak=True,
         **kwargs,
@@ -82,9 +82,6 @@ class GrassTestProgram(TestProgram):
             )
             self._discovery_parser: argparse.ArgumentParser
 
-    # def parseArgs(self, argv: list[str]) -> None:
-    #     super().parseArgs(argv)
-
     def _getDiscoveryArgParser(
         self, parent: argparse.ArgumentParser
     ) -> argparse.ArgumentParser:
@@ -95,14 +92,11 @@ class GrassTestProgram(TestProgram):
     ) -> argparse.ArgumentParser:
         return super()._getMainArgParser(parent)  # type: ignore
 
-    def _initArgParsers(self):
+    def _initArgParsers(self) -> None:
         self.parent_parser = self._getParentArgParser()  # type: ignore
         self.parent_parser = getGrassTestProgramParser(self.parent_parser)
         self._main_parser = self._getMainArgParser(self.parent_parser)
         self._discovery_parser = self._getDiscoveryArgParser(self.parent_parser)
-        # self._discovery_parser = getGrassTestProgramParser(self._discovery_parser)
-        # self._discovery_parser = getGrassTestProgramParser(self._discovery_parser)
-        # self._main_parser = getGrassTestProgramParser(self._main_parser)
 
 
 def test():
@@ -298,52 +292,6 @@ def getGrassTestProgramParser(parent: argparse.ArgumentParser | None = None):
         type=str,
         help=f"Path to a configuration file (default: {CONFIG_FILENAME})",
     )
-    # parser.add_argument(
-    #     "--location",
-    #     dest="location",
-    #     action="store",
-    #     help="Name of location where to perform test",
-    #     required=True,
-    # )
-    # parser.add_argument(
-    #     "--location-type",
-    #     dest="location_type",
-    #     action="store",
-    #     default="nc",
-    #     help="Type of tests which should be run" " (tag corresponding to location)",
-    # )
-    # parser.add_argument(
-    #     "--grassdata",
-    #     dest="gisdbase",
-    #     action="store",
-    #     default=None,
-    #     help="GRASS data(base) (GISDBASE) directory" " (current GISDBASE by default)",
-    # )
-    # parser.add_argument(
-    #     "--output",
-    #     dest="output",
-    #     action="store",
-    #     default="testreport",
-    #     help="Output directory",
-    # )
-    # parser.add_argument(
-    #     "--min-success",
-    #     dest="min_success",
-    #     action="store",
-    #     default="100",
-    #     type=int,
-    #     help=(
-    #         "Minimum success percentage (lower percentage"
-    #         " than this will result in a non-zero return code; values 0-100)"
-    #     ),
-    # )
-    # parser.add_argument(
-    #     "--config",
-    #     dest="config",
-    #     action="store",
-    #     type=str,
-    #     help=f"Path to a configuration file (default: {CONFIG_FILENAME})",
-    # )
 
     return parser
 
@@ -351,10 +299,10 @@ def getGrassTestProgramParser(parent: argparse.ArgumentParser | None = None):
 main = GrassTestProgram
 
 if __name__ == "__main__":
-    # print("hello")
-    # main(module=None)
-
     # sys.exit(main_function())
+
+    # Taken from the __main__.py file, in order to override the usage suggestions
+    # at the top of the help description
     import os.path
 
     # We change sys.argv[0] to make help message more useful
