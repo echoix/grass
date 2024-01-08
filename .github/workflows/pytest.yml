@@ -38,7 +38,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-
+      - run: homebrew install make
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
