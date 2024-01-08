@@ -10,6 +10,7 @@ for details.
 """
 from __future__ import annotations
 import os
+import pathlib
 import sys
 import argparse
 import configparser
@@ -29,6 +30,8 @@ from .reporters import FileAnonymizer
 class GrassTestProgram(TestProgram):
     """A class to be used by individual test files (wrapped in the function)"""
 
+    gisdbase: str | os.PathLike | None = None
+
     def __init__(
         self,
         exit_at_end: bool = False,
@@ -39,6 +42,8 @@ class GrassTestProgram(TestProgram):
         verbosity: int = 2,
         failfast: bool | None = None,
         catchbreak=True,
+        min_success: int = 100,
+        results_dir: str = "testreport",
         **kwargs,
     ):
         """Prepares the tests in GRASS way and then runs the tests.
@@ -47,6 +52,10 @@ class GrassTestProgram(TestProgram):
         """
         self.test = None
         self.grass_location = grass_location
+        self.min_success = min_success
+
+        self.results_dir = results_dir
+
         # it is unclear what the exact behavior is in unittest
         # buffer stdout and stderr during tests
         buffer_stdout_stderr = False
@@ -98,6 +107,13 @@ class GrassTestProgram(TestProgram):
         self._main_parser = self._getMainArgParser(self.parent_parser)
         self._discovery_parser = self._getDiscoveryArgParser(self.parent_parser)
 
+    def parseArgs(self, argv: list[str]) -> None:
+        super().parseArgs(argv)
+        if self.gisdbase is None:
+            # here we already rely on being in GRASS session
+            gisdbase = gs.gisenv()["GISDBASE"]
+        return
+
 
 def test():
     """Run a test of a module."""
@@ -120,7 +136,7 @@ def test():
 
     # TODO: enable passing omit to exclude also gunittest or nothing
     program = GrassTestProgram(
-        module="__main__", exit_at_end=False, grass_location="all", verbosity=verbosity
+        module="__main__", exit_at_end=False, grass_location="all"
     )
     # TODO: check if we are in the directory where the test file is
     # this will ensure that data directory is available when it is requested
@@ -174,9 +190,6 @@ def get_config(start_directory, config_file):
         # Create an empty section if file is not available or section is not present.
         config_parser.read_dict({"gunittest": {}})
     return config_parser["gunittest"]
-
-
-verbosity = 1
 
 
 def main_function():
@@ -251,7 +264,7 @@ def getGrassTestProgramParser(parent: argparse.ArgumentParser | None = None):
         dest="location",
         action="store",
         help="Name of location where to perform test",
-        required=True,
+        # required=True,
     )
     group.add_argument(
         "--location-type",
@@ -269,7 +282,7 @@ def getGrassTestProgramParser(parent: argparse.ArgumentParser | None = None):
     )
     group.add_argument(
         "--output",
-        dest="output",
+        dest="results_dir",
         action="store",
         default="testreport",
         help="Output directory",

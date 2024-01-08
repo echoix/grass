@@ -8,9 +8,11 @@ for details.
 
 :authors: Vaclav Petras
 """
+from __future__ import annotations
 
 import os
 import datetime
+from typing import IO, Any
 import xml.sax.saxutils as saxutils
 import xml.etree.ElementTree as et
 import subprocess
@@ -27,10 +29,18 @@ from io import StringIO
 
 # TODO: change text_to_keyvalue to same sep as here
 # TODO: create keyvalue file and move it there together with things from checkers
-def keyvalue_to_text(keyvalue, sep="=", vsep="\n", isep=",", last_vertical=None):
-    if not last_vertical:
-        last_vertical = vsep == "\n"
-    items = []
+def keyvalue_to_text(
+    keyvalue: dict[str, str | Iterable | Any],
+    sep: str = "=",
+    vsep: str = "\n",
+    isep: str = ",",
+    last_vertical: bool | None = None,
+):
+    _last_vertical: bool = vsep == "\n"
+    if last_vertical is not None:
+        _last_vertical = last_vertical
+
+    items: list[str] = []
     for key, value in keyvalue.items():
         # TODO: use isep for iterables other than strings
         if not isinstance(value, str) and isinstance(value, Iterable):
@@ -38,7 +48,7 @@ def keyvalue_to_text(keyvalue, sep="=", vsep="\n", isep=",", last_vertical=None)
             value = isep.join(value)
         items.append("{key}{sep}{value}".format(key=key, sep=sep, value=value))
     text = vsep.join(items)
-    if last_vertical:
+    if _last_vertical:
         text = text + vsep
     return text
 
@@ -116,12 +126,12 @@ def get_source_url(path, revision, line=None):
         return "{tracurl}{path}?rev={revision}".format(**locals())
 
 
-def html_escape(text):
+def html_escape(text: str) -> str:
     """Escape ``'&'``, ``'<'``, and ``'>'`` in a string of data."""
     return saxutils.escape(text)
 
 
-def html_unescape(text):
+def html_unescape(text: str) -> str:
     """Unescape ``'&amp;'``, ``'&lt;'``, and ``'&gt;'`` in a string of data."""
     return saxutils.unescape(text)
 
@@ -295,27 +305,25 @@ def get_html_test_authors_table(directory, tests_authors):
     if not not_testing_authors:
         not_testing_authors = ["all recent authors contributed tests"]
 
-    test_authors = (
-        "<h3>Code and test authors</h3>"
-        '<p style="font-size: 60%"><em>'
-        "Note that determination of authors is approximate and only"
-        " recent code authors are considered."
-        "</em></p>"
-        "<table><tbody>"
-        "<tr><td>Test authors:</td><td>{file_authors}</td></tr>"
-        "<tr><td>Authors of tested code:</td><td>{code_authors}</td></tr>"
-        "<tr><td>Authors owing tests:</td><td>{not_testing}</td></tr>"
-        "</tbody></table>".format(
-            file_authors=", ".join(sorted(tests_authors)),
-            code_authors=", ".join(sorted(tested_dir_authors)),
-            not_testing=", ".join(sorted(not_testing_authors)),
-        )
-    )
+    file_authors: str = ", ".join(sorted(tests_authors))
+    code_authors: str = ", ".join(sorted(tested_dir_authors))
+    not_testing: str = ", ".join(sorted(not_testing_authors))
+    test_authors = f"""<h3>Code and test authors</h3>
+        <p style="font-size: 60%"><em>
+        Note that determination of authors is approximate and only
+         recent code authors are considered.
+        </em></p>
+        <table><tbody>
+        <tr><td>Test authors:</td><td>{file_authors}</td></tr>
+        <tr><td>Authors of tested code:</td><td>{code_authors}</td></tr>
+        <tr><td>Authors owing tests:</td><td>{not_testing}</td></tr>
+        </tbody></table>"""
+
     return test_authors
 
 
 class GrassTestFilesMultiReporter:
-    """Interface to multiple repoter objects
+    """Interface to multiple reporter objects
 
     For start and finish of the tests and of a test of one file,
     it calls corresponding methods of all contained reporters.
@@ -382,7 +390,18 @@ class GrassTestFilesMultiReporter:
 
 
 class GrassTestFilesCountingReporter:
-    def __init__(self):
+    failures: int = 0
+    errors: int = 0
+    skipped: int = 0
+    successes: int = 0
+    expected_failures: int = 0
+    unexpected_success: int = 0
+    total: int = 0
+
+    # main_start_time: datetime.datetime
+    # main_end_time: datetime.datetime = None
+
+    def __init__(self) -> None:
         self.test_files = None
         self.files_fail = None
         self.files_pass = None
@@ -390,9 +409,9 @@ class GrassTestFilesCountingReporter:
         self.file_pass_per = None
         self.file_fail_per = None
 
-        self.main_start_time = None
-        self.main_end_time = None
-        self.main_time = None
+        self.main_start_time: datetime.datetime | None = None
+        self.main_end_time: datetime.datetime | None = None
+        self.main_time: datetime.timedelta | None = None
 
         self.file_start_time = None
         self.file_end_time = None
@@ -407,9 +426,9 @@ class GrassTestFilesCountingReporter:
         # this might be moved to some report start method
         self.main_start_time = datetime.datetime.now()
 
-    def finish(self):
+    def finish(self) -> None:
         self.main_end_time = datetime.datetime.now()
-        self.main_time = self.main_end_time - self.main_start_time
+        self.main_time: datetime.timedelta = self.main_end_time - self.main_start_time
 
         assert self.test_files == self.files_fail + self.files_pass
         if self.test_files:
@@ -555,13 +574,15 @@ def success_to_html_percent(total, successes):
 class GrassTestFilesHtmlReporter(GrassTestFilesCountingReporter):
     unknown_number = UNKNOWN_NUMBER_HTML
 
-    def __init__(self, file_anonymizer, main_page_name="index.html"):
+    def __init__(
+        self, file_anonymizer, main_page_name: str | os.PathLike = "index.html"
+    ):
         super().__init__()
-        self.main_index = None
+        self.main_index: IO | None = None
         self._file_anonymizer = file_anonymizer
         self._main_page_name = main_page_name
 
-    def start(self, results_dir):
+    def start(self, results_dir: str | os.PathLike):
         super().start(results_dir)
         # having all variables public although not really part of API
         main_page_name = os.path.join(results_dir, self._main_page_name)
@@ -860,7 +881,7 @@ class GrassTestFilesKeyValueReporter(GrassTestFilesCountingReporter):
         self.modules = set()
         self.test_files_authors = set()
 
-    def finish(self):
+    def finish(self) -> None:
         super().finish()
 
         # this shoul be moved to some additional meta passed in constructor
@@ -870,7 +891,7 @@ class GrassTestFilesKeyValueReporter(GrassTestFilesCountingReporter):
         else:
             svn_revision = svn_info["revision"]
 
-        summary = {}
+        summary: dict[str, Any] = {}
         summary["files_total"] = self.test_files
         summary["files_successes"] = self.files_pass
         summary["files_failures"] = self.files_fail
@@ -1079,14 +1100,14 @@ class TestsuiteDirReporter:
         # TODO: create object from this, so that it can be passed from
         # one function to another
         # TODO: put the inside of for loop to another function
-        dir_failures = 0
-        dir_errors = 0
-        dir_skipped = 0
-        dir_successes = 0
-        dir_expected_failures = 0
-        dir_unexpected_success = 0
-        dir_total = 0
-        test_files_authors = []
+        dir_failures: int = 0
+        dir_errors: int = 0
+        dir_skipped: int = 0
+        dir_successes: int = 0
+        dir_expected_failures: int = 0
+        dir_unexpected_success: int = 0
+        dir_total: int = 0
+        test_files_authors: list[str] = []
 
         file_total = 0
         file_successes = 0

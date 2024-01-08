@@ -46,14 +46,11 @@ class TextTestResult(TestResult, unittest.TextTestResult):
     Used by TextTestRunner.
     """
 
-    separator1 = "=" * 70
-    separator2 = "-" * 70
-
     def __init__(self, stream, descriptions, verbosity, **kwargs):
         super().__init__(
             stream=stream, descriptions=descriptions, verbosity=verbosity, **kwargs
         )
-        self.stream = _WritelnDecorator(stream)
+        self.stream = _WritelnDecorator(stream)  # type: ignore
 
         self.start_time = None
         self.end_time = None
