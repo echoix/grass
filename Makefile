@@ -78,6 +78,7 @@ default:
 	@echo "Finished compilation: `date`" >> $(ERRORLOG)
 	@cat $(ERRORLOG)
 	@if [ `wc -l < "$(ERRORLOG)"` -gt 8 ] ; then false ; else true ; fi
+	$(MAKE) --version
 
 manifests:
 ifeq ($(MANIFEST),external)
