@@ -61,6 +61,8 @@ jobs:
       - name: Build and install
         shell: bash -l {0}
         run: source ./.github/workflows/macos_install.sh $HOME/install
+        env:
+          MAKEFLAGS: "-j --shuffle"
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
       - name: Check installed version
