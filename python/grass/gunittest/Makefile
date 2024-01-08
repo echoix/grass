@@ -8,12 +8,12 @@ GDIR = $(PYDIR)/grass
 DSTDIR = $(GDIR)/gunittest
 
 # TODO: add multireport multirunner
-MODULES = case gmodules loader runner checkers gutils invoker main reporters utils
+MODULES = case gmodules loader result runner checkers gutils invoker main reporters utils
 
-PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__ __main__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__ __main__)
 
-default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc
+default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc $(GDIR)/__main__.py $(GDIR)/__main__.pyc
 
 $(PYDIR):
 	$(MKDIR) $@
