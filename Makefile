@@ -55,6 +55,7 @@ FILES = AUTHORS CHANGES CITING COPYING GPL.TXT INSTALL.md REQUIREMENTS.md contri
 FILES_DST = $(patsubst %,$(ARCH_DISTDIR)/%,$(FILES))
 
 default:
+	@echo "make version: `$(MAKE) --version`
 	@echo "GRASS GIS $(GRASS_VERSION_MAJOR).$(GRASS_VERSION_MINOR).$(GRASS_VERSION_RELEASE) $(GRASS_VERSION_GIT) compilation log" \
 		> $(ERRORLOG)
 	@echo "--------------------------------------------------" >> $(ERRORLOG)
@@ -78,7 +79,6 @@ default:
 	@echo "Finished compilation: `date`" >> $(ERRORLOG)
 	@cat $(ERRORLOG)
 	@if [ `wc -l < "$(ERRORLOG)"` -gt 8 ] ; then false ; else true ; fi
-	$(MAKE) --version
 
 manifests:
 ifeq ($(MANIFEST),external)
