@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: grass.gunittest.main",
+            "name": "Python: grass.gunittest.main help",
             "type": "python",
             "request": "launch",
             "module": "grass.gunittest.main",
@@ -16,11 +16,24 @@
                 "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}/python",
                 // "PYTHONPATH":"${env:PYTHONPATH}:${workspaceFolder}/python:${GISBASE}/etc/python"
             },
-            // "python": "${command:python.interpreterPath}/../monkeytype run",
-            // "python": "${command:python.interpreterPath}/../",
-            // "pythonArgs": ["-m monkeytype run"],
             "justMyCode": true
-        },{
+        },
+        {
+            "name": "Python: grass.gunittest.main with args",
+            "type": "python",
+            "request": "launch",
+            "module": "grass.gunittest.main",
+            "args": [
+                "--grassdata",
+                "${env:HOME}"
+            ],
+            "env": {
+                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}/python",
+                // "PYTHONPATH":"${env:PYTHONPATH}:${workspaceFolder}/python:${GISBASE}/etc/python"
+            },
+            "justMyCode": true
+        },
+        {
             "name": "Python: grass.gunittest",
             "type": "python",
             "request": "launch",
