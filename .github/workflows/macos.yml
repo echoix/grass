@@ -23,6 +23,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - run: brew install make
       - name: Setup Mambaforge
         uses: conda-incubator/setup-miniconda@v3
         with:
