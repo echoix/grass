@@ -1,0 +1,72 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: grass.gunittest.main help",
+            "type": "python",
+            "request": "launch",
+            "module": "grass.gunittest.main",
+            "args": [
+                "--help"
+            ],
+            "env": {
+                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}/python",
+                // "PYTHONPATH":"${env:PYTHONPATH}:${workspaceFolder}/python:${GISBASE}/etc/python"
+            },
+            "justMyCode": true
+        },
+        {
+            "name": "Python: grass.gunittest.main with args",
+            "type": "python",
+            "request": "launch",
+            "module": "grass.gunittest.main",
+            "args": [
+                "--grassdata",
+                "${env:HOME}"
+            ],
+            "env": {
+                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}/python",
+                // "PYTHONPATH":"${env:PYTHONPATH}:${workspaceFolder}/python:${GISBASE}/etc/python"
+            },
+            "justMyCode": true
+        },
+        {
+            "name": "Python: grass.gunittest",
+            "type": "python",
+            "request": "launch",
+            "module": "grass.gunittest",
+            "args": [
+                "--help"
+            ],
+            "env": {
+                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}/python",
+                // "PYTHONPATH":"${env:PYTHONPATH}:${workspaceFolder}/python:${GISBASE}/etc/python"
+            },
+            // "python": "${command:python.interpreterPath}/../monkeytype run",
+            // "python": "${command:python.interpreterPath}/../",
+            // "pythonArgs": ["-m monkeytype run"],
+            "justMyCode": true
+        },
+        {
+            "name": "Python: grass.gunittest.main discover",
+            "type": "python",
+            "request": "launch",
+            "module": "grass.gunittest.main",
+            "args": [
+                "discover",
+                "--help"
+            ],
+            "env": {
+                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}/python",
+                // "PYTHONPATH":"${env:PYTHONPATH}:${workspaceFolder}/python:${GISBASE}/etc/python"
+            },
+            // "python": "${command:python.interpreterPath}/../monkeytype run",
+            // "python": "${command:python.interpreterPath}/../",
+            // "pythonArgs": ["-m monkeytype run"],
+            "justMyCode": true
+        }
+    ]
+}

@@ -16,6 +16,7 @@ import hashlib
 import uuid
 import unittest
 
+from platform import system
 from grass.pygrass.modules import Module
 from grass.exceptions import CalledModuleError
 from grass.script import text_to_string, encode, decode
@@ -34,6 +35,12 @@ from .utils import safe_repr
 from .gutils import is_map_in_mapset
 
 from io import StringIO
+
+
+def expectedFailureIfWindowsUntilFixed(test_item):
+    if system() == "Windows":
+        return unittest.expectedFailure(test_item)
+    return lambda func: func
 
 
 class TestCase(unittest.TestCase):

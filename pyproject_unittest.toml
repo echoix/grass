@@ -1,0 +1,81 @@
+[tool.black]
+line-length = 88
+target-version = ['py37', 'py38', 'py39', 'py310']
+include = '\.pyi?$'
+exclude = '''
+(
+    # exclude directories in the root of the project
+    /(
+          \.eggs
+        | \.git
+        | \.hg
+        | \.mypy_cache
+        | \.tox
+        | \.venv
+        | _build
+        | buck-out
+        | build
+        | bin\..*
+        | dist\..*
+    )/
+    | python/libgrass_interface_generator/
+)
+'''
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+# python_files = "*/gunittest/testsuite/test_*.py"
+python_files = "*/testsuite/test_*.py"
+addopts = """
+    --ignore-glob='dist.*'
+    --ignore-glob='bin.*'
+    --ignore-glob='*/tests/data/*'
+    --ignore-glob='*/testreport/*'
+    --ignore-glob='*/testsuite/data/*'
+    --ignore-glob='*/grass/pygrass/tests/*'
+    --doctest-glob='*doctest*.txt'
+    --ignore='raster/r.category/test_rcategory_doctest.txt'
+"""
+timeout = 300
+
+
+# pyproject.toml
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c pyproject_unittest.toml
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml"
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
+# cd /workspace/grass/python/grass/gunittest 
+# grass --tmp-location XY --exec     python3 -m grass.gunittest.main     --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc     --min-success 100
+
+# vscode settings.json:
+# "python.testing.pytestEnabled": true,
+#   "python.testing.pytestArgs": [
+#     "-c",
+#     "/workspace/grass/pyproject.toml",
+#     "--override-ini=pythonpath=/usr/local/grass84/etc/python",
+#     // "--numprocesses",
+#     // "6",
+#     "--timeout=30"
+#   ]
+
+
+
+# "_PYTEST_RAISE": "1",
+# "GISBASE": "/usr/local/grass84",
+# "LD_LIBRARY_PATH": "/usr/local/grass84/lib"
+
+# GISBASE="/usr/local/grass84" pytest --co  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest"
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" PATH="$GISBASE/bin:$PATH" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" PATH="$GISBASE/bin:$PATH" pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+# GISBASE="/usr/local/grass84" LD_LIBRARY_PATH="/usr/local/grass84/lib" PATH="$GISBASE/bin:$PATH" grass --exec  pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+# grass --exec  pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+# grass --exec  pytest  --verbose --showlocals  --override-ini=pythonpath="/usr/local/grass84/etc/python" -c "/workspace/grass/pyproject_unittest.toml" "python/grass/gunittest/" -v -rfE
+
+
+#   "python.testing.pytestArgs": [
+#     "-c",
+#     "/workspace/grass/pyproject.toml",
+#     "--override-ini=pythonpath=/usr/local/grass84/etc/python",
+#     "--timeout=30"
+#   ],

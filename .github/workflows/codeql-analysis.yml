@@ -29,6 +29,10 @@ jobs:
           - cpp
           - python
 
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
+        matrix.language }}
+      cancel-in-progress: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -58,6 +62,7 @@ jobs:
         env:
           CFLAGS: -std=gnu11
           CXXFLAGS: -std=c++11
+          MAKEFLAGS: -j --shuffle
         run: .github/workflows/build_ubuntu-22.04.sh $HOME/install
 
       - name: Perform CodeQL Analysis

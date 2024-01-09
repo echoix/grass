@@ -16,13 +16,16 @@ import os
 
 class TestRasterExtraction(TestCase):
     mapsets_to_remove = []
-    outfile = "rastlist.txt"
-    gisenv = SimpleModule("g.gisenv", get="MAPSET")
-    TestCase.runModule(gisenv, expecting_stdout=True)
-    old_mapset = gisenv.outputs.stdout.strip()
+    outfile: str = None
+    old_mapset = None
 
     @classmethod
     def setUpClass(cls):
+        cls.mapsets_to_remove = []
+        cls.outfile = "rastlist.txt"
+        gisenv = SimpleModule("g.gisenv", get="MAPSET")
+        TestCase.runModule(gisenv, expecting_stdout=True)
+        cls.old_mapset = gisenv.outputs.stdout.strip()
         os.putenv("GRASS_OVERWRITE", "1")
         for i in range(1, 7):
             mapset_name = "test%i" % i

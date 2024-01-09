@@ -12,14 +12,27 @@ for details.
 from grass.gunittest.case import TestCase
 import grass.script as gscript
 import os
+import shutil
 
 
 class TestRasterExport(TestCase):
-    tmp = gscript.tempdir()
-    float_ = os.path.join(tmp, "geotiffloat")
-    int_ = os.path.join(tmp, "geotifint")
-    grid = os.path.join(tmp, "grid")
-    pack = os.path.join(tmp, "pack")
+    # tmp = gscript.tempdir()
+    # float_ = os.path.join(tmp, "geotiffloat")
+    # int_ = os.path.join(tmp, "geotifint")
+    # grid = os.path.join(tmp, "grid")
+    # pack = os.path.join(tmp, "pack")
+
+    def tearDown(self) -> None:
+        shutil.rmtree(self.tmp)
+        return super().tearDown()
+
+    def setUp(self) -> None:
+        self.tmp = gscript.tempdir()
+        self.float_ = os.path.join(self.tmp, "geotiffloat")
+        self.int_ = os.path.join(self.tmp, "geotifint")
+        self.grid = os.path.join(self.tmp, "grid")
+        self.pack = os.path.join(self.tmp, "pack")
+        return super().setUp()
 
     @classmethod
     def setUpClass(cls):

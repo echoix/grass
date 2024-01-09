@@ -38,7 +38,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-
+      - run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install make
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
@@ -59,10 +61,12 @@ jobs:
 
       - name: Set number of cores for compilation
         run: |
-          echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
+          echo "MAKEFLAGS=-j$(nproc) --shuffle" >> $GITHUB_ENV
 
       - name: Build
-        run: .github/workflows/build_${{ matrix.os }}.sh $HOME/install
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          .github/workflows/build_${{ matrix.os }}.sh $HOME/install
 
       - name: Add the bin directory to PATH
         run: |

@@ -8,14 +8,15 @@ for details.
 
 :authors: Vaclav Petras
 """
-
+from __future__ import annotations
 import os
+import pathlib
 import sys
 import argparse
 import configparser
 from pathlib import Path
 
-from unittest.main import TestProgram
+from unittest import TestProgram
 
 import grass.script.core as gs
 
@@ -29,16 +30,21 @@ from .reporters import FileAnonymizer
 class GrassTestProgram(TestProgram):
     """A class to be used by individual test files (wrapped in the function)"""
 
+    gisdbase: str | os.PathLike | None = None
+
     def __init__(
         self,
-        exit_at_end,
-        grass_location,
-        clean_outputs=True,
+        exit_at_end: bool = False,
+        grass_location=None,
+        clean_outputs: bool = True,
         unittest_argv=None,
         module=None,
-        verbosity=1,
-        failfast=None,
-        catchbreak=None,
+        verbosity: int = 2,
+        failfast: bool | None = None,
+        catchbreak=True,
+        min_success: int = 100,
+        results_dir: str = "testreport",
+        **kwargs,
     ):
         """Prepares the tests in GRASS way and then runs the tests.
 
@@ -46,10 +52,16 @@ class GrassTestProgram(TestProgram):
         """
         self.test = None
         self.grass_location = grass_location
+        self.min_success = min_success
+
+        self.results_dir = results_dir
+
         # it is unclear what the exact behavior is in unittest
         # buffer stdout and stderr during tests
         buffer_stdout_stderr = False
 
+        if failfast is None:
+            failfast = False
         grass_loader = GrassTestLoader(grass_location=self.grass_location)
 
         text_result = TextTestResult(
@@ -75,7 +87,32 @@ class GrassTestProgram(TestProgram):
                 failfast=failfast,
                 catchbreak=catchbreak,
                 buffer=buffer_stdout_stderr,
+                **kwargs,
             )
+            self._discovery_parser: argparse.ArgumentParser
+
+    def _getDiscoveryArgParser(
+        self, parent: argparse.ArgumentParser
+    ) -> argparse.ArgumentParser:
+        return super()._getDiscoveryArgParser(parent)  # type: ignore
+
+    def _getMainArgParser(
+        self, parent: argparse.ArgumentParser
+    ) -> argparse.ArgumentParser:
+        return super()._getMainArgParser(parent)  # type: ignore
+
+    def _initArgParsers(self) -> None:
+        self.parent_parser = self._getParentArgParser()  # type: ignore
+        self.parent_parser = getGrassTestProgramParser(self.parent_parser)
+        self._main_parser = self._getMainArgParser(self.parent_parser)
+        self._discovery_parser = self._getDiscoveryArgParser(self.parent_parser)
+
+    def parseArgs(self, argv: list[str]) -> None:
+        super().parseArgs(argv)
+        if self.gisdbase is None:
+            # here we already rely on being in GRASS session
+            gisdbase = gs.gisenv()["GISDBASE"]
+        return
 
 
 def test():
@@ -120,8 +157,10 @@ def discovery():
     Runs using::
         python main.py discovery [start_directory]
     """
-
-    program = GrassTestProgram(grass_location="nc", exit_at_end=False)
+    aaa = 1 / 0
+    program = GrassTestProgram(
+        grass_location="nc", exit_at_end=False, verbosity=verbosity
+    )
 
     sys.exit(not program.result.wasSuccessful())
 
@@ -153,58 +192,9 @@ def get_config(start_directory, config_file):
     return config_parser["gunittest"]
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Run test files in all testsuite directories starting"
-        " from the current one"
-        " (runs on active GRASS session)"
-    )
-    parser.add_argument(
-        "--location",
-        dest="location",
-        action="store",
-        help="Name of location where to perform test",
-        required=True,
-    )
-    parser.add_argument(
-        "--location-type",
-        dest="location_type",
-        action="store",
-        default="nc",
-        help="Type of tests which should be run" " (tag corresponding to location)",
-    )
-    parser.add_argument(
-        "--grassdata",
-        dest="gisdbase",
-        action="store",
-        default=None,
-        help="GRASS data(base) (GISDBASE) directory" " (current GISDBASE by default)",
-    )
-    parser.add_argument(
-        "--output",
-        dest="output",
-        action="store",
-        default="testreport",
-        help="Output directory",
-    )
-    parser.add_argument(
-        "--min-success",
-        dest="min_success",
-        action="store",
-        default="100",
-        type=int,
-        help=(
-            "Minimum success percentage (lower percentage"
-            " than this will result in a non-zero return code; values 0-100)"
-        ),
-    )
-    parser.add_argument(
-        "--config",
-        dest="config",
-        action="store",
-        type=str,
-        help=f"Path to a configuration file (default: {CONFIG_FILENAME})",
-    )
+def main_function():
+    parser = getGrassTestProgramParser()
+
     args = parser.parse_args()
     gisdbase = args.gisdbase
     if gisdbase is None:
@@ -256,5 +246,83 @@ def main():
     return 1
 
 
+def getGrassTestProgramParser(parent: argparse.ArgumentParser | None = None):
+    if parent is None:
+        parent = argparse.ArgumentParser()
+
+    parser = argparse.ArgumentParser(parents=[parent], add_help=False)
+    parser.description = (
+        "Run test files in all testsuite directories starting"
+        " from the current one"
+        " (runs on active GRASS session)"
+    )
+    group = parser.add_argument_group(
+        "grass.gunittest options", "Options related to GRASS gunittest module"
+    )
+    group.add_argument(
+        "--location",
+        dest="location",
+        action="store",
+        help="Name of location where to perform test",
+        # required=True,
+    )
+    group.add_argument(
+        "--location-type",
+        dest="location_type",
+        action="store",
+        default="nc",
+        help="Type of tests which should be run" " (tag corresponding to location)",
+    )
+    group.add_argument(
+        "--grassdata",
+        dest="gisdbase",
+        action="store",
+        default=None,
+        help="GRASS data(base) (GISDBASE) directory" " (current GISDBASE by default)",
+    )
+    group.add_argument(
+        "--output",
+        dest="results_dir",
+        action="store",
+        default="testreport",
+        help="Output directory",
+    )
+    group.add_argument(
+        "--min-success",
+        dest="min_success",
+        action="store",
+        default="100",
+        type=int,
+        help=(
+            "Minimum success percentage (lower percentage"
+            " than this will result in a non-zero return code; values 0-100)"
+        ),
+    )
+    group.add_argument(
+        "--config",
+        dest="config",
+        action="store",
+        type=str,
+        help=f"Path to a configuration file (default: {CONFIG_FILENAME})",
+    )
+
+    return parser
+
+
+main = GrassTestProgram
+
 if __name__ == "__main__":
-    sys.exit(main())
+    # sys.exit(main_function())
+
+    # Taken from the __main__.py file, in order to override the usage suggestions
+    # at the top of the help description
+    import os.path
+
+    # We change sys.argv[0] to make help message more useful
+    # use executable without path, unquoted
+    # (it's just a hint anyway)
+    # (if you have spaces in your executable you get what you deserve!)
+    executable = os.path.basename(sys.executable)
+    sys.argv[0] = executable + " -m grass.gunittest"
+    del os
+    main(module=None)
