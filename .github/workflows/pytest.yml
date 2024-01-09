@@ -64,7 +64,9 @@ jobs:
           echo "MAKEFLAGS=-j$(nproc) --shuffle" >> $GITHUB_ENV
 
       - name: Build
-        run: .github/workflows/build_${{ matrix.os }}.sh $HOME/install
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          .github/workflows/build_${{ matrix.os }}.sh $HOME/install
 
       - name: Add the bin directory to PATH
         run: |
