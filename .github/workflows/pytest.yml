@@ -40,7 +40,7 @@ jobs:
           cache: pip
       - run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          homebrew install make
+          brew install make
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
