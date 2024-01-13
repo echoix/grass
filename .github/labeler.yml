@@ -145,7 +145,6 @@ Python:
       - any-glob-to-any-file: 
         - '**/*.py'
         - '**/pyproject.toml'
-        - 'pyproject.toml'
 C:
   - changed-files:
       - any-glob-to-any-file: '**/*.c'
