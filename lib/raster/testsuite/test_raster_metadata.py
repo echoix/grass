@@ -5,8 +5,8 @@
 @copyright 2021 by Maris Nartiss and the GRASS Development Team
 
 @license This program is free software under the GNU General Public License (>=v2).
-Read the file COPYING that comes with GRASS
-for details
+    Read the file COPYING that comes with GRASS
+    for details
 """
 import random
 import string
