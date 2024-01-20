@@ -51,7 +51,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r .github/workflows/python_requirements.txt
           pip install -r .github/workflows/optional_requirements.txt
-          pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
+          pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist pytest-cov
 
       - name: Create installation directory
         run: |
@@ -75,11 +75,16 @@ jobs:
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-          pytest --numprocesses auto .
+          pytest --cov --numprocesses auto .
 
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   pytest-success:
     name: pytest Result
     needs:
