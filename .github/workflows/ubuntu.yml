@@ -69,10 +69,10 @@ jobs:
       - name: Build
         env:
           # TODO: -pedantic-errors here won't go through ./configure (with GNU C)
-          CFLAGS: -fPIC -Wvla --coverage
+          CFLAGS: -fPIC -Wvla -fprofile-arcs -ftest-coverage -g -O0 -fprofile-abs-path
           # TODO: -pedantic-errors here won't compile
-          CXXFLAGS: -fPIC --coverage
-          LDFLAGS: --coverage
+          CXXFLAGS: -fPIC -fprofile-arcs -ftest-coverage -g -O0 -fprofile-abs-path
+          LDFLAGS: -lgcov --coverage
         run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
       - name: Add the bin directory to PATH
