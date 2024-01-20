@@ -64,7 +64,9 @@ jobs:
       - name: Build
         run: .github/workflows/build_${{ matrix.os }}.sh $HOME/install
         env:
-          CFLAGS: '--coverage'
+          CFLAGS: '--coverage -O0 -g'
+          CXXFLAGS: '--coverage -O0 -g'
+          LDFLAGS: '--coverage'
 
       - name: Add the bin directory to PATH
         run: |
