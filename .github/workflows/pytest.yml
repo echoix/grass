@@ -90,6 +90,7 @@ jobs:
         with:
           verbose: true
           gcov: true
+          flags: pytest-python-${{ matrix.python-version }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
