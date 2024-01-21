@@ -213,7 +213,33 @@ jobs:
         with:
           name: bindist-${{ matrix.config }}
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -la -R
+      - run: chmod +x grass-*-*-*-install.sh
+      - name: Create installation directory
+        run: |
+          mkdir $HOME/install
+      - run: ./grass-*-*-*-install.sh grass-*-*-*.tar.gz $HOME/install/grass $HOME/install/bin
+      - name: Add the bin directory to PATH
+        run: |
+          echo "$HOME/install/bin" >> $GITHUB_PATH
+      - name: Set LD_LIBRARY_PATH for compilation
+        run: |
+          echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+
+      - name: Print installed versions
+        run: |
+          grass --version
+          grass --tmp-location XY --exec g.version -e
+          # Detailed Python version info (in one line thanks to echo)
+          grass --tmp-location XY --exec bash -c "echo Python: \$(\$GRASS_PYTHON -c 'import sys; print(sys.version)')"
+          python3 --version
+          python --version
+      # - name: Print installed versions
+      #   if: always()
+      #   run: .github/workflows/print_versions.sh
+
+      # - name: Test executing of the grass command
+      #   run: .github/workflows/test_simple.sh
 
   ignore-bindist-failures:
     needs:
