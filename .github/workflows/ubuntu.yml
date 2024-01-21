@@ -240,22 +240,22 @@ jobs:
           sudo apt install python3-coverage
       - run: >-
           sudo apt install 
-            gdal-bin
-            pdal
-            proj-bin
-            python3-dateutil
-            python3-matplotlib
-            python3-numpy
-            python3-pil
-            python3-ply
-            python3-pyvirtualdisplay
-            python3-termcolor
-            sqlite3
-            flex
-            libpng16-16
-            libzstd1
-            libcairo2
-            
+          gdal-bin
+          pdal
+          proj-bin
+          python3-dateutil
+          python3-matplotlib
+          python3-numpy
+          python3-pil
+          python3-ply
+          python3-pyvirtualdisplay
+          python3-termcolor
+          sqlite3
+          flex
+          libpng16-16
+          libzstd1
+          libcairo2
+
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
