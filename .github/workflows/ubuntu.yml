@@ -104,7 +104,7 @@ jobs:
       - name: Get dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y wget git gawk findutils
+          sudo apt-get install -y wget git gawk findutils python3-coverage
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
 
@@ -130,9 +130,10 @@ jobs:
       - name: Build
         env:
           # TODO: -pedantic-errors here won't go through ./configure (with GNU C)
-          CFLAGS: -fPIC -Wvla
+          CFLAGS: -fPIC -Wvla --coverage -g -O0 -fprofile-abs-path
           # TODO: -pedantic-errors here won't compile
-          CXXFLAGS: -fPIC
+          CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
+          LDFLAGS: --coverage
         run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
       - name: Add the bin directory to PATH
@@ -148,6 +149,8 @@ jobs:
 
       - name: Run tests
         run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+        env:
+          PYTHON: python3-coverage run --branch
 
       - name: Make HTML test report available
         if: ${{ always() }}
@@ -156,6 +159,16 @@ jobs:
           name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
           path: testreport
           retention-days: 3
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          verbose: true
+          gcov: true
+          flags: gunittest-${{ matrix.config }}
+          name: gunittest-${{ matrix.config }}-${{ matrix.extra-include }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build-and-test-success:
     name: Build & Test Result
