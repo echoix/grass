@@ -121,7 +121,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: testreport-${{ matrix.config }}
+          name: testreport-${{ matrix.config }}-${{ matrix.extra-exclude }}-${{ matrix.os }}
           path: testreport
           retention-days: 3
 
