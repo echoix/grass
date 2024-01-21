@@ -83,7 +83,7 @@ jobs:
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-          pytest --cov --cov-branch --numprocesses auto .
+          pytest --verbose --color=yes --cov --cov-branch --numprocesses auto .
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
