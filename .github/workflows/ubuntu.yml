@@ -104,6 +104,7 @@ jobs:
           verbose: true
           gcov: true
           flags: gunittest-${{ matrix.config }}
+          name: gunittest-${{ matrix.config }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
