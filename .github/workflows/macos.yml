@@ -23,6 +23,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - run: brew install make
       - name: Setup Mambaforge
         uses: conda-incubator/setup-miniconda@v3
         with:
@@ -60,6 +61,8 @@ jobs:
         run: mkdir $HOME/install
       - name: Build and install
         shell: bash -l {0}
+        env:
+          MAKEFLAGS: "-j 4 --shuffle"
         run: source ./.github/workflows/macos_install.sh $HOME/install
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
