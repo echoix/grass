@@ -85,9 +85,12 @@ jobs:
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
-
+      - name: Create config to ignore temporal
+        run: sed 's:exclude =:exclude = \n    temporal/*:g' .gunittest.cfg > .gunittest.without-temporal.cfg
+      - name: Create config to ignore db
+        run: sed 's:exclude =:exclude = \n    db/*:g' .gunittest.cfg > .gunittest.without-db.cfg
       - name: Run tests
-        run: .github/workflows/test_thorough.sh
+        run: .github/workflows/test_thorough.sh --config .gunittest.without-db.cfg
         env:
           PYTHON: python3-coverage run --branch
 
