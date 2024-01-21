@@ -16,11 +16,109 @@ on:
 jobs:
   ubuntu:
     name: ${{ matrix.name }} tests
+    needs: ubuntu-bindist
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
         matrix.name }}
       cancel-in-progress: true
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: "22.04"
+            os: ubuntu-22.04
+            config: ubuntu-22.04
+          # This is without optional things but it still keeps things useful,
+          # so, e.g., without OpenMP, but with PDAL. Code or tests should be written
+          # so that test pass even when these optional things are not present.
+          - name: minimum config
+            os: ubuntu-22.04
+            config: ubuntu-22.04_without_x
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - name: Get dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget git gawk findutils python3-coverage
+          xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
+              sudo apt-get install -y --no-install-recommends --no-install-suggests
+
+      - name: Create installation directory
+        run: |
+          mkdir $HOME/install
+
+      - name: Set number of cores for compilation
+        run: |
+          echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
+
+      - name: Set LD_LIBRARY_PATH for compilation
+        run: |
+          echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+
+      - name: Print build environment variables
+        shell: bash -el {0}
+        run: |
+          printenv | sort
+          gcc --version
+          ldd --version
+
+      - name: Build
+        env:
+          # TODO: -pedantic-errors here won't go through ./configure (with GNU C)
+          CFLAGS: -fPIC -Wvla --coverage -g -O0 -fprofile-abs-path
+          # TODO: -pedantic-errors here won't compile
+          CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
+          LDFLAGS: --coverage
+        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
+
+      - name: Add the bin directory to PATH
+        run: |
+          echo "$HOME/install/bin" >> $GITHUB_PATH
+
+      - name: Print installed versions
+        if: always()
+        run: .github/workflows/print_versions.sh
+
+      - name: Test executing of the grass command
+        run: .github/workflows/test_simple.sh
+
+      - name: Run tests
+        run: .github/workflows/test_thorough.sh
+        env:
+          PYTHON: python3-coverage run --branch
+
+      - name: Make HTML test report available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: testreport-${{ matrix.config }}
+          path: testreport
+          retention-days: 3
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          verbose: true
+          gcov: true
+          flags: gunittest-${{ matrix.config }}
+          name: gunittest-${{ matrix.config }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  ubuntu-bindist:
+    name: ${{ matrix.name }} bindist
+
+    concurrency:
+      group: ${{ github.workflow }}-bindist-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
+        matrix.name }}
+      cancel-in-progress: true
+    outputs:
+      output1: ${{ steps.artifact-upload-step.outputs.artifact-id }}
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -69,37 +167,164 @@ jobs:
       - name: Build
         env:
           # TODO: -pedantic-errors here won't go through ./configure (with GNU C)
-          CFLAGS: -fPIC -Wvla
+          CFLAGS: -fPIC -Wvla --coverage -g -O0 -fprofile-abs-path
           # TODO: -pedantic-errors here won't compile
-          CXXFLAGS: -fPIC
+          CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
+          LDFLAGS: --coverage
         run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
+      - run: make bindist
+      - run: ls -la -R
+      - name: Upload bindist artifacts
+        id: artifact-upload-step
+        uses: actions/upload-artifact@v4
+        with:
+          name: bindist-${{ matrix.config }}
+          path: |
+            grass-*-*-*.tar.gz
+            grass-*-*-*-install.sh
+          # grass-8.4.0dev-x86_64-pc-linux-gnu-21_01_2024.tar.gz
+          # grass-8.4.0dev-x86_64-pc-linux-gnu-21_01_2024-install.sh
+          retention-days: 3
+      - name: Upload instrumented OBJ artifacts
+        id: artifact-upload-step-obj
+        uses: actions/upload-artifact@v4
+        with:
+          name: obj-${{ matrix.config }}
+          path: |
+            **/BIN.*/**
+            **/OBJ.*/**
+          retention-days: 1
+
+  use-bindist-job:
+    name: ${{ matrix.name }} download bindist
+    needs:
+      - ubuntu-bindist
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: "22.04"
+            os: ubuntu-22.04
+            config: ubuntu-22.04
+          # This is without optional things but it still keeps things useful,
+          # so, e.g., without OpenMP, but with PDAL. Code or tests should be written
+          # so that test pass even when these optional things are not present.
+          - name: minimum config
+            os: ubuntu-22.04
+            config: ubuntu-22.04_without_x
+      fail-fast: false
+    steps:
+      - env:
+          OUTPUT1: ${{needs.ubuntu-bindist.outputs.output1}}
+        run: echo "Artifact ID from previous job is $OUTPUT1"
+      - uses: actions/download-artifact@v4
+        with:
+          name: bindist-${{ matrix.config }}
+      - name: Display structure of downloaded files
+        run: ls -la -R
+      - run: chmod +x grass-*-*-*-install.sh
+      - name: Create installation directory
+        run: |
+          mkdir $HOME/install
+      - run: ./grass-*-*-*-install.sh grass-*-*-*.tar.gz $HOME/install/grass $HOME/install/bin
       - name: Add the bin directory to PATH
         run: |
           echo "$HOME/install/bin" >> $GITHUB_PATH
+      - name: Set LD_LIBRARY_PATH for compilation
+        run: |
+          echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+
+      - name: Print installed versions
+        run: |
+          grass --version
+          grass --tmp-location XY --exec g.version -e
+          # Detailed Python version info (in one line thanks to echo)
+          grass --tmp-location XY --exec bash -c "echo Python: \$(\$GRASS_PYTHON -c 'import sys; print(sys.version)')"
+          python3 --version
+          python --version
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - run: |
+          sudo apt update
+          sudo apt install python3-coverage
+      - run: >-
+          sudo apt-get install -y --no-install-recommends --no-install-suggests
+          gdal-bin
+          pdal
+          proj-bin
+          python3-dateutil
+          python3-matplotlib
+          python3-numpy
+          python3-pil
+          python3-ply
+          python3-pyvirtualdisplay
+          python3-termcolor
+          sqlite3
+          flex
+          libpng16-16
+          libzstd1
+          libcairo2
+          libglu1-mesa
+          netcdf-bin
+          libopenblas0
+          libfftw3-bin
+          bzip2
+          libreadline8
+      - uses: actions/download-artifact@v4
+        with:
+          name: obj-${{ matrix.config }}
+
+      - name: Print installed versions
+        if: always()
+        run: .github/workflows/print_versions.sh
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
       - name: Run tests
         run: .github/workflows/test_thorough.sh
+        env:
+          PYTHON: python3-coverage run --branch
 
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: testreport-${{ matrix.config }}
+          name: testreport-bindist-${{ matrix.config }}
           path: testreport
           retention-days: 3
 
-      - name: Print installed versions
-        if: always()
-        run: .github/workflows/print_versions.sh
-  build-and-test-success:
-    name: Build & Test Result
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        if: ${{ always() }}
+        with:
+          verbose: true
+          gcov: true
+          flags: bindist-gunittest-${{ matrix.config }}
+          name: bindist-gunittest-${{ matrix.config }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  ignore-bindist-failures:
     needs:
-      - ubuntu
+      - ubuntu-bindist
+      - use-bindist-job
     if: ${{ always() }}
     uses: ./.github/workflows/verify-success.yml
     with:
       needs_context: ${{ toJson(needs) }}
+      fail_if_failure: false
+      fail_if_cancelled: false
+      fail_if_skipped: false
+      require_success: false
+
+  build-and-test-success:
+    name: Build & Test Result
+    needs:
+      - ubuntu
+      - ignore-bindist-failures
+    if: ${{ always() }}
+    uses: ./.github/workflows/verify-success.yml
+    with:
+      needs_context: ${{ toJson(needs) }}
+
