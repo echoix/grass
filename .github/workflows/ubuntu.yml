@@ -16,7 +16,8 @@ on:
 jobs:
   ubuntu:
     name: ${{ matrix.name }} tests
-
+    needs: ubuntu-bindist
+    
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
         matrix.name }}
@@ -109,11 +110,89 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  build-and-test-success:
-    name: Build & Test Result
+  ubuntu-bindist:
+    name: ${{ matrix.name }} bindist
+
+    concurrency:
+      group: ${{ github.workflow }}-bindist-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
+        matrix.name }}
+      cancel-in-progress: true
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: "22.04"
+            os: ubuntu-22.04
+            config: ubuntu-22.04
+          # This is without optional things but it still keeps things useful,
+          # so, e.g., without OpenMP, but with PDAL. Code or tests should be written
+          # so that test pass even when these optional things are not present.
+          - name: minimum config
+            os: ubuntu-22.04
+            config: ubuntu-22.04_without_x
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - name: Get dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget git gawk findutils
+          xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
+              sudo apt-get install -y --no-install-recommends --no-install-suggests
+
+      - name: Create installation directory
+        run: |
+          mkdir $HOME/install
+
+      - name: Set number of cores for compilation
+        run: |
+          echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
+
+      - name: Set LD_LIBRARY_PATH for compilation
+        run: |
+          echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+
+      - name: Print build environment variables
+        shell: bash -el {0}
+        run: |
+          printenv | sort
+          gcc --version
+          ldd --version
+
+      - name: Build
+        env:
+          # TODO: -pedantic-errors here won't go through ./configure (with GNU C)
+          CFLAGS: -fPIC -Wvla --coverage -g -O0 -fprofile-abs-path
+          # TODO: -pedantic-errors here won't compile
+          CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
+          LDFLAGS: --coverage
+        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
+
+      - run: make bindist
+      - run: ls -la -R
+
+  ignore-bindist-failures:
     needs:
-      - ubuntu
+      - ubuntu-bindist
     if: ${{ always() }}
     uses: ./.github/workflows/verify-success.yml
     with:
       needs_context: ${{ toJson(needs) }}
+      fail_if_failure: false
+      fail_if_cancelled: false
+      fail_if_skipped: false
+      require_success: false
+
+  build-and-test-success:
+    name: Build & Test Result
+    needs:
+      - ubuntu
+      - ignore-bindist-failures
+    if: ${{ always() }}
+    uses: ./.github/workflows/verify-success.yml
+    with:
+      needs_context: ${{ toJson(needs) }}
+
