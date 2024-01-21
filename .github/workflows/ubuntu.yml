@@ -234,12 +234,40 @@ jobs:
           grass --tmp-location XY --exec bash -c "echo Python: \$(\$GRASS_PYTHON -c 'import sys; print(sys.version)')"
           python3 --version
           python --version
-      # - name: Print installed versions
-      #   if: always()
-      #   run: .github/workflows/print_versions.sh
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - run: |
+          sudo apt update
+          sudo apt install python3-coverage
+      - name: Print installed versions
+        if: always()
+        run: .github/workflows/print_versions.sh
 
-      # - name: Test executing of the grass command
-      #   run: .github/workflows/test_simple.sh
+      - name: Test executing of the grass command
+        run: .github/workflows/test_simple.sh
+
+      - name: Run tests
+        run: .github/workflows/test_thorough.sh
+        env:
+          PYTHON: python3-coverage run --branch
+
+      - name: Make HTML test report available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: testreport-${{ matrix.config }}
+          path: testreport
+          retention-days: 3
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        if: ${{ always() }}
+        with:
+          verbose: true
+          gcov: true
+          flags: gunittest-${{ matrix.config }}
+          name: gunittest-${{ matrix.config }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   ignore-bindist-failures:
     needs:
