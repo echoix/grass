@@ -19,12 +19,31 @@ jobs:
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.name }}
+        matrix.name }}-${{ matrix.extra-exclude }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        extra-exclude:
+          # All primary subfolders that could contain tests are:
+          # - >-
+          #   db/* display/* doc/* docker/* general/* gui/*
+          #   imagery/* misc/* ps/* python/* raster/* raster3d/* scripts/*
+          #   temporal/*
+          #   testsuite/* utils/* vector/* visualization/*
+          #
+          # Using folded YAML multiline string block chomping (>-) to replace
+          # newlines with spaces, and strip newline at end.
+          # See https://yaml-multiline.info/
+          #
+          # The goal is have complementary exclusions to avoid repeating tests
+          - >-
+            temporal/*
+          - >-
+            db/* display/* doc/* docker/* general/* gui/*
+            imagery/* misc/* ps/* python/* raster/* raster3d/* scripts/*
+            testsuite/* utils/* vector/* visualization/*
         include:
           - name: "22.04"
             os: ubuntu-22.04
@@ -85,12 +104,13 @@ jobs:
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
-      - name: Create config to ignore temporal
-        run: sed 's:exclude =:exclude = \n    temporal/*:g' .gunittest.cfg > .gunittest.without-temporal.cfg
-      - name: Create config to ignore db
-        run: sed 's:exclude =:exclude = \n    ./db/* ./general/*:g' .gunittest.cfg > .gunittest.without-db.cfg
+      - name: Add extra exclusions to a gunittest config file
+        run: |
+          sed 's:exclude =:exclude = ${{ matrix.extra-exclude
+          }}:g' .gunittest.cfg > .gunittest.extra.cfg
+ 
       - name: Run tests
-        run: .github/workflows/test_thorough.sh --config .gunittest.without-db.cfg
+        run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: python3-coverage run --branch
 
