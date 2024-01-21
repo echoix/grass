@@ -255,6 +255,12 @@ jobs:
           libpng16-16
           libzstd1
           libcairo2
+          libglu1-mesa
+          netcdf-bin
+          libopenblas0
+          libfftw3-bin
+          bzip2
+          libreadline8
 
       - name: Print installed versions
         if: always()
@@ -282,8 +288,8 @@ jobs:
         with:
           verbose: true
           gcov: true
-          flags: gunittest-${{ matrix.config }}
-          name: gunittest-${{ matrix.config }}
+          flags: bindist-gunittest-${{ matrix.config }}
+          name: bindist-gunittest-${{ matrix.config }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
