@@ -17,7 +17,7 @@ jobs:
   ubuntu:
     name: ${{ matrix.name }} tests
     needs: ubuntu-bindist
-    
+
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
         matrix.name }}
@@ -172,6 +172,8 @@ jobs:
         run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
       - run: make bindist
+        env:
+          MAKEFLAGS: ''
       - run: ls -la -R
 
   ignore-bindist-failures:
