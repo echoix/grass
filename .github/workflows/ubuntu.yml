@@ -44,6 +44,9 @@ jobs:
             db/* display/* doc/* docker/* general/* gui/*
             imagery/* misc/* ps/* python/* raster/* raster3d/* scripts/*
             testsuite/* utils/* vector/* visualization/*
+        config:
+          - ubuntu-22.04_without_x
+          - ubuntu-22.04
         include:
           - name: "22.04"
             os: ubuntu-22.04
