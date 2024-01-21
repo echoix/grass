@@ -117,6 +117,8 @@ jobs:
       group: ${{ github.workflow }}-bindist-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
         matrix.name }}
       cancel-in-progress: true
+    outputs:
+      output1: ${{ steps.artifact-upload-step.outputs.artifact-id }}
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -172,13 +174,51 @@ jobs:
         run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
       - run: make bindist
-        env:
-          MAKEFLAGS: ''
       - run: ls -la -R
+      - name: Upload bindist artifacts
+        id: artifact-upload-step
+        uses: actions/upload-artifact@v4
+        with:
+          name: bindist-${{ matrix.config }}
+          path: |
+            grass-*-*-*.tar.gz
+            grass-*-*-*-install.sh
+          # grass-8.4.0dev-x86_64-pc-linux-gnu-21_01_2024.tar.gz
+          # grass-8.4.0dev-x86_64-pc-linux-gnu-21_01_2024-install.sh
+          retention-days: 3
+
+  use-bindist-job:
+    name: ${{ matrix.name }} download bindist
+    needs:
+      - ubuntu-bindist
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: "22.04"
+            os: ubuntu-22.04
+            config: ubuntu-22.04
+          # This is without optional things but it still keeps things useful,
+          # so, e.g., without OpenMP, but with PDAL. Code or tests should be written
+          # so that test pass even when these optional things are not present.
+          - name: minimum config
+            os: ubuntu-22.04
+            config: ubuntu-22.04_without_x
+      fail-fast: false
+    steps:
+      - env:
+          OUTPUT1: ${{needs.ubuntu-bindist.outputs.output1}}
+        run: echo "Artifact ID from previous job is $OUTPUT1"
+      - uses: actions/download-artifact@v4
+        with:
+          name: bindist-${{ matrix.config }}
+      - name: Display structure of downloaded files
+        run: ls -R
 
   ignore-bindist-failures:
     needs:
       - ubuntu-bindist
+      - use-bindist-job
     if: ${{ always() }}
     uses: ./.github/workflows/verify-success.yml
     with:
