@@ -19,12 +19,15 @@ jobs:
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.name }}-${{ matrix.extra-exclude }}
+        matrix.name }}-${{ matrix.extra-exclude }}-${{ matrix.os }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        name:
+          - "22.04"
+          - minimum config
         extra-exclude:
           # All primary subfolders that could contain tests are:
           # - >-
@@ -44,9 +47,6 @@ jobs:
             db/* display/* doc/* docker/* general/* gui/*
             imagery/* misc/* ps/* python/* raster/* raster3d/* scripts/*
             testsuite/* utils/* vector/* visualization/*
-        config:
-          - ubuntu-22.04_without_x
-          - ubuntu-22.04
         include:
           - name: "22.04"
             os: ubuntu-22.04
@@ -111,7 +111,7 @@ jobs:
         run: |
           sed 's:exclude =:exclude = ${{ matrix.extra-exclude
           }}:g' .gunittest.cfg > .gunittest.extra.cfg
- 
+
       - name: Run tests
         run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
