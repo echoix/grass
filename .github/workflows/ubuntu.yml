@@ -89,7 +89,7 @@ jobs:
       - name: Run tests
         run: .github/workflows/test_thorough.sh
         env:
-          PYTHON: python3-coverage run
+          PYTHON: python3-coverage run --branch
 
       - name: Make HTML test report available
         if: ${{ always() }}
