@@ -161,7 +161,7 @@ jobs:
         with:
           verbose: true
           gcov: true
-          flags: gunittest-${{ matrix.config }}
+          flags: gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{ matrix.extra-include }}
           name: gunittest-${{ matrix.config }}-${{ matrix.extra-include }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
