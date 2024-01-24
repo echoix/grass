@@ -148,7 +148,7 @@ jobs:
       - name: Run tests
         run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python3-coverage run --branch
+          PYTHON: python3-coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
 
       - name: Make HTML test report available
         if: ${{ always() }}
