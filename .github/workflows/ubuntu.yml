@@ -117,6 +117,9 @@ jobs:
       - name: Set LD_LIBRARY_PATH for compilation
         run: |
           echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+      - name: Set COVERAGE_PROCESS_START env variable
+        run: |
+          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
 
       - name: Print build environment variables
         shell: bash -el {0}
@@ -145,6 +148,11 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
+      - name: Place a sitecustomize.py file enabling subprocess code coverage
+        run: |
+          mkdir -p $(python -m site --user-site)
+          printf "import coverage\ncoverage.process_startup()" \
+            > "$(python -m site --user-site)/sitecustomize.py"
       - name: Run tests
         run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
