@@ -169,6 +169,13 @@ jobs:
           name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
           path: testreport
           retention-days: 3
+      - name: Make python-only code coverage test report available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
+          path: coverage_html_report
+          retention-days: 3
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
