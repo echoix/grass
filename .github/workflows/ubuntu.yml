@@ -157,7 +157,10 @@ jobs:
         run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: python3-coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
-
+      - run: python3-coverage combine
+      - name: Show python coverage report summary
+        run: python3-coverage report
+      - run: python3-coverage html
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@v4

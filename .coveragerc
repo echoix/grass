@@ -23,7 +23,6 @@ exclude_also =
     @(abc\.)?abstractmethod
 
 ignore_errors = True
-show_missing = true
 precision = 2
 
 [html]
