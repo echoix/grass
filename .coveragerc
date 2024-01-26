@@ -3,6 +3,12 @@ branch = True
 dynamic_context = test_function
 concurrency = multiprocessing,thread
 parallel = True
+data_file = ${INITIAL_PWD-.}/.coverage
+omit = ${INITIAL_PWD-.}/testreport
+source = 
+    ${INITIAL_PWD-.}/
+    ${INITIAL_GISBASE-/usr/local/grass84}/
+
 
 [report]
 ; Regexes for lines to exclude from consideration
@@ -16,8 +22,8 @@ exclude_also =
     raise NotImplementedError
 
     ; Don't complain if non-runnable code isn't run:
-    if 0:
-    if __name__ == .__main__.:
+    ; if 0:
+    ; if __name__ == .__main__.:
 
     ; Don't complain about abstract methods, they aren't run:
     @(abc\.)?abstractmethod

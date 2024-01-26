@@ -154,9 +154,10 @@ jobs:
           printf "import coverage\ncoverage.process_startup()" \
             > "$(python -m site --user-site)/sitecustomize.py"
       - name: Run tests
-        run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+        run: INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: python3-coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
+          INITIAL_GISBASE: $HOME/install/grass84
       - run: python3-coverage combine
       - name: Show python coverage report summary
         run: python3-coverage report
