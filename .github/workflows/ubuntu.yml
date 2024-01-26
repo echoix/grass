@@ -37,7 +37,7 @@ jobs:
           - scripts
           - >-
             db display doc docker general gui
-            imagery misc ps python raster raster3d scripts
+            imagery lib misc ps python raster raster3d scripts
             testsuite utils vector visualization
           # All root folders that could contain tests are:
           #   db display doc docker general gui
@@ -66,7 +66,7 @@ jobs:
         id: get-exclude
         run: |
           array=(db display doc docker general gui \
-          imagery misc ps python raster raster3d scripts \
+          imagery lib misc ps python raster raster3d scripts \
           temporal testsuite utils vector visualization)
           echo "Complete set of folders that can be included:"
           echo "${array[@]}"
