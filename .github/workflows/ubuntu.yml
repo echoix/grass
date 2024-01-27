@@ -43,6 +43,7 @@ jobs:
           # newlines with spaces, and strip newline at end.
           # See https://yaml-multiline.info/
           - temporal
+          - scripts
           - >-
             db display doc docker general gui
             imagery lib misc ps python raster raster3d scripts
@@ -119,6 +120,9 @@ jobs:
       - name: Set LD_LIBRARY_PATH for compilation
         run: |
           echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+      - name: Set COVERAGE_PROCESS_START env variable
+        run: |
+          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
 
       - name: Print build environment variables
         shell: bash -el {0}
@@ -147,11 +151,20 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
+      - name: Place a sitecustomize.py file enabling subprocess code coverage
+        run: |
+          mkdir -p $(python -m site --user-site)
+          printf "import coverage\ncoverage.process_startup()" \
+            > "$(python -m site --user-site)/sitecustomize.py"
       - name: Run tests
-        run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+        run: INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python3-coverage run --branch
-
+          PYTHON: python3-coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
+          INITIAL_GISBASE: $HOME/install/grass84
+      - run: python3-coverage combine
+      - name: Show python coverage report summary
+        run: python3-coverage report
+      - run: python3-coverage html
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -159,13 +172,20 @@ jobs:
           name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
           path: testreport
           retention-days: 3
+      - name: Make python-only code coverage test report available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
+          path: coverage_html_report
+          retention-days: 3
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
           verbose: true
           gcov: true
-          flags: gunittest-${{ matrix.config }}
+          flags: gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{ matrix.extra-include }}
           name: gunittest-${{ matrix.config }}-${{ matrix.extra-include }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
