@@ -62,6 +62,42 @@ jobs:
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - name: Invert inclusion list to an exclusion list
+        id: get-exclude
+        run: |
+          array=(db display doc docker general gui \
+          imagery lib misc ps python raster raster3d scripts \
+          temporal testsuite utils vector visualization)
+          echo "Complete set of folders that can be included:"
+          echo "${array[@]}"
+          delete=( ${{ env.DELETE_ARRAY }} )
+          echo "Included folders to remove from the complete set:"
+          echo "${delete[@]}"
+          for target in "${delete[@]}"; do
+            for i in "${!array[@]}"; do
+              if [[ ${array[i]} = $target ]]; then
+                unset 'array[i]'
+              fi
+            done
+          done
+          unset new_array
+          for i in "${!array[@]}"; do
+              new_array+=( "${array[i]}" )
+          done
+          echo "Excluded folders:"
+          echo "${new_array[@]}"
+          printf -v extra_exclude './%s/* ' "${new_array[@]}"
+          echo "Exclusion string to add to gunittest config"
+          echo "${extra_exclude}"
+          echo "extra-exclude=${extra_exclude}" >> "${GITHUB_OUTPUT}"
+        env:
+          DELETE_ARRAY: ${{ matrix.extra-include }}
+      - name: Add extra exclusions to a gunittest config file
+        run: |
+          sed 's:exclude =:exclude = ${{ 
+            steps.get-exclude.outputs.extra-exclude
+          }}:g' .gunittest.cfg > .gunittest.extra.cfg
+          cat .gunittest.extra.cfg
 
       - name: Invert inclusion list to an exclusion list
         id: get-exclude
@@ -104,7 +140,7 @@ jobs:
       - name: Get dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y wget git gawk findutils
+          sudo apt-get install -y wget git gawk findutils python3-coverage
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
 
@@ -119,6 +155,9 @@ jobs:
       - name: Set LD_LIBRARY_PATH for compilation
         run: |
           echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+      - name: Set COVERAGE_PROCESS_START env variable
+        run: |
+          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
 
       - name: Print build environment variables
         shell: bash -el {0}
@@ -130,9 +169,10 @@ jobs:
       - name: Build
         env:
           # TODO: -pedantic-errors here won't go through ./configure (with GNU C)
-          CFLAGS: -fPIC -Wvla
+          CFLAGS: -fPIC -Wvla --coverage -g -O0 -fprofile-abs-path
           # TODO: -pedantic-errors here won't compile
-          CXXFLAGS: -fPIC
+          CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
+          LDFLAGS: --coverage
         run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
       - name: Add the bin directory to PATH
@@ -146,9 +186,20 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
+      - name: Place a sitecustomize.py file enabling subprocess code coverage
+        run: |
+          mkdir -p $(python -m site --user-site)
+          printf "import coverage\ncoverage.process_startup()" \
+            > "$(python -m site --user-site)/sitecustomize.py"
       - name: Run tests
-        run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
-
+        run: INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+        env:
+          PYTHON: python3-coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
+          INITIAL_GISBASE: $HOME/install/grass84
+      - run: python3-coverage combine
+      - name: Show python coverage report summary
+        run: python3-coverage report
+      - run: python3-coverage html
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -156,6 +207,23 @@ jobs:
           name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
           path: testreport
           retention-days: 3
+      - name: Make python-only code coverage test report available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
+          path: coverage_html_report
+          retention-days: 3
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          verbose: true
+          gcov: true
+          flags: gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{ matrix.extra-include }}
+          name: gunittest-${{ matrix.config }}-${{ matrix.extra-include }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build-and-test-success:
     name: Build & Test Result
