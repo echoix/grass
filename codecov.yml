@@ -1,3 +1,9 @@
+codecov:
+    notify:
+        # do not notify until at least 7 builds have been uploaded from the CI pipeline
+        # Change when more or less uploads are made, to not receive a GitHub
+        # comment notification too early after only pytest has uploaded coverage
+        after_n_builds: 7
 coverage:
   status:
     project:
@@ -7,6 +13,7 @@ coverage:
     patch:
       default:
         informational: true
+
 component_management:
   # default_rules:  # default rules that will be inherited by all components
   #   statuses:
@@ -106,8 +113,6 @@ component_management:
       name: python library
       paths:
         - python/grass/**
-# comment:
-#   require_changes: true
 
 # When modifying this file, please validate using
 # curl -X POST --data-binary @codecov.yml https://codecov.io/validate
