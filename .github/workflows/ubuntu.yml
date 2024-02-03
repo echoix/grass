@@ -207,7 +207,7 @@ jobs:
           verbose: true
           # gcov: true
           flags: gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
-          name: gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
+          name: gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
           token: ${{ secrets.CODECOV_TOKEN }}
 
   build-and-test-success:
