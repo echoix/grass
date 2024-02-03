@@ -180,12 +180,12 @@ jobs:
       - name: Run tests
         run: INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python3-coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
+          PYTHON: coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
           INITIAL_GISBASE: $HOME/install/grass84
-      - run: python3-coverage combine
+      - run: coverage combine
       - name: Show python coverage report summary
-        run: python3-coverage report
-      - run: python3-coverage html
+        run: coverage report
+      - run: coverage html
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
