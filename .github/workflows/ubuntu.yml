@@ -91,6 +91,12 @@ jobs:
           echo "Exclusion string to add to gunittest config"
           echo "${extra_exclude}"
           echo "extra-exclude=${extra_exclude}" >> "${GITHUB_OUTPUT}"
+          echo "Inclusion string for tags"
+          printf -v extra_include_tag ' %s' "${delete[@]}"
+          extra_include_tag="${extra_include_tag:1}" # trim extra first space
+          extra_include_tag=${extra_include_tag// /-} # replace spaces by hyphens
+          echo "${extra_include_tag}"
+          echo "extra-include-tag=${extra_include_tag}" >> "${GITHUB_OUTPUT}"
         env:
           DELETE_ARRAY: ${{ matrix.extra-include }}
 
@@ -168,14 +174,14 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
+          name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
           path: testreport
           retention-days: 3
       - name: Make python-only code coverage test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
+          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
           path: coverage_html_report
           retention-days: 3
 
