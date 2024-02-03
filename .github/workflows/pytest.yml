@@ -92,11 +92,10 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           verbose: true
-          gcov: true
+          # gcov: true
           flags: pytest-python-${{ matrix.python-version }}
           name: pytest-python-${{ matrix.python-version }}
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   pytest-success:
     name: pytest Result
