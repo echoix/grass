@@ -76,14 +76,14 @@ jobs:
           echo "${delete[@]}"
           for target in "${delete[@]}"; do
             for i in "${!array[@]}"; do
-              if [[ ${array[i]} = $target ]]; then
+              if [[ ${array[i]} = "$target" ]]; then
                 unset 'array[i]'
               fi
             done
           done
           unset new_array
           for i in "${!array[@]}"; do
-              new_array+=( "${array[i]}" )
+            new_array+=( "${array[i]}" )
           done
           echo "Excluded folders:"
           echo "${new_array[@]}"
