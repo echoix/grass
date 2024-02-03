@@ -3,7 +3,7 @@ codecov:
         # do not notify until at least 7 builds have been uploaded from the CI pipeline
         # Change when more or less uploads are made, to not receive a GitHub
         # comment notification too early after only pytest has uploaded coverage
-        after_n_builds: 5
+        after_n_builds: 7
 coverage:
   status:
     project:
