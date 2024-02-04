@@ -73,6 +73,9 @@ jobs:
         run: |
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
+      - name: Reset gcov count data files after compilation
+        run: find . \( -name "*.gcda" -o -name "*.gcov" \) -delete
+
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
