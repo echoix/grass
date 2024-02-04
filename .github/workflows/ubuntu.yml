@@ -159,7 +159,7 @@ jobs:
           # TODO: -pedantic-errors here won't compile
           CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
           LDFLAGS: --coverage
-        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror -fprofile-dir=coverage.%p
+        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
       - name: Add the bin directory to PATH
         run: |

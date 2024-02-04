@@ -63,7 +63,7 @@ jobs:
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
 
       - name: Build
-        run: .github/workflows/build_${{ matrix.os }}.sh $HOME/install -fprofile-dir=coverage.%p
+        run: .github/workflows/build_${{ matrix.os }}.sh $HOME/install
         env:
           CFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
           CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
