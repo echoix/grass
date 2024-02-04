@@ -173,6 +173,9 @@ jobs:
           name: gu-before-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Reset gcov count data files after compilation
+        run: find . \( -name "*.gcda" -o -name "*.gcov" \) -delete
+
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
