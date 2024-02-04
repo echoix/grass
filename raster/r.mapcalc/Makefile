@@ -18,7 +18,7 @@ LIBES3 = $(CALCLIB) $(RASTER3DLIB) $(GISLIB) $(RASTERLIB) $(BTREELIB) $(READLINE
 default: multi
 
 $(BIN)/$(PGM2)$(EXE): LIBES = $(LIBES2)
-$(BIN)/$(PGM3)$(EXE): LIBES = $(LIBES3)
+$(BIN)/$(PGM3)$(EXE): LIBES = $(LIBES3) $(BIN)/$(PGM2)$(EXE)
 
 $(OBJDIR)/mapcalc.yy.o: mapcalc.tab.h
 
