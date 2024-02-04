@@ -22,7 +22,7 @@ fi
 makecmd="make"
 if [[ "$#" -ge 2 ]]; then
     ARGS=("$@")
-    makecmd="make CFLAGS='$CFLAGS ${ARGS[@]:1}' CXXFLAGS='$CXXFLAGS ${ARGS[@]:1}'"
+    makecmd="remake --trace --profile CFLAGS='$CFLAGS ${ARGS[@]:1}' CXXFLAGS='$CXXFLAGS ${ARGS[@]:1}'"
 fi
 
 # non-existent variables as an errors
@@ -52,4 +52,4 @@ export INSTALL_PREFIX=$1
     --with-netcdf
 
 eval $makecmd
-make install
+remake --trace --profile install
