@@ -11,7 +11,8 @@ HTMLSRC = $(SCRIPT)
 
 ETCDIR = $(ETC)/$(PGM)
 ETCPYFILES := $(patsubst %,$(ETCDIR)/%.py,$(ETCFILES))
-ETCPYCFILES := $(patsubst %,$(ETCDIR)/%.pyc,$(ETCFILES))
+# ETCPYCFILES := $(patsubst %,$(ETCDIR)/%.pyc,$(ETCFILES))
+ETCPYCFILES := $(join $(addsuffix $(PYCACHE_DIR)/, $(dir $(ETCPYFILES))), $(notdir $(ETCPYFILES:.py=.$(PY_CACHE_TAG).pyc)))
 
 include $(MODULE_TOPDIR)/include/Make/Rules.make
 include $(MODULE_TOPDIR)/include/Make/Html.make
@@ -23,13 +24,19 @@ SCRIPT_ACTIONS += $(BIN)/$(PGM).bat
 SCRIPT_DIR = %GISBASE%/scripts
 endif
 
-script: $(SCRIPT_ACTIONS)
+scriptdeps: $(SCRIPT_ACTIONS)
+	$(MAKE) -C $(MODULE_TOPDIR)/python/grass/script
+
+script: $(SCRIPT_ACTIONS) scriptdeps
 
 $(BIN)/$(PGM).bat: $(MODULE_TOPDIR)/scripts/windows_launch.bat
 	sed -e "s#SCRIPT_NAME#$(PGM)#" -e "s#SCRIPT_DIR#$(SCRIPT_DIR)#" $(MODULE_TOPDIR)/scripts/windows_launch.bat > $@
 	unix2dos $@
 
 scriptstrings: $(STRINGDIR)/$(PGM)_to_translate.c
+
+$(ETCPYCFILES): $(ETCPYFILES)
+	$(PYTHON) -m compileall $?
 
 install:
 	$(INSTALL) $(SCRIPT) $(INST_DIR)/scripts/

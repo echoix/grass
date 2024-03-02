@@ -66,30 +66,47 @@ CTYPESFLAGS = --no-embed-preamble --strip-build-path "$(ARCH_DISTDIR)" \
 EXTRA_CLEAN_FILES := $(wildcard ctypesgen/*.pyc) $(wildcard ctypesgen/*/*.pyc)
 EXTRA_CLEAN_DIRS := $(wildcard ctypesgen/__pycache__) $(wildcard ctypesgen/*/__pycache__)
 
-include $(MODULE_TOPDIR)/include/Make/Python.make
+# include $(MODULE_TOPDIR)/include/Make/Python.make
 
 PYDIR = $(ETC)/python
 GDIR = $(PYDIR)/grass
 DSTDIR = $(GDIR)/lib
 
 PYFILES  := $(patsubst %,$(DSTDIR)/%.py,$(MODULES))
-PYCFILES  := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES))
+# PYCFILES  := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES))
+# PYCFILES  := $(patsubst %,$(DSTDIR)/__pycache__/%.$(PY_CACHE_TAG).pyc,$(MODULES))
 LPYFILES := $(patsubst %,$(OBJDIR)/%.py,$(MODULES))
 
 COPY_FILES = ctypes_loader ctypes_preamble __init__
 PY_COPY_FILES = $(patsubst %,$(DSTDIR)/%.py,$(COPY_FILES))
-PYC_COPY_FILES = $(patsubst %,$(DSTDIR)/%.pyc,$(COPY_FILES))
+# PYC_COPY_FILES = $(patsubst %,$(DSTDIR)/%.pyc,$(COPY_FILES))
+# PYC_COPY_FILES = $(patsubst %,$(DSTDIR)/__pycache__/%.$(PY_CACHE_TAG).pyc,$(COPY_FILES))
+PYC_COPY_FILES = $(join $(addsuffix $(PYCACHE_DIR)/, $(dir $(PY_COPY_FILES))), $(notdir $(PY_COPY_FILES:.py=.$(PY_CACHE_TAG).pyc)))
+include $(MODULE_TOPDIR)/include/Make/Python.make
 
 ifeq ($(strip $(GRASS_LIBRARY_TYPE)),shlib)
 default:
 	$(MAKE) $(DSTDIR)
-	$(MAKE) $(LPYFILES) $(PYFILES) $(PYCFILES)
+	$(MAKE) $(LPYFILES) $(PYFILES)
 	$(MAKE) $(PY_COPY_FILES) $(PYC_COPY_FILES)
+	$(MAKE) pyc_compile
+#	$(MAKE) pyc_compile | PYFILES = $(LPYFILES)
+#	$(MAKE) pyc_compile | PYFILES = $(PY_COPY_FILES)
+# default:
+# 	$(MAKE) $(DSTDIR)
+# 	$(MAKE) $(LPYFILES) $(PYFILES) $(PYCFILES)
+# 	$(MAKE) $(PY_COPY_FILES) $(PYC_COPY_FILES)
+
+$(PYC_COPY_FILES): $(PY_COPY_FILES)
+	$(PYTHON) -m compileall $?
+
 else
 default:
 	@echo "Cannot build Python wrappers for static libraries" >&2
 	exit 1
 endif
+
+$(PYFILES): $(LPYFILES)
 
 $(PY_COPY_FILES): | $(DSTDIR)
 $(DSTDIR)/__init__.py: libgrass__init__.py
@@ -115,7 +132,12 @@ $(PYDIR):
 $(GDIR): | $(PYDIR)
 	$(MKDIR) $@
 
+# $(GDIR)/$(PYCACHE_DIR): | $(GDIR)
+# 	$(MKDIR) $@/$(PYCACHE_DIR)
+
 $(DSTDIR): | $(GDIR)
 	$(MKDIR) $@
+# $(MKDIR) $@/$(PYCACHE_DIR)
+
 
 .SECONDARY: $(patsubst %,%.py,$(MODULES)) $(patsubst %,%.py,$(COPY_FILES))
