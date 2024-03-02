@@ -10,6 +10,7 @@ $(HTMLDIR)/%.html: %.html %.tmp.html $(HTMLSRC) $(IMGDST) | $(HTMLDIR)
 $(MANDIR)/%.$(MANSECT): $(HTMLDIR)/%.html
 	$(HTML2MAN) "$<" "$@"
 
+# if [ "$(HTMLSRC)" != "" ] ; then $(call htmldesc,$<,$@) ; else touch "$@" ; fi
 %.tmp.html: $(HTMLSRC)
 	if [ "$(HTMLSRC)" != "" ] ; then $(call htmldesc,$<,$@) ; fi
 

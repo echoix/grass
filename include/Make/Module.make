@@ -12,6 +12,7 @@ include $(MODULE_TOPDIR)/include/Make/Compile.make
 
 ETCFILES_DST := $(patsubst %,$(ETC)/$(PGM)/%,$(ETCFILES))
 
+# cmd: $(BIN)/$(PGM)$(EXE) $(ETCFILES_DST)
 cmd: $(BIN)/$(PGM)$(EXE) $(ETCFILES_DST) html
 
 $(BIN)/$(PGM)$(EXE): $(ARCH_OBJS) $(DEPENDENCIES)
@@ -22,6 +23,8 @@ $(ETC)/$(PGM)/%: % | $(ETC)/$(PGM)
 
 $(ETC)/$(PGM):
 	$(MKDIR) $@
+
+# html: $(HTMLSRC)
 
 install:
 	$(INSTALL) $(ARCH_DISTDIR)/bin/$(PGM)$(EXE) $(INST_DIR)/bin/
@@ -36,3 +39,4 @@ install:
 	fi
 
 .PHONY: cmd
+# .PHONY: cmd html

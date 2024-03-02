@@ -1,6 +1,7 @@
 
 # common html rules (included by Html.make and GuiScript.make)
 
+# htmldesc = $(call run_grass,$(1) --html-description  | grep -v '</body>\|</html>\|</div> <!-- end container -->' > $(2))
 htmldesc = $(call run_grass,$(1) --html-description < /dev/null | grep -v '</body>\|</html>\|</div> <!-- end container -->' > $(2))
 
 IMGSRC := $(wildcard *.png) $(wildcard *.jpg) $(wildcard *.gif)
