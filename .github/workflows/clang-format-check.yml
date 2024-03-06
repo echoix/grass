@@ -65,13 +65,6 @@ jobs:
           tool_name: clang-format
           fail_on_error: true
           cleanup: false
-      - name: Add file suggestions
-        uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # v1.11.0
-        with:
-          tool_name: clang-format
-          fail_on_error: true
-          filter_mode: file
-          cleanup: false
       - name: Explain that more files need to be fixed
         if: ${{ steps.verify-changed-files.outputs.files_changed == 'true' }}
         run: |
