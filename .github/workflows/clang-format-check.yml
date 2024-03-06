@@ -57,7 +57,8 @@ jobs:
         uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # v1.11.0
         with:
           tool_name: clang-format
-          # fail_on_error: true
+          fail_on_error: true
+          cleanup: false
       - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         if: always()
         with:
@@ -67,4 +68,7 @@ jobs:
             ${{ steps.verify-changed-files.outputs.changed_files }}
       - name: Make job fail if changed files
         if: ${{ steps.verify-changed-files.outputs.files_changed == 'true' }}
-        run: exit 1
+        run: 
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo 'More formatting errors on other files might need to be fixed manually' >> "$GITHUB_STEP_SUMMARY"
+          exit 1
