@@ -42,7 +42,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
       - name: List all changed files tracked and untracked files
         run: |
-          echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
+          echo "Changed files: ${{ steps.git-changed-files.outputs.CHANGED_FILES }}"
       - name: Add job summary without changed files
         if: ${{ steps.verify-changed-files.outputs.files_changed == 'false' }}
         run: |
@@ -56,9 +56,11 @@ jobs:
           {
             echo '### Changed files:'
             echo '```'
-            git ls-files --other --modified --exclude-standard
+            echo "${CHANGED_FILES}"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          CHANGED_FILES: ${{ steps.git-changed-files.outputs.CHANGED_FILES }}
       - name: Add code suggestions
         uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # v1.11.0
         with:
