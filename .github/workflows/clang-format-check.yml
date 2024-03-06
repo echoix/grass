@@ -79,13 +79,7 @@ jobs:
           fail_on_error: true
           filter_mode: file
           cleanup: false
-      - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-        if: always()
-        with:
-          name: my-artifact
-          path: |
-            .clang-format
-            ${{ steps.git-changed-files.outputs.CHANGED_FILES }}
+
       - name: Explain that more files need to be fixed
         if: ${{ steps.verify-changed-files.outputs.files_changed == 'true' }}
         run: |
@@ -95,3 +89,10 @@ jobs:
             echo 'All the files above still need to be formatted, even without suggestions.'
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1
+      - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        if: always()
+        with:
+          name: my-artifact
+          path: |
+            .clang-format
+            ${{ steps.git-changed-files.outputs.CHANGED_FILES }}
