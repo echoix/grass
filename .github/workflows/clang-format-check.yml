@@ -78,9 +78,12 @@ jobs:
           path: |
             .clang-format
             ${{ steps.verify-changed-files.outputs.changed_files }}
-      - name: Make job fail if changed files
+      - name: Explain that more files need to be fixed
         if: ${{ steps.verify-changed-files.outputs.files_changed == 'true' }}
         run: |
-          echo '' >> "$GITHUB_STEP_SUMMARY"
-          echo 'More formatting errors on other files might need to be fixed manually' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo '' >> "$GITHUB_STEP_SUMMARY"
+            echo 'Suggestions can only be added near to lines changed in this PR.'
+            echo 'All the files above still need to be formatted, even without suggestions.'
+          } >> "$GITHUB_STEP_SUMMARY"
           exit 1
