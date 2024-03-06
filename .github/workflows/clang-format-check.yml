@@ -70,6 +70,7 @@ jobs:
             ${{ steps.verify-changed-files.outputs.changed_files }}
       - name: Make job fail if changed files
         if: ${{ steps.verify-changed-files.outputs.files_changed == 'true' }}
-        run: echo '' >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo '' >> "$GITHUB_STEP_SUMMARY"
           echo 'More formatting errors on other files might need to be fixed manually' >> "$GITHUB_STEP_SUMMARY"
           exit 1
