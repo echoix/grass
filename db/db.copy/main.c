@@ -18,16 +18,16 @@
 #include <grass/dbmi.h>
 #include <grass/glocale.h>
 
-int main(int argc, char **argv)
-{
-    int ret;
-    struct Option *from_driver, *from_database, *from_table;
+int main(int argc,   char **argv)
+{ 
+     int ret;
+    struct Option *  from_driver, *from_database, *from_table;
     struct Option *to_driver, *to_database, *to_table;
     struct Option *where, *select;
     struct GModule *module;
     const char *drv, *db;
 
-    G_gisinit(argv[0]);
+ G_gisinit(argv[0]);
 
     /* Set description */
     module = G_define_module();
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     from_table = G_define_standard_option(G_OPT_DB_TABLE);
     from_table->key = "from_table";
     from_table->description =
-        _("Input table name (only, if 'select' is not used)");
+        _("Input table name (only, if 'select' is not used)") ;
 
     to_driver = G_define_standard_option(G_OPT_DB_DRIVER);
     to_driver->key = "to_driver";
