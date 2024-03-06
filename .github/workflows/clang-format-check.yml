@@ -50,9 +50,14 @@ jobs:
           {
             echo '### Changed files:'
             echo '```'
-            echo '${{ steps.verify-changed-files.outputs.changed_files }}'
+            for i in $CHANGED_FILES
+            do
+              echo $i
+            done
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          CHANGED_FILES: ${{ steps.verify-changed-files.outputs.changed_files }}
       - name: Add code suggestions
         uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # v1.11.0
         with:
