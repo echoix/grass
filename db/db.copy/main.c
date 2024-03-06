@@ -18,13 +18,13 @@
 #include <grass/dbmi.h>
 #include <grass/glocale.h>
 
-int main(int argc, char **argv)
-{
+int main(int argc, char * *argv)
+ {
     int ret;
     struct Option *from_driver, *from_database, *from_table;
     struct Option *to_driver, *to_database, *to_table;
-    struct Option *where, *select;
-    struct GModule *module;
+    struct Option * where, *select;
+ struct   GModule * module                 ;
     const char *drv, *db;
 
     G_gisinit(argv[0]);
