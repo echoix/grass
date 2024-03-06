@@ -64,6 +64,13 @@ jobs:
           tool_name: clang-format
           fail_on_error: true
           cleanup: false
+      - name: Add file suggestions
+        uses: reviewdog/action-suggester@3d7fde6859623ad6174df5fd662677a0eb63310a # v1.11.0
+        with:
+          tool_name: clang-format
+          fail_on_error: true
+          filter_mode: file
+          cleanup: false
       - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         if: always()
         with:
