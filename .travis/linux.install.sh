@@ -13,6 +13,7 @@ sudo apt-get update -y
 dpkg -l | grep pdal
 apt rdepends libpdal-util13
 apt depends libpdal-base13
-apt depends libpdal-base16
+apt depends libpdal16
+apt depends libpdal-dev
+apt policy libpdal-dev
 apt policy pdal
-dpkg -l | grep -E "pdal16|pdal.*2\.5"
