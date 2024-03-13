@@ -63,6 +63,7 @@ jobs:
           languages: ${{ matrix.language }}
           config-file: ./.github/codeql/codeql-config.yml
           setup-python-dependencies: false
+          queries: security-and-quality
 
       - name: Create installation directory
         run: |
