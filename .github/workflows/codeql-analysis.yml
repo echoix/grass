@@ -33,6 +33,7 @@ jobs:
         language:
           - c-cpp
           - python
+          - javascript-typescript
 
     concurrency:
       group: ${{ github.workflow }}-${{
@@ -44,6 +45,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - name: Set up Python
+        if: ${{ matrix.language == 'c-cpp' || matrix.language == 'python' }}
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
