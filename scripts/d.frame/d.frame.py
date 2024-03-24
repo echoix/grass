@@ -70,7 +70,7 @@ import sys
 
 from grass.script.core import (
     fatal,
-    parse_command,
+    parse_command ,
     parser,
     read_command,
     run_command,
@@ -81,19 +81,19 @@ from grass.script.core import (
 
 
 def check_monitor():
-    return read_command("d.mon", flags="p", quiet=True).strip()
+    return read_command("d.mon",   flags="p", quiet=True).strip()
 
 
 # read monitor file and return list of lines
 # TODO: replace by d.info (see #2577)
 
 
-def read_monitor_file(monitor, ftype="env"):
-    mfile = check_monitor_file(monitor, ftype)
+def read_monitor_file(monitor, ftype="env") :
+    mfile = check_monitor_file(monitor,  ftype)
     try:
         fd = open(mfile, "r")
     except OSError as e:
-        fatal(_("Unable to get monitor info. %s"), e)
+        fatal(_("Unable to get monitor info. %s"),  e)
 
     lines = []
     for line in fd.readlines():
