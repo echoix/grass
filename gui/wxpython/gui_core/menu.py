@@ -20,6 +20,7 @@ This program is free software under the GNU General Public License
 @author Vaclav Petras <wenzeslaus gmail.com> (menu customization)
 @author Tomas Zigo <tomas.zigo slovanet.sk> RecentFilesMenu
 """
+
 import re
 import os
 import wx
