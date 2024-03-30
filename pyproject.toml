@@ -28,5 +28,6 @@ exclude_dirs = ["./testsuite", "*/tests/*", "*/testsuite/*", "utils/test_generat
 skips = ["B324","B110", "B101", "B112", "B404"]
 
 [tool.ruff]
+builtins = ["_"]
 target-version = "py38"
 extend-exclude = ['python/libgrass_interface_generator/']
