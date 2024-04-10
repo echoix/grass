@@ -51,7 +51,7 @@
               echo '${{ steps.verify-changed-files.outputs.changed_files }}'
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
-        - uses: parkerbxyz/suggest-changes@f5b10bcbfe35840153c0e823095d260d5abad1f9 # v1.0.0
+        - uses: parkerbxyz/suggest-changes@bc0675cfa742436438844ae57721de9a2c2e1d20 # v1.0.4
           with:
             comment: |
               Please commit the suggested changes from clang-format.
