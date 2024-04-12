@@ -38,8 +38,9 @@
             xperf -on DiagEasy
         - run: |
             git clone https://github.com/balsamleti/speedup-windows10.git
-            & 'Win 10 Disable Cortana Completely.bat'
+            "Win 10 Disable Cortana Completely.bat"
           working-directory: ${{ runner.temp }}
+          shell: cmd
         - name: Set git to use LF
           run: |
             git config --global core.autocrlf false
