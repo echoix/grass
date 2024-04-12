@@ -86,6 +86,7 @@ jobs:
         with:
           name: ETW
           path: C:\perf.etl
+          compression-level: 2
         
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
