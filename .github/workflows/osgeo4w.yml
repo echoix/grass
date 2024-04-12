@@ -27,8 +27,9 @@ jobs:
     steps:
       - name: Download WPT
         # https://go.microsoft.com/fwlink/?linkid=2243390
+        # Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2026036" -OutFile "C:\adksetup.exe"
         run: |
-          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2026036" -OutFile "C:\adksetup.exe"
+          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2243390" -OutFile "C:\adksetup.exe"
       - name: Install WPT
         run: |
           C:\adksetup.exe /q /norestart /features OptionId.WindowsPerformanceToolkit
