@@ -36,6 +36,10 @@
         - name: Start ETW Session
           run: |
             xperf -on DiagEasy
+        - run: |
+            taskkill /f /IM "SearchUI.exe"
+            ren "C:\Windows\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy\SearchUI.exe" "SearchUI.bak"
+          shell: cmd
         - name: Set git to use LF
           run: |
             git config --global core.autocrlf false
