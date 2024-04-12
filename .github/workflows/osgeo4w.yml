@@ -39,6 +39,7 @@
         - run: |
             git clone https://github.com/balsamleti/speedup-windows10.git
             dir
+            cd speedup-windows10
             & '.\Win 10 Disable Cortana Completely.bat'
           working-directory: ${{ runner.temp }}
         - name: Set git to use LF
