@@ -24,7 +24,6 @@ exclude = '''
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-#python_files = "*/tests/*_test.py"
 addopts = """
     --ignore-glob='*/testsuite/*'
     --ignore-glob='dist.*'
@@ -36,6 +35,5 @@ addopts = """
     --ignore='docker/testdata/test_grass_session.py'
     --ignore='gui/wxpython/mapdisp/test_mapdisp.py'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
-    --ignore='utils/test_generate_last_commit_file.py'
 """
 timeout = 300
