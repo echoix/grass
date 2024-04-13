@@ -24,8 +24,9 @@ exclude = '''
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-python_files = "*/tests/*_test.py"
+#python_files = "*/tests/*_test.py"
 addopts = """
+    --ignore-glob='*/testsuite/*'
     --ignore-glob='dist.*'
     --ignore-glob='bin.*'
     --ignore-glob='*/tests/data/*'
