@@ -32,6 +32,9 @@ addopts = """
     --ignore-glob='*/tests/data/*'
     --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
+    --ignore='docker/testdata/test_grass_python.py'
+    --ignore='docker/testdata/test_grass_session.py'
+    --ignore='gui/wxpython/mapdisp/test_mapdisp.py'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
 """
 timeout = 300
