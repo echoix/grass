@@ -17,13 +17,13 @@ fi
 
 # package patch number
 # e.g. 'r65400-1' for daily builds, '-1' for release
-if [ -z  $PACKAGE_PATCH ]; then
+if [ -z  "$PACKAGE_PATCH" ]; then
     PACKAGE_PATCH=1
 fi
 
 # package name
 # eg. '-daily' -> 'grass-daily', empty for release
-if [ -z $PACKAGE_POSTFIX ]; then
+if [ -z "$PACKAGE_POSTFIX" ]; then
     PACKAGE_POSTFIX=""
 fi
 
@@ -41,8 +41,8 @@ fetchenv() {
     args="$@"
     cmd.exe //c set >$srcenv
     cmd.exe //c "call `cygpath -sw $batch` $args \>nul 2\>nul \& set" >$dstenv
-    diff -u $srcenv $dstenv | sed -f mswindows/osgeo4w/envdiff.sed >$diffenv
-    . $diffenv
+    diff -u "$srcenv" "$dstenv" | sed -f mswindows/osgeo4w/envdiff.sed >"$diffenv"
+    . "$diffenv"
     PATH=$PATH:/usr/bin:/mingw64/bin/:$PWD/mswindows/osgeo4w/lib:$PWD/mswindows/osgeo4w:/c/windows32/system32:/c/windows:/c/windows32/system32:/c/windows
     rm -f $srcenv $dstenv $diffenv
 }
@@ -149,18 +149,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
 
 	mkdir -p mswindows/osgeo4w/lib
-	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
-	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
+	cp -uv ${OSGEO4W_ROOT_MSYS}/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
+	cp -uv ${OSGEO4W_ROOT_MSYS}/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
 
 	log configure
 	./configure \
 		--host=x86_64-w64-mingw32 \
-		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
-		--with-includes=$OSGEO4W_ROOT_MSYS/include \
-		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
-		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
-		--bindir=$OSGEO4W_ROOT_MSYS/bin \
-		--includedir=$OSGEO4W_ROOT_MSYS/include \
+		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--libexecdir="${OSGEO4W_ROOT_MSYS}/bin" \
+		--prefix="${OSGEO4W_ROOT_MSYS}/apps/grass" \
+		--bindir="${OSGEO4W_ROOT_MSYS}/bin" \
+		--includedir="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-opengl=windows \
 		--without-x \
 		--with-cxx \
@@ -168,29 +168,29 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--enable-largefile \
 		--with-fftw \
 		--with-freetype \
-		--with-freetype-includes=/mingw64/include/freetype2 \
-		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
-		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
+		--with-freetype-includes="/mingw64/include/freetype2" \
+		--with-proj-share="${OSGEO4W_ROOT_MSYS}/share/proj" \
+		--with-proj-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-proj-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-postgres \
-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
+		--with-postgres-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
 		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
 		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
 		--with-sqlite \
-		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
+		--with-sqlite-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-sqlite-libs="${OSGEO4W_ROOT_MSYS}/mswindows/osgeo4w/lib" \
 		--with-regex \
 		--with-nls \
 		--with-zstd \
 		--with-odbc \
-		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
+		--with-netcdf="${OSGEO4W_ROOT_MSYS}/bin/nc-config" \
 		--with-blas \
 		--with-lapack \
-		--with-lapack-includes=/mingw64/include \
+		--with-lapack-includes="/mingw64/include" \
 		--with-openmp \
 		--with-cairo \
-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
+		--with-cairo-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
 		--with-bzlib \
 		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \

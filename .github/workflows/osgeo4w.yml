@@ -26,47 +26,250 @@ jobs:
         os:
           - windows-2019
       fail-fast: false
-
     steps:
+      - name: Collect Workflow Telemetry
+        uses: catchpoint/workflow-telemetry-action@v1
+        with:
+          comment_on_pr: false
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
+      - run: |
+          echo "PackageDir=OSGeo4W_v2-Packages" >> $env:GITHUB_ENV
+      - uses: actions/github-script@v7
+        id: osgeo4w-pkgs
+        with:
+          result-encoding: string
+          script: >-
+            return process.env.Deps
+                    .split(",").join(" ").split(" ")
+                    .filter((x) => x != "")
+                    // .join(",");
+                    .join(" -P ");
+        env:
+          Deps: >-
+            proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,
+            netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,
+            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,
+            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,
+            python3-wxpython,zstd-devel
+
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - uses: msys2/setup-msys2@v2
         with:
           path-type: inherit
-          location: D:\
+          # location: D:\
+          msystem: mingw64
           update: true
-          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
-            mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
-            mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
-            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
-            mingw-w64-x86_64-pcre
+          # install: tar libintl bison flex git dos2unix zip 
+          pacboy: >-
+            tar: libintl: bison: flex: git: dos2unix: zip:
+            make: diffutils:p toolchain:p
+            fftw:p lapack:p pkgconf:p gcc:p ccache:p zlib:p libiconv:p bzip2:p gettext:p 
+            libsystre:p libtre-git:p libwinpthread-git:p libpng:p pcre:p
+      # not removed: mingw-w64-x86_64-libpng
 
+
+      # - name: Restore PROJ data cache
+      #   id: restore-proj-data
+      #   uses: actions/cache/restore@v3
+      #   with:
+      #     # The key here will never match, it will always use the restore-keys.
+      #     # Since we don't have a lockfile or a way of knowing which
+      #     # version of proj-data is needed used, we cannot have a better key.
+      #     key: OSGeo4W-proj-data-${{ env.PackageDir }}-
+      #     restore-keys: |
+      #       OSGeo4W-proj-data-${{ env.PackageDir }}-
+      #     path: ${{ env.PackageDir }}/**/proj-data**
+      # - name: Restore OSGeo4W package cache
+      #   id: restore-pkgs
+      #   uses: actions/cache/restore@v3
+      #   with:
+      #     # The key here will never match, it will always use the restore-keys.
+      #     # Since we don't have a lockfile or a way of knowing which
+      #     # dependencies were used, we cannot use hashfiles() on files that 
+      #     # don't exist yet.
+      #     key: OSGeo4W-packages-cache-${{ env.PackageDir }}-
+      #     restore-keys: |
+      #       OSGeo4W-packages-cache-${{ env.PackageDir }}-
+      #     path: |
+      #       ${{ env.PackageDir }}/*/*/*/*
+      #       !${{ env.PackageDir }}/*/*/*/proj/proj-data
+      #       !${{ env.PackageDir }}/*/*/*/gdal/gdal-dev
+      #       !${{ env.PackageDir }}/*/*/setup.ini
+      # - name: Save hashes of restored cache before update
+      #   id: restored-cache-hash
+      #   run: |
+      #     echo "proj-data=${{ hashfiles(
+      #       format('{0}/**/proj-data**', env.PackageDir) )
+      #     }}" >> "$env:GITHUB_OUTPUT"
+      #     echo "packages=${{ hashfiles(
+      #       format('{0}/**', env.PackageDir),
+      #       format('!{0}/**/proj-data**', env.PackageDir),
+      #       format('!{0}/**/gdal-dev/**', env.PackageDir),
+      #       format('!{0}/**/setup.ini', env.PackageDir) )
+      #     }}" >> "$env:GITHUB_OUTPUT"
+      # - run: echo "${{ hashFiles( format('{0}{1}', env.PackageDir,'/**/proj-data**')) }}"
+
+      - name: Download OSGeo4W
+        run: Invoke-WebRequest -Uri "${{ env.BASE_URL }}/${{ env.FILE_NAME }}"  -OutFile "${{ env.FILE_NAME }}"
+        env:
+          BASE_URL: https://download.osgeo.org/osgeo4w/v2
+          FILE_NAME: osgeo4w-setup.exe
       - name: Install OSGeo4W
         run: |
-          $exe = 'osgeo4w-setup.exe'
-          $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
-          (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
-            -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
+          .\"${{ env.FILE_NAME }}"  -A -g -k -q --no-desktop --no-shortcuts --no-startmenu -s ${{ env.BASE_URL }} -P ${{ env.Deps }} -l "${{ env.PackageDir }}" | Out-Default
         env:
-          Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
-            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
-            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
-            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-wxpython,regex-devel,zstd-devel"
+          BASE_URL: https://download.osgeo.org/osgeo4w/v2
+          FILE_NAME: osgeo4w-setup.exe
+          Deps: ${{ steps.osgeo4w-pkgs.outputs.result}}
+          # Deps: >-
+          #   proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-wxpython,zstd-devel
+            
+      # removed: regex-devel,pdal-devel,
+    
+      # - name: Remove outdated OSGeo4W cached packages
+      #   shell: msys2 {0}
+      #   # First sed pattern: 
+      #   #   Filters out the lines after the [prev] section until next blank line by
+      #   #   keeping lines between "@ osgeo4w-package-name" and "[prev]" or a blank line.
+      #   #   Adapted from: https://github.com/jef-n/OSGeo4W/blob/9b26e568b5660b9e18839076327cfdade769fcd9/scripts/build-helpers#L376
+      #   # Second sed pattern:
+      #   #   Keeps only the path subgroup of lines starting with `install:` or `license:`
+      #   #   Adapted from https://github.com/jef-n/OSGeo4W/blob/9b26e568b5660b9e18839076327cfdade769fcd9/scripts/build-inorder.pl#L22-L23
+      #   run: >-
+      #     pwd \n
+      #     find ${{ env.PackageDir }} -type f \(  ! -name "setup.ini"  $(
+      #       sed -rne '/^@ .*$/,/^(\[prev\])?$/p' setup.ini |
+      #       sed -nr 's/^(install|source|license):\s+(\S+)\s+[0-9]+\s+\S+/\2/p' |
+      #       xargs printf ' -a ! -path ${{ env.PackageDir }}/http*/%s\n'
+      #     ) \)
+      #   continue-on-error: true
+      #   env:
+      #     PackageDir: ${{ env.PackageDir }}
+   
+  
+     # - name: Install OSGeo4W
+     #   run: |
+     #     $exe = 'osgeo4w-setup.exe'
+     #     $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
+     #     (New-Object System.Net.WebClient).DownloadFile($url, $exe)
+     #     Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
+     #       -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
+     #   env:
+     #     Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
+     #       pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
+     #       gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
+     #       python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
+     #       python3-wxpython,regex-devel,zstd-devel"
+     #   shell: pwsh
+      
+      # - name: Get hashes of caches to save
+      #   id: save-cache-hash
+      #   run: |
+      #     echo "proj-data=${{ hashfiles(
+      #       format('{0}/**/proj-data**', env.PackageDir) )
+      #     }}" >> "$env:GITHUB_OUTPUT"
+      #     echo "packages=${{ hashfiles(
+      #       format('{0}/**', env.PackageDir),
+      #       format('!{0}/**/proj-data**', env.PackageDir),
+      #       format('!{0}/**/gdal-dev/**', env.PackageDir),
+      #       format('!{0}/**/setup.ini', env.PackageDir) )
+      #     }}" >> "$env:GITHUB_OUTPUT"
+      # - name: Save proj-data cache
+      #   if: ${{ steps.restored-cache-hash.outputs.proj-data != steps.save-cache-hash.outputs.proj-data }}
+      #   uses: actions/cache/save@v3
+      #   with:
+      #     key: OSGeo4W-proj-data-${{ env.PackageDir }}-${{ steps.save-cache-hash.outputs.proj-data  }}
+      #     path: ${{ env.PackageDir }}/**/proj-data**
+      # - name: Save OSGeo4W package cache
+      #   if: ${{ steps.restored-cache-hash.outputs.packages != steps.save-cache-hash.outputs.packages }}
+      #   uses: actions/cache/save@v3
+      #   with:
+      #     key: OSGeo4W-packages-cache-${{ env.PackageDir }}-${{ steps.save-cache-hash.outputs.packages  }}
+      #     path: |
+      #       ${{ env.PackageDir }}/*/*/*/*
+      #       !${{ env.PackageDir }}/*/*/*/proj/proj-data
+      #       !${{ env.PackageDir }}/*/*/*/gdal/gdal-dev
+      #       !${{ env.PackageDir }}/*/*/setup.ini
 
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+      # - run: ccache -s -v -v
+      #   if: ${{ always() }}
+      #   shell: msys2 {0}
+      # - name: Configure ccache settings
+      #   run: |
+      #     ccache --set-config=cache_dir='${{ github.workspace }}/.ccache'
+      #     ccache --set-config=max_size=500M
+      #     ccache --set-config=compression=true
+      #     echo "ccache config:"
+      #     ccache --show-config
+      #     ccache --zero-stats
+      #   shell: msys2 {0}
+      # - name: Configure ccache settings
+      #   run: |
+      #     ccache --set-config=cache_dir='${{ github.workspace }}/.ccache'
+      #     ccache --set-config=max_size=500M
+      #     ccache --set-config=compression=true
+      #     echo "ccache config:"
+      #     ccache -p
+      #   shell: msys2 {0}
+
+      - run: ls -la mswindows/osgeo4w/
+        shell: msys2 {0}
+      - run: ls -la /c/OSGeo4W/bin/
+        shell: msys2 {0}
+      - run: pwd
+        shell: msys2 {0}
+      - run: ls -la mswindows/osgeo4w/
+        shell: msys2 {0}
+      - run: ls -la /c/OSGeo4W/bin/
+        shell: msys2 {0}
       - name: Compile GRASS GIS
-        run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
+        run: SRC="$(pwd)" ./mswindows/osgeo4w/build_osgeo4w.sh
+        shell: msys2 {0}
+        env:
+          MAKEFLAGS: -j 4
+          OSGEO4W_ROOT_MSYS: /c/OSGeo4W
+          UNITTEST: 1
+          GCC_COLORS: 'error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+          CC: 'ccache x86_64-w64-mingw32-gcc'
+          CXX: 'ccache x86_64-w64-mingw32-g++'
+
+      - run: ls -la mswindows/osgeo4w/
+        if: ${{ always() }}
+        shell: msys2 {0}
+      - run: ls -la /c/OSGeo4W/bin/
+        if: ${{ always() }}
+        shell: msys2 {0}
+      # - run: mkdir -p .ccache && ls -la .ccache
+      #   if: ${{ always() }}
+      #   shell: msys2 {0}
+      # - run: ccache --show-stats -v -v
+      #   if: ${{ always() }}
+      #   shell: msys2 {0}
+      
+      
+      #- name: Compile GRASS GIS
+        #run: .github/workflows/build_osgeo4w.sh .
+        #shell: msys2 {0}
+        #env:
+          #MAKEFLAGS: -j0
+        #run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
-
+        #shell: msys2 {0}
+      #- run: exit 1
       - name: Test executing of the grass command in bash
-        run: D:\msys64\usr\bin\bash.exe .github/workflows/test_simple.sh
+        run: .github/workflows/test_simple.sh
+        shell: msys2 {0}
+       # run: D:\msys64\usr\bin\bash.exe .github/workflows/test_simple.sh
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
+        #run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
+      
