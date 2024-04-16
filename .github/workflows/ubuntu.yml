@@ -12,21 +12,44 @@ on:
     branches:
       - main
       - releasebranch_*
+      - '*'
 
 jobs:
-  build-and-test:
-    name: ${{ matrix.name }} tests
-
+  ubuntu:
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.name }}
+        matrix.name }}-${{ matrix.os }}-${{ matrix.extra-include }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        name:
+          - "22.04"
+          - minimum config
+
+        # Only run tests for these folders in this matrix job.
+        extra-include:
+          # All root folders that could contain tests are:
+          #   db display doc docker general gui
+          #   imagery lib misc ps python raster raster3d scripts
+          #   temporal testsuite utils vector visualization
+          #
+          # In order to split test executions, all these root folders are
+          # added as excluded folders, then items included for this matrix
+          # job are removed from that exclusion list.
+          #
+          # Using folded YAML multiline string block chomping (>-) to replace
+          # newlines with spaces, and strip newline at end.
+          # See https://yaml-multiline.info/
+          - temporal
+          - >-
+            db display doc docker general gui
+            imagery lib misc ps python raster raster3d scripts
+            testsuite utils vector visualization
+
         include:
-          - name: '22.04'
+          - name: "22.04"
             os: ubuntu-22.04
             config: ubuntu-22.04
           # This is without optional things but it still keeps things useful,
@@ -40,12 +63,72 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
+      - name: Invert inclusion list to an exclusion list
+        id: get-exclude
+        run: |
+          array=(db display doc docker general gui \
+          imagery lib misc ps python raster raster3d scripts \
+          temporal testsuite utils vector visualization)
+          echo "Complete set of folders that can be included:"
+          echo "${array[@]}"
+          delete=( ${{ env.DELETE_ARRAY }} )
+          echo "Included folders to remove from the complete set:"
+          echo "${delete[@]}"
+          for target in "${delete[@]}"; do
+            for i in "${!array[@]}"; do
+              if [[ ${array[i]} = "$target" ]]; then
+                unset 'array[i]'
+              fi
+            done
+          done
+          unset new_array
+          for i in "${!array[@]}"; do
+            new_array+=( "${array[i]}" )
+          done
+          echo "Excluded folders:"
+          echo "${new_array[@]}"
+          printf -v extra_exclude './%s/* ' "${new_array[@]}"
+          echo "Exclusion string to add to gunittest config"
+          echo "${extra_exclude}"
+          echo "extra-exclude=${extra_exclude}" >> "${GITHUB_OUTPUT}"
+          echo "Inclusion string for tags"
+          printf -v extra_include_tag ' %s' "${delete[@]}"
+          extra_include_tag="${extra_include_tag:1}" # trim extra first space
+          extra_include_tag=${extra_include_tag// /-} # replace spaces by hyphens
+          echo "${extra_include_tag}"
+          echo "extra-include-tag=${extra_include_tag}" >> "${GITHUB_OUTPUT}"
+          echo "Truncated string for codecov upload"
+          max_flag_len=45
+          max_flag_prefix_len=33 # gunittest-ubuntu-22.04_without_x-
+          max_flag_suffix_len=$((max_flag_len - max_flag_prefix_len))
+          extra_include_tag_len=${#extra_include_tag} # string's length
+          extra_include_tag_len_len=${#extra_include_tag_len} # length of string's length
+          if [[ "${extra_include_tag_len}" -gt "${max_flag_suffix_len}" ]]; then
+            # Extra include too long
+            extra_include_tag_trunc="${extra_include_tag:0:$max_flag_suffix_len-1-$extra_include_tag_len_len}.${extra_include_tag_len}"
+          else
+            extra_include_tag_trunc="${extra_include_tag}"
+          fi
+          echo "${extra_include_tag_trunc}"
+          echo "extra-include-tag-trunc=${extra_include_tag_trunc}" >> "${GITHUB_OUTPUT}"
+        env:
+          DELETE_ARRAY: ${{ matrix.extra-include }}
+
+      - name: Add extra exclusions to a gunittest config file
+        run: |
+          sed 's:exclude =:exclude = ${{ 
+            steps.get-exclude.outputs.extra-exclude
+          }}:g' .gunittest.cfg > .gunittest.extra.cfg
+          cat .gunittest.extra.cfg
+
       - name: Get dependencies
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget git gawk findutils
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
+      - name: Install python coverage tool
+        run: pip install coverage
 
       - name: Create installation directory
         run: |
@@ -58,6 +141,9 @@ jobs:
       - name: Set LD_LIBRARY_PATH for compilation
         run: |
           echo "LD_LIBRARY_PATH=$HOME/install/lib" >> $GITHUB_ENV
+      - name: Set COVERAGE_PROCESS_START env variable
+        run: |
+          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
 
       - name: Print build environment variables
         shell: bash -el {0}
@@ -69,29 +155,66 @@ jobs:
       - name: Build
         env:
           # TODO: -pedantic-errors here won't go through ./configure (with GNU C)
-          CFLAGS: -fPIC
+          CFLAGS: -fPIC -Wvla --coverage -g -O0 -fprofile-abs-path
           # TODO: -pedantic-errors here won't compile
-          CXXFLAGS: -fPIC
+          CXXFLAGS: -fPIC --coverage -g -O0 -fprofile-abs-path
+          LDFLAGS: --coverage
         run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
 
       - name: Add the bin directory to PATH
         run: |
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
+      - name: Print installed versions
+        if: always()
+        run: .github/workflows/print_versions.sh
+
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
+      - name: Place a sitecustomize.py file enabling subprocess code coverage
+        run: |
+          mkdir -p $(python -m site --user-site)
+          printf "import coverage\ncoverage.process_startup()" \
+            > "$(python -m site --user-site)/sitecustomize.py"
       - name: Run tests
-        run: .github/workflows/test_thorough.sh
-
+        run: INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+        env:
+          PYTHON: coverage run --branch --parallel-mode --concurrency=multiprocessing,thread
+          INITIAL_GISBASE: $HOME/install/grass84
+      - run: coverage combine
+      - name: Show python coverage report summary
+        run: coverage report
+      - run: coverage html
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: testreport-${{ matrix.config }}
+          name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
           path: testreport
           retention-days: 3
+      - name: Make python-only code coverage test report available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
+          path: coverage_html_report
+          retention-days: 3
 
-      - name: Print installed versions
-        if: always()
-        run: .github/workflows/print_versions.sh
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          verbose: true
+          # gcov: true
+          flags: gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
+          name: gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  build-and-test-success:
+    name: Build & Test Result
+    needs:
+      - ubuntu
+    if: ${{ always() }}
+    uses: ./.github/workflows/verify-success.yml
+    with:
+      needs_context: ${{ toJson(needs) }}
