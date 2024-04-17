@@ -39,6 +39,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
+      - name: Ccache for gh actions
+        uses: hendrikmuhs/ccache-action@v1.2.12
+        with:
+          verbose: 2
+          variant: ccache
+
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
