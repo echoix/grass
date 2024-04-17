@@ -59,6 +59,7 @@ jobs:
         with:
           verbose: 2
           variant: ccache
+          restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
           key: |
             ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
           restore-keys: |
