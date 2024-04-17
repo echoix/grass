@@ -59,6 +59,11 @@ jobs:
         with:
           verbose: 2
           variant: ccache
+          key: |
+            ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+          restore-keys: |
+            ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+            ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-/refs/heads/main
 
       - name: Create installation directory
         run: |
