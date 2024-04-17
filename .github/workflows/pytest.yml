@@ -40,16 +40,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
-      - name: Ccache for gh actions
-        uses: hendrikmuhs/ccache-action@v1.2.12
-        with:
-          verbose: 2
-          variant: ccache
-
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y wget git gawk findutils
+          sudo apt-get install -y wget git gawk findutils ccache
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
 
@@ -59,6 +53,12 @@ jobs:
           pip install -r .github/workflows/python_requirements.txt
           pip install -r .github/workflows/optional_requirements.txt
           pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
+
+      - name: Ccache for gh actions
+        uses: hendrikmuhs/ccache-action@v1.2.12
+        with:
+          verbose: 2
+          variant: ccache
 
       - name: Create installation directory
         run: |
