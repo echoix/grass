@@ -32,6 +32,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - uses: actions/cache/restore@v3
+        id: cache
+        with:
+          path: cache-download
+          key: ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+          path: cache-download
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Set up Python
