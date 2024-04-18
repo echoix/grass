@@ -10,6 +10,7 @@ on:
     branches:
       - main
       - releasebranch_*
+      - "*"
 
 jobs:
   build:
@@ -44,6 +45,18 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre
+      - name: Ccache for gh actions
+        uses: hendrikmuhs/ccache-action@v1.2.12
+        with:
+          verbose: 2
+          variant: ccache
+          create-symlink: true
+          restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
+          key: |
+            ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+          restore-keys: |
+            ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}-
+            ${{ github.job }}-${{ matrix.os }}-/refs/heads/main-
 
       - name: Install OSGeo4W
         run: |
