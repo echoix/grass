@@ -79,9 +79,9 @@ jobs:
       - name: Compile GRASS GIS
         run: ./.github/workflows/build_osgeo4w.sh ${{ github.workspace }}
         shell: msys2 {0}
-        # env:
-        #   CC: sccache x86_64-w64-mingw32-gcc
-        #   CXX: sccache x86_64-w64-mingw32-gcc
+        env:
+          CC: sccache.exe gcc
+          CXX: sccache.exe gcc
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
