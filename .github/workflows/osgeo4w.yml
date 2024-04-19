@@ -87,7 +87,7 @@ jobs:
         shell: msys2 {0}
         env:
           CC: ccache gcc
-          CXX: ccache gcc
+          CXX: ccache g++
         # env:
         #   CC: sccache.exe gcc
         #   CXX: sccache.exe gcc
