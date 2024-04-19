@@ -85,9 +85,9 @@ jobs:
       - name: Compile GRASS GIS
         run: ./.github/workflows/build_osgeo4w.sh ${{ github.workspace }}
         shell: msys2 {0}
-        # env:
-        #   CC: ccache gcc
-        #   CXX: sccache.exe gcc
+        env:
+          CC: ccache gcc
+          CXX: ccache gcc
         # env:
         #   CC: sccache.exe gcc
         #   CXX: sccache.exe gcc
