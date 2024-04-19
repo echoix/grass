@@ -36,7 +36,7 @@ jobs:
         id: cache
         with:
           path: cache-download
-          key: ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+          key: ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}-
           # key: ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
           # restore-keys: |
           #   ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
