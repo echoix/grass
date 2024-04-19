@@ -54,8 +54,8 @@ jobs:
           key: |
             ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
           restore-keys: |
-            ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}-
-            ${{ github.job }}-${{ matrix.os }}-/refs/heads/main-
+            ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+            ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
 
       - name: Install OSGeo4W
         run: |
