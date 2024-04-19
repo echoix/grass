@@ -27,6 +27,8 @@ jobs:
         os:
           - windows-2019
       fail-fast: false
+    permissions:
+      actions: write # remove stale ccache cache
 
     steps:
       - name: Set git to use LF
@@ -45,17 +47,21 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre
-      - name: Ccache for gh actions
-        uses: hendrikmuhs/ccache-action@v1.2.12
+      # - name: Ccache for gh actions
+      #   uses: hendrikmuhs/ccache-action@v1.2.12
+      #   with:
+      #     verbose: 2
+      #     variant: sccache
+      #     restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
+      #     key: |
+      #       ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+      #     restore-keys: |
+      #       ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+      #       ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
+      - name: Setup ccache action
+        uses: Chocobo1/setup-ccache-action@v1.4.2
         with:
-          verbose: 2
-          variant: sccache
-          restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
-          key: |
-            ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
-          restore-keys: |
-            ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
-            ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
+          windows_compile_environment: msys2
 
       - name: Install OSGeo4W
         run: |
@@ -79,9 +85,12 @@ jobs:
       - name: Compile GRASS GIS
         run: ./.github/workflows/build_osgeo4w.sh ${{ github.workspace }}
         shell: msys2 {0}
-        env:
-          CC: sccache.exe gcc
-          CXX: sccache.exe gcc
+        # env:
+        #   CC: ccache gcc
+        #   CXX: sccache.exe gcc
+        # env:
+        #   CC: sccache.exe gcc
+        #   CXX: sccache.exe gcc
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
