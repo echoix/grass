@@ -36,10 +36,11 @@ jobs:
         id: cache
         with:
           path: cache-download
-          key: ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
-          restore-keys: |
-            ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
-            ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-/refs/heads/main
+          key: ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+          # key: ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+          # restore-keys: |
+          #   ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+          #   ccache-${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-/refs/heads/main
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.cache.outputs.cache-matched-key }}
@@ -74,11 +75,15 @@ jobs:
           create-symlink: true
           append-timestamp: false
           restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
-          key: |
-            ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+          key: ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
           restore-keys: |
-            ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}-
-            ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-/refs/heads/main-
+            ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+            ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-main
+          # key: |
+          #   ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}
+          # restore-keys: |
+          #   ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-${{ github.ref }}-
+          #   ${{ github.job }}-${{ matrix.os }}-python${{ matrix.python-version }}-/refs/heads/main-
 
       - name: Create installation directory
         run: |
