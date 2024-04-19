@@ -40,6 +40,7 @@ jobs:
         with:
           path-type: inherit
           location: D:\
+          msystem: mingw64
           update: true
           install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
