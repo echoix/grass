@@ -84,7 +84,7 @@ jobs:
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
 
       - name: Test executing of the grass command in bash
-        run: D:\msys64\usr\bin\bash.exe .github/workflows/test_simple.sh
+        run: .github/workflows/test_simple.sh
         shell: msys2 {0}
 
       # - name: Run tests
