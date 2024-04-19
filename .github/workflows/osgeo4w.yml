@@ -84,14 +84,23 @@ jobs:
         shell: msys2 {0}
 
       - name: Compile GRASS GIS
-        run: ./.github/workflows/build_osgeo4w.sh ${{ github.workspace }}
+        run: ./mswindows/osgeo4w/build_osgeo4w.sh
         shell: msys2 {0}
         env:
+          SRC: ${{ github.workspace }}
+          OSGEO4W_ROOT_MSYS: /c/OSGeo4W
+          UNITTEST: 1
           CC: ccache gcc
           CXX: ccache g++
-        # env:
-        #   CC: sccache.exe gcc
-        #   CXX: sccache.exe gcc
+      # - name: Compile GRASS GIS
+      #   run: ./.github/workflows/build_osgeo4w.sh ${{ github.workspace }}
+      #   shell: msys2 {0}
+      #   env:
+      #     CC: ccache gcc
+      #     CXX: ccache g++
+      #   # env:
+      #   #   CC: sccache.exe gcc
+      #   #   CXX: sccache.exe gcc
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
