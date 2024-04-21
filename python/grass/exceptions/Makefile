@@ -1,30 +1,32 @@
 MODULE_TOPDIR=../../..
 
 include $(MODULE_TOPDIR)/include/Make/Other.make
-include $(MODULE_TOPDIR)/include/Make/Python.make
-include $(MODULE_TOPDIR)/include/Make/Doxygen.make
+# include $(MODULE_TOPDIR)/include/Make/Python.make
+# include $(MODULE_TOPDIR)/include/Make/Doxygen.make
 
 PYDIR = $(ETC)/python
 GDIR = $(PYDIR)/grass
 DSTDIR = $(GDIR)/exceptions
 
-PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__) $(GDIR)/__init__.py
+# PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+include $(MODULE_TOPDIR)/include/Make/Python.make
 
-default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc
+default: python_compile
+# default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc
 
 
-$(PYDIR):
-	$(MKDIR) $@
+# $(PYDIR):
+# 	$(MKDIR) $@
 
-$(GDIR): | $(PYDIR)
-	$(MKDIR) $@
+# $(GDIR): | $(PYDIR)
+# 	$(MKDIR) $@
 
-$(DSTDIR): | $(GDIR)
-	$(MKDIR) $@
+# $(DSTDIR): | $(GDIR)
+# 	$(MKDIR) $@
 
-$(DSTDIR)/%: % | $(DSTDIR)
-	$(INSTALL_DATA) $< $@
+# $(DSTDIR)/%: % | $(DSTDIR)
+# 	$(INSTALL_DATA) $< $@
 
-#doxygen:
-DOXNAME = exceptions
+# #doxygen:
+# DOXNAME = exceptions

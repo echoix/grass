@@ -14,6 +14,9 @@ default: cmd
 thumbnails: $(BIN)/r.mapcalc$(EXE)
 	-$(call run_grass, $(GRASS_HOME)/utils/thumbnails.py)
 
+$(BIN)/r.mapcalc$(EXE):
+	$(MAKE) -C $(MODULE_TOPDIR)/raster/r.mapcalc
+
 .PHONY: thumbnails
 
 .INTERMEDIATE: v.colors.tmp.html

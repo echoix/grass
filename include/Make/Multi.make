@@ -21,8 +21,20 @@ htmlmulti: $(HTMLFILES) $(MANFILES)
 endif
 
 $(BIN)/%$(EXE): $(DEPENDENCIES)
+	$(warning Edouard_multi: target: $@, prereq: $^, dependencies: $(DEPENDENCIES))
+	echo "Edouard_multi2: target: $@, prereq: $^, one: $(1), man_target: $(BIN)/$(1)$(EXE), dependencies: $(DEPENDENCIES)"
+	echo "Edouard_multi3: target: $$@, prereq: $$^, one: $(1), man_target: $(BIN)/$(1)$(EXE), dependencies: $$(DEPENDENCIES)"
 	$(call linker)
+	echo "Edouard_multi4: before sleep"
+	$(shell sleep 1)
+	echo "Edouard_multi4: after sleep"
 
+# $(BIN)/$(1)$(EXE): $$(patsubst %.o,$(OBJDIR)/%.o,$$($$(subst .,_,$(1)_OBJS))) 
+# $(BIN)/$(1)$(EXE): $$(patsubst %.o,$(OBJDIR)/%.o,$$($$(subst .,_,$(1)_OBJS))) $$(DEPENDENCIES)
+# 	$(warning Edouard_objs_rule: target: $$@, prereq: $$^, one: $(1), man_target: $(BIN)/$(1)$(EXE) , dependencies: $(DEPENDENCIES))
+# 	echo "Edouard_objs_rule3: target: $@, prereq: $^, one: $(1), man_target: $(BIN)/$(1)$(EXE), dependencies: $(DEPENDENCIES)"
+# 	echo "Edouard_objs_rule4: target: $$@, prereq: $$^, one: $(1), man_target: $(BIN)/$(1)$(EXE), dependencies: $$(DEPENDENCIES)"
+# 	$(call linker)
 define objs_rule
 $(BIN)/$(1)$(EXE): $$(patsubst %.o,$(OBJDIR)/%.o,$$($$(subst .,_,$(1)_OBJS)))
 $(HTMLDIR)/$(1).html: $(1).html $(1).tmp.html $(BIN)/$(1)$(EXE)

@@ -9,5 +9,5 @@ default: script $(ETC)/d.polar/ps_defs.eps
 $(ETC)/d.polar/%: % | $(ETC)/d.polar
 	$(INSTALL_DATA) $< $@
 
-$(ETC)/d.polar:
-	$(MKDIR) $@
+# $(ETC)/d.polar:
+# 	$(MKDIR) $@

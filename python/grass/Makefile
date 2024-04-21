@@ -29,3 +29,6 @@ $(PYDIR):
 
 $(PYDIR)/__init__.py: __init__.py | $(PYDIR)
 	$(INSTALL_DATA) $< $@
+
+$(call pyc-files,$(PYDIR)/__init__.py): $(PYDIR)/__init__.py
+	$(PYTHON) -m py_compile $@

@@ -12,5 +12,5 @@ default: script $(TEST_DST)
 $(ETC)/db.test/%: % | $(ETC)/db.test
 	$(INSTALL_DATA) $< $@
 
-$(ETC)/db.test:
-	$(MKDIR) $@
+# $(ETC)/db.test:
+# 	$(MKDIR) $@

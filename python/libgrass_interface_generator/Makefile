@@ -66,30 +66,45 @@ CTYPESFLAGS = --no-embed-preamble --strip-build-path "$(ARCH_DISTDIR)" \
 EXTRA_CLEAN_FILES := $(wildcard ctypesgen/*.pyc) $(wildcard ctypesgen/*/*.pyc)
 EXTRA_CLEAN_DIRS := $(wildcard ctypesgen/__pycache__) $(wildcard ctypesgen/*/__pycache__)
 
-include $(MODULE_TOPDIR)/include/Make/Python.make
+# include $(MODULE_TOPDIR)/include/Make/Python.make
 
 PYDIR = $(ETC)/python
 GDIR = $(PYDIR)/grass
 DSTDIR = $(GDIR)/lib
 
 PYFILES  := $(patsubst %,$(DSTDIR)/%.py,$(MODULES))
-PYCFILES  := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES))
+# PYCFILES  := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES))
 LPYFILES := $(patsubst %,$(OBJDIR)/%.py,$(MODULES))
 
 COPY_FILES = ctypes_loader ctypes_preamble __init__
 PY_COPY_FILES = $(patsubst %,$(DSTDIR)/%.py,$(COPY_FILES))
-PYC_COPY_FILES = $(patsubst %,$(DSTDIR)/%.pyc,$(COPY_FILES))
+# PYC_COPY_FILES = $(patsubst %,$(DSTDIR)/%.pyc,$(COPY_FILES))
+include $(MODULE_TOPDIR)/include/Make/Python.make
 
 ifeq ($(strip $(GRASS_LIBRARY_TYPE)),shlib)
-default:
-	$(MAKE) $(DSTDIR)
-	$(MAKE) $(LPYFILES) $(PYFILES) $(PYCFILES)
-	$(MAKE) $(PY_COPY_FILES) $(PYC_COPY_FILES)
+
+
+default: | $(DSTDIR)
+	$(MAKE) $(LPYFILES) $(PYFILES)
+	$(MAKE) $(PY_COPY_FILES)
+	$(MAKE) python_compile
+	$(MAKE) PYFILES="$(PY_COPY_FILES)" python_compile
+
 else
 default:
 	@echo "Cannot build Python wrappers for static libraries" >&2
 	exit 1
 endif
+# ifeq ($(strip $(GRASS_LIBRARY_TYPE)),shlib)
+# default:
+# 	$(MAKE) $(DSTDIR)
+# 	$(MAKE) $(LPYFILES) $(PYFILES) $(PYCFILES)
+# 	$(MAKE) $(PY_COPY_FILES) $(PYC_COPY_FILES)
+# else
+# default:
+# 	@echo "Cannot build Python wrappers for static libraries" >&2
+# 	exit 1
+# endif
 
 $(PY_COPY_FILES): | $(DSTDIR)
 $(DSTDIR)/__init__.py: libgrass__init__.py

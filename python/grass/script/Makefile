@@ -1,22 +1,24 @@
 MODULE_TOPDIR = ../../..
 
 include $(MODULE_TOPDIR)/include/Make/Other.make
-include $(MODULE_TOPDIR)/include/Make/Python.make
+# include $(MODULE_TOPDIR)/include/Make/Python.make
 
 DSTDIR = $(ETC)/python/grass/script
 
 MODULES = core db raster raster3d vector array setup task utils
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+# PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+include $(MODULE_TOPDIR)/include/Make/Python.make
 
-default: $(PYFILES) $(PYCFILES)
+default: python_compile
+# default: $(PYFILES) $(PYCFILES)
 
-$(DSTDIR):
-	$(MKDIR) $@
+# $(DSTDIR):
+# 	$(MKDIR) $@
 
-$(DSTDIR)/%: % | $(DSTDIR)
-	$(INSTALL_DATA) $< $@
+# $(DSTDIR)/%: % | $(DSTDIR)
+# 	$(INSTALL_DATA) $< $@
 
 EXTRA_CLEAN_FILES = setup.py.tmp
 
