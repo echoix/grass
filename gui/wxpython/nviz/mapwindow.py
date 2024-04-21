@@ -20,7 +20,6 @@ This program is free software under the GNU General Public License
 
 import os
 import sys
-import six
 import time
 import copy
 import math
@@ -478,7 +477,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
         and then to textures so that they can be rendered by OpenGL.
         Updates self.imagelist"""
         # update images (legend and text)
-        for oid, overlay in six.iteritems(self.overlays):
+        for oid, overlay in self.overlays.items():
             if not overlay.IsShown() or overlay.name in ("barscale", "northarrow"):
                 continue
             if oid not in [t.GetId() for t in self.imagelist]:  # new
@@ -565,7 +564,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
                     self.fly["pos"]["x"] = sx / 2
                     self.fly["pos"]["y"] = sy / 2
                     self.fly["mouseControl"] = False  # controlled by keyboard
-                    self.timerFly.Start(self.fly["interval"])
+                    self.timerFly.Start(int(self.fly["interval"]))
 
                 self.ProcessFlyByArrows(keyCode=key)
 
@@ -713,7 +712,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
 
         if self.mouse["use"] == "fly":
             if not self.timerFly.IsRunning():
-                self.timerFly.Start(self.fly["interval"])
+                self.timerFly.Start(int(self.fly["interval"]))
                 self.fly["mouseControl"] = True
 
         event.Skip()
