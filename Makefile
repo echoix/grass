@@ -115,7 +115,7 @@ cleandistdirs:
 cleanscriptstrings:
 	rm -f locale/scriptstrings/*.c 2>/dev/null
 
-clean: cleandistdirs cleanscriptstrings cleandocs code-coverage-clean
+clean: cleandistdirs cleanscriptstrings cleandocs code-coverage-clean libsclean
 
 libsclean: cleandistdirs
 	$(MAKE) clean-recursive SUBDIRS=$(LIBDIRS)
