@@ -71,8 +71,8 @@ jobs:
                  libboost-thread-dev libboost-program-options-dev libpdal-dev\
                  subversion libzstd-dev checkinstall \
                  libglu1-mesa-dev libxmu-dev \
-                 ghostscript wget -y make ccache g++
-            - run: python -m pip install ninja
+                 ghostscript wget -y make ccache g++ ninja-build
+            #- run: python -m pip install ninja
             - name: Configure ccache
               run: |
                   echo CCACHE_BASEDIR=$PWD >> ${GITHUB_ENV}
