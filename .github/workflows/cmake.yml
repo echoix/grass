@@ -44,13 +44,13 @@ jobs:
                   restore-keys: |
                     ${{ env.cache-name }}-${{ runner.os }}-${{ github.base_ref }}
                     ${{ env.cache-name }}-${{ runner.os }}
-            - name: Install CMake 3.16.0
-              run: |
-                cd ${GITHUB_WORKSPACE}
-                wget https://github.com/Kitware/CMake/releases/download/v3.16.0/cmake-3.16.0-Linux-x86_64.tar.gz
-                tar xzf cmake-3.16.0-Linux-x86_64.tar.gz
-                echo "CMAKE_DIR=$GITHUB_WORKSPACE/cmake-3.16.0-Linux-x86_64/bin" >> $GITHUB_ENV
-                echo "$GITHUB_WORKSPACE/cmake-3.16.0-Linux-x86_64/bin" >> $GITHUB_PATH
+            #- name: Install CMake 3.16.0
+              #run: |
+                #cd ${GITHUB_WORKSPACE}
+                #wget https://github.com/Kitware/CMake/releases/download/v3.16.0/cmake-3.16.0-Linux-x86_64.tar.gz
+                #tar xzf cmake-3.16.0-Linux-x86_64.tar.gz
+                #echo "CMAKE_DIR=$GITHUB_WORKSPACE/cmake-3.16.0-Linux-x86_64/bin" >> $GITHUB_ENV
+                #echo "$GITHUB_WORKSPACE/cmake-3.16.0-Linux-x86_64/bin" >> $GITHUB_PATH
             - run: |
                 cmake --version
             - name: Install dependencies
