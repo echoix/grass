@@ -1,0 +1,290 @@
+#[[
+AUTHOR(S):  Rashad Kanavath <rashad km gmail>
+PURPOSE:    GRASS GIS root that adds options to activate/deactivate
+            3rd party libraries
+COPYRIGHT:  (C) 2020-2022 by the GRASS Development Team
+            This program is free software under the GPL (>=v2)
+            Read the file COPYING that comes with GRASS for details.
+#]]
+
+cmake_minimum_required(VERSION 3.11)
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+
+# if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
+# set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
+# endif()
+
+project(GRASS)
+
+set(BUILD_SHARED_LIBS ON)
+# message(FATAL_ERROR "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
+if(MSVC)
+  if(BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+  endif()
+
+  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+endif()
+
+set(CMAKE_MODULE_PATH
+    "${CMAKE_SOURCE_DIR}/cmake/find_scripts;${CMAKE_SOURCE_DIR}/cmake/modules;${CMAKE_MODULE_PATH}"
+)
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 11)
+  set(CMAKE_C_STANDARD_REQUIRED ON)
+endif()
+
+set(default_option_enabled ON)
+if(WIN32)
+  set(default_option_enabled OFF)
+endif()
+
+# Configure CCache if available
+if(NOT MSVC)
+  option(USE_CCACHE "Use ccache" ON)
+  if(USE_CCACHE)
+    find_program(CCACHE_FOUND ccache)
+    if(CCACHE_FOUND)
+      set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+      set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+      message(STATUS "ccache found")
+    endif(CCACHE_FOUND)
+  endif(USE_CCACHE)
+endif(NOT MSVC)
+
+if(USE_ALTERNATE_LINKER)
+  include("cmake/modules/linker.cmake")
+endif()
+
+if(CMAKE_BUILD_TYPE)
+  set(grass_build_type "${CMAKE_BUILD_TYPE}")
+  string(TOLOWER "${grass_build_type}" grass_build_type_lc)
+  set(find_library_suffix "_RELEASE")
+  if(grass_build_type_lc STREQUAL "debug")
+    set(find_library_suffix "_DEBUG")
+  endif()
+else()
+  set(find_library_suffix "")
+endif()
+
+# Graphics options
+option(WITH_X11 "Build with X11 support ." ${default_option_enabled})
+option(WITH_OPENGL "Build with opengl support ." ON)
+option(WITH_CAIRO "Build with cairo support ." ON)
+option(WITH_LIBPNG "Build with libpng support ." OFF)
+
+# Data storage options
+option(WITH_SQLITE "Build with SQLite support" ON)
+option(WITH_POSTGRES "Build with Postgres support" OFF)
+option(WITH_MYSQL "Build with MySQL support" OFF)
+if(WIN32)
+  option(WITH_ODBC "Build with ODBC support" OFF)
+endif()
+option(WITH_ZSTD "Build with zstd support" ON)
+option(WITH_BZLIB "Build with bzlib support" OFF)
+
+# Command-line options
+option(WITH_READLINE "Build with Readline support" OFF)
+
+# Language options
+option(WITH_FREETYPE "Build with FreeType support" ON)
+option(WITH_NLS "Build with NLS support" ${default_option_enabled})
+
+# Computing options
+option(WITH_FFTW "Build with FFTW support" ON)
+option(WITH_BLAS "Build with BLAS support" ON)
+option(WITH_LAPACK "Build with LAPACK support" ON)
+option(WITH_OPENMP "Build with OpenMP support" ON)
+
+# Data format options
+option(WITH_TIFF "Build with LibTIFF support ." ON)
+option(WITH_NETCDF "Build with NetCDF support" OFF)
+option(WITH_GEOS "Build with GEOS support" OFF)
+option(WITH_PDAL "Build with PDAL support" ON)
+option(WITH_LIBLAS "Build with libLAS support" OFF)
+option(WITH_OPENDWG "Build with OpenDWG support" OFF)
+
+# Other options
+option(WITH_LARGEFILES "Build with large file support"
+       ${default_option_enabled})
+option(WITH_DOCS "Build documentation" ON)
+option(WITH_GUI "Build GUI" ON)
+
+if(APPLE)
+  if(POLICY CMP0042)
+    cmake_policy(SET CMP0042 NEW)
+  endif()
+  set(CMAKE_MACOSX_RPATH TRUE)
+endif()
+
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
+     "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif("${isSystemDir}" STREQUAL "-1")
+
+set(GISBASE ${CMAKE_BINARY_DIR}/gisbase)
+file(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}" MODULE_TOPDIR)
+file(TO_NATIVE_PATH "${GISBASE}" GISBASE_NATIVE)
+file(TO_NATIVE_PATH "${GISBASE}/bin" BIN_DIR)
+file(TO_NATIVE_PATH "${GISBASE}/lib" LIB_DIR)
+file(TO_NATIVE_PATH "${GISBASE}/scripts" SCRIPTS_DIR)
+file(TO_NATIVE_PATH "${GISBASE}/etc/config/rc" GISRC)
+file(TO_NATIVE_PATH "${GISBASE}/etc/python" ETC_PYTHON_DIR)
+file(TO_NATIVE_PATH "${GISBASE}/gui/wxpython" GUI_WXPYTHON_DIR)
+
+# Setup build locations.
+if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${GISBASE}/lib)
+endif()
+if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${GISBASE}/lib)
+endif()
+
+# XXX: not used for now; setup install directories
+set(GISBASE_DIR "grass${GRASS_VERSION_MAJOR}${GRASS_VERSION_MINOR}")
+set(GRASS_BIN_DIR "${GISBASE_DIR}/bin")
+set(GRASS_LIB_DIR "${GISBASE_DIR}/lib")
+set(GRASS_SCRIPTS_DIR "${GISBASE_DIR}/scripts")
+set(GRASS_ETC_DIR "${GISBASE_DIR}/etc")
+set(GRASS_GUI_DIR "${GISBASE_DIR}/gui")
+set(GRASS_DRIVER_DIR "${GISBASE_DIR}/driver")
+set(GRASS_FONTS_DIR "${GISBASE_DIR}/fonts")
+set(GRASS_UTILS_DIR "${GISBASE_DIR}/utils")
+set(GRASS_SHARE_DIR "${GISBASE_DIR}/share")
+set(GRASS_INCLUDE_DIR "${GISBASE_DIR}/include")
+set(GRASS_DOCS_DIR "${GISBASE_DIR}/docs")
+set(GRASS_DEMOLOCATION_DIR "${GISBASE_DIR}/demolocation")
+
+include(get_host_arch)
+get_host_arch(BUILD_ARCH)
+
+include(get_versions)
+get_versions("include/VERSION" GRASS_VERSION_MAJOR GRASS_VERSION_MINOR
+             GRASS_VERSION_RELEASE GRASS_VERSION_DATE)
+
+set(GRASS_VERSION_NUMBER
+    ${GRASS_VERSION_MAJOR}.${GRASS_VERSION_MINOR}.${GRASS_VERSION_RELEASE})
+message(STATUS "GRASS_VERSION_NUMBER  =  '${GRASS_VERSION_NUMBER}'")
+set(GRASS_VERSION_UPDATE_PKG "0.2")
+
+include(set_compiler_flags)
+set_compiler_flags()
+include(Configure)
+
+include(repo_status)
+repo_status("${CMAKE_CURRENT_LIST_DIR}")
+
+enable_testing()
+
+include(check_target)
+include(CheckDependentLibraries)
+include(build_module)
+include(build_program)
+include(build_program_in_subdir)
+include(build_library_in_subdir)
+include(copy_python_files_in_subdir)
+include(build_script_in_subdir)
+include(build_gui_in_subdir)
+
+set(MKHTML_PY ${CMAKE_BINARY_DIR}/utils/mkhtml.py)
+
+if(WIN32)
+  set(sep "\;")
+  set(env_path "")
+else()
+  set(sep ":")
+  set(env_path ":$ENV{PATH}")
+endif()
+
+set(grass_env_command
+    ${CMAKE_COMMAND} -E env "PATH=${BIN_DIR}${sep}${SCRIPTS_DIR}${env_path}"
+    "PYTHONPATH=${ETC_PYTHON_DIR}${sep}${GUI_WXPYTHON_DIR}${sep}$ENV{PYTHONPATH}"
+    "LD_LIBRARY_PATH=${LIB_DIR}${sep}$ENV{LD_LIBRARY_PATH}"
+    "GISBASE=${GISBASE_NATIVE}" "GISRC=${GISRC}" "LC_ALL=C" "LANG=C"
+    "LANGUAGE=C" "MODULE_TOPDIR=${MODULE_TOPDIR}"
+    "VERSION_NUMBER=\"${GRASS_VERSION_NUMBER}\""
+    "VERSION_DATE=\"${GRASS_VERSION_DATE}\"")
+
+set(NO_HTML_DESCR_TARGETS "g.parser;ximgview;test.raster3d.lib")
+# include(Configure)
+add_subdirectory(include)
+
+include_directories("${GISBASE}/include")
+include_directories("${GISBASE}/include/grass")
+if(MSVC)
+  include_directories("${CMAKE_SOURCE_DIR}/msvc")
+endif()
+
+execute_process(
+  COMMAND ${CMAKE_COMMAND} -E echo "Creating directories in ${GISBASE}"
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/bin/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/scripts/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/demolocation/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/etc/config/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/driver/db/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/utils/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/lib/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/python/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/etc/lister/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/etc/python/grass/lib
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/gui/wxpython/xml/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/gui/icons/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/gui/images/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GISBASE}/docs/html/)
+
+add_subdirectory(lib)
+add_subdirectory(utils)
+set(modules_list)
+
+set(ALL_SUBDIRS
+    general
+    db
+    display
+    imagery
+    misc
+    raster
+    raster3d
+    scripts
+    vector
+    temporal
+    ps)
+
+foreach(d ${ALL_SUBDIRS})
+  add_subdirectory(${d})
+endforeach()
+add_custom_target(
+  ALL_MODULES
+  COMMAND ${CMAKE_COMMAND} -E echo "Building all modules"
+  DEPENDS ${modules_list})
+
+# message(FATAL_ERROR "modules_list=${modules_list}")
+
+if(WITH_GUI)
+  add_subdirectory(gui)
+endif()
+
+add_subdirectory(python)
+
+if(WITH_DOCS)
+  add_subdirectory(doc)
+  add_subdirectory(man)
+endif() # WITH_DOCS
+
+# add_subdirectory(locale)
+
+# TODO: To be discussed - add_subdirectory(testsuite) - add_subdirectory(macosx)
+
+if(WITH_X11)
+  build_program_in_subdir(visualization/ximgview DEPENDS grass_gis X11)
+endif()
