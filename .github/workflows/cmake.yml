@@ -82,7 +82,7 @@ jobs:
               working-directory: ${{ github.workspace }}
             - name: Configure
               run: |
-                cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build -G eNinja
+                cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build -G Ninja
             - name: Build
               run: |
                 cmake --build $GITHUB_WORKSPACE/build --verbose -j$(nproc)
