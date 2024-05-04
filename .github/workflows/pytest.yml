@@ -73,7 +73,7 @@ jobs:
           pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
 
       - name: Ccache for gh actions
-        uses: hendrikmuhs/ccache-action@v1.2.11
+        uses: hendrikmuhs/ccache-action@v1.2.13
         with:
           verbose: 2
           variant: ccache
