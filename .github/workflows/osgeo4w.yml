@@ -66,10 +66,10 @@ jobs:
             echo $(cygpath -u $GITHUB_WORKSPACE)/.sccache
             env SCCACHE_IDLE_TIMEOUT=0 SCCACHE_DIR=$(cygpath -u $GITHUB_WORKSPACE)/.sccache SCCACHE_CACHE_SIZE=${{ env.MAX_SIZE }} sccache --start-server
             sccache --help
-            sccache --version
-            sccache --show-stats
-            sccache -z
-            sccache --show-stats
+            sccache --version -vv
+            sccache --show-stats -vv
+            sccache -z -vv
+            sccache --show-stats -vv
         # sccache --stop-server
         shell: msys2 {0}
         env:
@@ -139,9 +139,9 @@ jobs:
       #   #   CC: sccache.exe gcc
       #   #   CXX: sccache.exe gcc
       
-      - run: sccache --show-stats
+      - run: sccache --show-stats -vv
         shell: msys2 {0}
-      - run: sccache --stop-server
+      - run: sccache --stop-server -vv
         shell: msys2 {0}
       
       - name: Test executing of the grass command
