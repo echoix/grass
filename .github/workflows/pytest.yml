@@ -7,7 +7,6 @@ on:
       - main
       - releasebranch_*
   pull_request:
-    branches:
 
 jobs:
   pytest:
@@ -25,9 +24,6 @@ jobs:
           - '3.10'
           - '3.12'
       fail-fast: true
-    env:
-      FORCE_COLOR: 1
-      CLICOLOR_FORCE: 1
 
     runs-on: ${{ matrix.os }}
     env:
