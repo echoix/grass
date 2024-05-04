@@ -51,20 +51,19 @@ jobs:
             sccache --show-stats
             sccache -z
             sccache --stop-server
-            sccache --start-server
         shell: msys2 {0}
-      - name: Ccache for gh actions
-        uses: hendrikmuhs/ccache-action@v1.2.13
-        with:
-          verbose: 2
-          variant: sccache
-          restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
-          create-symlink: false
-          # key: |
-          #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
-          # restore-keys: |
-          #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
-          #   ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
+      # - name: Ccache for gh actions
+      #   uses: hendrikmuhs/ccache-action@v1.2.13
+      #   with:
+      #     verbose: 2
+      #     variant: sccache
+      #     restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
+      #     create-symlink: false
+      #     # key: |
+      #     #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+      #     # restore-keys: |
+      #     #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+      #     #   ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
       # - name: Setup ccache action
       #   uses: Chocobo1/setup-ccache-action@v1.4.2
       #   with:
@@ -90,7 +89,11 @@ jobs:
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
-
+      - run: |
+          env SCCACHE_IDLE_TIMEOUT=0 SCCACHE_DIR=${{ github.workspace }}/.sccache SCCACHE_CACHE_SIZE=${{ env.MAX_SIZE }} sccache --start-server
+        env:
+          MAX_SIZE: 500M
+        shell: msys2 {0}
       - name: Compile GRASS GIS
         run: SRC=$(pwd) ./mswindows/osgeo4w/build_osgeo4w.sh
         shell: msys2 {0}
@@ -112,7 +115,8 @@ jobs:
       #   # env:
       #   #   CC: sccache.exe gcc
       #   #   CXX: sccache.exe gcc
-
+      
+      
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
 
