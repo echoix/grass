@@ -44,23 +44,23 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre
-      # - name: Ccache for gh actions
-      #   uses: hendrikmuhs/ccache-action@v1.2.12
-      #   with:
-      #     verbose: 2
-      #     variant: sccache
-      #     restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
-      #     key: |
-      #       ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
-      #     restore-keys: |
-      #       ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
-      #       ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
-      - name: Setup ccache action
-        uses: Chocobo1/setup-ccache-action@v1.4.2
+      - name: Ccache for gh actions
+        uses: hendrikmuhs/ccache-action@v1.2.13
         with:
-          windows_compile_environment: msys2
-          install_ccache: false
-          update_packager_index: false
+          verbose: 2
+          variant: sccache
+          restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
+          # key: |
+          #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+          # restore-keys: |
+          #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+          #   ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
+      # - name: Setup ccache action
+      #   uses: Chocobo1/setup-ccache-action@v1.4.2
+      #   with:
+      #     windows_compile_environment: msys2
+      #     install_ccache: false
+      #     update_packager_index: false
 
       - name: Install OSGeo4W
         run: |
@@ -88,8 +88,11 @@ jobs:
           SRC2: ${{ github.workspace }}
           OSGEO4W_ROOT_MSYS: /c/OSGeo4W
           UNITTEST: 1
-          CC: ccache gcc
-          CXX: ccache g++
+          CC: sccache gcc
+          CXX: sccache g++
+          # CC: ccache gcc
+          # CXX: ccache g++
+          
       # - name: Compile GRASS GIS
       #   run: ./.github/workflows/build_osgeo4w.sh ${{ github.workspace }}
       #   shell: msys2 {0}
