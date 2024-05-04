@@ -139,6 +139,8 @@ jobs:
       #   #   CC: sccache.exe gcc
       #   #   CXX: sccache.exe gcc
       
+      - run: sccache --show-stats
+        shell: msys {0}
       
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
