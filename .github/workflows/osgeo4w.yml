@@ -49,6 +49,7 @@ jobs:
             sccache --help
             sccache --version
             sccache --show-stats
+            sccache --stop-server
             sccache -z
             sccache --start-server
         shell: msys2 {0}
