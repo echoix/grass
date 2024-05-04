@@ -64,6 +64,7 @@ jobs:
         with:
           windows_compile_environment: msys2
           install_ccache: false
+          update_packager_index: false
 
       - name: Install OSGeo4W
         run: |
