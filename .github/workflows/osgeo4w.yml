@@ -49,8 +49,8 @@ jobs:
             sccache --help
             sccache --version
             sccache --show-stats
-            sccache --stop-server
             sccache -z
+            sccache --stop-server
             sccache --start-server
         shell: msys2 {0}
       - name: Ccache for gh actions
