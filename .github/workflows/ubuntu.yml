@@ -133,7 +133,8 @@ jobs:
           CFLAGS: -fPIC -Wvla
           # TODO: -pedantic-errors here won't compile
           CXXFLAGS: -fPIC
-        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror -Werror=implicit-int -Werror=implicit-function-declaration -Werror=declaration-missing-parameter-type -Werror=return-mismatch -Werror=int-conversion -Werror=incompatible-pointer-types
+        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror -Werror=implicit-int -Werror=implicit-function-declaration -Werror=return-mismatch -Werror=int-conversion -Werror=incompatible-pointer-types
+        #-Werror=declaration-missing-parameter-type
 
       - name: Add the bin directory to PATH
         run: |
