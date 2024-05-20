@@ -55,7 +55,7 @@ jobs:
             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-wxpython,regex-devel,zstd-devel,python3-pip"
+            python3-wxpython,regex-devel,zstd-devel,python3-pip,python3-pytest"
 
       - name: Set number of cores for compilation
         run: |
@@ -88,7 +88,10 @@ jobs:
 
       - run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-          python -m pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
+          which python
+          which python3 || true
+          python -m pip install pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
+        # python -m pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
         shell: msys2 {0}
 
       - name: Run pytest
