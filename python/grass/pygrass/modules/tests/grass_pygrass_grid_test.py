@@ -6,9 +6,23 @@ import pytest
 
 import grass.script as gs
 
-
-def max_processes():
+@pytest.fixture(scope="module")
+def max_processes() -> int:
     """Get max useful number of parallel processes to run"""
+    import os
+    if "PYTEST_XDIST_WORKER_COUNT" in os.environ:
+        n_workers = int(os.environ["PYTEST_XDIST_WORKER_COUNT"])
+        allowed_logical_cpus = len(os.sched_getaffinity(0))
+        return min(allowed_logical_cpus // n_workers, 4)
+    return min(multiprocessing.cpu_count(), 4)
+
+def max_processes_result():
+    """Get max useful number of parallel processes to run"""
+    import os
+    if "PYTEST_XDIST_WORKER_COUNT" in os.environ:
+        n_workers = int(os.environ["PYTEST_XDIST_WORKER_COUNT"])
+        allowed_logical_cpus = len(os.sched_getaffinity(0))
+        return min(allowed_logical_cpus // n_workers, 4)
     return min(multiprocessing.cpu_count(), 4)
 
 
@@ -21,8 +35,9 @@ def run_in_subprocess(function):
     process.start()
     process.join()
 
-
-@pytest.mark.parametrize("processes", list(range(1, max_processes() + 1)) + [None])
+# @pytest.mark.parametrize("processes", list(range(1, max_processes() + 1)) + [None])
+@pytest.mark.serial
+@pytest.mark.parametrize("processes", list(range(1, max_processes_result() + 1)) + [None])
 def test_processes(tmp_path, processes):
     """Check that running with multiple processes works"""
     location = "test"
@@ -61,7 +76,8 @@ def test_processes(tmp_path, processes):
 
 @pytest.mark.parametrize("width", [5, 10, 50])  # None does not work.
 @pytest.mark.parametrize("height", [5, 10, 50])
-def test_tiling_schemes(tmp_path, width, height):
+# def test_tiling_schemes(tmp_path, width, height):
+def test_tiling_schemes(tmp_path, width, height, max_processes):
     """Check that different shapes of tiles work"""
     location = "test"
     gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
@@ -81,7 +97,8 @@ def test_tiling_schemes(tmp_path, width, height):
                 width=width,
                 height=height,
                 overlap=2,
-                processes=max_processes(),
+                processes=max_processes,
+                # processes=max_processes(),
                 elevation=surface,
                 slope="slope",
                 aspect="aspect",
@@ -95,7 +112,8 @@ def test_tiling_schemes(tmp_path, width, height):
 
 
 @pytest.mark.parametrize("overlap", [0, 1, 2, 5])
-def test_overlaps(tmp_path, overlap):
+# def test_overlaps(tmp_path, overlap):
+def test_overlaps(tmp_path, overlap, max_processes):
     """Check that overlap accepts different values"""
     location = "test"
     gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
@@ -114,7 +132,8 @@ def test_overlaps(tmp_path, overlap):
                 width=10,
                 height=5,
                 overlap=overlap,
-                processes=max_processes(),
+                # processes=max_processes(),
+                processes=max_processes,
                 elevation=surface,
                 slope="slope",
                 aspect="aspect",
@@ -129,7 +148,8 @@ def test_overlaps(tmp_path, overlap):
 
 @pytest.mark.parametrize("clean", [True, False])
 @pytest.mark.parametrize("surface", ["surface", "non_exist_surface"])
-def test_cleans(tmp_path, clean, surface):
+# def test_cleans(tmp_path, clean, surface):
+def test_cleans(tmp_path, clean, surface, max_processes):
     """Check that temporary mapsets are cleaned when appropriate"""
     location = "test"
     mapset_prefix = "abc"
@@ -149,7 +169,8 @@ def test_cleans(tmp_path, clean, surface):
                 width=10,
                 height=5,
                 overlap=0,
-                processes=max_processes(),
+                # processes=max_processes(),
+                processes=max_processes,
                 elevation=surface,
                 slope="slope",
                 aspect="aspect",
@@ -174,7 +195,8 @@ def test_cleans(tmp_path, clean, surface):
 
 
 @pytest.mark.parametrize("patch_backend", [None, "r.patch", "RasterRow"])
-def test_patching_backend(tmp_path, patch_backend):
+# def test_patching_backend(tmp_path, patch_backend):
+def test_patching_backend(tmp_path, patch_backend, max_processes):
     """Check patching backend works"""
     location = "test"
     gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
@@ -199,7 +221,8 @@ def test_patching_backend(tmp_path, patch_backend):
                 height=5,
                 overlap=0,
                 patch_backend=patch_backend,
-                processes=max_processes(),
+                # processes=max_processes(),
+                processes=max_processes,
                 input=points,
                 output="output",
                 type="point",
@@ -214,12 +237,20 @@ def test_patching_backend(tmp_path, patch_backend):
         assert abs(mean - mean_ref) < 0.0001
 
 
+# @pytest.mark.parametrize(
+#     "width, height, processes",
+#     [
+#         (None, None, max_processes()),
+#         (10, None, max_processes()),
+#         (None, 5, max_processes()),
+#     ],
+# )
 @pytest.mark.parametrize(
     "width, height, processes",
     [
-        (None, None, max_processes()),
-        (10, None, max_processes()),
-        (None, 5, max_processes()),
+        (None, None, max_processes_result()),
+        (10, None, max_processes_result()),
+        (None, 5, max_processes_result()),
     ],
 )
 def test_tiling(tmp_path, width, height, processes):
@@ -254,7 +285,7 @@ def test_tiling(tmp_path, width, height, processes):
         info = gs.raster_info("slope")
         assert info["min"] > 0
 
-
+@pytest.mark.serial
 @pytest.mark.parametrize(
     "processes, backend",
     [
