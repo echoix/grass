@@ -57,7 +57,7 @@ jobs:
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-wxpython,regex-devel,zstd-devel"
 
-       - run: pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist.
+      - run: pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist.
         shell: msys2 {0}
 
       - name: Set number of cores for compilation
