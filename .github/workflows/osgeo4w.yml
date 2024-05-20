@@ -115,7 +115,7 @@ jobs:
         shell: msys2 {0}
         env:
           PYTHONHOME: ${{ steps.build.outputs.PYTHONHOME }}
-          PATH: "${{ steps.build.outputs.PATH  }}:${{ steps.build.outputs.PYTHONHOME }}/apps/Python312/Scripts"
+          PATH: "${{ steps.build.outputs.PATH  }}:${{ steps.build.outputs.PYTHONHOME }}/Scripts"
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
