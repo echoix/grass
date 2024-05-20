@@ -19,6 +19,7 @@ addopts = """
     --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
+    --continue-on-collection-errors
 """
 timeout = 300
 markers = [
