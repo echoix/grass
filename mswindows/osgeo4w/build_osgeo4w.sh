@@ -191,7 +191,7 @@ if [ "$UNITTEST" ]; then
     printf "export PATH=\"${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin\"\nexport PYTHONHOME=\"${PYTHONHOME}\"\nexport PYTHONUTF8=1" > $HOME/.bashrc
 
     if [[ ! -z "$CI" ]]; then
-        echo "PATH=\"${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin\"" >> "${GITHUB_OUTPUT}"
-        echo "PYTHONHOME=\"${PYTHONHOME}\"" >> "${GITHUB_OUTPUT}"
+        echo "PATH=${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin" >> "${GITHUB_OUTPUT}"
+        echo "PYTHONHOME=${PYTHONHOME}" >> "${GITHUB_OUTPUT}"
     fi
 fi
