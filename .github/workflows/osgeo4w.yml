@@ -56,7 +56,13 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-wxpython,regex-devel,zstd-devel,python3-pip,python3-pytest"
-
+      - run: pytest
+        continue-on-error: true
+      - run: where pytest
+        continue-on-error: true
+      - run: which pytest
+        shell: msys2 {0}
+        continue-on-error: true
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
@@ -98,6 +104,9 @@ jobs:
         shell: msys2 {0}
       - run: echo $PATH
         shell: msys2 {0}
+      - run: echo $PYTHONPATH
+        shell: msys2 {0}
+        continue-on-error: true
       - name: Run pytest
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
@@ -106,7 +115,7 @@ jobs:
         shell: msys2 {0}
         env:
           PYTHONHOME: ${{ steps.build.outputs.PYTHONHOME }}
-          PATH: ${{ steps.build.outputs.PATH }}
+          PATH: "${{ steps.build.outputs.PATH  }}:${{ steps.build.outputs.PYTHONHOME }}/apps/Python312/Scripts"
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
