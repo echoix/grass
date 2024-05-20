@@ -57,6 +57,9 @@ jobs:
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-wxpython,regex-devel,zstd-devel"
 
+       - run: pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist.
+        shell: msys2 {0}
+
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
@@ -81,6 +84,12 @@ jobs:
       - name: Test executing of the grass command in bash
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
+
+      - name: Run pytest
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses auto -ra .
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
