@@ -21,6 +21,12 @@ export C_INCLUDE_PATH=".:${OSGEO4W_ROOT_MSYS}/include:${SRC}/dist.${ARCH}/includ
 export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
 export ARCH=x86_64-w64-mingw32
 
+if [[ ! -z "$CI" ]]; then
+    echo "PYTHONHOME=${PYTHONHOME}" >> "${GITHUB_OUTPUT}"
+    echo "C_INCLUDE_PATH=${C_INCLUDE_PATH}" >> "${GITHUB_OUTPUT}"
+    echo "OSGEO4W_ROOT_MSYS=${OSGEO4W_ROOT_MSYS}" >> "${GITHUB_OUTPUT}"
+fi
+
 ./configure \
     --host=${ARCH} \
     --with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
@@ -183,4 +189,9 @@ if [ "$UNITTEST" ]; then
     printf "export PATH=\"${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin\"\nexport PYTHONHOME=\"${PYTHONHOME}\"\nexport PYTHONUTF8=1" > $HOME/.bash_profile
     printf "export PATH=\"${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin\"\nexport PYTHONHOME=\"${PYTHONHOME}\"\nexport PYTHONUTF8=1" > $HOME/.profile
     printf "export PATH=\"${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin\"\nexport PYTHONHOME=\"${PYTHONHOME}\"\nexport PYTHONUTF8=1" > $HOME/.bashrc
+
+    if [[ ! -z "$CI" ]]; then
+        echo "PATH=\"${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin\"" >> "${GITHUB_OUTPUT}"
+        echo "PYTHONHOME=\"${PYTHONHOME}\"" >> "${GITHUB_OUTPUT}"
+    fi
 fi
