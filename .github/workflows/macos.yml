@@ -12,6 +12,8 @@ on:
     branches:
       - main
       - releasebranch_*
+      - '*'
+
 env:
   CACHE_NUMBER: 0
 concurrency:
