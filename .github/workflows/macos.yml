@@ -12,6 +12,8 @@ on:
     branches:
       - main
       - releasebranch_*
+      - '*'
+
 env:
   CACHE_NUMBER: 0
 concurrency:
@@ -45,6 +47,7 @@ jobs:
           init-shell: bash
           environment-file: .github/workflows/macos_dependencies.txt
           environment-name: grass-env
+          cache-environment: true
       - name: Environment info
         shell: bash -el {0}
         run: |
