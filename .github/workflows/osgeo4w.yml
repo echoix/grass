@@ -64,6 +64,7 @@ jobs:
       - run: cat .github/workflows/test_simple.sh
         shell: msys2 {0}
       - name: Compile GRASS GIS
+        id: build
         shell: msys2 {0}
         run: .github/workflows/build_osgeo4w.sh
       - name: Make compilation log available
@@ -90,16 +91,22 @@ jobs:
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           which python
           which python3 || true
+          python --version
+          python3 --version
           python -m pip install pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
         # python -m pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
         shell: msys2 {0}
-
+      - run: echo $PATH
+        shell: msys2 {0}
       - name: Run pytest
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
           pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses auto -ra .
         shell: msys2 {0}
+        env:
+          PYTHONHOME: ${{ steps.build.outputs.PYTHONHOME }}
+          PATH: ${{ steps.build.outputs.PATH }}
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
