@@ -77,7 +77,17 @@ jobs:
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
-          pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses auto -ra .
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses auto -ra . -m 'not serial'
+      - name: Run pytest (serial-only test)
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses 1 -ra . -m 'serial'
+      - name: Run pytest (serial-only test)
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 -ra . -m 'serial'
 
       - name: Print installed versions
         if: always()
