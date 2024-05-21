@@ -68,6 +68,20 @@ jobs:
           which pytest
         shell: msys2 {0}
         continue-on-error: true
+      - run: |
+          which pytest
+          pytest
+        shell: msys2 {0}
+        continue-on-error: true
+        env:
+          PATH: C:\\OSGeo4W\\apps\\Python312\\Scripts;C:\\OSGeo4W\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\system32\\WBem
+      - run: |
+          which pytest
+          pytest
+        shell: msys2 {0}
+        continue-on-error: true
+        env:
+          PATH: /c/OSGeo4W/apps/Python312/Scripts:/c/OSGeo4W/bin:/c/Windows/system32:/c/Windows:/c/Windows/system32/WBem
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
