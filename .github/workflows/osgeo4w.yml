@@ -64,7 +64,7 @@ jobs:
         shell: msys2 {0}
         continue-on-error: true
       - run: |
-          C:\OSGeo4W\bin\o4w_env.bat
+          C:\\OSGeo4W\\bin\\o4w_env.bat
           which pytest
         shell: msys2 {0}
         continue-on-error: true
