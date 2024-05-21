@@ -1,0 +1,23 @@
+# Common settings that generally should always be used with your language specific settings
+
+# Auto detect text files and perform LF normalization
+*          text=auto
+
+#
+# The above will handle all files NOT found below
+#
+
+# *.csv      text eol=crlf
+
+# Test files
+# *.ascii           binary
+
+# demolocation
+demolocation/PERMANENT/DEFAULT_WIND text eol=lf
+demolocation/PERMANENT/MYNAME       text eol=lf
+demolocation/PERMANENT/PROJ_EPSG    text eol=lf
+demolocation/PERMANENT/PROJ_INFO    text eol=lf
+demolocation/PERMANENT/PROJ_SRID    text eol=lf
+demolocation/PERMANENT/PROJ_UNITS   text eol=lf
+demolocation/PERMANENT/VAR          text eol=lf
+demolocation/PERMANENT/WIND         text eol=lf

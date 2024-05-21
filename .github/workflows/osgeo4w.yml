@@ -25,10 +25,10 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Set git to use LF
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.eol lf
+      # - name: Set git to use LF
+      #   run: |
+      #     git config --global core.autocrlf false
+      #     git config --global core.eol lf
       - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
       - uses: msys2/setup-msys2@d0e80f58dffbc64f6a3a1f43527d469b4fc7b6c8 # v2.23.0
         with:
@@ -55,16 +55,61 @@ jobs:
             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-wxpython,regex-devel,zstd-devel"
-
+            python3-wxpython,regex-devel,zstd-devel,python3-pip,python3-pytest"
+      - run: pytest
+        continue-on-error: true
+      - run: where pytest
+        continue-on-error: true
+      - run: which pytest
+        shell: msys2 {0}
+        continue-on-error: true
+      - run: |
+          C:\\OSGeo4W\\bin\\o4w_env.bat
+          which pytest
+        shell: msys2 {0}
+        continue-on-error: true
+      - run: |
+          which pytest
+          pytest
+        shell: msys2 {0}
+        continue-on-error: true
+        env:
+          PATH: C:\\OSGeo4W\\apps\\Python312\\Scripts;C:\\OSGeo4W\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\system32\\WBem
+          PYTHONHOME: /c/OSGeo4W/apps/Python312
+          PYTHONPATH:
+          PYTHONUTF8: 1
+      - run: |
+          which pytest
+          pytest
+        shell: msys2 {0}
+        continue-on-error: true
+        env:
+          PATH: /c/OSGeo4W/apps/Python312/Scripts:/c/OSGeo4W/bin:/c/Windows/system32:/c/Windows:/c/Windows/system32/WBem
+          PYTHONHOME: /c/OSGeo4W/apps/Python312
+          PYTHONPATH:
+          PYTHONUTF8: 1
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
-
+      - run: cat .github/workflows/test_simple.sh
+        shell: msys2 {0}
       - name: Compile GRASS GIS
+        id: build
         shell: msys2 {0}
         run: .github/workflows/build_osgeo4w.sh
+      - name: Make compilation log available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: compilation-log-${{ matrix.os }}
+          path: |
+            error.log
+            mswindows/osgeo4w/package.log
+          retention-days: 3
+
+      - run: cat .github/workflows/test_simple.sh
+        shell: msys2 {0}
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
@@ -73,5 +118,39 @@ jobs:
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
 
+      - run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          which python
+          which python3 || true
+          python --version
+          python3 --version
+          python -m pip install pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
+        # python -m pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
+        shell: msys2 {0}
+      - run: echo $PATH
+        shell: msys2 {0}
+      - run: echo $PYTHONPATH
+        shell: msys2 {0}
+        continue-on-error: true
+      - name: Run pytest
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$HOME/install/grass84/lib:$LD_LIBRARY_PATH
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses auto -ra .
+        shell: msys2 {0}
+        env:
+          PYTHONHOME: ${{ steps.build.outputs.PYTHONHOME }}
+          PATH: "${{ steps.build.outputs.PYTHONHOME }}/Scripts:${{ steps.build.outputs.PATH  }}"
+          PYTHONPATH:
+          PYTHONUTF8: 1
+
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass84.bat' 'C:\OSGeo4W\bin\python3'
+
+      - name: Make HTML test report available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: testreport-${{ matrix.os }}
+          path: testreport
+          retention-days: 3
