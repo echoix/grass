@@ -21,6 +21,7 @@ addopts = """
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
     --continue-on-collection-errors
+    --import-mode=importlib
 """
 # --ignore-glob='*/grass/pygrass/tests/*'
 timeout = 300
