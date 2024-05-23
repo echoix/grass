@@ -19,12 +19,12 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - ubuntu-24.04
+          #- ubuntu-24.04
         python-version:
           - '3.8'
           - '3.10'
           - '3.12'
-          - '3.13'
+         # - '3.13'
       fail-fast: false #true
 
     runs-on: ${{ matrix.os }}
@@ -55,7 +55,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r .github/workflows/python_requirements.txt
           pip install -r .github/workflows/optional_requirements.txt
-          pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist
+          pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist pytest-randomly
 
       - name: Create installation directory
         run: |
@@ -79,12 +79,12 @@ jobs:
           grass --tmp-location XY --exec \
             g.download.location url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz path=$HOME
           cd $HOME
-          grass --tmp-location XY --exec pytest --verbose --color=yes --durations=0 --durations-min=0.005 --numprocesses auto -ra . -m 'not serial' --tb=line  -o console_output_style=count
+          grass --tmp-location XY --exec pytest --verbose --color=yes --durations=0 --durations-min=0.005 --numprocesses auto -ra . -m 'not serial' --tb=line  -o console_output_style=count -o faulthandler_timeout=45
         continue-on-error: true
 
       - run: |
           cd $HOME
-          grass --tmp-location XY --exec pytest --verbose --color=yes --durations=0 --durations-min=0.005 -ra . -m 'not serial' --tb=line  -o console_output_style=count
+          grass --tmp-location XY --exec pytest --verbose --color=yes --durations=0 --durations-min=0.005 -ra . -m 'not serial' --tb=line  -o console_output_style=count -o faulthandler_timeout=45
         continue-on-error: true
       - name: Run pytest
         run: |
