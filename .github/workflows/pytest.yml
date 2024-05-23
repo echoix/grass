@@ -19,11 +19,13 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
+          - ubuntu-24.04
         python-version:
           - '3.8'
           - '3.10'
           - '3.12'
-      fail-fast: true
+          - '3.13'
+      fail-fast: false #true
 
     runs-on: ${{ matrix.os }}
     env:
@@ -76,7 +78,13 @@ jobs:
       - run: |
           grass --tmp-location XY --exec \
             g.download.location url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz path=$HOME
+          cd $HOME
           grass --tmp-location XY --exec pytest --verbose --color=yes --durations=0 --durations-min=0.005 --numprocesses auto -ra . -m 'not serial' --tb=line  -o console_output_style=count
+        continue-on-error: true
+
+      - run: |
+          cd $HOME
+          grass --tmp-location XY --exec pytest --verbose --color=yes --durations=0 --durations-min=0.005 -ra . -m 'not serial' --tb=line  -o console_output_style=count
         continue-on-error: true
       - name: Run pytest
         run: |
