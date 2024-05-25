@@ -23,6 +23,7 @@ jobs:
         name:
           - "22.04"
           - minimum config
+          - "20.04"
 
         # Only run tests for these folders in this matrix job.
         extra-include:
@@ -47,6 +48,9 @@ jobs:
         include:
           - name: "22.04"
             os: ubuntu-22.04
+            config: ubuntu-22.04
+          - name: "20.04"
+            os: ubuntu-20.04
             config: ubuntu-22.04
           # This is without optional things but it still keeps things useful,
           # so, e.g., without OpenMP, but with PDAL. Code or tests should be written
