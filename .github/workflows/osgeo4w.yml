@@ -65,6 +65,15 @@ jobs:
       - name: Compile GRASS GIS
         shell: msys2 {0}
         run: .github/workflows/build_osgeo4w.sh
+      - name: Make compilation log available
+        if: ${{ always() }}
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: compilation-log-${{ matrix.os }}
+          path: |
+            error.log
+            mswindows/osgeo4w/package.log
+          retention-days: 3
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass84.bat'
