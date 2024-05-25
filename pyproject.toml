@@ -11,16 +11,25 @@ extend-exclude = '''
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-python_files = "*/tests/*_test.py"
+#python_files = "*/tests/*_test.py"
 addopts = """
     --ignore-glob='dist.*'
     --ignore-glob='bin.*'
     --ignore-glob='*/tests/data/*'
-    --ignore-glob='*/grass/pygrass/tests/*'
+    --ignore-glob='*/gunittest/testsuite/data/*'
+    --ignore-glob='*/tests/*_test.py'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
+    --continue-on-collection-errors
+    --import-mode=importlib
+    --ignore=gunittest/testsuite/data/
 """
+# --ignore-glob='*/grass/pygrass/tests/*'
 timeout = 300
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "serial",
+]
 
 
 [tool.bandit]
