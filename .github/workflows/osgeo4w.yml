@@ -62,7 +62,7 @@ jobs:
           OSGEO4W_DESKTOP_LINKS: 0
           OSGEO4W_STARTMENU: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\OSGeo4W"
           OSGEO4W_DESKTOP: "C:\\Users\\runneradmin\\Desktop"
-      - run: setup-x86_64.exe --no-verify -g  -q -s "http://download.osgeo.org/osgeo4w/v2/" -P ${{ env.Deps }}
+      - run: setup-x86_64.exe --no-verify -g  -q -s "http://download.osgeo.org/osgeo4w/v2/" --root ${{ env.OSGEO4W_ROOT }} -P ${{ env.Deps }}
         shell: cmd
         env:
           Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
