@@ -48,7 +48,7 @@ jobs:
           $exe = 'setup-x86_64.exe'
           $url = 'https://www.cygwin.com/' + $exe
           (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          Start-Process ('.\'+$exe) -ArgumentList '-A --no-verify -g -k -q \
+          Start-Process ('.\'+$exe) -ArgumentList ' --no-verify -g  -q \
             -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
         env:
           Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
