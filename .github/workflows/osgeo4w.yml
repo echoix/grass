@@ -48,8 +48,8 @@ jobs:
           $exe = 'setup-x86_64.exe'
           $url = 'https://www.cygwin.com/' + $exe
           (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          Start-Process ('.\'+$exe) -ArgumentList ' --no-verify -g  -q \
-            -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
+        # Start-Process ('.\'+$exe) -ArgumentList ' --no-verify -g  -q \
+        #   -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
         env:
           Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
@@ -62,7 +62,20 @@ jobs:
           OSGEO4W_DESKTOP_LINKS: 0
           OSGEO4W_STARTMENU: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\OSGeo4W"
           OSGEO4W_DESKTOP: "C:\\Users\\runneradmin\\Desktop"
-
+      - run: setup-x86_64.exe --no-verify -g  -q -s "http://download.osgeo.org/osgeo4w/v2/" -P ${{ env.Deps }}
+        shell: cmd
+        env:
+          Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
+            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
+            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
+            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
+            python3-wxpython,regex-devel,zstd-devel"
+          OSGEO4W_ROOT: "C:/OSGEO4W"
+          OSGEO4W_ROOT_MSYS: "C:/OSGEO4W"
+          OSGEO4W_MENU_LINKS: 0
+          OSGEO4W_DESKTOP_LINKS: 0
+          OSGEO4W_STARTMENU: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\OSGeo4W"
+          OSGEO4W_DESKTOP: "C:\\Users\\runneradmin\\Desktop"
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
