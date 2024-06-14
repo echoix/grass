@@ -60,6 +60,7 @@ RUN apt-get update && apt-get upgrade -y && \
     netcdf-bin \
     proj-bin \
     proj-data \
+    python-is-python3 \
     python3 \
     python3-dateutil \
     python3-dev \
@@ -149,7 +150,7 @@ ENV CFLAGS "$MYCFLAGS"
 ENV CXXFLAGS "$MYCXXFLAGS"
 
 # Configure compile and install GRASS GIS
-ENV GRASS_PYTHON=/usr/bin/python3
+ENV GRASS_PYTHON=/usr/bin/python
 ENV NUMTHREADS=4
 RUN make distclean || echo "nothing to clean"
 RUN /src/grass_build/configure \
@@ -198,7 +199,7 @@ RUN ln -sf /usr/local/grass85 /usr/local/grass
 # show GRASS GIS, PROJ, GDAL etc versions
 RUN grass --tmp-location EPSG:4326 --exec g.version -rge && \
     pdal --version && \
-    python3 --version
+    python --version
 
 # Reduce the image size
 RUN apt-get autoremove -y
@@ -222,7 +223,7 @@ WORKDIR /scripts
 COPY docker/testdata/test_grass_session.py .
 ## just scan the LAZ file
 # Not yet ready for GRASS GIS 8:
-#RUN /usr/bin/python3 /scripts/test_grass_session.py
+#RUN /usr/bin/python /scripts/test_grass_session.py
 # test LAZ file
 RUN grass --tmp-location EPSG:25832 --exec r.in.pdal input="/tmp/simple.laz" output="count_1" method="n" resolution=1 -g
 
