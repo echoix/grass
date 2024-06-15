@@ -35,6 +35,7 @@ jobs:
       PYLINT_VERSION: "2.12.2"
       # renovate: datasource=pypi depName=bandit
       BANDIT_VERSION: "1.7.9"
+      FORCE_COLOR: 1 # for software including pip: https://force-color.org/
 
     runs-on: ${{ matrix.os }}
     permissions:
