@@ -76,6 +76,9 @@ jobs:
           # To keep repo's file structure in formatted changes artifact
           extra-upload-changes: .clang-format
 
+      - run: pip install pre-commit
+      - run: pre-commit run --all-files flake8
+
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
@@ -98,8 +101,6 @@ jobs:
       - name: Run Flake8 on additional files
         run: |
           flake8 --count --statistics --show-source --jobs=$(nproc) python/grass/{script,jupyter}/testsuite/
-      - run: pip install pre-commit
-      - run: pre-commit run --all-files
       - name: Bandit Vulnerability Scan
         run: |
           bandit -c pyproject.toml -iii -r . -f sarif -o bandit.sarif --exit-zero
