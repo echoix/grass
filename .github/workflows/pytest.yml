@@ -39,6 +39,14 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
+      - shell: python
+        run: |
+          import os
+          import multiprocessing
+          allowed_logical_cpus = len(os.sched_getaffinity(0))
+          print(f"allowed_logical_cpus={allowed_logical_cpus}")
+          print(f"multiprocessing.cpu_count()={multiprocessing.cpu_count()}")
+
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
