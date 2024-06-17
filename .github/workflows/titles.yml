@@ -1,0 +1,58 @@
+---
+name: Validate Titles
+
+on:
+  pull_request_target:
+    types:
+      - edited
+      # The following types are default for pull_request_target
+      - opened
+      # - synchronize
+      - reopened
+
+permissions: {}
+
+jobs:
+  validate-titles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+        continue-on-error: true
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+        continue-on-error: true
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+        continue-on-error: true
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+        continue-on-error: true
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+        continue-on-error: true
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+        continue-on-error: true
+      - name: Checkout base repository (doesn't include the PR changes)
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Set up Python
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+      - run: echo $PR_TITLE
+      - name: Call PR title validation function
+        run: python generate_release_notes.py check "${PR_TITLE}"
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_TITLE2: ${{ github.event.changes.title.from }}
