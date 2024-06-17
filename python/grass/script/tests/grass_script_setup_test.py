@@ -12,6 +12,7 @@ import grass.script as gs
 # we use a separate process.
 # Ideally, the functions would support env parameter and the test
 # would mostly use that.
+## TODO: check usages
 def run_in_subprocess(function):
     """Run function in a separate process
 

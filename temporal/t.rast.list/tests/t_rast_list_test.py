@@ -48,6 +48,7 @@ def test_json(space_time_raster_dataset):
     assert names == space_time_raster_dataset.raster_names
 
 
+# TODO: Check if repeated failures
 @pytest.mark.skipif(yaml is None, reason="PyYAML package not available")
 def test_yaml(space_time_raster_dataset):
     """Check JSON can be parsed and contains the right values"""

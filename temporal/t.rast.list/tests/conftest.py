@@ -7,7 +7,7 @@ import pytest
 
 import grass.script as gs
 
-
+# TODO: may be slow, review
 @pytest.fixture(scope="module")
 def space_time_raster_dataset(tmp_path_factory):
     """Start a session and create a raster time series
