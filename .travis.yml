@@ -19,8 +19,10 @@ jobs:
 
 env:
   global:
-    - CFLAGS="-Werror=implicit-function-declaration -Werror"
-    - CXXFLAGS="-std=c++17 -Werror"
+    - CFLAGS="-Werror=implicit-function-declaration"
+    - CXXFLAGS="-std=c++17"
+    - GRASS_EXTRA_CFLAGS="-Werror"
+    - GRASS_EXTRA_CXXFLAGS="-Werror"
 
 before_install:
   - ./.travis/$TRAVIS_OS_NAME.before_install.sh
