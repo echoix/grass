@@ -18,11 +18,28 @@ def max_processes():
 # to separate individual GridModule calls.
 def run_in_subprocess(function):
     """Run function in a separate process"""
-    process = multiprocessing.Process(target=function)
+    # with multiprocessing.get_context(method="spawn").Process(
+    #     target=function
+    # ) as process:
+    #     process.start()
+    #     process.join()
+    # pass
+    # # pool = mltp.Pool(processes=self.processes)
+    # result = pool.map_async(cmd_exe, self.get_works())
+    # result.wait()
+    # pool.close()
+    # pool.join()
+    # with
+    # process = multiprocessing.Process(target=function)
+    # process.start()
+    # process.join()
+    ctx = multiprocessing.get_context(method="spawn")
+    process = ctx.Process(target=function)
     process.start()
     process.join()
 
 
+@pytest.mark.needs_solo_run
 @pytest.mark.parametrize("processes", list(range(1, max_processes() + 1)) + [None])
 def test_processes(tmp_path, processes):
     """Check that running with multiple processes works"""
@@ -232,6 +249,7 @@ def test_tiling(tmp_path, width, height, processes):
         assert info["min"] > 0
 
 
+@pytest.mark.needs_solo_run
 @pytest.mark.parametrize(
     "processes, backend",
     [

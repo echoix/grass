@@ -20,10 +20,13 @@ jobs:
         os:
           - ubuntu-22.04
         python-version:
-          - '3.8'
+          - '3.9'
           - '3.10'
+          - '3.11'
           - '3.12'
-      fail-fast: true
+          - '3.13-dev'
+          - '3.14-dev'
+      fail-fast: false #true
 
     runs-on: ${{ matrix.os }}
     env:
@@ -34,11 +37,22 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Set up Python
+        if: ${{ matrix.python-version != '3.14-dev' }}
         uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
+      - uses: python/cpython/.github/workflows/reusable-ubuntu.yml@main
+        if: ${{ matrix.python-version == '3.14-dev' }}
+        with:
+          # config_hash: ${{ needs.check_source.outputs.config_hash }}
+          config_hash: "31f7457429f744eeaf09c55c2b659fe03dc6aec77b5868755ce269b7e328323e"
+          options: |
+            ../cpython-ro-srcdir/configure \
+              --config-cache \
+              --with-pydebug \
+              --with-openssl=$OPENSSL_DIR
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
@@ -73,11 +87,17 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
-      - name: Run pytest
+      - name: Run pytest with multiple workers in parallel
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
-          pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses auto -ra .
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 --numprocesses auto -ra . -m 'not needs_solo_run'
+
+      - name: Run pytest with a single worker (for tests marked with needs_solo_run)
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 -ra . -m 'needs_solo_run'
 
       - name: Print installed versions
         if: always()
