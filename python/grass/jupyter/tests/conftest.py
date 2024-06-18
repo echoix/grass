@@ -18,10 +18,10 @@ def space_time_raster_dataset(tmp_path_factory):
     """Start a session and create a raster time series
     Returns object with attributes about the dataset.
     """
-    tmp_path = tmp_path_factory.mktemp("raster_time_series")
+    tmp_path1 = tmp_path_factory.mktemp("raster_time_series")
     location = "test"
-    gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
-    with gs.setup.init(tmp_path / location):
+    gs.core._create_location_xy(tmp_path1, location)  # pylint: disable=protected-access
+    with gs.setup.init(tmp_path1 / location):
         gs.run_command("g.region", s=0, n=80, w=0, e=120, b=0, t=50, res=10, res3=10)
         names = [f"precipitation_{i}" for i in range(1, 7)]
         max_values = [550, 450, 320, 510, 300, 650]
@@ -36,7 +36,7 @@ def space_time_raster_dataset(tmp_path_factory):
             title="Precipitation",
             description="Random series generated for tests",
         )
-        dataset_file = tmp_path / "names.txt"
+        dataset_file = tmp_path1 / "names.txt"
         dataset_file.write_text("\n".join(names))
         gs.run_command(
             "t.register",
@@ -72,10 +72,10 @@ def simple_dataset(tmp_path_factory):
     """Start a session and create a raster time series
     Returns object with attributes about the dataset.
     """
-    tmp_path = tmp_path_factory.mktemp("simple_dataset")
+    tmp_path1 = tmp_path_factory.mktemp("simple_dataset")
     location = "test"
-    gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
-    with gs.setup.init(tmp_path / location):
+    gs.core._create_location_xy(tmp_path1, location)  # pylint: disable=protected-access
+    with gs.setup.init(tmp_path1 / location):
         gs.run_command("g.proj", flags="c", epsg=26917)
         gs.run_command("g.region", s=0, n=80, w=0, e=120, b=0, t=50, res=10, res3=10)
         # Create Vector
