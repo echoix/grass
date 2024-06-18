@@ -37,11 +37,22 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Set up Python
+        if: ${{ matrix.python-version != '3.14-dev' }}
         uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
+      - uses: python/cpython/.github/workflows/reusable-ubuntu.yml@main
+        if: ${{ matrix.python-version == '3.14-dev' }}
+        with:
+          # config_hash: ${{ needs.check_source.outputs.config_hash }}
+          config_hash: "31f7457429f744eeaf09c55c2b659fe03dc6aec77b5868755ce269b7e328323e"
+          options: |
+            ../cpython-ro-srcdir/configure \
+              --config-cache \
+              --with-pydebug \
+              --with-openssl=$OPENSSL_DIR
       - name: Install non-Python dependencies
         run: |
           sudo apt-get update -y
