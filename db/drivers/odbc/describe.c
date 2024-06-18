@@ -10,9 +10,9 @@
 int set_column_type(dbColumn *column, int otype);
 
 int db__driver_describe_table(table_name, table)
-dbString *table_name;
-dbTable **table;
 {
+    dbString *table_name;
+    dbTable **table;
     char *name = NULL;
     SQLINTEGER err;
     SQLRETURN ret;
@@ -61,9 +61,9 @@ dbTable **table;
 }
 
 int describe_table(stmt, table)
-SQLHSTMT stmt;
-dbTable **table;
 {
+    SQLHSTMT stmt;
+    dbTable **table;
     dbColumn *column;
     int col;
     SQLLEN intval;
@@ -144,9 +144,9 @@ dbTable **table;
 }
 
 int set_column_type(column, otype)
-dbColumn *column;
-int otype;
 {
+    dbColumn *column;
+    int otype;
     int dbtype;
 
     /* determine the DBMI datatype from ODBC type */
