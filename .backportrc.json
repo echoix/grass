@@ -1,0 +1,11 @@
+{
+    "repoOwner": "echoix",
+    "repoName": "grass",
+    // "targetBranchChoices": ["1.x"],
+    // "targetPRLabels": ["backport"],
+    "autoMerge": false,
+    "autoMergeMethod": "squash",
+    "branchLabelMapping": {
+        "^backport to (\\d+).(\\d+)$": "$1.$2"
+      }
+  }
