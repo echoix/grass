@@ -32,4 +32,4 @@ export CXX="ccache $CXX"
             --with-cairo \
             --with-pdal
 
-make -j2
+make -j $(nproc)
