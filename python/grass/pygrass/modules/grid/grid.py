@@ -656,13 +656,16 @@ class GridModule:
             for wrk in self.get_works():
                 cmd_exe(wrk)
         else:
-            pool = mltp.Pool(processes=self.processes)
-            result = pool.map_async(cmd_exe, self.get_works())
-            result.wait()
-            pool.close()
-            pool.join()
-            if not result.successful():
-                raise RuntimeError(_("Execution of subprocesses was not successful"))
+            with mltp.get_context(method="spawn").Pool(processes=self.processes) as pool:
+                # pool = mltp.Pool(processes=self.processes)
+                result = pool.map_async(cmd_exe, self.get_works())
+                result.wait()
+                pool.close()
+                pool.join()
+                if not result.successful():
+                    raise RuntimeError(
+                        _("Execution of subprocesses was not successful")
+                    )
 
         if patch:
             if self.move:
@@ -750,3 +753,7 @@ class GridModule:
             grm = Module("g.remove")
             for key in self.inlist:
                 grm(flags="f", type="raster", name=self.inlist[key])
+
+
+if __name__ is "__main__":
+    pass
