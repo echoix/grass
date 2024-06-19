@@ -7,10 +7,6 @@ import json
 
 import pytest
 
-# try:
-#     import yaml
-# except ImportError:
-#     yaml = None
 yaml = pytest.importorskip("yaml", reason="PyYAML package not available")
 
 import grass.script as gs
@@ -63,7 +59,6 @@ def test_json(space_time_raster_dataset):
 
 
 @pytest.mark.needs_solo_run
-# @pytest.mark.skipif(yaml is None, reason="PyYAML package not available")
 def test_yaml(space_time_raster_dataset):
     """Check JSON can be parsed and contains the right values"""
     result = yaml.safe_load(
