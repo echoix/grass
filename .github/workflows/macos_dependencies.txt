@@ -38,4 +38,6 @@ llvm-openmp
 flex
 git
 pytest
+pytest-github-annotate-failures
+pytest-timeout
 pytest-xdist
