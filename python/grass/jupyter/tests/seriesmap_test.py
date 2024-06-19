@@ -3,15 +3,20 @@
 from pathlib import Path
 import pytest
 
-try:
-    import IPython
-except ImportError:
-    IPython = None
+# try:
+#     import IPython
+# except ImportError:
+#     IPython = None
 
-try:
-    import ipywidgets
-except ImportError:
-    ipywidgets = None
+# try:
+#     import ipywidgets
+# except ImportError:
+#     ipywidgets = None
+
+IPython = pytest.importorskip("IPython", reason="IPython package not available")
+ipywidgets = pytest.importorskip("ipywidgets", reason="ipywidgets package not available")
+# @pytest.mark.skipif(IPython is None, reason="IPython package not available")
+# @pytest.mark.skipif(ipywidgets is None, reason="ipywidgets package not available")
 
 import grass.jupyter as gj
 
@@ -44,8 +49,8 @@ def test_render_layers(space_time_raster_dataset):
 
 
 @pytest.mark.needs_solo_run
-@pytest.mark.skipif(IPython is None, reason="IPython package not available")
-@pytest.mark.skipif(ipywidgets is None, reason="ipywidgets package not available")
+# @pytest.mark.skipif(IPython is None, reason="IPython package not available")
+# @pytest.mark.skipif(ipywidgets is None, reason="ipywidgets package not available")
 def test_save(space_time_raster_dataset, tmp_path):
     """Test returns from animate and time_slider are correct object types"""
     img = gj.SeriesMap()
