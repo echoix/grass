@@ -74,6 +74,7 @@ def test_save(space_time_raster_dataset, tmp_path):
     gif_file = img.save(tmp_path / "image.gif")
     assert Path(gif_file).is_file()
 
+
 @pytest.mark.needs_solo_run
 def test_save1(space_time_raster_dataset, tmp_path):
     """Test returns from animate and time_slider are correct object types"""
