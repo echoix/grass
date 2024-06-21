@@ -5,10 +5,8 @@ import statistics
 
 import pytest
 
-try:
-    import numpy as np
-except ImportError:
-    np = None
+
+np = pytest.importorskip("numpy", reason="NumPy package not available")
 
 import grass.script as gs
 
@@ -83,7 +81,6 @@ def test_extra_stats(simple_dataset):
     assert stats["median"] == statistics.median(simple_dataset.values)
 
 
-@pytest.mark.skipif(np is None, reason="NumPy package not available")
 def test_quartiles_default_percentile(simple_dataset):
     """Test extended statistics including quantiles against NumPy"""
     data = json.loads(
@@ -122,7 +119,6 @@ def test_quartiles_default_percentile(simple_dataset):
     )
 
 
-@pytest.mark.skipif(np is None, reason="NumPy package not available")
 def test_percentiles(simple_dataset):
     """Test custom percentiles against NumPy"""
     percentiles = list(range(10, 100, 10))
