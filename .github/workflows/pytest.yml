@@ -93,7 +93,8 @@ jobs:
         run: .github/workflows/print_versions.sh
       - uses: actions/upload-artifact @v4
         with:
-          - '**/*.scalene.json'
+          name: scalene-json
+          path: '**/*.scalene.json'
   pytest-success:
     name: pytest Result
     needs:
