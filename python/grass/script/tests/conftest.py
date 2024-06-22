@@ -7,7 +7,7 @@ import pytest
 def mock_no_session(monkeypatch):
     """Set the environment variables as if there would be no background session.
 
-    Use with usefixtures (not as a paramter) to avoid warnings about an unused
+    Use with usefixtures (not as a parameter) to avoid warnings about an unused
     parameter::
 
         @pytest.mark.usefixtures("mock_no_session")
