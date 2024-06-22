@@ -37,3 +37,7 @@ cmake
 llvm-openmp
 flex
 git
+pytest
+pytest-github-actions-annotate-failures
+pytest-timeout
+pytest-xdist
