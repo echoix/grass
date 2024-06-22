@@ -12,8 +12,8 @@ for details.
 from grass.script.core import start_command, PIPE
 from grass.script.utils import decode
 
-from .gmodules import call_module
-from .checkers import text_to_keyvalue
+from grass.gunittest.gmodules import call_module
+from grass.gunittest.checkers import text_to_keyvalue
 
 
 def get_current_mapset():

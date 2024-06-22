@@ -15,7 +15,7 @@ from grass.script.utils import encode, decode
 from grass.exceptions import CalledModuleError
 from grass.pygrass.modules import Module
 
-from .utils import do_doctest_gettext_workaround
+from grass.gunittest.utils import do_doctest_gettext_workaround
 
 
 class SimpleModule(Module):

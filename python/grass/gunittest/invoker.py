@@ -15,10 +15,10 @@ import shutil
 import subprocess
 import sys
 
-from .checkers import text_to_keyvalue
+from grass.gunittest.checkers import text_to_keyvalue
 
-from .loader import GrassTestLoader, discover_modules
-from .reporters import (
+from grass.gunittest.loader import GrassTestLoader, discover_modules
+from grass.gunittest.reporters import (
     GrassTestFilesMultiReporter,
     GrassTestFilesTextReporter,
     GrassTestFilesHtmlReporter,
@@ -28,7 +28,7 @@ from .reporters import (
     NoopFileAnonymizer,
     keyvalue_to_text,
 )
-from .utils import silent_rmtree, ensure_dir
+from grass.gunittest.utils import silent_rmtree, ensure_dir
 
 import grass.script as gs
 from grass.script.utils import decode, _get_encoding

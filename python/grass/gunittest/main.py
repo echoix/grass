@@ -19,11 +19,16 @@ from unittest.main import TestProgram
 
 import grass.script.core as gs
 
-from .loader import GrassTestLoader
-from .runner import GrassTestRunner, MultiTestResult, TextTestResult, KeyValueTestResult
-from .invoker import GrassTestFilesInvoker
-from .utils import silent_rmtree
-from .reporters import FileAnonymizer
+from grass.gunittest.loader import GrassTestLoader
+from grass.gunittest.runner import (
+    GrassTestRunner,
+    MultiTestResult,
+    TextTestResult,
+    KeyValueTestResult,
+)
+from grass.gunittest.invoker import GrassTestFilesInvoker
+from grass.gunittest.utils import silent_rmtree
+from grass.gunittest.reporters import FileAnonymizer
 
 
 class GrassTestProgram(TestProgram):
