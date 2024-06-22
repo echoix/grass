@@ -93,7 +93,7 @@ jobs:
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
-      - uses: actions/upload-artifact @v4
+      - uses: actions/upload-artifact@v4
         with:
           name: scalene-json
           path: '**/*.scalene.json'
