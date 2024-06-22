@@ -18,8 +18,8 @@ import collections
 import re
 from collections.abc import Iterable
 
-from .utils import ensure_dir
-from .checkers import text_to_keyvalue
+from grass.gunittest.utils import ensure_dir
+from grass.gunittest.checkers import text_to_keyvalue
 
 
 from io import StringIO

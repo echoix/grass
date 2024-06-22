@@ -20,8 +20,8 @@ from grass.pygrass.modules import Module
 from grass.exceptions import CalledModuleError
 from grass.script import text_to_string, encode, decode
 
-from .gmodules import call_module, SimpleModule
-from .checkers import (
+from grass.gunittest.gmodules import call_module, SimpleModule
+from grass.gunittest.checkers import (
     check_text_ellipsis,
     text_to_keyvalue,
     keyvalue_equals,
@@ -30,8 +30,8 @@ from .checkers import (
     text_file_md5,
     files_equal_md5,
 )
-from .utils import safe_repr
-from .gutils import is_map_in_mapset
+from grass.gunittest.utils import safe_repr
+from grass.gunittest.gutils import is_map_in_mapset
 
 from io import StringIO
 
