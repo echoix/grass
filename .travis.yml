@@ -5,7 +5,13 @@
 language: c
 cache: ccache
 
-matrix:
+# safelist
+branches:
+  only:
+    - main
+    - releasebranch*
+
+jobs:
   include:
     - os: linux
       dist: focal
