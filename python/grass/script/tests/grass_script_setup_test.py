@@ -10,6 +10,7 @@ import grass.script as gs
 
 # This is useful when we want to ensure that function like init does
 # not change the global environment.
+@pytest.mark.needs_solo_run
 def run_in_subprocess(function):
     """Run function in a separate process
 
@@ -62,6 +63,7 @@ def test_init_finish_global_functions_with_env(tmp_path):
     assert not os.path.exists(session_file)
 
 
+@pytest.mark.needs_solo_run
 def test_init_finish_global_functions_capture_strerr0(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -83,6 +85,7 @@ def test_init_finish_global_functions_capture_strerr0(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
+@pytest.mark.needs_solo_run
 def test_init_finish_global_functions_capture_strerrX(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -111,6 +114,7 @@ def test_init_finish_global_functions_capture_strerrX(tmp_path):
     assert runtime_present_after, "Runtime should continue to be present"
 
 
+@pytest.mark.needs_solo_run
 def test_init_finish_global_functions_isolated(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -165,6 +169,7 @@ def test_init_finish_global_functions_isolated(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
+@pytest.mark.needs_solo_run
 @pytest.mark.usefixtures("mock_no_session")
 def test_init_as_context_manager_env_attribute(tmp_path):
     """Check that session has global environment as attribute"""
