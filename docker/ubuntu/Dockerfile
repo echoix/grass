@@ -5,7 +5,7 @@
 
 ARG GUI=without
 
-FROM ubuntu:22.04@sha256:19478ce7fc2ffbce89df29fea5725a8d12e57de52eb9ea570890dc5852aac1ac as common_start
+FROM ubuntu:24.04@sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30 as common_start
 
 LABEL authors="Carmen Tawalika,Markus Neteler,Anika Weinmann,Stefan Blumentrath"
 LABEL maintainer="tawalika@mundialis.de,neteler@mundialis.de,weinmann@mundialis.de"
