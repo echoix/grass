@@ -1120,3 +1120,14 @@ redefining-builtins-modules = [
     "builtins",
     "io",
 ]
+
+
+[tool.pyright]
+include = ["python"]
+exclude = ["**/__pycache__", "**/OBJ.*", "bin.*/**", "dist.*/**"]
+
+# Set extraPath to the output of $(grass --config python_path)
+
+# *GRASS modified*
+# *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
+pythonVersion = "3.9"
