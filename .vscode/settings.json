@@ -1,0 +1,10 @@
+{
+    "pylint.importStrategy": "fromEnvironment",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.exclude": [
+        "**"
+    ],
+    "python.analysis.ignore": [
+        "**"
+    ]
+}
