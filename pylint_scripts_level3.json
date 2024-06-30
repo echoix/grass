@@ -1,0 +1,121 @@
+{
+    "messages": [
+        {
+            "type": "warning",
+            "symbol": "pointless-exception-statement",
+            "message": "Exception statement has no effect",
+            "messageId": "W0133",
+            "confidence": "INFERENCE",
+            "module": "test_addons_download",
+            "obj": "TestModuleDownloadFromDifferentSources.setUp",
+            "line": 54,
+            "column": 16,
+            "endLine": 57,
+            "endColumn": 17,
+            "path": "scripts/g.extension/testsuite/test_addons_download.py",
+            "absolutePath": "/workspace/grass/scripts/g.extension/testsuite/test_addons_download.py"
+        },
+        {
+            "type": "warning",
+            "symbol": "pointless-exception-statement",
+            "message": "Exception statement has no effect",
+            "messageId": "W0133",
+            "confidence": "INFERENCE",
+            "module": "test_addons_modules",
+            "obj": "TestModulesFromDifferentSources.setUp",
+            "line": 83,
+            "column": 16,
+            "endLine": 87,
+            "endColumn": 17,
+            "path": "scripts/g.extension/testsuite/test_addons_modules.py",
+            "absolutePath": "/workspace/grass/scripts/g.extension/testsuite/test_addons_modules.py"
+        },
+        {
+            "type": "convention",
+            "symbol": "empty-docstring",
+            "message": "Empty method docstring",
+            "messageId": "C0112",
+            "confidence": "INFERENCE_FAILURE",
+            "module": "test_g_search_modules",
+            "obj": "TestSearchModule.test_terminal_output",
+            "line": 37,
+            "column": 4,
+            "endLine": 37,
+            "endColumn": 28,
+            "path": "scripts/g.search.modules/testsuite/test_g_search_modules.py",
+            "absolutePath": "/workspace/grass/scripts/g.search.modules/testsuite/test_g_search_modules.py"
+        },
+        {
+            "type": "error",
+            "symbol": "no-self-argument",
+            "message": "Method 'tearDown' should have \"self\" as first argument",
+            "messageId": "E0213",
+            "confidence": "UNDEFINED",
+            "module": "test_r_import",
+            "obj": "TestRImportRegion.tearDown",
+            "line": 16,
+            "column": 4,
+            "endLine": 16,
+            "endColumn": 16,
+            "path": "scripts/r.import/testsuite/test_r_import.py",
+            "absolutePath": "/workspace/grass/scripts/r.import/testsuite/test_r_import.py"
+        },
+        {
+            "type": "error",
+            "symbol": "no-self-argument",
+            "message": "Method 'tearDown' should have \"self\" as first argument",
+            "messageId": "E0213",
+            "confidence": "UNDEFINED",
+            "module": "testrra",
+            "obj": "Testrr.tearDown",
+            "line": 29,
+            "column": 4,
+            "endLine": 29,
+            "endColumn": 16,
+            "path": "scripts/r.reclass.area/testsuite/testrra.py",
+            "absolutePath": "/workspace/grass/scripts/r.reclass.area/testsuite/testrra.py"
+        },
+        {
+            "type": "warning",
+            "symbol": "reimported",
+            "message": "Reimport 'test' (imported line 13)",
+            "messageId": "W0404",
+            "confidence": "HIGH",
+            "module": "testrra",
+            "obj": "",
+            "line": 99,
+            "column": 4,
+            "endLine": 99,
+            "endColumn": 41,
+            "path": "scripts/r.reclass.area/testsuite/testrra.py",
+            "absolutePath": "/workspace/grass/scripts/r.reclass.area/testsuite/testrra.py"
+        },
+        {
+            "type": "error",
+            "symbol": "no-self-argument",
+            "message": "Method 'tearDown' should have \"self\" as first argument",
+            "messageId": "E0213",
+            "confidence": "UNDEFINED",
+            "module": "test_v_import",
+            "obj": "TestVImport.tearDown",
+            "line": 21,
+            "column": 4,
+            "endLine": 21,
+            "endColumn": 16,
+            "path": "scripts/v.import/testsuite/test_v_import.py",
+            "absolutePath": "/workspace/grass/scripts/v.import/testsuite/test_v_import.py"
+        }
+    ],
+    "statistics": {
+        "messageTypeCount": {
+            "fatal": 0,
+            "error": 3,
+            "warning": 3,
+            "refactor": 0,
+            "convention": 1,
+            "info": 0
+        },
+        "modulesLinted": 55,
+        "score": 9.89
+    }
+}

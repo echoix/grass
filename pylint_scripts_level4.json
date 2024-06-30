@@ -1,0 +1,31 @@
+{
+    "messages": [
+        {
+            "type": "fatal",
+            "symbol": "fatal",
+            "message": "No module named scripts/*/*/*/*.py",
+            "messageId": "F0001",
+            "confidence": "UNDEFINED",
+            "module": "scripts/*/*/*/*.py",
+            "obj": "",
+            "line": 1,
+            "column": 0,
+            "endLine": null,
+            "endColumn": null,
+            "path": "scripts/*/*/*/*.py",
+            "absolutePath": "scripts/*/*/*/*.py"
+        }
+    ],
+    "statistics": {
+        "messageTypeCount": {
+            "fatal": 1,
+            "error": 0,
+            "warning": 0,
+            "refactor": 0,
+            "convention": 0,
+            "info": 0
+        },
+        "modulesLinted": 4,
+        "score": 0
+    }
+}
