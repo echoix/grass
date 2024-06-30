@@ -1137,7 +1137,7 @@ class GroupDialog(wx.Dialog):
         """Group was selected, check if changes were applied"""
         self._checkChange()
         group, s = self.GetSelectedGroup()
-        maps = list()
+        maps = []
         groups = self.GetExistGroups()
         if group in groups:
             maps = self.GetGroupLayers(group)
@@ -1177,7 +1177,7 @@ class GroupDialog(wx.Dialog):
         subgroup = self.subGroupSelect.GetValue().strip()
         group = self.currentGroup
 
-        gmaps = list()
+        gmaps = []
         groups = self.GetExistGroups()
 
         self.subgmaps = {}
@@ -1351,7 +1351,7 @@ class GroupDialog(wx.Dialog):
 
     def GetGroupLayers(self, group, subgroup=None):
         """Get layers in group"""
-        kwargs = dict()
+        kwargs = {}
         kwargs["group"] = group
         if subgroup:
             kwargs["subgroup"] = subgroup
@@ -1881,8 +1881,8 @@ class SetOpacityDialog(wx.Dialog):
 
 def GetImageHandlers(image):
     """Get list of supported image handlers"""
-    lext = list()
-    ltype = list()
+    lext = []
+    ltype = []
     try:
         for h in image.GetHandlers():
             lext.append(h.GetExtension())
