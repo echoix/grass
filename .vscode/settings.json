@@ -1,12 +1,10 @@
 {
     "pylint.importStrategy": "fromEnvironment",
-    "ruff.enable": false,
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.exclude": [
         "**"
     ],
     "python.analysis.ignore": [
         "**"
-    ],
-    "cSpell.enabled": false
+    ]
 }
