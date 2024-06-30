@@ -346,7 +346,9 @@ max-returns = 9
 max-statements = 220
 
 # Minimum number of public methods for a class (see R0903).
-min-public-methods = 2
+# *GRASS modified: default 2, (see R0915)*
+# *GRASS TODO: Try to increase this value*
+min-public-methods = 1
 
 [tool.pylint.exceptions]
 # Exceptions that will emit a warning when caught.
@@ -458,7 +460,7 @@ disable = [
     "use-implicit-booleaness-not-comparison-to-zero",
     "use-symbolic-message-instead",
     "useless-suppression",
-    # *GRASS modifies: The following rules are added to the disabled list*
+    # *GRASS modified: The following rules are added to the disabled list*
     # *GRASS TODO: Try to ignore less rules*
     "anomalous-backslash-in-string",
     "attribute-defined-outside-init",
