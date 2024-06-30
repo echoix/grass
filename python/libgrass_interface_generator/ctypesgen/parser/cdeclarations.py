@@ -137,7 +137,7 @@ class StructTypeSpecifier(object):
         else:
             s = "struct"
         if self.attrib:
-            attrs = list()
+            attrs = []
             for attr, val in self.attrib.items():
                 if val and type(val) == str:
                     attrs.append("{}({})".format(attr, val))
@@ -190,7 +190,7 @@ class PragmaPack(object):
 
     def __init__(self):
         self.current = self.DEFAULT
-        self.stack = list()
+        self.stack = []
 
     def set_default(self):
         self.current = self.DEFAULT
