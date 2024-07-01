@@ -13,10 +13,10 @@
 #       for details.
 #
 
-import os
 import atexit
-import grass.script as gs
+import os
 
+import grass.script as gs
 
 tmp_grad_abs = None
 tmp_grad_rel = None
