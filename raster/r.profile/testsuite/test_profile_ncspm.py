@@ -1,7 +1,7 @@
-from grass.gunittest.case import TestCase
-from grass.gunittest.main import test
-from grass.gunittest.gmodules import SimpleModule
 import grass.script.core as gcore
+from grass.gunittest.case import TestCase
+from grass.gunittest.gmodules import SimpleModule
+from grass.gunittest.main import test
 
 import json
 from itertools import zip_longest
