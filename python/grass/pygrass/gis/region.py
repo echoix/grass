@@ -5,6 +5,7 @@ Created on Fri May 25 12:57:10 2012
 """
 
 import ctypes
+
 import grass.lib.gis as libgis
 import grass.lib.raster as libraster
 import grass.script as gs
@@ -665,6 +666,7 @@ class Region:
 
 if __name__ == "__main__":
     import doctest
+
     from grass.pygrass import utils
     from grass.script.core import run_command
 
