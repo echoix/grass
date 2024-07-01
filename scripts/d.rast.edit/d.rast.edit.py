@@ -74,11 +74,11 @@
 # % answer: 100
 # %end
 
-import sys
-import math
 import atexit
-import grass.script as gs
+import math
+import sys
 
+import grass.script as gs
 from grass.script.setup import set_gui_path
 
 set_gui_path()

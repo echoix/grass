@@ -36,6 +36,7 @@
 # %end
 
 import sys
+
 import grass.script as gs
 from grass.exceptions import CalledModuleError
 
