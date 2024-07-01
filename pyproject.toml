@@ -70,6 +70,7 @@ skips = ["B324", "B110", "B101", "B112", "B311", "B404", "B603"]
 py_version = 39
 profile = "black"
 skip_glob = ["python/libgrass_interface_generator/*"]
+filter_files = true
 
 
 [tool.pylint.main]
