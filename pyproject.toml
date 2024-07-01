@@ -22,7 +22,8 @@ builtins = ["_"]
 extend-exclude = ["python/libgrass_interface_generator"]
 # In addition to the standard set of inclusions, include `.ipynb` files.
 extend-include = ["*.ipynb"]
-src = [ "python", "gui/wxpython" ]
+src = [ "python" ]
+# src = [ "python", "gui/wxpython" ]
 
 [tool.ruff.lint]
 # See https://docs.astral.sh/ruff/rules/
@@ -461,6 +462,7 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["grass"]
+known-third-party = ["wx"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -497,7 +499,10 @@ py_version = 39
 profile = "black"
 skip_glob = ["python/libgrass_interface_generator/*"]
 filter_files = true
-
+known_third_party = ["wx"]
+# known_third_party = ["wx"]
+# src_paths = ["python", "gui/wxpython"]
+src_paths = ["python"]
 
 [tool.pylint.main]
 # Analyse import fallback blocks. This can be used to support both Python 2 and 3
