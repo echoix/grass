@@ -22,6 +22,7 @@ builtins = ["_"]
 extend-exclude = ["python/libgrass_interface_generator"]
 # In addition to the standard set of inclusions, include `.ipynb` files.
 extend-include = ["*.ipynb"]
+src = [ "python", "gui/wxpython" ]
 
 [tool.ruff.lint]
 # See https://docs.astral.sh/ruff/rules/
@@ -457,6 +458,9 @@ ignore = [
 [tool.ruff.lint.flake8-import-conventions.extend-aliases]
 # Declare a custom aliases, checked with rule ICN001
 "grass.script" = "gs"
+
+[tool.ruff.lint.isort]
+known-first-party = ["grass"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
