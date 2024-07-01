@@ -44,8 +44,8 @@ import atexit
 import os
 import re
 
-from grass.exceptions import CalledModuleError
 import grass.script as gs
+from grass.exceptions import CalledModuleError
 
 rm_files = []
 

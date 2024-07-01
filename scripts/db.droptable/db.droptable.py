@@ -43,6 +43,7 @@
 # %end
 
 import sys
+
 import grass.script as gs
 from grass.script.utils import encode
 

@@ -49,9 +49,9 @@
 # % label: Name for target database schema
 # %end
 
-import sys
 import os
 import string
+import sys
 
 import grass.script as gs
 from grass.exceptions import CalledModuleError
