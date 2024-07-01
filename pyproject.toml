@@ -499,10 +499,10 @@ py_version = 39
 profile = "black"
 skip_glob = ["python/libgrass_interface_generator/*"]
 filter_files = true
-known_third_party = ["wx"]
 # known_third_party = ["wx"]
-# src_paths = ["python", "gui/wxpython"]
-src_paths = ["python"]
+# # known_third_party = ["wx"]
+# # src_paths = ["python", "gui/wxpython"]
+# src_paths = ["python"]
 
 [tool.pylint.main]
 # Analyse import fallback blocks. This can be used to support both Python 2 and 3
