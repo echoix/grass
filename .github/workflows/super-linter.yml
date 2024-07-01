@@ -36,7 +36,7 @@ jobs:
           DEFAULT_BRANCH: main
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LOG_LEVEL: DEBUG
+          # LOG_LEVEL: DEBUG
           # By default, super-linter expect all linters to have their config
           # files inside .github/linters.
           # Setting it to the root of the repo for easier configuration here.
