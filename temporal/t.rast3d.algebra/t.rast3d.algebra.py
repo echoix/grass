@@ -87,11 +87,10 @@ def main():
     register_null = flags["n"]
     granularity = flags["g"]
 
-    # Check for PLY istallation
+    # Check for PLY installation
     try:
         # Intentionally unused imports
-        from ply import lex  # noqa: F401
-        from ply import yacc  # noqa: F401
+        from ply import lex, yacc  # noqa: F401
     except ImportError:
         gs.fatal(
             _(
