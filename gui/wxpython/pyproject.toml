@@ -13,17 +13,24 @@ known-third-party = ["wx","grass"]
 # known-local-folder = ["grass"]
 
 
+# [tool.isort]
+# # *GRASS modified*
+# # *GRASS TODO: keep un sync with MIN_PYTHON_VERSION supported*
+# py_version = 39
+# profile = "black"
+# # # skip_glob = ["python/libgrass_interface_generator/*"]
+# # filter_files = true
+# src_paths = ["."]
+# # known_first_party = ["grass"]
+# # known_first_party = ["./*"]
+# # known_third_party = ["wx"]
+# known_third_party = ["wx", "grass"]
+# # no_sections = true
+# # known_local_folder = ["grass"]
+
+
 [tool.isort]
 # *GRASS modified*
 # *GRASS TODO: keep un sync with MIN_PYTHON_VERSION supported*
 py_version = 39
 profile = "black"
-# # skip_glob = ["python/libgrass_interface_generator/*"]
-# filter_files = true
-src_paths = ["."]
-# known_first_party = ["grass"]
-# known_first_party = ["./*"]
-# known_third_party = ["wx"]
-known_third_party = ["wx", "grass"]
-# no_sections = true
-# known_local_folder = ["grass"]
