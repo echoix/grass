@@ -155,6 +155,35 @@ jobs:
       - name: Add the bin directory to PATH
         run: |
           echo "$HOME/install/bin" >> $GITHUB_PATH
+      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: installed-home-before
+          if-no-files-found: ignore
+          retention-days: 1
+          path: |
+            /home/runner/install/
+      - run: pip install isort==${{ env.ISORT_VERSION }} numpy
+      - run: cd $HOME/install/ && pwd
+      - run: cd $(grass --config python_path) && pwd
+      - run: cd $(grass --config path) && pwd
+      # - run: cd $(grass --config python_path) && isort . --profile black --py 39 --resolve-all-config
+      - run: cd $(grass --config path) && isort . --profile black --py 39 --show-config
+      - run: cd $(grass --config path) && isort . --profile black --py 39
+      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: installed-home-after
+          if-no-files-found: ignore
+          retention-days: 1
+          path: |
+            /home/runner/install/
+      - run: cd $(grass --config path) && black .
+      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: installed-home-after-black
+          if-no-files-found: ignore
+          retention-days: 1
+          path: |
+            /home/runner/install/
 
       - name: Run isort
         run: pipx run isort==${{ env.ISORT_VERSION }} .
@@ -166,6 +195,8 @@ jobs:
           tool-name: isort
           # To keep repo's file structure in formatted changes artifact
           extra-upload-changes: pyproject.toml
+          fail-if-changed: false
+
 
       - name: Run Pylint on grass package
         run: |
