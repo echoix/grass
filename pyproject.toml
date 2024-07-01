@@ -22,7 +22,7 @@ builtins = ["_"]
 extend-exclude = ["python/libgrass_interface_generator"]
 # In addition to the standard set of inclusions, include `.ipynb` files.
 extend-include = ["*.ipynb"]
-src = [ "python" ]
+# src = [ "python" ]
 # src = [ "python", "gui/wxpython" ]
 
 [tool.ruff.lint]
