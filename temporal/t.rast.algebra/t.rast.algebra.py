@@ -101,11 +101,10 @@ def main():
     granularity = flags["g"]
     dry_run = flags["d"]
 
-    # Check for PLY istallation
+    # Check for PLY installation
     try:
         # Intentionally unused imports
-        from ply import lex  # noqa: F401
-        from ply import yacc  # noqa: F401
+        from ply import lex, yacc  # noqa: F401
     except ImportError:
         grass.script.fatal(
             _(
