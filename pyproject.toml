@@ -480,7 +480,10 @@ limit-inference-results = 100
 
 # List of plugins (as comma separated values of python module names) to load,
 # usually to register additional checkers.
-# load-plugins =
+load-plugins = [
+    "pylint.extensions.redefined_variable_type",
+    "pylint.extensions.bad_builtin",
+]
 
 # Pickle collected data for later comparisons.
 persistent = true
