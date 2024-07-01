@@ -30,8 +30,8 @@
 # % description: Force center at zero
 # %end
 
-import os
 import atexit
+import os
 
 import grass.script as gs
 from grass.script.utils import decode
