@@ -26,13 +26,29 @@ builtins = ["_"]
 
 # In addition to the standard set of exclusions, omit the following files or folders.
 extend-exclude = ["python/libgrass_interface_generator"]
-src = [ "python" ]
+# In addition to the standard set of inclusions, include `.ipynb` files.
+extend-include = ["*.ipynb"]
+# src = ["python"]
 # src = [ "python", "gui/wxpython" ]
 
 [tool.ruff.lint]
 # On top of the defaults (`E4`, E7`, `E9`, and `F`), enable flake8-bugbear (`B`) and flake8-quotes (`Q`).
 # select = ["E4", "E7", "E9", "F", "B", "Q", "I"]
-select =["I001"]
+# select =["I001"]
+select = [
+    "C408",
+    "ISC001",
+    "PLR0402",
+    "PLR1711",
+    "PLR172",
+    "PLR1722",
+    "PLR1730",
+    "PLR173",
+    # "PLR6201",
+    "PLW0133",
+    "UP022",
+]
+# select =["C408", "PLR6201"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["grass"]
