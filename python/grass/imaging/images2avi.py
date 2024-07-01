@@ -39,12 +39,12 @@ http://linux.die.net/man/1/ffmpeg
 """
 
 import os
-import time
-import subprocess
 import shutil
+import subprocess
+import time
 
-from grass.imaging import images2ims
 import grass.script as gs
+from grass.imaging import images2ims
 
 
 def _cleanDir(tempDir):
