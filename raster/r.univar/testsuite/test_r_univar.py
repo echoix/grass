@@ -7,7 +7,6 @@ import json
 from itertools import zip_longest
 
 from grass.gunittest.case import TestCase
-
 from grass.gunittest.gmodules import SimpleModule
 
 

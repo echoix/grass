@@ -13,8 +13,8 @@ import json
 from itertools import zip_longest
 
 from grass.gunittest.case import TestCase
-from grass.gunittest.main import test
 from grass.gunittest.gmodules import SimpleModule
+from grass.gunittest.main import test
 
 
 class TestProfiling(TestCase):
