@@ -486,6 +486,14 @@ exclude_dirs = [
 skips = ["B324", "B110", "B101", "B112", "B311", "B404", "B603"]
 
 
+[tool.isort]
+# *GRASS modified*
+# *GRASS TODO: keep un sync with MIN_PYTHON_VERSION supported*
+py_version = 39
+profile = "black"
+skip_glob = ["python/libgrass_interface_generator/*"]
+
+
 [tool.pylint.main]
 # Analyse import fallback blocks. This can be used to support both Python 2 and 3
 # compatible code, which means that the block might have code that exists only in
