@@ -23,17 +23,13 @@ import sys
 
 import wx
 import wx.stc
-
-from grass.script import core as grass
-from grass.script import task as gtask
+from core import globalvar, utils
+from core.gcmd import DecodeString, EncodeString, GError
 
 from grass.grassdb import history
-
 from grass.pydispatch.signal import Signal
-
-from core import globalvar
-from core import utils
-from core.gcmd import EncodeString, DecodeString, GError
+from grass.script import core as grass
+from grass.script import task as gtask
 
 
 class GPrompt:
@@ -167,11 +163,9 @@ class GPromptSTC(GPrompt, wx.stc.StyledTextCtrl):
         self._loadHistory()
         if giface:
             giface.currentMapsetChanged.connect(self._loadHistory)
-            giface.entryToHistoryAdded.connect(
-                lambda entry: self._addEntryToCmdHistoryBuffer(entry)
-            )
+            giface.entryToHistoryAdded.connect(self._addEntryToCmdHistoryBuffer)
             giface.entryFromHistoryRemoved.connect(
-                lambda index: self._removeEntryFromCmdHistoryBuffer(index)
+                self._removeEntryFromCmdHistoryBuffer
             )
         #
         # bindings
@@ -433,7 +427,7 @@ class GPromptSTC(GPrompt, wx.stc.StyledTextCtrl):
             else:
                 delimiter = char
             parts.append(delimiter + textLeft.rpartition(char)[2])
-        return min(parts, key=lambda x: len(x))
+        return min(parts, key=len)
 
     def ShowList(self):
         """Show sorted auto-completion list if it is not empty"""

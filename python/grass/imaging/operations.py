@@ -126,7 +126,7 @@ def change_rbg_to_transparent(
     elif color == "black":
         rgb = (0, 0, 0)
     else:
-        rgb = color  # pylint: disable=redefined-variable-type
+        rgb = color
     if not output_file:
         output_file = input_file
     img = Image.open(input_file)

@@ -35,6 +35,7 @@
 # %end
 
 import os
+
 import grass.script as grass
 
 
@@ -51,13 +52,14 @@ def main():
 
     set_gui_path()
 
-    from core.render import Map
     from core.globalvar import ICONDIR
-    from mapdisp.frame import MapPanel
-    from gui_core.mapdisp import FrameMixin
-    from mapdisp.main import DMonGrassInterface
+    from core.render import Map
     from core.settings import UserSettings
-    from vdigit.main import haveVDigit, errorMsg
+    from gui_core.mapdisp import FrameMixin
+    from mapdisp.frame import MapPanel
+    from mapdisp.main import DMonGrassInterface
+    from vdigit.main import errorMsg, haveVDigit
+
     from grass.exceptions import CalledModuleError
 
     # define classes which needs imports as local
@@ -104,7 +106,7 @@ def main():
             self.toolbars["vdigit"].StartEditing(mapLayer)
             # use Close instead of QuitVDigit for standalone tool
             self.toolbars["vdigit"].quitDigitizer.disconnect(self.QuitVDigit)
-            self.toolbars["vdigit"].quitDigitizer.connect(lambda: self.Close())
+            self.toolbars["vdigit"].quitDigitizer.connect(self.Close)
 
             # add Map Display panel to Map Display frame
             sizer = wx.BoxSizer(wx.VERTICAL)

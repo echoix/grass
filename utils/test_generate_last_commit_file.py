@@ -17,8 +17,8 @@ pytest utils/test_generate_last_commit_file.py
 @author Tomas Zigo <tomas.zigo slovanet.sk>
 """
 
-import os
 import json
+import os
 import subprocess
 
 import pytest
@@ -83,8 +83,7 @@ def test_compare_json_file_data(read_json_file, core_module_path):
             f"--format=%H,{COMMIT_DATE_FORMAT}",
             core_module_path,
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         check=True,
     )  # --format=%H,COMMIT_DATE_FORMAT commit hash,author date
     commit, date = process_result.stdout.decode().strip().split(",")

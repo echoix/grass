@@ -17,21 +17,19 @@
 #############################################################################
 
 import http
-import sys
-import os
-import string
-import re
-from datetime import datetime
-import locale
 import json
+import locale
+import os
 import pathlib
+import re
+import string
 import subprocess
-
+import sys
+import urllib.parse as urlparse
+from datetime import datetime
 from html.parser import HTMLParser
-
 from urllib import request as urlrequest
 from urllib.error import HTTPError, URLError
-import urllib.parse as urlparse
 
 try:
     import grass.script as gs
@@ -380,8 +378,7 @@ def has_src_code_git(src_dir, is_addon):
                 f"--format=%H,{COMMIT_DATE_FORMAT}",
                 src_dir,
             ],
-            stderr=subprocess.PIPE,
-            stdout=subprocess.PIPE,
+            capture_output=True,
         )  # --format=%H,COMMIT_DATE_FORMAT commit hash,author date
         os.chdir(actual_dir)
         return process_result if process_result.returncode == 0 else None

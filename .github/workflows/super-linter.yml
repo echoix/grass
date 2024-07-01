@@ -36,6 +36,7 @@ jobs:
           DEFAULT_BRANCH: main
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # LOG_LEVEL: DEBUG
           # By default, super-linter expect all linters to have their config
           # files inside .github/linters.
           # Setting it to the root of the repo for easier configuration here.
@@ -54,7 +55,9 @@ jobs:
           VALIDATE_JSON: true
           VALIDATE_MARKDOWN: true
           VALIDATE_POWERSHELL: true
+          VALIDATE_PYTHON_ISORT: true
           # VALIDATE_XML: true
           VALIDATE_YAML: true
+          PYTHON_ISORT_CONFIG_FILE: pyproject.toml
           MARKDOWN_CONFIG_FILE: .markdownlint.yml
           YAML_CONFIG_FILE: .yamllint

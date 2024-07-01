@@ -17,32 +17,23 @@ for details.
 @author Tomas Zigo
 """
 
-import re
 import copy
 import datetime
+import re
 
 import wx
-
 from core import globalvar
-
 from core.gcmd import GError, GException
-from core.utils import (
-    parse_mapcalc_cmd,
-    replace_module_cmd_special_flags,
-    split,
-)
+from core.treemodel import DictFilterNode, TreeModel
+from core.utils import parse_mapcalc_cmd, replace_module_cmd_special_flags, split
 from gui_core.forms import GUI
-from core.treemodel import TreeModel, DictFilterNode
 from gui_core.treeview import CTreeView
 from gui_core.wrap import Menu
-
 from icons.icon import MetaIcon
-
-from grass.pydispatch.signal import Signal
 
 from grass.grassdb import history
 from grass.grassdb.history import Status
-
+from grass.pydispatch.signal import Signal
 
 # global variables for node types
 TIME_PERIOD = "time_period"
@@ -137,12 +128,8 @@ class HistoryBrowserTree(CTreeView):
         self.runIgnoredCmdPattern = Signal("HistoryBrowserTree.runIgnoredCmdPattern")
 
         self._giface.currentMapsetChanged.connect(self.UpdateHistoryModelFromScratch)
-        self._giface.entryToHistoryAdded.connect(
-            lambda entry: self.InsertCommand(entry)
-        )
-        self._giface.entryInHistoryUpdated.connect(
-            lambda entry: self.UpdateCommand(entry)
-        )
+        self._giface.entryToHistoryAdded.connect(self.InsertCommand)
+        self._giface.entryInHistoryUpdated.connect(self.UpdateCommand)
 
         self.SetToolTip(_("Double-click to open the tool"))
         self.selectionChanged.connect(self.OnItemSelected)

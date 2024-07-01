@@ -17,24 +17,23 @@ This program is free software under the GNU General Public License
 """
 
 import os
+
 import wx
-
-import grass.script as grass
-
-from gui_core.mapdisp import DoubleMapPanel, FrameMixin
-from gui_core.dialogs import GetImageHandlers
-from gui_core.wrap import Slider
-from core.render import Map
-from mapdisp import statusbar as sb
+from core import globalvar
 from core.debug import Debug
 from core.gcmd import GError, GMessage
 from core.layerlist import LayerListToRendererConverter
-from core import globalvar
-from gui_core.query import QueryDialog, PrepareQueryResults
-
-from mapswipe.toolbars import SwipeMapToolbar, SwipeMainToolbar, SwipeMiscToolbar
+from core.render import Map
+from gui_core.dialogs import GetImageHandlers
+from gui_core.mapdisp import DoubleMapPanel, FrameMixin
+from gui_core.query import PrepareQueryResults, QueryDialog
+from gui_core.wrap import Slider
+from mapdisp import statusbar as sb
+from mapswipe.dialogs import PreferencesDialog, SwipeMapDialog
 from mapswipe.mapwindow import SwipeBufferedWindow
-from mapswipe.dialogs import SwipeMapDialog, PreferencesDialog
+from mapswipe.toolbars import SwipeMainToolbar, SwipeMapToolbar, SwipeMiscToolbar
+
+import grass.script as grass
 
 
 class SwipeMapPanel(DoubleMapPanel):
@@ -85,8 +84,8 @@ class SwipeMapPanel(DoubleMapPanel):
         self.secondMapWindow.mapQueried.connect(self.Query)
 
         # bind tracking cursosr to mirror it
-        self.firstMapWindow.Bind(wx.EVT_MOTION, lambda evt: self.TrackCursor(evt))
-        self.secondMapWindow.Bind(wx.EVT_MOTION, lambda evt: self.TrackCursor(evt))
+        self.firstMapWindow.Bind(wx.EVT_MOTION, self.TrackCursor)
+        self.secondMapWindow.Bind(wx.EVT_MOTION, self.TrackCursor)
 
         self.MapWindow = self.firstMapWindow  # current by default
         self.firstMapWindow.zoomhistory = self.secondMapWindow.zoomhistory
@@ -785,9 +784,7 @@ class SwipeMapPanel(DoubleMapPanel):
         else:
             self._queryDialog = QueryDialog(parent=self, data=result)
             self._queryDialog.Bind(wx.EVT_CLOSE, self._oncloseQueryDialog)
-            self._queryDialog.redirectOutput.connect(
-                lambda output: self._giface.WriteLog(output)
-            )
+            self._queryDialog.redirectOutput.connect(self._giface.WriteLog)
             self._queryDialog.Show()
 
     def _oncloseQueryDialog(self, event):
