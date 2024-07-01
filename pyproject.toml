@@ -501,7 +501,7 @@ limit-inference-results = 100
 # usually to register additional checkers.
 load-plugins = [
     "pylint.extensions.redefined_variable_type",
-    "pylint.extensions.bad_builtin",
+    # "pylint.extensions.bad_builtin", # *GRASS TODO: Enable later*
 ]
 
 # Pickle collected data for later comparisons.
