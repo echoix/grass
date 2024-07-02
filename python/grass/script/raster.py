@@ -132,6 +132,17 @@ def mapcalc(
     e = t.substitute(**kwargs)
 
     try:
+        # run_command(
+        #     "r.mapcalc",
+        #     file="-",
+        #     stdin=e,
+        #     env=env,
+        #     seed=seed,
+        #     quiet=quiet,
+        #     superquiet=superquiet,
+        #     verbose=verbose,
+        #     overwrite=overwrite,
+        # )
         write_command(
             "r.mapcalc",
             file="-",

@@ -55,3 +55,6 @@ node_modules
 *.gcno
 *.gcda
 .coverage
+
+logs/*.log
+logs/*/*.log

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../mkcheck"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../mkcheck-eval"
+		}
+	],
+	"settings": {}
+}
