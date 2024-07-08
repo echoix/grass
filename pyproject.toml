@@ -160,8 +160,6 @@ ignore = [
     "FURB105", # print-empty-string
     "FURB110", # if-exp-instead-of-or-operator
     "FURB113", # repeated-append
-    "FURB116", # f-string-number-format
-    "FURB116", # f-string-number-format
     "FURB118", # reimplemented-operator
     "FURB129", # readlines-in-for
     "FURB131", # delete-full-slice
