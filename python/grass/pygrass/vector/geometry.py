@@ -790,7 +790,7 @@ class Line(Geo):
 
         ..
         """
-        bbox = bbox if bbox else Bbox()
+        bbox = bbox or Bbox()
         libvect.Vect_line_box(self.c_points, bbox.c_bbox)
         return bbox
 
@@ -1374,7 +1374,7 @@ class Boundary(Line):
     def _centroid(self, side, idonly=False):
         if side > 0:
             v_id = libvect.Vect_get_area_centroid(self.c_mapinfo, side)
-            v_id = v_id if v_id else None
+            v_id = v_id or None
             if idonly:
                 return v_id
             else:
@@ -1495,7 +1495,7 @@ class Isle(Geo):
     @mapinfo_must_be_set
     def bbox(self, bbox=None):
         """Return bounding box of Isle"""
-        bbox = bbox if bbox else Bbox()
+        bbox = bbox or Bbox()
         libvect.Vect_get_isle_box(self.c_mapinfo, self.id, bbox.c_bbox)
         return bbox
 
@@ -1698,7 +1698,7 @@ class Area(Geo):
         :param bbox: a Bbox object to fill with info from bounding box of area
         :type bbox: a Bbox object
         """
-        bbox = bbox if bbox else Bbox()
+        bbox = bbox or Bbox()
         libvect.Vect_get_area_box(self.c_mapinfo, self.id, bbox.c_bbox)
         return bbox
 
@@ -1796,7 +1796,7 @@ class Area(Geo):
         :param cats: a Cats object to fill with info with area categories
         :type cats: a Cats object
         """
-        cats = cats if cats else Cats()
+        cats = cats or Cats()
         libvect.Vect_get_area_cats(self.c_mapinfo, self.id, cats.c_cats)
         return cats
 
@@ -1818,7 +1818,7 @@ class Area(Geo):
         :param bbox: the bounding box where run the analysis
         :type bbox: a Bbox object
         """
-        bbox = bbox if bbox else self.bbox()
+        bbox = bbox or self.bbox()
         return bool(
             libvect.Vect_point_in_area(
                 point.x, point.y, self.c_mapinfo, self.id, bbox.c_bbox
@@ -1895,8 +1895,8 @@ def read_next_line(
     if c_cats is None:
         free_cats = True
 
-    c_points = c_points if c_points else ctypes.pointer(libvect.line_pnts())
-    c_cats = c_cats if c_cats else ctypes.pointer(libvect.line_cats())
+    c_points = c_points or ctypes.pointer(libvect.line_pnts())
+    c_cats = c_cats or ctypes.pointer(libvect.line_cats())
     ftype, v_id, c_points, c_cats = c_read_next_line(c_mapinfo, c_points, c_cats)
     return GV_TYPE[ftype]["obj"](
         v_id=v_id,
@@ -1943,8 +1943,8 @@ def read_line(
     if c_cats is None:
         free_cats = True
 
-    c_points = c_points if c_points else ctypes.pointer(libvect.line_pnts())
-    c_cats = c_cats if c_cats else ctypes.pointer(libvect.line_cats())
+    c_points = c_points or ctypes.pointer(libvect.line_pnts())
+    c_cats = c_cats or ctypes.pointer(libvect.line_cats())
     feature_id, ftype, c_points, c_cats = c_read_line(
         feature_id, c_mapinfo, c_points, c_cats
     )
