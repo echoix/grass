@@ -394,21 +394,12 @@ class BboxFinder(AbstractFinder):
     of a vector map that are inside or intersect a boundingbox.
     The BboxFinder class is part of a topological vector map object.
 
+    Find geometry feature(s)that are insider or intersect
+    with a boundingbox.
     """
 
-    def __init__(
-        self,
-        c_mapinfo: _Pointer[Map_info],
-        table: Table | None = None,
-        writeable: bool = False,
-    ):
-        """Find geometry feature(s)that are insider or intersect
-        with a boundingbox.
-        """
-        super().__init__(c_mapinfo, table, writeable)
-
     @must_be_open
-    def geos(self, bbox, type="all", bboxlist_only=False):
+    def geos(self, bbox, type="all", bboxlist_only: bool = False):
         """Find vector features inside a boundingbox.
 
         :param bbox: The boundingbox to search in
