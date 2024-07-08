@@ -116,7 +116,9 @@ class SemanticLabelReader:
                     if shortcut and re.match(shortcut, item["shortcut"]) is None:
                         continue
                 except re.error as e:
-                    raise SemanticLabelReaderError("Invalid pattern: {}".format(e)) from e
+                    raise SemanticLabelReaderError(
+                        "Invalid pattern: {}".format(e)
+                    ) from e
 
                 found = True
                 if band and band not in item["bands"]:
@@ -181,7 +183,7 @@ class SemanticLabelReader:
                     shortcut
                     and config[root]["shortcut"].upper() == shortcut.upper()
                     and band.upper()
-                    in map(lambda x: x.upper(), config[root]["bands"].keys())
+                    in (x.upper() for x in config[root]["bands"].keys())
                 ):
                     return filename
 
