@@ -85,7 +85,6 @@ ignore = [
     "ARG001",  # unused-function-argument
     "ARG002",  # unused-method-argument
     "ARG005",  # unused-lambda-argument
-    "B004",    # unreliable-callable-check
     "B006",    # mutable-argument-default
     "B007",    # unused-loop-control-variable
     "B008",    # function-call-in-default-argument

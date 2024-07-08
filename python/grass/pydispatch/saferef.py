@@ -121,7 +121,7 @@ class BoundMethodWeakref:
                 pass
             for function in methods:
                 try:
-                    if hasattr(function, "__call__"):
+                    if callable(function):
                         function(self)
                 except Exception as e:
                     try:

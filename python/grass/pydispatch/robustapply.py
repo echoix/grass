@@ -28,7 +28,7 @@ def function(receiver):
     If fromMethod is true, then the callable already
     has its first argument bound
     """
-    if hasattr(receiver, "__call__"):
+    if callable(receiver):
         # Reassign receiver to the actual method that will be called.
         if hasattr(receiver.__call__, im_func) or hasattr(receiver.__call__, im_code):
             receiver = receiver.__call__
