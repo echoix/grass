@@ -2288,8 +2288,8 @@ class GdalSelect(wx.Panel):
                 lines = ret.splitlines()
                 projectionMatch = "0"
                 if lines:
-                    bandNumber, bandType, projectionMatch = map(
-                        lambda x: x.strip(), lines[0].split(",")
+                    bandNumber, bandType, projectionMatch = (
+                        x.strip() for x in lines[0].split(",")
                     )
 
             return projectionMatch
@@ -2318,8 +2318,8 @@ class GdalSelect(wx.Panel):
 
             layerId = 1
             for line in ret.splitlines():
-                layerName, featureType, projectionMatch, geometryColumn = map(
-                    lambda x: x.strip(), line.split(",")
+                layerName, featureType, projectionMatch, geometryColumn = (
+                    x.strip() for x in line.split(",")
                 )
                 projectionMatchCaption = getProjMatchCaption(projectionMatch)
                 grassName = GetValidLayerName(layerName)
