@@ -4,6 +4,8 @@ Created on Tue Mar 19 11:09:30 2013
 @author: pietro
 """
 
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import grass.lib.vector as libvect
 
 from grass.pygrass.errors import must_be_open
@@ -14,13 +16,24 @@ from grass.pygrass.vector.geometry import read_line, Isle, Area, Node
 # For test purposes
 test_vector_name = "find_doctest_map"
 
+if TYPE_CHECKING:
+    from grass.pygrass.vector.table import Table
+    from ctypes import _Pointer
+    from grass.lib.vector import Map_info
+
 
 class AbstractFinder:
-    def __init__(self, c_mapinfo, table=None, writeable=False):
-        """Abstract finder
-        -----------------
+    def __init__(
+        self,
+        c_mapinfo: _Pointer[Map_info],
+        table: Table | None = None,
+        writeable: bool = False,
+    ):
+        """Find geometry feature(s) around a point.
 
-        Find geometry feature around a point.
+        :param c_mapinfo: Pointer to the vector layer mapinfo structure
+        :param table: Attribute table of the vector layer
+        :param writable: True or False
         """
         self.c_mapinfo = c_mapinfo
         self.table = table
@@ -47,20 +60,6 @@ class PointFinder(AbstractFinder):
     of a vector map that are close to a point. The PointFinder class
     is part of a topological vector map object.
     """
-
-    def __init__(self, c_mapinfo, table=None, writeable=False):
-        """Find geometry feature(s) around a point.
-
-        :param c_mapinfo: Pointer to the vector layer mapinfo structure
-        :type c_mapinfo: ctypes pointer to mapinfo structure
-
-        :param table: Attribute table of the vector layer
-        :type table: Class Table from grass.pygrass.table
-
-        :param writable: True or False
-        :type writeable: boolean
-        """
-        super().__init__(c_mapinfo, table, writeable)
 
     @must_be_open
     def node(self, point, maxdist):
@@ -397,18 +396,14 @@ class BboxFinder(AbstractFinder):
 
     """
 
-    def __init__(self, c_mapinfo, table=None, writeable=False):
+    def __init__(
+        self,
+        c_mapinfo: _Pointer[Map_info],
+        table: Table | None = None,
+        writeable: bool = False,
+    ):
         """Find geometry feature(s)that are insider or intersect
         with a boundingbox.
-
-         :param c_mapinfo: Pointer to the vector layer mapinfo structure
-         :type c_mapinfo: ctypes pointer to mapinfo structure
-
-         :param table: Attribute table of the vector layer
-         :type table: Class Table from grass.pygrass.table
-
-         :param writable: True or False
-         :type writeable: boolean
         """
         super().__init__(c_mapinfo, table, writeable)
 
@@ -662,8 +657,6 @@ class BboxFinder(AbstractFinder):
 
 
 class PolygonFinder(AbstractFinder):
-    def __init__(self, c_mapinfo, table=None, writeable=False):
-        super().__init__(c_mapinfo, table, writeable)
 
     def lines(self, polygon, isles=None):
         pass
