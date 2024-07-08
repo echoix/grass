@@ -156,6 +156,7 @@ jobs:
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
       - name: Run Pylint on grass package
+        continue-on-error: true # DEBUG
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
@@ -163,6 +164,7 @@ jobs:
           pylint --persistent=no --py-version=${{ env.MIN_PYTHON_VERSION }} --jobs=$(nproc) grass
 
       - name: Run Pylint on wxGUI
+        continue-on-error: true # DEBUG
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
@@ -170,6 +172,7 @@ jobs:
           pylint --persistent=no --py-version=${{ env.MIN_PYTHON_VERSION }} --jobs=$(nproc) *
 
       - name: Run Pylint on other files using pytest
+        continue-on-error: true # DEBUG
         run: |
           pipx inject --include-apps pylint pytest
           pipx inject pylint pytest-pylint pytest-github-actions-annotate-failures pytest-timeout
@@ -201,6 +204,34 @@ jobs:
           name: sphinx-grass
           path: sphinx-grass
           retention-days: 3
+
+      - name: Run Pylint on grass package
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          cd python
+          pylint --persistent=no --py-version=${{ env.MIN_PYTHON_VERSION }} --jobs=$(nproc) grass
+
+      - name: Run Pylint on wxGUI
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          cd gui/wxpython
+          pylint --persistent=no --py-version=${{ env.MIN_PYTHON_VERSION }} --jobs=$(nproc) *
+
+      - name: Run Pylint on other files using pytest
+        run: |
+          pipx inject --include-apps pylint pytest
+          pipx inject pylint pytest-pylint= pytest-github-actions-annotate-failures
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          pytest --pylint -m pylint --pylint-rcfile=.pylintrc --pylint-jobs=$(nproc) \
+            --pylint-ignore-patterns="${{ env.PylintIgnore }}"
+        env:
+          PylintIgnore: "python/.*,gui/wxpython/.*,doc/.*,man/.*,utils/.*,locale/.*,raster/.*,\
+            imagery/.*,scripts/r.in.wms/wms_drv.py,scripts/g.extension/g.extension.py,\
+            temporal/t.rast.accdetect/t.rast.accdetect.py,temporal/t.rast.accumulate/t.rast.accumulate.py,\
+            scripts/d.rast.edit/d.rast.edit.py"
 
   python-success:
     name: Python Code Quality Result
