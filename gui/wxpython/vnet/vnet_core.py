@@ -482,11 +482,13 @@ class VNETAnalyses:
         else:
             cmdParams.append("input=" + params["input"])
 
-        cmdParams.append("file=" + self.coordsTmpFile)
-
-        cmdParams.append("dmax=" + str(params["max_dist"]))
-
-        cmdParams.append("--overwrite")
+        cmdParams.extend(
+            (
+                "file=" + self.coordsTmpFile,
+                "dmax=" + str(params["max_dist"]),
+                "--overwrite",
+            )
+        )
         self._prepareCmd(cmd=cmdParams)
 
         if flags["t"]:
@@ -694,8 +696,9 @@ class VNETAnalyses:
         if not self.tmpInPtsConnected:
             return False
 
-        cmdParams.append("input=" + self.tmpInPtsConnected.GetVectMapName())
-        cmdParams.append("--overwrite")
+        cmdParams.extend(
+            ("input=" + self.tmpInPtsConnected.GetVectMapName(), "--overwrite")
+        )
 
         self._setCmdForSpecificAn(cmdParams)
 
