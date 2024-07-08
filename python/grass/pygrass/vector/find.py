@@ -408,7 +408,7 @@ class BboxFinder(AbstractFinder):
         super().__init__(c_mapinfo, table, writeable)
 
     @must_be_open
-    def geos(self, bbox, type="all", bboxlist_only=False):
+    def geos(self, bbox, type="all", bboxlist_only: bool = False):
         """Find vector features inside a boundingbox.
 
         :param bbox: The boundingbox to search in
