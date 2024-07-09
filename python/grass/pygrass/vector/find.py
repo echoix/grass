@@ -30,7 +30,8 @@ class AbstractFinder:
     def __init__(
         self,
         c_mapinfo: _Pointer[Map_info],
-        table: Table | None = None,
+        table: Optional[Table] = None,  # noqa: FA100, UP007
+        # table: Table | None = None,
         writeable: bool = False,
     ):
         """Find geometry feature(s) around a point.
