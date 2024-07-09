@@ -5,7 +5,7 @@ Created on Tue Mar 19 11:09:30 2013
 """
 
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING  # noqa: F401
 import grass.lib.vector as libvect
 
 from grass.pygrass.errors import must_be_open
@@ -16,10 +16,14 @@ from grass.pygrass.vector.geometry import read_line, Isle, Area, Node
 # For test purposes
 test_vector_name = "find_doctest_map"
 
-if TYPE_CHECKING:
-    from grass.pygrass.vector.table import Table
-    from ctypes import _Pointer
-    from grass.lib.vector import Map_info
+from grass.pygrass.vector.table import Table  # noqa: TCH001, E402
+from ctypes import _Pointer  # noqa: TCH003, E402
+from grass.lib.vector import Map_info  # noqa: TCH001, E402
+
+# if TYPE_CHECKING:
+#     from grass.pygrass.vector.table import Table
+#     from ctypes import _Pointer
+#     from grass.lib.vector import Map_info
 
 
 class AbstractFinder:
