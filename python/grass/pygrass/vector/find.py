@@ -5,7 +5,7 @@ Created on Tue Mar 19 11:09:30 2013
 """
 
 from __future__ import annotations
-from typing import TYPE_CHECKING  # noqa: F401
+from typing import TYPE_CHECKING
 import grass.lib.vector as libvect
 
 from grass.pygrass.errors import must_be_open
@@ -16,14 +16,10 @@ from grass.pygrass.vector.geometry import read_line, Isle, Area, Node
 # For test purposes
 test_vector_name = "find_doctest_map"
 
-from grass.pygrass.vector.table import Table  # noqa: TCH001, E402
-from ctypes import _Pointer  # noqa: TCH003, E402
-from grass.lib.vector import Map_info  # noqa: TCH001, E402
-
-# if TYPE_CHECKING:
-#     from grass.pygrass.vector.table import Table
-#     from ctypes import _Pointer
-#     from grass.lib.vector import Map_info
+if TYPE_CHECKING:
+    from grass.pygrass.vector.table import Table
+    from ctypes import _Pointer
+    from grass.lib.vector import Map_info
 
 
 class AbstractFinder:
@@ -117,9 +113,7 @@ class PointFinder(AbstractFinder):
             )
 
     @must_be_open
-    def geo(
-        self, point, maxdist: float, type="all", exclude=0
-    ) -> Optional[Node]:  # noqa: UP007, FA100
+    def geo(self, point, maxdist: float, type="all", exclude=0) -> Node | None:
         """Find the nearest vector feature around a specific point.
 
         :param point: The point to search
@@ -668,7 +662,7 @@ if __name__ == "__main__":
     utils.create_test_vector_map(test_vector_name)
     doctest.testmod()
 
-    """Remove the generated vector map, if exist"""
+    # Remove the generated vector map, if exist
     from grass.pygrass.utils import get_mapset_vector
     from grass.script.core import run_command
 
