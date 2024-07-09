@@ -117,14 +117,15 @@ class PointFinder(AbstractFinder):
             )
 
     @must_be_open
-    def geo(self, point, maxdist, type="all", exclude=0):
+    def geo(
+        self, point, maxdist: float, type="all", exclude=0
+    ) -> Optional[Node]:  # noqa: UP007, FA100
         """Find the nearest vector feature around a specific point.
 
         :param point: The point to search
         :type point: grass.pygrass.vector.geometry.Point
 
         :param maxdist: The maximum search distance around the point
-        :type maxdist: float
 
         :param type: The type of feature to search for
                      Valid type are all the keys in find.vtype dictionary
