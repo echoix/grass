@@ -5,7 +5,7 @@ Created on Tue Mar 19 11:09:30 2013
 """
 
 from __future__ import annotations
-from typing import TYPE_CHECKING  # noqa: F401
+from typing import TYPE_CHECKING, Optional  # noqa: F401
 import grass.lib.vector as libvect
 
 from grass.pygrass.errors import must_be_open
