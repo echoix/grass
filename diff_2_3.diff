@@ -1,0 +1,179 @@
+diff --git a/ruff_stats_2_main_20240710_c9a1a17c5266f9c01da8be4daf4500aeafbb7ba7.txt b/ruff_stats_3_echoix_pending.txt
+index f455e0be93..fcb9ec885d 100644
+--- a/ruff_stats_2_main_20240710_c9a1a17c5266f9c01da8be4daf4500aeafbb7ba7.txt
++++ b/ruff_stats_3_echoix_pending.txt
+@@ -1,40 +1,40 @@
+-13607	ANN001 	[ ] missing-type-function-argument
+- 9030	ANN201 	[ ] missing-return-type-undocumented-public-function
+- 7346	D400   	[ ] ends-in-period
+- 7336	D415   	[ ] ends-in-punctuation
+- 7293	COM812 	[*] missing-trailing-comma
++13593	ANN001 	[ ] missing-type-function-argument
++ 9029	ANN201 	[ ] missing-return-type-undocumented-public-function
++ 7345	D400   	[ ] ends-in-period
++ 7335	D415   	[ ] ends-in-punctuation
++ 7284	COM812 	[*] missing-trailing-comma
+  5919	N802   	[ ] invalid-function-name
+  4438	N806   	[ ] non-lowercase-variable-in-function
+  2285	D102   	[ ] undocumented-public-method
+- 2149	UP031  	[*] printf-string-formatting
++ 2148	UP031  	[*] printf-string-formatting
+  1826	ANN202 	[ ] missing-return-type-private-function
+  1439	F405   	[ ] undefined-local-with-import-star-usage
+- 1433	D205   	[ ] blank-line-after-summary
++ 1431	D205   	[ ] blank-line-after-summary
+  1353	ERA001 	[*] commented-out-code
+  1337	ARG002 	[ ] unused-method-argument
+  1328	FBT003 	[ ] boolean-positional-value-in-call
+- 1182	ANN204 	[ ] missing-return-type-special-method
++ 1179	ANN204 	[ ] missing-return-type-special-method
+  1115	D401   	[ ] non-imperative-mood
+   909	N803   	[ ] invalid-argument-name
+   893	T201   	[*] print
+   891	CPY001 	[ ] missing-copyright-notice
+   762	PTH118 	[ ] os-path-join
+   751	D212   	[*] multi-line-summary-first-line
+-  715	FBT002 	[ ] boolean-default-value-positional-argument
+-  699	I001   	[*] unsorted-imports
++  712	FBT002 	[ ] boolean-default-value-positional-argument
++  696	I001   	[*] unsorted-imports
+   693	TD002  	[ ] missing-todo-author
+   688	TD003  	[ ] missing-todo-link
+   661	DTZ001 	[ ] call-datetime-without-tzinfo
+   654	FIX002 	[ ] line-contains-todo
+-  650	D107   	[ ] undocumented-public-init
++  649	D107   	[ ] undocumented-public-init
+   643	A001   	[ ] builtin-variable-shadowing
+   585	D103   	[ ] undocumented-public-function
+-  563	PLR2004	[ ] magic-value-comparison
+-  556	D101   	[ ] undocumented-public-class
++  564	PLR2004	[ ] magic-value-comparison
++  558	D101   	[ ] undocumented-public-class
+   519	D202   	[*] no-blank-line-after-function
+   513	ANN206 	[*] missing-return-type-class-method
+   495	E501   	[ ] line-too-long
+-  491	F841   	[ ] unused-variable
++  492	F841   	[ ] unused-variable
+   490	A002   	[ ] builtin-argument-shadowing
+   487	PTH123 	[ ] builtin-open
+   481	PLR6301	[ ] no-self-use
+@@ -56,7 +56,7 @@
+   256	D100   	[ ] undocumented-public-module
+   246	PTH110 	[ ] os-path-exists
+   223	PLC1901	[ ] compare-to-empty-string
+-  217	SIM118 	[*] in-dict-keys
++  218	SIM118 	[*] in-dict-keys
+   195	D105   	[ ] undocumented-magic-method
+   193	SLF001 	[ ] private-member-access
+   184	E722   	[ ] bare-except
+@@ -103,9 +103,8 @@
+    63	S110   	[ ] try-except-pass
+    63	B006   	[*] mutable-argument-default
+    63	RUF012 	[ ] mutable-class-default
+-   62	BLE001 	[ ] blind-except
++   61	BLE001 	[ ] blind-except
+    60	PTH119 	[ ] os-path-basename
+-   59	FURB110	[*] if-exp-instead-of-or-operator
+    58	PERF203	[ ] try-except-in-loop
+    58	RUF005 	[ ] collection-literal-concatenation
+    57	S608   	[ ] hardcoded-sql-expression
+@@ -116,7 +115,6 @@
+    49	PTH122 	[ ] os-path-splitext
+    49	N812   	[ ] lowercase-imported-as-non-lowercase
+    49	F821   	[ ] undefined-name
+-   48	B904   	[ ] raise-without-from-inside-except
+    44	D104   	[ ] undocumented-public-package
+    43	SIM201 	[*] negate-equal-op
+    43	D407   	[*] dashed-underline-after-section
+@@ -139,7 +137,6 @@
+    29	FURB101	[ ] read-whole-file
+    28	D412   	[*] blank-lines-between-header-and-content
+    26	D402   	[ ] no-signature
+-   25	C417   	[*] unnecessary-map
+    25	PTH120 	[ ] os-path-dirname
+    25	FURB103	[ ] write-whole-file
+    24	S607   	[ ] start-process-with-partial-path
+@@ -147,6 +144,7 @@
+    24	D300   	[ ] triple-single-quotes
+    24	PLR6201	[*] literal-membership
+    24	FURB154	[*] repeated-global
++   22	B904   	[ ] raise-without-from-inside-except
+    22	E266   	[*] multiple-leading-hashes-for-block-comment
+    20	C416   	[*] unnecessary-comprehension
+    19	S405   	[ ] suspicious-xml-etree-import
+@@ -200,7 +198,6 @@
+     8	D206   	[ ] indent-with-spaces
+     8	TRY004 	[ ] type-check-without-type-error
+     7	C414   	[*] unnecessary-double-cast-or-process
+-    7	C419   	[*] unnecessary-comprehension-in-call
+     7	DTZ011 	[ ] call-date-today
+     7	EXE002 	[ ] shebang-missing-executable-file
+     7	FIX004 	[ ] line-contains-hack
+@@ -210,31 +207,30 @@
+     7	PTH111 	[ ] os-path-expanduser
+     7	PTH204 	[ ] os-path-getmtime
+     7	D210   	[ ] surrounding-whitespace
++    7	UP034  	[*] extraneous-parentheses
+     6	S108   	[ ] hardcoded-temp-file
+     6	PIE810 	[*] multiple-starts-ends-with
+     6	RET501 	[*] unnecessary-return-none
+     6	SIM401 	[*] if-else-block-instead-of-dict-get
+     6	E741   	[ ] ambiguous-variable-name
+     6	F811   	[ ] redefined-while-unused
+-    6	UP034  	[*] extraneous-parentheses
+     6	UP036  	[*] outdated-version-block
+     6	RUF019 	[*] unnecessary-key-check
+     5	S202   	[ ] tarfile-unsafe-members
+     5	S324   	[ ] hashlib-insecure-hash-function
+     5	S602   	[ ] subprocess-popen-with-shell-equals-true
++    5	C404   	[*] unnecessary-list-comprehension-dict
+     5	N805   	[*] invalid-first-argument-name-for-method
+     5	PLE0704	[ ] misplaced-bare-raise
+     5	FURB171	[*] single-item-membership-test
+-    4	C404   	[*] unnecessary-list-comprehension-dict
+     4	PT018  	[*] pytest-composite-assertion
+     4	D405   	[*] capitalize-section-name
+     4	D416   	[*] section-name-ends-in-colon
+     4	D419   	[ ] empty-docstring
+-    4	FURB136	[*] if-expr-min-max
+     4	RUF003 	[ ] ambiguous-unicode-character-comment
+     3	S604   	[ ] call-with-shell-equals-true
+     3	S606   	[ ] start-process-with-no-shell
+-    3	B009   	[*] get-attr-with-constant
++    3	FBT001 	[ ] boolean-type-hint-positional-argument
+     3	B034   	[ ] re-sub-positional-args
+     3	C403   	[*] unnecessary-list-comprehension-set
+     3	DTZ002 	[ ] call-datetime-today
+@@ -244,16 +240,11 @@
+     3	PT009  	[ ] pytest-unittest-assertion
+     3	N818   	[ ] error-suffix-on-exception-name
+     3	D411   	[*] no-blank-line-before-section
+-    3	F632   	[*] is-literal
+     3	PLC0414	[*] useless-import-alias
+-    3	PLR2044	[*] empty-comment
+     3	PLW1641	[ ] eq-without-hash
+-    3	FURB105	[*] print-empty-string
+-    3	FURB116	[ ] f-string-number-format
+     3	TRY201 	[*] verbose-raise
+     2	S403   	[ ] suspicious-pickle-import
+     2	S406   	[ ] suspicious-xml-sax-import
+-    2	B004   	[*] unreliable-callable-check
+     2	COM818 	[ ] trailing-comma-on-bare-tuple
+     2	C401   	[*] unnecessary-generator-set
+     2	C405   	[*] unnecessary-literal-set
+@@ -274,7 +265,6 @@
+     2	RUF013 	[*] implicit-optional
+     1	YTT204 	[ ] sys-version-info-minor-cmp-int
+     1	S113   	[ ] request-without-timeout
+-    1	FBT001 	[ ] boolean-type-hint-positional-argument
+     1	B023   	[ ] function-uses-loop-variable
+     1	B028   	[ ] no-explicit-stacklevel
+     1	C400   	[*] unnecessary-generator-list
+@@ -286,7 +276,6 @@
+     1	N804   	[*] invalid-first-argument-name-for-class-method
+     1	N817   	[ ] camelcase-imported-as-acronym
+     1	E731   	[*] lambda-assignment
+-    1	W391   	[*] too-many-newlines-at-end-of-file
+     1	D201   	[*] no-blank-line-before-function
+     1	D204   	[*] one-blank-line-after-class
+     1	D409   	[*] section-underline-matches-section-length
