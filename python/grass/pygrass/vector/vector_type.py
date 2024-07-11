@@ -4,10 +4,10 @@ Created on Wed Jul 18 10:49:26 2012
 @author: pietro
 """
 
-from typing import Literal, TypedDict
-import grass.lib.vector as libvect
 from enum import IntEnum
+from typing import Literal, TypedDict
 
+import grass.lib.vector as libvect
 
 MAPTYPE = {
     libvect.GV_FORMAT_NATIVE: "native",

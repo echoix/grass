@@ -5,21 +5,22 @@ Created on Tue Mar 19 11:09:30 2013
 """
 
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 import grass.lib.vector as libvect
-
 from grass.pygrass.errors import must_be_open
-
-from grass.pygrass.vector.basic import Ilist, BoxList
-from grass.pygrass.vector.geometry import read_line, Isle, Area, Node
+from grass.pygrass.vector.basic import BoxList, Ilist
+from grass.pygrass.vector.geometry import Area, Isle, Node, read_line
 
 # For test purposes
 test_vector_name = "find_doctest_map"
 
 if TYPE_CHECKING:
-    from grass.pygrass.vector.table import Table
     from ctypes import _Pointer
+
     from grass.lib.vector import Map_info
+    from grass.pygrass.vector.table import Table
 
 
 class AbstractFinder:
@@ -657,6 +658,7 @@ class PolygonFinder(AbstractFinder):
 
 if __name__ == "__main__":
     import doctest
+
     from grass.pygrass import utils
 
     utils.create_test_vector_map(test_vector_name)
