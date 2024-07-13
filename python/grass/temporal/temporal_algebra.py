@@ -946,7 +946,7 @@ class TemporalAlgebraParser:
             return False
 
         # Compute the common granularity
-        if "absolute" in ttypes.keys():
+        if "absolute" in ttypes:
             self.granularity = compute_common_absolute_time_granularity(
                 grans, start_times
             )

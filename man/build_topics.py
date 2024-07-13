@@ -62,7 +62,7 @@ def build_topics(ext):
         except Exception:
             desc.strip()
 
-        if key not in keywords.keys():
+        if key not in keywords:
             keywords[key] = {}
             keywords[key][fname] = desc
         elif fname not in keywords[key]:

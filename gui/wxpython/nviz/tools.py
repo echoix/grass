@@ -225,7 +225,7 @@ class NvizToolWindow(GNotebook):
                 "foldPanelBar": self.foldpanelAnalysis,
             },
         }
-        if new in pages.keys():
+        if new in pages:
             pages[new]["expand"]()
             wx.CallAfter(self.UpdateScrolling, (pages[new]["foldPanelBar"],))
 

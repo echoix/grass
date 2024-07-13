@@ -171,7 +171,7 @@ def main():
         tar = tarfile.TarFile.open(name=outfile_base, mode="w:gz")
     tar.add(infile, recursive=True)
     if vrt_files:
-        for f in vrt_files.keys():
+        for f in vrt_files:
             tar.add(f, recursive=True)
 
     tar.close()

@@ -751,7 +751,7 @@ class WSPropertiesDialog(WSDialogBase):
         """Get url/server/passwod from cmd tuple"""
         conn = {"url": "", "username": "", "password": ""}
 
-        for k in conn.keys():
+        for k in conn:
             if k in cmd[1]:
                 conn[k] = cmd[1][k]
         return conn

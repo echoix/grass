@@ -886,8 +886,8 @@ class VectorDBInfo:
 
             # check for key column
             # v.db.connect -g/p returns always key column name lowercase
-            if self.layers[layer]["key"] not in columns.keys():
-                for col in columns.keys():
+            if self.layers[layer]["key"] not in columns:
+                for col in columns:
                     if col.lower() == self.layers[layer]["key"]:
                         self.layers[layer]["key"] = col.upper()
                         break

@@ -108,7 +108,7 @@ def build_keywords(ext):
                     break
 
         for key in keys:
-            if key not in keywords.keys():
+            if key not in keywords:
                 keywords[key] = []
                 keywords[key].append(fname)
             elif fname not in keywords[key]:
@@ -127,9 +127,9 @@ def build_keywords(ext):
         # this list it is useful to create the TOC using only the first
         # character for keyword
         firstchar = key[0].lower()
-        if firstchar not in char_list.keys():
+        if firstchar not in char_list:
             char_list[str(firstchar)] = key
-        elif firstchar in char_list.keys():
+        elif firstchar in char_list:
             if key.lower() < char_list[str(firstchar)].lower():
                 char_list[str(firstchar.lower())] = key
 

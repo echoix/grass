@@ -386,7 +386,7 @@ class VectorTopo(Vector):
 
         ..
         """
-        if vtype in _NUMOF.keys():
+        if vtype in _NUMOF:
             if isinstance(_NUMOF[vtype], tuple):
                 fn, ptype = _NUMOF[vtype]
                 return fn(self.c_mapinfo, ptype)

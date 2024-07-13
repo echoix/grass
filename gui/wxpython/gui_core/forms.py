@@ -3027,7 +3027,7 @@ class CmdPanel(wx.Panel):
         iconSectionDict = {
             "manual": os.path.join(globalvar.ICONDIR, iconTheme, "help.png")
         }
-        if section in iconSectionDict.keys():
+        if section in iconSectionDict:
             image = wx.Image(iconSectionDict[section]).Scale(
                 16, 16, wx.IMAGE_QUALITY_HIGH
             )

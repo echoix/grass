@@ -167,7 +167,7 @@ def get_commands(*, env=None):
                     name, ext = os.path.splitext(fname)
                     if ext != ".manifest":
                         cmd.append(name)
-                    if ext in scripts.keys():
+                    if ext in scripts:
                         scripts[ext].append(name)
                 else:
                     cmd.append(fname)
