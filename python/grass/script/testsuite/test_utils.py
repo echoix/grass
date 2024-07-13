@@ -12,14 +12,12 @@ class EnvironChange(TestCase):
     NOT_FOUND = "Not found!"
 
     def setUp(self):
-        self.original_env = {
-            k: os.environ.get(k, self.NOT_FOUND) for k in self.env.keys()
-        }
+        self.original_env = {k: os.environ.get(k, self.NOT_FOUND) for k in self.env}
         for k, v in self.env.items():
             os.environ[k] = v
 
     def tearDown(self):
-        for k in self.env.keys():
+        for k in self.env:
             oval = self.original_env[k]
             if oval == self.NOT_FOUND:
                 os.environ.pop(k)

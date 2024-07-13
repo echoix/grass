@@ -398,7 +398,7 @@ class VectorTopo(Vector):
     def num_primitives(self):
         """Return dictionary with the number of all primitives"""
         output = {}
-        for prim in VTYPE.keys():
+        for prim in VTYPE:
             output[prim] = self.num_primitive_of(prim)
         return output
 
@@ -444,7 +444,7 @@ class VectorTopo(Vector):
             >>> test_vect.close()
         """
         is2D = not self.is_3D()
-        if vtype in _GEOOBJ.keys():
+        if vtype in _GEOOBJ:
             if _GEOOBJ[vtype] is not None:
                 ids = (indx for indx in range(1, self.number_of(vtype) + 1))
                 if idonly:
