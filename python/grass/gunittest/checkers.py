@@ -374,7 +374,7 @@ def keyvalue_equals(
     # iterate over subset or just any if not a_is_subset
     # check for missing keys in superset
     # compare matching keys
-    for key in dict_a.keys():
+    for key in dict_a.keys():  # noqa: SIM118
         if a_is_subset and key not in b_keys:
             return False
         equal_fun = key_equal.get(key, def_equal)
