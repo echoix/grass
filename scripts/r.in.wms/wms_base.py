@@ -567,7 +567,7 @@ class GRASSImporter:
             )
 
         # delete environmental variable which overrides region
-        if "GRASS_REGION" in os.environ.keys():
+        if "GRASS_REGION" in os.environ:
             os.environ.pop("GRASS_REGION")
 
         maplist = gs.read_command(
