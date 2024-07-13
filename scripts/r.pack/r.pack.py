@@ -130,7 +130,7 @@ def main():
 
         # Copy vrt files
         if vrt_files:
-            for f in vrt_files.keys():
+            for f in vrt_files:
                 f_tmp_dir = os.path.join(tmp, f)
                 if not os.path.exists(f_tmp_dir):
                     os.mkdir(f_tmp_dir)
@@ -169,7 +169,7 @@ def main():
         tar = tarfile.TarFile.open(name=outfile_base, mode="w:gz")
     tar.add(infile, recursive=True)
     if vrt_files:
-        for f in vrt_files.keys():
+        for f in vrt_files:
             tar.add(f, recursive=True)
 
     tar.close()
