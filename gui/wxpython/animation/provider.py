@@ -730,7 +730,7 @@ class DictRefCounter:
     def Clear(self):
         """Clears items which are not needed any more."""
         Debug.msg(4, "DictRefCounter.Clear")
-        for key in self.dictionary.copy().keys():
+        for key in self.dictionary.copy():
             if key is not None:
                 if self.referenceCount[key] <= 0:
                     del self.dictionary[key]
@@ -927,7 +927,7 @@ def test():
 
     prov.Load(bgcolor=(13, 156, 230), nprocs=4)
 
-    for key in bPool.keys():
+    for key in bPool:
         if key is not None:
             bPool[key].SaveFile(os.path.join(tempDir, key + ".png"), wx.BITMAP_TYPE_PNG)
 
