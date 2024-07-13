@@ -179,7 +179,7 @@ def main():
         sp.update_command_string(dbif=dbif)
     elif len(update_dict) > 0:
         count = 0
-        for key in update_dict.keys():
+        for key in update_dict:
             id = update_dict[key]
             sp = tgis.open_old_stds(id, type, dbif)
             sp.update_from_registered_maps(dbif)

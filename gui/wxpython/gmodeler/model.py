@@ -2263,7 +2263,7 @@ class ProcessModelFile:
             pos, size = self._getDim(node)
             text = self._filterValue(self._getNodeText(node, "condition")).strip()
             aid = {"if": [], "else": []}
-            for b in aid.keys():
+            for b in aid:
                 bnode = node.find(b)
                 if bnode is None:
                     continue

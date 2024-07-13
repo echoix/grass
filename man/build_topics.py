@@ -35,7 +35,7 @@ for fname in htmlfiles:
         desc = lines[index_desc].split("-", 1)[1].strip()
     except:
         desc.strip()
-    if key not in keywords.keys():
+    if key not in keywords:
         keywords[key] = {}
         keywords[key][fname] = desc
     elif fname not in keywords[key]:
