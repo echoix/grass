@@ -53,7 +53,7 @@ def update_keyval_file(filename, module, returncode):
     # always overwrite name and status
     keyval["name"] = module.name
     keyval["tested_dir"] = module.tested_dir
-    if "status" not in keyval.keys():
+    if "status" not in keyval:
         if returncode is None or returncode:
             status = "failed"
         else:

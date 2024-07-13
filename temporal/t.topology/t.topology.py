@@ -104,7 +104,7 @@ def main():
 
     dict_ = sp.count_temporal_types(maps)
 
-    for key in dict_.keys():
+    for key in dict_:
         if key == "interval":
             #      0123456789012345678901234567890
             print(" | Number of intervals: ....... %s" % (dict_[key]))
@@ -128,7 +128,7 @@ def main():
     dict_ = sp.count_temporal_relations(maps)
 
     if dict_:
-        for key in dict_.keys():
+        for key in dict_:
             if key == "equal":
                 #      0123456789012345678901234567890
                 print(" | Equal:...................... %s" % (dict_[key]))
