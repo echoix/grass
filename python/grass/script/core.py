@@ -469,7 +469,7 @@ def run_command(*args, **kwargs):
     if "encoding" in kwargs:
         encoding = kwargs["encoding"]
 
-    if _capture_stderr and "stderr" not in kwargs.keys():
+    if _capture_stderr and "stderr" not in kwargs:
         kwargs["stderr"] = PIPE
     ps = start_command(*args, **kwargs)
     if _capture_stderr:
@@ -537,7 +537,7 @@ def read_command(*args, **kwargs):
     if "encoding" in kwargs:
         encoding = kwargs["encoding"]
 
-    if _capture_stderr and "stderr" not in kwargs.keys():
+    if _capture_stderr and "stderr" not in kwargs:
         kwargs["stderr"] = PIPE
     process = pipe_command(*args, **kwargs)
     stdout, stderr = process.communicate()
@@ -639,7 +639,7 @@ def write_command(*args, **kwargs):
         stdin = encode(stdin)
     else:
         stdin = encode(stdin, encoding=encoding)
-    if _capture_stderr and "stderr" not in kwargs.keys():
+    if _capture_stderr and "stderr" not in kwargs:
         kwargs["stderr"] = PIPE
     process = feed_command(*args, **kwargs)
     unused, stderr = process.communicate(stdin)
@@ -1152,7 +1152,7 @@ def compare_key_value_text_files(
         return False
 
     # We compare matching keys
-    for key in dict_a.keys():
+    for key in dict_a:
         # Floating point values must be handled separately
         if isinstance(dict_a[key], float) and isinstance(dict_b[key], float):
             if abs(dict_a[key] - dict_b[key]) > precision:
