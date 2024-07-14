@@ -27,5 +27,25 @@
     // enable Nix lock file update (flake.lock)
     "nix": {
         "enabled": true
-    }
+    },
+
+    "packageRules": [
+        {
+            // Adapted from https://docs.renovatebot.com/presets-group/#groupgithubartifactactions
+            "groupName": "GitHub Artifact Actions",
+            "matchManagers": ["github-actions"],
+            "matchPackageNames": [
+                "actions/download-artifact",
+                "actions/upload-artifact",
+            ],
+        },
+        {
+            "groupName": "ruff",
+            "matchPackageNames": [
+                "astral-sh/ruff",
+                "astral-sh/ruff-pre-commit",
+                "ruff",
+            ],
+        },
+    ],
 }
