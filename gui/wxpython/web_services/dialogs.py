@@ -1049,6 +1049,7 @@ class SaveWMSLayerDialog(wx.Dialog):
                 msg = (
                     _("Region <%s> does not exist.") % self.params["region"].GetValue()
                 )
+
                 GWarning(parent=self, message=msg)
                 return
 

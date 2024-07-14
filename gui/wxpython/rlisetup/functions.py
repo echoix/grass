@@ -149,7 +149,7 @@ def sampleAreaVector(
         ):
             GError(
                 message=_(
-                    "The raster map <%s> already exists."
+                    "The raster map <{map_name}> already exists."
                     " Please remove or rename the maps "
                     "with the prefix '%s' or select the "
                     "option to overwrite existing maps"

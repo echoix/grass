@@ -1690,7 +1690,7 @@ class PythonPanel(wx.Panel):
             dlg = wx.MessageDialog(
                 self,
                 message=_(
-                    "{} script is locally modified. "
+                    "{script_type} script is locally modified. "
                     "Refresh will discard all changes. "
                     "Do you really want to continue?"
                 ).format(self.body.script_type),
