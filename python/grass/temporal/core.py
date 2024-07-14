@@ -768,12 +768,12 @@ def init(raise_fatal_error=False, skip_db_version_check=False):
                 "Temporal database version mismatch detected.\n{backup}"
                 "Supported temporal database version is: {tdb}\n"
                 "Your existing temporal database version: {ctdb}\n"
-                "Current temporal database info: {info}".format(
-                    backup=backup_howto,
-                    tdb=tgis_db_version,
-                    ctdb=tgis_db_version_meta,
-                    info=get_database_info_string(),
-                )
+                "Current temporal database info: {info}"
+            ).format(
+                backup=backup_howto,
+                tdb=tgis_db_version,
+                ctdb=tgis_db_version_meta,
+                info=get_database_info_string(),
             )
 
             if tgis_db_version_meta == 2 and tgis_db_version == 3:
@@ -783,8 +783,8 @@ def init(raise_fatal_error=False, skip_db_version_check=False):
                 msgr.fatal(
                     _(
                         "The format of your actual temporal database is "
-                        "not supported any more. {m}".format(m=message)
-                    )
+                        "not supported any more. {m}"
+                    ).format(m=message)
                 )
 
         return
@@ -879,7 +879,7 @@ def create_temporal_database(dbif):
     stvds_tables_sql = stds_tables_template_sql.replace("STDS", "stvds")
     str3ds_tables_sql = stds_tables_template_sql.replace("STDS", "str3ds")
 
-    msgr.message(_("Creating temporal database: %s" % (str(tgis_database_string))))
+    msgr.message(_("Creating temporal database: %s") % (str(tgis_database_string)))
 
     if tgis_backend == "sqlite":
         # We need to create the sqlite3 database path if it does not exist
@@ -892,8 +892,9 @@ def create_temporal_database(dbif):
                     _(
                         "Unable to create SQLite temporal database\n"
                         "Exception: %s\nPlease use t.connect to set a "
-                        "read- and writable temporal database path" % (e)
+                        "read- and writable temporal database path"
                     )
+                    % (e)
                 )
 
         # Set up the trigger that takes care of
@@ -1528,7 +1529,7 @@ class DBConnection:
         except:
             if connected:
                 self.close()
-            self.msgr.error(_("Unable to execute :\n %(sql)s" % {"sql": statement}))
+            self.msgr.error(_("Unable to execute :\n %(sql)s") % {"sql": statement})
             raise
 
         if connected:
@@ -1572,7 +1573,7 @@ class DBConnection:
             if connected:
                 self.close()
             self.msgr.error(
-                _("Unable to execute transaction:\n %(sql)s" % {"sql": statement})
+                _("Unable to execute transaction:\n %(sql)s") % {"sql": statement}
             )
             raise
 
