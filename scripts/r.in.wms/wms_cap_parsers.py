@@ -45,8 +45,8 @@ class BaseCapabilitiesTree(ET.ElementTree):
                 raise ParseError(_("Unable to parse XML file")) from pe
             except OSError as error:
                 raise ParseError(
-                    _("Unable to open XML file '%s'.\n%s\n" % (cap_file, error))
-                ) from error
+                    _("Unable to open XML file '%s'.\n%s\n") % (cap_file, error)
+                )
         else:
             try:
                 ET.ElementTree.__init__(self, element=ET.fromstring(cap_file))
