@@ -66,12 +66,14 @@ jobs:
       - run: pip install uv
       - run: uvx --help
       - run: uv tool --help
+      - run: uv help tool
+      - run: uv tool install --help
 
-      #- name: Install Ruff
+      - name: Install Ruff
         #run: uvx --from ruff==${{ env.RUFF_VERSION }} --help
-        #run: uvx install ruff==${{ env.RUFF_VERSION }}
+        run: uv tool install ruff==${{ env.RUFF_VERSION }}
       - name: Run Ruff
-        run: uvx ruff check --output-format=github . --preview --fix --unsafe-fixes
+        run: ruff check --output-format=github . --preview --fix --unsafe-fixes
       - name: Create and uploads code suggestions to apply for Ruff
         # Will fail fast here if there are changes required
         id: diff-ruff
