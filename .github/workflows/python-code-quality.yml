@@ -86,8 +86,8 @@ jobs:
           extra-upload-changes: pyproject.toml
 
       - name: Install Black only
-        run: uvx black[jupyter]==${{ env.BLACK_VERSION }}
-        #run: uvx install black[jupyter]==${{ env.BLACK_VERSION }}
+        #run: uvx black[jupyter]==${{ env.BLACK_VERSION }}
+        run: uv tool install black[jupyter]==${{ env.BLACK_VERSION }}
 
       - name: Run Black
         run: black .
