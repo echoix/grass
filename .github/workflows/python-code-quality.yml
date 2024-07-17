@@ -67,7 +67,7 @@ jobs:
       - run: uvx --help
 
       - name: Install Ruff
-        run: uvx --with ruff==${{ env.RUFF_VERSION }} --help
+        run: uvx --from ruff==${{ env.RUFF_VERSION }} --help
         #run: uvx install ruff==${{ env.RUFF_VERSION }}
       - name: Run Ruff
         run: ruff check --output-format=github . --preview --fix --unsafe-fixes
