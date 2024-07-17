@@ -110,15 +110,17 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install -r .github/workflows/python_requirements.txt
-          pip install -r .github/workflows/optional_requirements.txt
-          pip install --user pipx
-          pipx ensurepath
-          uvx install flake8==${{ env.FLAKE8_VERSION }}
-          uvx install pylint==${{ env.PYLINT_VERSION }}
-          uvx inject pylint -r .github/workflows/python_requirements.txt -r .github/workflows/optional_requirements.txt
+          uv pip install --system \
+            -r .github/workflows/python_requirements.txt \
+            -r .github/workflows/optional_requirements.txt
+          # pip install --user pipx
+          # pipx ensurepath
+          uv tool install flake8==${{ env.FLAKE8_VERSION }}
+          uv tool install pylint==${{ env.PYLINT_VERSION }} \
+            --with -r .github/workflows/python_requirements.txt -r .github/workflows/optional_requirements.txt
+          # uvx inject pylint -r .github/workflows/python_requirements.txt -r .github/workflows/optional_requirements.txt
           # The extra toml is only needed before Python 3.11
-          uvx install bandit[sarif,toml]==${{ env.BANDIT_VERSION }}
+          uv tool install bandit[sarif,toml]==${{ env.BANDIT_VERSION }}
 
       - name: Run Flake8
         run: |
