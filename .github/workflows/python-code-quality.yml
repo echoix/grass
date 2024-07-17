@@ -65,12 +65,13 @@ jobs:
         run: python -m pip install --upgrade pip
       - run: pip install uv
       - run: uvx --help
+      - run: uv tool --help
 
-      - name: Install Ruff
-        run: uvx --from ruff==${{ env.RUFF_VERSION }} --help
+      #- name: Install Ruff
+        #run: uvx --from ruff==${{ env.RUFF_VERSION }} --help
         #run: uvx install ruff==${{ env.RUFF_VERSION }}
       - name: Run Ruff
-        run: ruff check --output-format=github . --preview --fix --unsafe-fixes
+        run: uvx ruff check --output-format=github . --preview --fix --unsafe-fixes
       - name: Create and uploads code suggestions to apply for Ruff
         # Will fail fast here if there are changes required
         id: diff-ruff
@@ -83,7 +84,8 @@ jobs:
           extra-upload-changes: pyproject.toml
 
       - name: Install Black only
-        run: uvx install black[jupyter]==${{ env.BLACK_VERSION }}
+        run: uvx black[jupyter]==${{ env.BLACK_VERSION }}
+        #run: uvx install black[jupyter]==${{ env.BLACK_VERSION }}
 
       - name: Run Black
         run: black .
