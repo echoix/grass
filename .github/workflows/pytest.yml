@@ -91,6 +91,7 @@ jobs:
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
           pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
             --cov --cov="$(grass --config python_path)" \
+            --cov-branch \
             --cov-report=term \
             -ra . \
             -m 'needs_solo_run'
