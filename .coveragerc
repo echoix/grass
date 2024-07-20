@@ -1,6 +1,6 @@
 [run]
-branch = True
-dynamic_context = test_function
+; branch = True
+; dynamic_context = test_function
 concurrency = multiprocessing,thread
 parallel = True
 data_file = ${INITIAL_PWD-.}/.coverage
@@ -9,7 +9,7 @@ omit =
     ${INITIAL_PWD-.}/.github/*
     ${INITIAL_PWD-.}/bin.*/*
     ${INITIAL_PWD-.}/dist.*/*
-    ${INITIAL_PWD-.}/OBJ.*/*
+    **/OBJ.*/*
 
 source_pkgs = 
     grass
