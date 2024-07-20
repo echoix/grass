@@ -4,7 +4,11 @@ dynamic_context = test_function
 concurrency = multiprocessing,thread
 parallel = True
 data_file = ${INITIAL_PWD-.}/.coverage
-omit = ${INITIAL_PWD-.}/testreport
+omit =
+    ${INITIAL_PWD-.}/testreport
+    ${INITIAL_PWD-.}/.github/*
+    ${INITIAL_PWD-.}/bin.*/*
+    ${INITIAL_PWD-.}/dist.*/*
 source =
     ${INITIAL_PWD-.}/
     ${INITIAL_GISBASE-/usr/local/grass85}/
@@ -12,6 +16,9 @@ source =
 
 [paths]
 source =
+    .
+    /usr/local/grass??/
+    /home/*/install/grass??/
     python/grass/
     /usr/local/grass*/etc/python/grass/
     /home/*/install/grass*/etc/python/grass/
