@@ -1,6 +1,5 @@
 import os
 import subprocess
-from coverage import CoverageData
 from pathlib import Path
 
 
@@ -8,7 +7,7 @@ def get_grass_config_path():
     grass_config_path = None
     try:
         grass_config_path = subprocess.run(
-            ["grass1", "--config", "path"], capture_output=True, text=True, check=True
+            ["grass", "--config", "path"], capture_output=True, text=True, check=True
         ).stdout.rstrip()
     except OSError:
         grass_config_path = None
@@ -34,6 +33,7 @@ def map_scripts_paths(old_path):
 
 
 if __name__ == "__main__":
+    from coverage import CoverageData
     a = CoverageData(".coverage")
     b = CoverageData(".coverage.fixed_scripts")
     b.update(a, map_path=map_scripts_paths)
