@@ -9,19 +9,31 @@ omit =
     ${INITIAL_PWD-.}/.github/*
     ${INITIAL_PWD-.}/bin.*/*
     ${INITIAL_PWD-.}/dist.*/*
-source =
+    ${INITIAL_PWD-.}/OBJ.*/*
+
+source_pkgs = 
+    grass
+source = 
+    .
     ${INITIAL_PWD-.}/
-    ${INITIAL_GISBASE-/usr/local/grass85}/
-    ${INITIAL_GISBASE-/usr/local/grass85}/etc/python/grass
 
 [paths]
-source =
-    .
-    /usr/local/grass??/
+root =
+    ./
+    ${INITIAL_GISBASE-/usr/local/grass??}/
     /home/*/install/grass??/
-    python/grass/
-    /usr/local/grass*/etc/python/grass/
-    /home/*/install/grass*/etc/python/grass/
+python =
+    ./python/
+    ${INITIAL_GISBASE-/usr/local/grass??}/etc/python/
+    /home/*/install/grass??/etc/python/
+special_d_mon =
+    ./display/d.mon/
+    ${INITIAL_GISBASE-/usr/local/grass??}/etc/d.mon/
+    /home/*/install/grass??/etc/d.mon/
+special_r_in_wms =
+    ./scripts/r.in.wms/
+    ${INITIAL_GISBASE-/usr/local/grass??}/etc/r.in.wms/
+    /home/*/install/grass??/etc/r.in.wms/
 
 [report]
 include_namespace_packages = True
