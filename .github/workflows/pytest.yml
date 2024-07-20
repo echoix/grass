@@ -92,6 +92,7 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           INITIAL_PWD="${PWD}" pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
             --cov \
+            --cov-context=test \
             --cov-report=html \
             -ra . \
             -m 'needs_solo_run'
