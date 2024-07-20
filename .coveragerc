@@ -1,5 +1,4 @@
 [run]
-; plugins = covdefaults
 ; branch = True
 ; dynamic_context = test_function
 concurrency = multiprocessing,thread
@@ -12,8 +11,6 @@ omit =
     ${INITIAL_PWD-.}/dist.*/*
     **/OBJ.*/*
 
-; source_pkgs = 
-;     grass
 source = 
     .
     ${INITIAL_PWD-.}/
@@ -23,32 +20,20 @@ source =
 root =
     ./
     ${INITIAL_GISBASE-/usr/local/grass??}/
-    ; /home/*/install/grass??/
+    /home/*/install/grass??/
 python =
     ./python/
     ${INITIAL_GISBASE-/usr/local/grass??}/etc/python/
-    ; /home/*/install/grass??/etc/python/
+    /home/*/install/grass??/etc/python/
 special_d_mon =
     ./display/d.mon/
     ${INITIAL_GISBASE-/usr/local/grass??}/etc/d.mon/
-    ; /home/*/install/grass??/etc/d.mon/
+    /home/*/install/grass??/etc/d.mon/
 special_r_in_wms =
     ./scripts/r.in.wms/
     ${INITIAL_GISBASE-/usr/local/grass??}/etc/r.in.wms/
-    ; /home/*/install/grass??/etc/r.in.wms/
+    /home/*/install/grass??/etc/r.in.wms/
 
-; scripts_no_ext =
-;     ./scripts/*/*.py
-;     ${INITIAL_GISBASE-/usr/local/grass??}/scripts/
-
-scripts_no_ext2 =
-    ; ${INITIAL_GISBASE-/usr/local/grass??}/scripts/t.unregister
-    ; ${INITIAL_GISBASE-/usr/local/grass??}/scripts/t.unregiste?
-    ; ${INITIAL_GISBASE-/usr/local/grass??}/scripts/
-    ./scripts/t.unregister/
-    ; ./scripts/t.unregister/t.unregister.py
-    ; ./scripts/*/t.unregister.py
-    ${INITIAL_GISBASE-/usr/local/grass??}/scripts/
 
 
 [html]
@@ -57,6 +42,8 @@ show_contexts = true
 
 
 [report]
+; Since our file structure isn't an importable package, not all files are found
+; This allows to find python files even if there is missing __init__.py files, but is slow
 include_namespace_packages = True
 skip_covered = False
 ignore_errors = True
@@ -77,20 +64,3 @@ exclude_also =
 
     ; Don't complain about abstract methods, they aren't run:
     @(abc\.)?abstractmethod
-
-     # allow defensive code
-    ^\s*raise AssertionError\b
-    ^\s*raise NotImplementedError\b
-    ^\s*return NotImplemented\b
-    ^\s*raise$
-
-    # typing-related code
-    if TYPE_CHECKING:
-    
-    ^\s*if (False|TYPE_CHECKING):
-    : \.\.\.(\s*#.*)?$
-    ^ +\.\.\.$
-    -> ['"]?NoReturn['"]?:
-
-
-
