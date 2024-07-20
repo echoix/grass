@@ -93,7 +93,6 @@ jobs:
             --cov --cov="$(grass --config python_path)" \
             --cov="$(pwd)" \
             --cov="$(grass --config path)" \
-            --cov-branch \
             --cov-report=term \
             -ra . \
             -m 'needs_solo_run'
