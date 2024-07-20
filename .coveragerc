@@ -17,6 +17,7 @@ source =
     /home/*/install/grass*/etc/python/grass/
 
 [report]
+include_namespace_packages = True
 skip_covered = False
 ; Regexes for lines to exclude from consideration
 exclude_also =
