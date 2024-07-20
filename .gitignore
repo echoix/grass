@@ -65,3 +65,4 @@ lib/*/latex/
 *.gcno
 *.gcda
 .coverage
+.coverage.*
