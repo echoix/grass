@@ -10,12 +10,10 @@ omit =
     ${INITIAL_PWD-.}/bin.*/*
     ${INITIAL_PWD-.}/dist.*/*
     **/OBJ.*/*
-
-source_pkgs = 
-    grass
 source = 
     .
     ${INITIAL_PWD-.}/
+    ${INITIAL_GISBASE-/usr/local/grass??}/
 
 [paths]
 root =
@@ -35,7 +33,10 @@ special_r_in_wms =
     ${INITIAL_GISBASE-/usr/local/grass??}/etc/r.in.wms/
     /home/*/install/grass??/etc/r.in.wms/
 
+
 [report]
+; Since our file structure isn't an importable package, not all files are found
+; This allows to find python files even if there is missing __init__.py files, but is slow
 include_namespace_packages = True
 skip_covered = False
 ; Regexes for lines to exclude from consideration
