@@ -66,3 +66,4 @@ lib/*/latex/
 *.gcda
 .coverage
 .coverage.*
+coverage.xml
