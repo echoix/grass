@@ -1,0 +1,96 @@
+[run]
+; plugins = covdefaults
+; branch = True
+; dynamic_context = test_function
+concurrency = multiprocessing,thread
+parallel = True
+data_file = ${INITIAL_PWD-.}/.coverage
+omit = 
+    ${INITIAL_PWD-.}/testreport
+    ${INITIAL_PWD-.}/.github/*
+    ${INITIAL_PWD-.}/bin.*/*
+    ${INITIAL_PWD-.}/dist.*/*
+    **/OBJ.*/*
+
+; source_pkgs = 
+;     grass
+source = 
+    .
+    ${INITIAL_PWD-.}/
+    ${INITIAL_GISBASE-/usr/local/grass??}/
+
+[paths]
+root =
+    ./
+    ${INITIAL_GISBASE-/usr/local/grass??}/
+    ; /home/*/install/grass??/
+python =
+    ./python/
+    ${INITIAL_GISBASE-/usr/local/grass??}/etc/python/
+    ; /home/*/install/grass??/etc/python/
+special_d_mon =
+    ./display/d.mon/
+    ${INITIAL_GISBASE-/usr/local/grass??}/etc/d.mon/
+    ; /home/*/install/grass??/etc/d.mon/
+special_r_in_wms =
+    ./scripts/r.in.wms/
+    ${INITIAL_GISBASE-/usr/local/grass??}/etc/r.in.wms/
+    ; /home/*/install/grass??/etc/r.in.wms/
+
+; scripts_no_ext =
+;     ./scripts/*/*.py
+;     ${INITIAL_GISBASE-/usr/local/grass??}/scripts/
+
+scripts_no_ext2 =
+    ; ${INITIAL_GISBASE-/usr/local/grass??}/scripts/t.unregister
+    ; ${INITIAL_GISBASE-/usr/local/grass??}/scripts/t.unregiste?
+    ; ${INITIAL_GISBASE-/usr/local/grass??}/scripts/
+    ./scripts/t.unregister/
+    ; ./scripts/t.unregister/t.unregister.py
+    ; ./scripts/*/t.unregister.py
+    ${INITIAL_GISBASE-/usr/local/grass??}/scripts/
+
+
+[html]
+directory = coverage_html_report
+show_contexts = true
+
+
+[report]
+include_namespace_packages = True
+skip_covered = False
+ignore_errors = True
+precision = 2
+; Regexes for lines to exclude from consideration
+exclude_also =
+    ; Don't complain about missing debug-only code:
+    def __repr__
+    if self\.debug
+
+    ; Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    ; Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+    ; Don't complain about abstract methods, they aren't run:
+    @(abc\.)?abstractmethod
+
+     # allow defensive code
+    ^\s*raise AssertionError\b
+    ^\s*raise NotImplementedError\b
+    ^\s*return NotImplemented\b
+    ^\s*raise$
+
+    # typing-related code
+    if TYPE_CHECKING:
+    
+    ^\s*if (False|TYPE_CHECKING):
+    : \.\.\.(\s*#.*)?$
+    ^ +\.\.\.$
+    -> ['"]?NoReturn['"]?:
+
+
+
