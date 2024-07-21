@@ -38,6 +38,7 @@ jobs:
           # Using folded YAML multiline string block chomping (>-) to replace
           # newlines with spaces, and strip newline at end.
           # See https://yaml-multiline.info/
+          - db
           - temporal
           - >-
             db display doc docker general gui
