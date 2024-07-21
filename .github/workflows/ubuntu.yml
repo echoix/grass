@@ -170,6 +170,7 @@ jobs:
       - name: Set COVERAGE_PROCESS_START env variable
         run: |
           echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
+          echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
       - name: Place a usercustomize.py file enabling subprocess code coverage
         run: |
           mkdir -p $(python -m site --user-site)
