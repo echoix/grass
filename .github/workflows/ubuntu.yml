@@ -76,14 +76,14 @@ jobs:
           echo "${delete[@]}"
           for target in "${delete[@]}"; do
             for i in "${!array[@]}"; do
-              if [[ ${array[i]} = $target ]]; then
+              if [[ ${array[i]} = "$target" ]]; then
                 unset 'array[i]'
               fi
             done
           done
           unset new_array
           for i in "${!array[@]}"; do
-              new_array+=( "${array[i]}" )
+            new_array+=( "${array[i]}" )
           done
           echo "Excluded folders:"
           echo "${new_array[@]}"
@@ -91,6 +91,26 @@ jobs:
           echo "Exclusion string to add to gunittest config"
           echo "${extra_exclude}"
           echo "extra-exclude=${extra_exclude}" >> "${GITHUB_OUTPUT}"
+          echo "Inclusion string for tags"
+          printf -v extra_include_tag ' %s' "${delete[@]}"
+          extra_include_tag="${extra_include_tag:1}" # trim extra first space
+          extra_include_tag=${extra_include_tag// /-} # replace spaces by hyphens
+          echo "${extra_include_tag}"
+          echo "extra-include-tag=${extra_include_tag}" >> "${GITHUB_OUTPUT}"
+          echo "Truncated string for codecov upload"
+          max_flag_len=45
+          max_flag_prefix_len=33 # gunittest-ubuntu-22.04_without_x-
+          max_flag_suffix_len=$((max_flag_len - max_flag_prefix_len))
+          extra_include_tag_len=${#extra_include_tag} # string's length
+          extra_include_tag_len_len=${#extra_include_tag_len} # length of string's length
+          if [[ "${extra_include_tag_len}" -gt "${max_flag_suffix_len}" ]]; then
+            # Extra include too long
+            extra_include_tag_trunc="${extra_include_tag:0:$max_flag_suffix_len-1-$extra_include_tag_len_len}.${extra_include_tag_len}"
+          else
+            extra_include_tag_trunc="${extra_include_tag}"
+          fi
+          echo "${extra_include_tag_trunc}"
+          echo "extra-include-tag-trunc=${extra_include_tag_trunc}" >> "${GITHUB_OUTPUT}"
         env:
           DELETE_ARRAY: ${{ matrix.extra-include }}
 
@@ -173,7 +193,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
+          name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
           path: testreport
           retention-days: 3
 
