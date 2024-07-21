@@ -177,7 +177,8 @@ jobs:
       - name: Run tests
         run: |
           export INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+          export INITIAL_PWD="${PWD}"
+          .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: coverage run
       - name: Fix non-standard installed script paths in coverage data
