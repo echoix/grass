@@ -23,9 +23,12 @@ class TestDbColumns(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        print(f"ed: db.columns: test_dbcolumns.py: setUpClass: __file__ is {__file__}")
         cls.runModule("db.connect", flags="c")
 
     def test_dbcols(self):
+        print(f"ed: db.columns: test_dbcolumns.py: test_dbcols: __file__ is {__file__}")
+        print(dir())
         cols = read_command("db.columns", table=self.invect, database=self.mapset)
         self.assertEqual(first=cols, second=output)
 
