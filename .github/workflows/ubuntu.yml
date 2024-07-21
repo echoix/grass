@@ -196,7 +196,8 @@ jobs:
           export COVERAGE_PROCESS_START=${PWD}/.coveragerc
           export COVERAGE_RCFILE=${PWD}/.coveragerc
           export INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+          export INITIAL_PWD="${PWD}"
+          .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: coverage run
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
