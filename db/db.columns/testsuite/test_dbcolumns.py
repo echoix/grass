@@ -27,7 +27,7 @@ class TestDbColumns(TestCase):
         cls.runModule("db.connect", flags="c")
 
     def test_dbcols(self):
-        print(f"ed: db.columns: test_dbcolumns.py: test_dbcols: __file__ is {__file__}, __main__.__file__ is {__main__.__file__}")
+        print(f"ed: db.columns: test_dbcolumns.py: test_dbcols: __file__ is {__file__}")
         print("dir():")
         print(dir())
         print("locals()")
