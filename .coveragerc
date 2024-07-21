@@ -5,7 +5,7 @@ concurrency = multiprocessing,thread
 parallel = True
 data_file = ${INITIAL_PWD-.}/.coverage
 omit =
-    **/testreport/*
+    ; ${INITIAL_PWD-.}/testreport
     ${INITIAL_PWD-.}/.github/*
     ${INITIAL_PWD-.}/bin.*/*
     ${INITIAL_PWD-.}/dist.*/*
