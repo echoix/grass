@@ -167,6 +167,14 @@ jobs:
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
+      - name: Set COVERAGE_PROCESS_START env variable
+        run: |
+          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
+      - name: Place a usercustomize.py file enabling subprocess code coverage
+        run: |
+          mkdir -p $(python -m site --user-site)
+          printf "import coverage\ncoverage.process_startup()" \
+            > "$(python -m site --user-site)/usercustomize.py"
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
