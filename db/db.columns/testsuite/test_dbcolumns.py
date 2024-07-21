@@ -39,4 +39,8 @@ class TestDbColumns(TestCase):
 
 
 if __name__ == "__main__":
+    print(
+        f'ed: db.columns: test_dbcolumns.py: if __name__ == "__main__": '
+        f" : __file__ is {__file__}"
+    )
     test()
