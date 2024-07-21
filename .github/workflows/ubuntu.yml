@@ -13,8 +13,9 @@ on:
 jobs:
   ubuntu:
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.name }}-${{ matrix.os }}-${{ matrix.extra-include }}
+      group: >-
+        ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
+        '' }}${{ matrix.name }}-${{ matrix.os }}-${{ matrix.extra-include }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
@@ -210,14 +211,18 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
-          name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
+          name: >-
+            testreport-${{ matrix.os }}-${{ matrix.config }}-${{
+            '' }}${{ steps.get-exclude.outputs.extra-include-tag }}
           path: testreport
           retention-days: 3
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
-          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag }}
+          name: >-
+            python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{
+            '' }}${{ steps.get-exclude.outputs.extra-include-tag }}
           path: coverage_html_report
           retention-days: 1
 
@@ -225,7 +230,9 @@ jobs:
         uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
         with:
           verbose: true
-          flags: gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
+          flags: >-
+            gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{
+            '' }}${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
           name: gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
           token: ${{ secrets.CODECOV_TOKEN }}
 
