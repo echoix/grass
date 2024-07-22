@@ -191,8 +191,10 @@ jobs:
             grass --tmp-project XY --exec \
             ${PYTHON} -m grass.gunittest.main \
             --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
-            --min-success 100  --config .gunittest.extra.cfg
+            --min-success 100  --config "${{ github.workspace }}/.gunittest.extra.cfg"
+            ls -la
             coverage combine
+            ls -la
           done
         env:
           PYTHON: coverage run --concurrency=multiprocessing,thread
