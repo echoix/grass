@@ -194,8 +194,10 @@ jobs:
           #delete=( ${{ env.DELETE_ARRAY }} )
           #for target in "${delete[@]}"; do
             #cd "${{ github.workspace }}/$target"
+            # ${PYTHON} -m grass.gunittest.main \
             grass --tmp-project XY --exec \
-            ${PYTHON} -m grass.gunittest.main \
+            coverage run --concurrency=multiprocessing,thread --timid --debug=sys --debug=data \
+              -m grass.gunittest.main \
             --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
             --min-success 100 --config .gunittest.extra.cfg #--config "${{ github.workspace }}/.gunittest.extra.cfg"
             ls -la
