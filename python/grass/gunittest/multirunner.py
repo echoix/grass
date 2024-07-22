@@ -178,7 +178,7 @@ def main():
         arguments = [
             sys.executable,
             grasssrc + "/python/grass/gunittest/" + "multireport.py",
-            "--timestapms",
+            "--timestamps",
         ]
         arguments.extend(reports)
         p = subprocess.Popen(arguments)
