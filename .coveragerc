@@ -15,6 +15,7 @@ source =
     ${INITIAL_PWD-.}/
     ${INITIAL_GISBASE-/usr/local/grass??}/
 		${INITIAL_GISBASE-/home/*/install/grass??}/
+		/
 
 [paths]
 root =
