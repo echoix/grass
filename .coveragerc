@@ -1,6 +1,7 @@
 [run]
 ; branch = True
 ; dynamic_context = test_function
+sigterm = True
 concurrency = multiprocessing,thread
 parallel = True
 data_file = ${INITIAL_PWD-.}/.coverage
