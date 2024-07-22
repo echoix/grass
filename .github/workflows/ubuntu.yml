@@ -185,22 +185,26 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
           #.github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+          coverage debug sys
+          coverage debug config
+          coverage debug data 
           grass --tmp-project XY --exec \
             g.download.location url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz path=$HOME
-          delete=( ${{ env.DELETE_ARRAY }} )
-          for target in "${delete[@]}"; do
-            cd "${{ github.workspace }}/$target"
+          #delete=( ${{ env.DELETE_ARRAY }} )
+          #for target in "${delete[@]}"; do
+            #cd "${{ github.workspace }}/$target"
             grass --tmp-project XY --exec \
             ${PYTHON} -m grass.gunittest.main \
             --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
-            --min-success 100  #--config "${{ github.workspace }}/.gunittest.extra.cfg"
+            --min-success 100 --config .gunittest.extra.cfg #--config "${{ github.workspace }}/.gunittest.extra.cfg"
             ls -la
             # coverage combine
             ls -la
-          done
+          #done
+          coverage debug data
         env:
-          PYTHON: coverage run --concurrency=multiprocessing,thread
-          DELETE_ARRAY: ${{ matrix.extra-include }}
+          PYTHON: coverage run --concurrency=multiprocessing,thread --append
+          # DELETE_ARRAY: ${{ matrix.extra-include }}
 
       - run: ls -la db/
       - run: ls -la -R
