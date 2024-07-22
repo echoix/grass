@@ -181,7 +181,13 @@ jobs:
           export COVERAGE_RCFILE=${PWD}/.coveragerc
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
-          .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+          #.github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+          grass --tmp-project XY --exec \
+            g.download.location url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz path=$HOME
+          grass --tmp-project XY --exec \
+            ${PYTHON} -m grass.gunittest.main \
+            --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
+            --min-success 100  --config .gunittest.extra.cfg
         env:
           PYTHON: coverage run
 
