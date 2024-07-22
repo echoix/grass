@@ -118,6 +118,8 @@ jobs:
             steps.get-exclude.outputs.extra-exclude
           }}:g' .gunittest.cfg > .gunittest.extra.cfg
           cat .gunittest.extra.cfg
+      - run: python -m site --user-site
+      - run: python -m site
 
       - name: Get dependencies
         run: |
