@@ -197,9 +197,9 @@ jobs:
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
-          coverage combine
+          coverage combine --debug=pathmap
           python utils/coverage_mapper.py
-          coverage combine
+          coverage combine --debug=pathmap
 
       - name: Show python coverage report summary
         run: |
