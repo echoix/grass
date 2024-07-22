@@ -185,12 +185,19 @@ jobs:
           #.github/workflows/test_thorough.sh --config .gunittest.extra.cfg
           grass --tmp-project XY --exec \
             g.download.location url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz path=$HOME
-          grass --tmp-project XY --exec \
+          delete=( ${{ env.DELETE_ARRAY }} )
+          for target in "${delete[@]}"; do
+            cd "${{ github.workspace }}/$target"
+            grass --tmp-project XY --exec \
             ${PYTHON} -m grass.gunittest.main \
             --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
             --min-success 100  --config .gunittest.extra.cfg
+            coverage combine
+          done
         env:
           PYTHON: coverage run --concurrency=multiprocessing,thread
+          DELETE_ARRAY: ${{ matrix.extra-include }}
+
       - run: ls -la db/
       - run: ls -la -R
 
@@ -225,7 +232,7 @@ jobs:
           name: >-
             testreport-${{ matrix.os }}-${{ matrix.config }}-${{
             '' }}${{ steps.get-exclude.outputs.extra-include-tag }}
-          path: testreport
+          path: '**/testreport'
           retention-days: 3
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
@@ -234,7 +241,7 @@ jobs:
           name: >-
             python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{
             '' }}${{ steps.get-exclude.outputs.extra-include-tag }}
-          path: coverage_html_report
+          path: '**/coverage_html_report'
           retention-days: 1
 
       - name: Upload coverage reports to Codecov
