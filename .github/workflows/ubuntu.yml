@@ -190,6 +190,8 @@ jobs:
             --min-success 100  --config .gunittest.extra.cfg
         env:
           PYTHON: coverage run
+      - run: ls -la db/
+      - run: ls -la -R
 
       - name: Fix non-standard installed script paths in coverage data
         run: |
