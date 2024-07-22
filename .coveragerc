@@ -7,7 +7,7 @@ parallel = True
 data_file = ${INITIAL_PWD-.}/.coverage
 omit =
     ; ${INITIAL_PWD-.}/testreport
-    ${INITIAL_PWD-.}/.github/*
+    ; ${INITIAL_PWD-.}/.github/*
     ${INITIAL_PWD-.}/bin.*/*
     ; ${INITIAL_PWD-.}/dist.*/*
     **/OBJ.*/*
