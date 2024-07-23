@@ -93,7 +93,10 @@ def main():
     locations = args.locations
     locations_types = args.location_types
 
-    print(f"ed: multirunner: main gunittest parsing: os environ: {os.environ}")
+    import pprint
+    print(f"ed: multirunner: main gunittest parsing: os environ:")
+    pprint.pprint(dict(os.environ))
+
     # TODO: if locations empty or just one we can suppose the same all the time
     if len(locations) != len(locations_types):
         print(
