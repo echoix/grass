@@ -37,7 +37,7 @@ class TestDbColumns(TestCase):
         print("globals()")
         print(globals())
         print("os environ")
-        pprint.pprint(os.environ)
+        pprint.pprint(dict(os.environ))
         cols = read_command("db.columns", table=self.invect, database=self.mapset)
         self.assertEqual(first=cols, second=output)
 
