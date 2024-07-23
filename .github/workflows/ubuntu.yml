@@ -133,6 +133,9 @@ jobs:
       - run: python -m site
       - run: ls -la "$(python -m site --user-site)/"
       - run: python --version
+      - run: python --version --version
+      - run: which python
+      - run: python -c "import os; print(os.environ['_'])"
       - run: python --help
 
       - name: Get dependencies
