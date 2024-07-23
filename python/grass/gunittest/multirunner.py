@@ -94,6 +94,7 @@ def main():
     locations_types = args.location_types
 
     import pprint
+
     print("ed: multirunner: main gunittest parsing: os environ:")
     pprint.pprint(dict(os.environ))
 
