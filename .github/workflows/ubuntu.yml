@@ -184,6 +184,7 @@ jobs:
           export COVERAGE_RCFILE=${PWD}/.coveragerc
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
+          printenv | sort
           #.github/workflows/test_thorough.sh --config .gunittest.extra.cfg
           coverage debug sys
           coverage debug config
@@ -191,6 +192,7 @@ jobs:
           #coverage debug
           grass --tmp-project XY --exec \
             g.download.location url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz path=$HOME
+          printenv | sort
           #delete=( ${{ env.DELETE_ARRAY }} )
           #for target in "${delete[@]}"; do
             #cd "${{ github.workspace }}/$target"
