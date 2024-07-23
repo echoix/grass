@@ -129,7 +129,8 @@ jobs:
         run: |
           mkdir -p $(python -m site --user-site)
           printf "import coverage\ncoverage.process_startup()" \
-            > "$(python -m site --user-site)/sitecustomize.py"
+            > "$(python -m site --user-site)/usercustomize.py"
+          #> "$(python -m site --user-site)/sitecustomize.py"
       - run: python -m site
       - run: ls -la "$(python -m site --user-site)/"
       - run: python --version
@@ -184,11 +185,11 @@ jobs:
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
-      - name: Place a sitecustomize.py file enabling subprocess code coverage
-        run: |
-          mkdir -p $(python -m site --user-site)
-          printf "import coverage\ncoverage.process_startup()" \
-            > "$(python -m site --user-site)/sitecustomize.py"
+      #- name: Place a sitecustomize.py file enabling subprocess code coverage
+        #run: |
+          #mkdir -p $(python -m site --user-site)
+          #printf "import coverage\ncoverage.process_startup()" \
+          #  > "$(python -m site --user-site)/sitecustomize.py"
 
       - name: Set COVERAGE_PROCESS_START env variable
         run: |
