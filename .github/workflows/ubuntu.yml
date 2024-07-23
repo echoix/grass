@@ -118,13 +118,20 @@ jobs:
             steps.get-exclude.outputs.extra-exclude
           }}:g' .gunittest.cfg > .gunittest.extra.cfg
           cat .gunittest.extra.cfg
-      - name: Set up Python
-        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
-        with:
-          python-version: '3.10'
+      #- name: Set up Python
+       # uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+       # with:
+       #   python-version: '3.10'
           
       - run: python -m site --user-site
       - run: python -m site
+      - name: Place a sitecustomize.py file enabling subprocess code coverage
+        run: |
+          mkdir -p $(python -m site --user-site)
+          printf "import coverage\ncoverage.process_startup()" \
+            > "$(python -m site --user-site)/sitecustomize.py"
+      - run: python -m site
+      - run: ls -la "$(python -m site --user-site)/"
 
       - name: Get dependencies
         run: |
