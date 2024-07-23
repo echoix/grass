@@ -132,6 +132,8 @@ jobs:
             > "$(python -m site --user-site)/sitecustomize.py"
       - run: python -m site
       - run: ls -la "$(python -m site --user-site)/"
+      - run: python --version
+      - run: python --help
 
       - name: Get dependencies
         run: |
