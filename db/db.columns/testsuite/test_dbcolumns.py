@@ -1,6 +1,8 @@
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 from grass.script.core import read_command
+import os
+import pprint
 
 output = """cat
 OBJECTID
@@ -34,6 +36,8 @@ class TestDbColumns(TestCase):
         print(locals())
         print("globals()")
         print(globals())
+        print("os environ")
+        pprint.pprint(os.environ)
         cols = read_command("db.columns", table=self.invect, database=self.mapset)
         self.assertEqual(first=cols, second=output)
 
