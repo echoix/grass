@@ -210,6 +210,7 @@ jobs:
         env:
           PYTHON: coverage run --concurrency=multiprocessing,thread --timid --debug=sys --debug=data
           # DELETE_ARRAY: ${{ matrix.extra-include }}
+          GRASS_PYTHON: coverage run
 
       - run: ls -la db/
       - run: ls -la -R
