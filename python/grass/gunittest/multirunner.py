@@ -94,7 +94,7 @@ def main():
     locations_types = args.location_types
 
     import pprint
-    print(f"ed: multirunner: main gunittest parsing: os environ:")
+    print("ed: multirunner: main gunittest parsing: os environ:")
     pprint.pprint(dict(os.environ))
 
     # TODO: if locations empty or just one we can suppose the same all the time
