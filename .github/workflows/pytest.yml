@@ -95,6 +95,8 @@ jobs:
             --cov-context=test \
             -ra . \
             -m 'needs_solo_run'
+        env:
+          COVERAGE_CORE: sysmon
       - name: Fix non-standard installed script paths in coverage data
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
