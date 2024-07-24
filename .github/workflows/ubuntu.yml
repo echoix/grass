@@ -194,6 +194,7 @@ jobs:
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: coverage run
+          COVERAGE_CORE: sysmon
 
       - name: Fix non-standard installed script paths in coverage data
         run: |
