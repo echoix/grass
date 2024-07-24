@@ -63,9 +63,15 @@ jobs:
           cache: pip
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
+      - run: pip install uv
+      - run: uvx --help
+      - run: uv tool --help
+      - run: uv help tool
+      - run: uv tool install --help
 
       - name: Install Ruff
-        run: pip install ruff==${{ env.RUFF_VERSION }}
+        #run: uvx --from ruff==${{ env.RUFF_VERSION }} --help
+        run: uv tool install ruff==${{ env.RUFF_VERSION }}
       - name: Run Ruff
         run: ruff check --output-format=github . --preview --fix --unsafe-fixes
       - name: Create and uploads code suggestions to apply for Ruff
@@ -80,7 +86,8 @@ jobs:
           extra-upload-changes: pyproject.toml
 
       - name: Install Black only
-        run: pip install black[jupyter]==${{ env.BLACK_VERSION }}
+        #run: uvx black[jupyter]==${{ env.BLACK_VERSION }}
+        run: uv tool install black[jupyter]==${{ env.BLACK_VERSION }}
 
       - name: Run Black
         run: black .
@@ -103,15 +110,17 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install -r .github/workflows/python_requirements.txt
-          pip install -r .github/workflows/optional_requirements.txt
-          pip install --user pipx
-          pipx ensurepath
-          pipx install flake8==${{ env.FLAKE8_VERSION }}
-          pipx install pylint==${{ env.PYLINT_VERSION }}
-          pipx inject pylint -r .github/workflows/python_requirements.txt -r .github/workflows/optional_requirements.txt
+          uv pip install --system \
+            -r .github/workflows/python_requirements.txt \
+            -r .github/workflows/optional_requirements.txt
+          # pip install --user pipx
+          # pipx ensurepath
+          uv tool install flake8==${{ env.FLAKE8_VERSION }}
+          uv tool install pylint==${{ env.PYLINT_VERSION }} \
+            --with -r .github/workflows/python_requirements.txt -r .github/workflows/optional_requirements.txt
+          # uvx inject pylint -r .github/workflows/python_requirements.txt -r .github/workflows/optional_requirements.txt
           # The extra toml is only needed before Python 3.11
-          pipx install bandit[sarif,toml]==${{ env.BANDIT_VERSION }}
+          uv tool install bandit[sarif,toml]==${{ env.BANDIT_VERSION }}
 
       - name: Run Flake8
         run: |
@@ -168,8 +177,8 @@ jobs:
 
       - name: Run Pylint on other files using pytest
         run: |
-          pipx inject --include-apps pylint pytest==7.4.4
-          pipx inject pylint pytest-pylint==0.19 pytest-github-actions-annotate-failures
+          uvx inject --include-apps pylint pytest==7.4.4
+          uvx inject pylint pytest-pylint==0.19 pytest-github-actions-annotate-failures
           echo "::warning file=.github/workflows/python-code-quality.yml,line=149,col=42,endColumn=48::\
             Temporarily downgraded pytest-pylint and pytest to allow merging other PRs.\
             The errors reported with a newer version seem legitimite and should be fixed \
