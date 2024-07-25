@@ -205,7 +205,7 @@ jobs:
           export PYTHON="${{ env.PYTHON }} --source . --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python -m slipcover --json
+          PYTHON: python -m slipcover --json --out .coverage.json
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
       # - name: Fix non-standard installed script paths in coverage data
