@@ -162,7 +162,7 @@ jobs:
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
       - name: Print installed versions
-        if: always()
+        if: ${{ !cancelled() }}
         run: .github/workflows/print_versions.sh
 
       - name: Test executing of the grass command
@@ -232,7 +232,7 @@ jobs:
           coverage html
 
       - name: Make HTML test report available
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: >-
