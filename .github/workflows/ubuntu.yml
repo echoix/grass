@@ -129,7 +129,8 @@ jobs:
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
       - name: Install python coverage tool
-        run: pip install coverage slipcover
+        run: pip install slipcover
+        # run: pip install coverage slipcover
       - run: python -m slipcover --help
 
       - name: Create installation directory
