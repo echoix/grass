@@ -187,6 +187,7 @@ jobs:
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: python -m slipcover --json --out coverage.json
+      - run: ls -la
       # - name: Fix non-standard installed script paths in coverage data
       #   run: |
       #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
