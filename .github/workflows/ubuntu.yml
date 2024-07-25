@@ -169,11 +169,11 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
-      - name: Place a usercustomize.py file enabling subprocess code coverage
-        run: |
-          mkdir -p $(python -m site --user-site)
-          printf "import coverage\ncoverage.process_startup()" \
-            > "$(python -m site --user-site)/usercustomize.py"
+      #- name: Place a usercustomize.py file enabling subprocess code coverage
+      #  run: |
+      #    mkdir -p $(python -m site --user-site)
+       #   printf "import coverage\ncoverage.process_startup()" \
+       #     > "$(python -m site --user-site)/usercustomize.py"
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
@@ -192,10 +192,10 @@ jobs:
           SAMPLE_DATA: "https://grass.osgeo.org/sampledata/north_carolina/\
             nc_spm_full_v2alpha2.tar.gz"
 
-      - name: Set COVERAGE_PROCESS_START env variable
-        run: |
-          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
-          echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
+      #- name: Set COVERAGE_PROCESS_START env variable
+      #  run: |
+      #    echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
+      #    echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
