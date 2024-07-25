@@ -186,7 +186,7 @@ jobs:
           export PYTHON="${{ env.PYTHON }} --source . --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python -m slipcover --json --out .coverage.json
+          PYTHON: python -m slipcover --json --out coverage.json
       # - name: Fix non-standard installed script paths in coverage data
       #   run: |
       #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
