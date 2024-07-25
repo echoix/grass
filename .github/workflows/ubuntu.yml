@@ -209,6 +209,7 @@ jobs:
           PYTHON: python -m slipcover --json --out coverage.json
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
+      - run: ls -la
       # - name: Fix non-standard installed script paths in coverage data
       #   run: |
       #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
