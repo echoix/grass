@@ -183,7 +183,7 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python -m slipcover
+          PYTHON: python -m slipcover --json
       # - name: Fix non-standard installed script paths in coverage data
       #   run: |
       #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
