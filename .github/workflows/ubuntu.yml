@@ -44,6 +44,7 @@ jobs:
           # newlines with spaces, and strip newline at end.
           # See https://yaml-multiline.info/
           - temporal
+          - db
           - >-
             db display doc docker general gui
             imagery lib misc ps python raster raster3d scripts
