@@ -202,7 +202,7 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: coverage run
+          PYTHON: python -m slipcover
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
       - name: Fix non-standard installed script paths in coverage data
