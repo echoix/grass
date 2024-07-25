@@ -170,11 +170,11 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
-      #- name: Place a usercustomize.py file enabling subprocess code coverage
-      #  run: |
-      #    mkdir -p $(python -m site --user-site)
-       #   printf "import coverage\ncoverage.process_startup()" \
-       #     > "$(python -m site --user-site)/usercustomize.py"
+      # - name: Place a usercustomize.py file enabling subprocess code coverage
+      #   run: |
+      #     mkdir -p $(python -m site --user-site)
+      #     printf "import coverage\ncoverage.process_startup()" \
+      #      > "$(python -m site --user-site)/usercustomize.py"
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
@@ -193,10 +193,10 @@ jobs:
           SAMPLE_DATA: "https://grass.osgeo.org/sampledata/north_carolina/\
             nc_spm_full_v2alpha2.tar.gz"
 
-      #- name: Set COVERAGE_PROCESS_START env variable
-      #  run: |
-      #    echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
-      #    echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
+      # - name: Set COVERAGE_PROCESS_START env variable
+      #   run: |
+      #     echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
+      #     echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
@@ -206,30 +206,30 @@ jobs:
           PYTHON: python -m slipcover
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
-      - name: Fix non-standard installed script paths in coverage data
-        run: |
-          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
-          export INITIAL_GISBASE="$(grass --config path)"
-          export INITIAL_PWD="${PWD}"
-          coverage combine
-          python utils/coverage_mapper.py
-          coverage combine
+      # - name: Fix non-standard installed script paths in coverage data
+      #   run: |
+      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+      #     export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+      #     export INITIAL_GISBASE="$(grass --config path)"
+      #     export INITIAL_PWD="${PWD}"
+      #     coverage combine
+      #     python utils/coverage_mapper.py
+      #     coverage combine
 
-      - name: Show python coverage report summary
-        run: |
-          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
-          export INITIAL_GISBASE="$(grass --config path)"
-          export INITIAL_PWD="${PWD}"
-          coverage report
-      - name: Generate HTML coverage report
-        run: |
-          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
-          export INITIAL_GISBASE="$(grass --config path)"
-          export INITIAL_PWD="${PWD}"
-          coverage html
+      # - name: Show python coverage report summary
+      #   run: |
+      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+      #     export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+      #     export INITIAL_GISBASE="$(grass --config path)"
+      #     export INITIAL_PWD="${PWD}"
+      #     coverage report
+      # - name: Generate HTML coverage report
+      #   run: |
+      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+      #     export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+      #     export INITIAL_GISBASE="$(grass --config path)"
+      #     export INITIAL_PWD="${PWD}"
+      #     coverage html
 
       - name: Make HTML test report available
         if: ${{ !cancelled() }}
