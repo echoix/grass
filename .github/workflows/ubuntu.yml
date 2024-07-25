@@ -201,7 +201,9 @@ jobs:
       - name: Run tests
         run: |
           export INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}" .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+          export INITIAL_PWD="${PWD}"
+          export PYTHON="${{ env.PYTHON }} --source . --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
+          .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: python -m slipcover --json
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
