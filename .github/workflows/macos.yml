@@ -71,7 +71,7 @@ jobs:
           echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
       - name: Run tests
         shell: bash -el {0}
-        run: >
+        run: |
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
           grass --tmp-project XY --exec \
