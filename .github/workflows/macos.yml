@@ -89,6 +89,17 @@ jobs:
         if: ${{ !cancelled() }}
         shell: micromamba-shell {0}
         run: source ./.github/workflows/print_versions.sh
+      - name: Place a usercustomize.py file enabling subprocess code coverage
+        shell: bash -el {0}
+        run: |
+          mkdir -p $(python -m site --user-site)
+          printf "import coverage\ncoverage.process_startup()" \
+            > "$(python -m site --user-site)/usercustomize.py"
+      - name: Set COVERAGE_PROCESS_START env variable
+        shell: bash -el {0}
+        run: |
+          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
+          echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
 
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
@@ -135,15 +146,65 @@ jobs:
 
       - name: Run gunittest tests
         shell: micromamba-shell {0}
-        run: .github/workflows/test_thorough.sh --config .github/workflows/macos_gunittest.cfg
+        run: |
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          grass --tmp-project XY --exec \
+              g.download.location url=${{ env.SAMPLE_DATA_URL }} path=$HOME
+          grass --tmp-project XY --exec \
+              ${PYTHON}  -m grass.gunittest.main \
+              --grassdata $HOME --location nc_spm_full_v2alpha2 --location-type nc \
+              --min-success 100 --config .github/workflows/macos_gunittest.cfg
         env:
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
-
+          PYTHON: coverage run
+      - name: Fix non-standard installed script paths in coverage data
+        shell: bash -el {0}
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          # export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage combine
+          python utils/coverage_mapper.py
+          coverage combine
+      - name: Show python coverage report summary
+        shell: bash -el {0}
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          # export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage report
+      - name: Generate HTML coverage report
+        shell: bash -el {0}
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          # export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage html
       - name: Make HTML test report available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: testreport-macOS
+          name: testreport-${{ runner.os }}
           path: testreport
           retention-days: 3
+      - name: Make python-only code coverage test report available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: >-
+            python-codecoverage-report-${{ 'macos-14' }}
+          path: coverage_html_report
+          retention-days: 1
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        with:
+          verbose: true
+          flags: >-
+            gunittest,gunittest-${{ 'macos-14' }}
+          name: gunittest-${{ 'macos-14' }}
+          token: ${{ secrets.CODECOV_TOKEN }}
