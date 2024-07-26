@@ -177,6 +177,7 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
           coverage report
+          coverage json
       - name: Generate HTML coverage report
         shell: bash -el {0}
         run: |
