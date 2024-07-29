@@ -208,6 +208,8 @@ jobs:
           PYTHON: python -m slipcover --json --out slipcover.json
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
+      - run: cat slipcover.json
+      - run: jq . slipcover.json
       - name: Convert slipcover's output to coverage.py data file
         run: python utils/slipcover_to_coverage.py slipcover.json .coverage.slipcover
       - run: ls -la
