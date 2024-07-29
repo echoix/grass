@@ -187,7 +187,7 @@ jobs:
           echo "$PYTHON"
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: >
+          PYTHON: >-
             python -m slipcover
             --json
             --out slipcover.json
