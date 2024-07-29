@@ -188,7 +188,7 @@ jobs:
           PYTHON: python -m slipcover --json --out slipcover.json
       - name: Convert slipcover's output to coverage.py data file
         run: python utils/slipcover_to_coverage.py slipcover.json .coverage.slipcover
-      - run: ls -la 
+      - run: ls -la
       - name: Fix non-standard installed script paths in coverage data
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
