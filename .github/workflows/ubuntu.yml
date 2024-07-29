@@ -187,7 +187,7 @@ jobs:
         env:
           PYTHON: python -m slipcover --json --out slipcover.json
       - run: cat slipcover.json
-      - run: jq . slipcover.json 
+      - run: jq . slipcover.json
       - name: Convert slipcover's output to coverage.py data file
         run: python utils/slipcover_to_coverage.py slipcover.json .coverage.slipcover
       - run: ls -la
