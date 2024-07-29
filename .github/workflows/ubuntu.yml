@@ -214,6 +214,7 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
           coverage report
+        continue-on-error: true
       - name: Generate HTML coverage report
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
@@ -221,6 +222,7 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
           coverage html
+        continue-on-error: true
       - name: Make HTML test report available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
