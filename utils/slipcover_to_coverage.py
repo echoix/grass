@@ -13,7 +13,6 @@ def convert_slipcover_json_to_coverage(input_path, output_path):
         str(Path().joinpath(file).resolve()): data["executed_lines"]
         for file, data in input_json["files"].items()
     }
-    
     data_file.add_lines(line_data)
     data_file.write()
 
@@ -26,4 +25,3 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
