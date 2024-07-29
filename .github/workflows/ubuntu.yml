@@ -128,9 +128,8 @@ jobs:
           sudo apt-get install -y wget git gawk findutils
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
-      - name: Install python coverage tool
-        run: pip install slipcover
-        # run: pip install coverage slipcover
+      - name: Install python coverage tools
+        run: pip install coverage slipcover
       - run: python -m slipcover --help
 
       - name: Create installation directory
@@ -204,37 +203,38 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
           export PYTHON="${{ env.PYTHON }} --source . --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
-          # export PYTHON="${{ env.PYTHON }} --source ."
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python -m slipcover --json --out coverage.json
+          PYTHON: python -m slipcover --json --out slipcover.json
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
+      - name: Convert slipcover's output to coverage.py data file
+        run: python utils/slipcover_to_coverage.py slipcover.json .coverage.slipcover
       - run: ls -la
-      # - name: Fix non-standard installed script paths in coverage data
-      #   run: |
-      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-      #     export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
-      #     export INITIAL_GISBASE="$(grass --config path)"
-      #     export INITIAL_PWD="${PWD}"
-      #     coverage combine
-      #     python utils/coverage_mapper.py
-      #     coverage combine
+      - name: Fix non-standard installed script paths in coverage data
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage combine
+          python utils/coverage_mapper.py
+          coverage combine
 
-      # - name: Show python coverage report summary
-      #   run: |
-      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-      #     export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
-      #     export INITIAL_GISBASE="$(grass --config path)"
-      #     export INITIAL_PWD="${PWD}"
-      #     coverage report
-      # - name: Generate HTML coverage report
-      #   run: |
-      #     export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
-      #     export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
-      #     export INITIAL_GISBASE="$(grass --config path)"
-      #     export INITIAL_PWD="${PWD}"
-      #     coverage html
+      - name: Show python coverage report summary
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage report
+      - name: Generate HTML coverage report
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage html
 
       - name: Make HTML test report available
         if: ${{ !cancelled() }}
