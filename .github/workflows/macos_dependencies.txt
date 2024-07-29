@@ -37,3 +37,4 @@ cmake
 llvm-openmp
 flex
 git
+coverage
