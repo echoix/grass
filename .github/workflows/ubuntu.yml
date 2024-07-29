@@ -184,6 +184,7 @@ jobs:
           export INITIAL_PWD="${PWD}"
           export PYTHON="${PYTHON} --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
           export PYTHON="${PYTHON} --source ${INITIAL_GISBASE}/scripts"
+          echo "$PYTHON"
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
           PYTHON: >
