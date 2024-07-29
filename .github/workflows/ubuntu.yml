@@ -182,10 +182,15 @@ jobs:
         run: |
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
-          export PYTHON="${{ env.PYTHON }} --source . --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
+          export PYTHON="${{ env.PYTHON }} --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
+          export PYTHON="${{ env.PYTHON }} --source ${INITIAL_GISBASE}/scripts"
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
-          PYTHON: python -m slipcover --json --out slipcover.json
+          PYTHON: >-
+            python -m slipcover
+            --json 
+            --out slipcover.json
+            --source .
       - run: cat slipcover.json
       - run: jq . slipcover.json
       - name: Convert slipcover's output to coverage.py data file
