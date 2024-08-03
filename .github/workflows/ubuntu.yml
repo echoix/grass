@@ -163,6 +163,21 @@ jobs:
         run: |
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
+      - name: Replace scripts with symbolic links to have files with .py extensions
+        run: |
+          cd "$(grass --config path)"
+          cp -R scripts/ scrips_orig/
+          # Output first lines of files
+          head $(grass --config path)/scripts/* -n1 -q
+          # Rename files to have .py extension
+          ls | xargs -I fileName mv fileName fileName.py
+          # Copy with symbolic link
+          for old in scripts/*.py
+            do new=`echo $old | sed -e's/.py//'`
+            cp --symbolic-link "$old" "$new"
+          done
+          ls -la
+
       - name: Print installed versions
         if: ${{ !cancelled() }}
         run: .github/workflows/print_versions.sh
