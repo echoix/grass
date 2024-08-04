@@ -182,7 +182,6 @@ ignore = [
     "PLR1702", # too-many-nested-blocks
     "PLR1704", # redefined-argument-from-local
     "PLR1733", # unnecessary-dict-index-lookup
-    "PLR2004", # magic-value-comparison
     "PLR6104", # non-augmented-assignment
     "PLR6201", # literal-membership
     "PLR6301", # no-self-use
@@ -355,6 +354,8 @@ ignore = [
 "gui/wxpython/web_services/widgets.py" = ["INT003"]
 "gui/wxpython/wxgui.py" = ["INT002"]
 "gui/wxpython/wxplot/profile.py" = ["A005"]
+"imagery/i.gensig/testsuite/test_i_gensig.py" = ["PLR2004"]
+"imagery/i.svm.train/testsuite/test_i_svm_train.py" = ["PLR2004"]
 "lib/imagery/testsuite/test_imagery_sigsetfile.py" = ["FURB152"]
 "lib/init/grass.py" = ["INT003"]
 "python/grass/__init__.py" = ["PYI056"]
@@ -403,6 +404,7 @@ ignore = [
 "scripts/r.pack/r.pack.py" = ["INT003"]
 "scripts/r.tileset/r.tileset.py" = ["INT003"]
 "scripts/r.unpack/r.unpack.py" = ["INT002"]
+"scripts/v.dissolve/tests/v_dissolve*_test.py" = ["PLR2004"]
 "scripts/v.rast.stats/v.rast.stats.py" = ["INT002"]
 "scripts/v.to.lines/v.to.lines.py" = ["INT003"]
 "scripts/v.unpack/v.unpack.py" = ["INT002", "INT003"]
@@ -427,6 +429,7 @@ ignore = [
 "utils/generate_release_notes.py" = ["PGH004"]
 "utils/mkhtml.py" = ["INT002"]
 "vector/v.fill.holes/examples.ipynb" = ["PTH201"]
+"vector/v.fill.holes/tests/v_fill_holes_test.py" = ["PLR2004"]
 
 [tool.ruff.lint.flake8-import-conventions.extend-aliases]
 # Declare a custom aliases, checked with rule ICN001
