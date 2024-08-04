@@ -630,7 +630,7 @@ class TestNeighbors(TestCase):
 
         weights = tempfile()
         Path(weights).write_text(
-            "0 1 1 1 0\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n0 1 1 1 0"
+            "0 1 1 1 0\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n0 1 1 1 0", encoding="utf-8"
         )
 
         self.assertModule(

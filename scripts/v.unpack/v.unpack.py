@@ -221,7 +221,7 @@ def main():
         ).splitlines()
 
         # return the list of old connection for extract layer number and key
-        dbln = open(os.path.join(new_dir, "dbln"), "r")
+        dbln = open(os.path.join(new_dir, "dbln"), "r", encoding="utf-8")
         dbnlist = dbln.readlines()
         dbln.close()
         # check if dbf or sqlite directory exists

@@ -228,7 +228,7 @@ if __name__ == "__main__":
         year = os.getenv("VERSION_DATE")
         name = args.output.name
         args.output.close()
-        topicsfile = open(name, "w")
+        topicsfile = open(name, "w", encoding="utf-8")
         topicsfile.write(
             header1_tmpl.substitute(
                 title="GRASS GIS "

@@ -663,7 +663,7 @@ class GConsole(wx.EvtHandler):
             skipInterface = True
             if os.path.splitext(command[0])[1] in {".py", ".sh"}:
                 try:
-                    with open(command[0], "r") as sfile:
+                    with open(command[0], "r", encoding="utf-8") as sfile:
                         for line in sfile:
                             if len(line) < 3:
                                 continue

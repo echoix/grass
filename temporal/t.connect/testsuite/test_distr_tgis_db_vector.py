@@ -108,7 +108,7 @@ class TestRasterExtraction(TestCase):
         )
         self.assertModule(t_list)
         self.assertFileExists(self.outfile)
-        read_data = Path(self.outfile).read_text()
+        read_data = Path(self.outfile).read_text(encoding="utf-8")
         for a, b in zip(list_string.split("\n"), read_data.split("\n")):
             self.assertEqual(a.strip(), b.strip())
         # self.assertLooksLike(reference=read_data, actual=list_string)
@@ -200,7 +200,7 @@ class TestRasterExtraction(TestCase):
         )
         self.assertModule(trast_list)
         self.assertFileExists(self.outfile)
-        read_data = Path(self.outfile).read_text()
+        read_data = Path(self.outfile).read_text(encoding="utf-8")
         for a, b in zip(list_string.split("\n"), read_data.split("\n")):
             self.assertEqual(a.strip(), b.strip())
         if os.path.isfile(self.outfile):

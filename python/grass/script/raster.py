@@ -52,7 +52,7 @@ def raster_history(map, overwrite=False, env=None):
     if find_file(name=map, env=env)["mapset"] == current_mapset:
         if overwrite is True:
             historyfile = tempfile(env=env)
-            f = open(historyfile, "w")
+            f = open(historyfile, "w", encoding="utf-8")
             f.write(os.environ["CMDLINE"])
             f.close()
             run_command("r.support", map=map, loadhistory=historyfile, env=env)

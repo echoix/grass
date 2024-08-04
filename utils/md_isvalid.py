@@ -26,7 +26,7 @@ def check_module(module):
     print_line()
     print(module)
     tmp_file = gs.tempfile()
-    with open(tmp_file, "w") as fp:
+    with open(tmp_file, "w", encoding="utf-8") as fp:
         p = subprocess.Popen([module, "--md-description"], stdout=fp)
         p.wait()
 

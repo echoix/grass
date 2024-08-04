@@ -73,7 +73,7 @@ def get_module_man_html_file_path(module):
 
 for html_file in htmlfiles:
     fname = os.path.basename(html_file)
-    with open(html_file) as f:
+    with open(html_file, encoding="utf-8") as f:
         lines = f.readlines()
     # TODO maybe move to Python re (regex)
     # remove empty lines
@@ -120,7 +120,7 @@ for key in sorted(keywords.keys()):
         if key.lower() < char_list[str(firstchar)].lower():
             char_list[str(firstchar.lower())] = key
 
-keywordsfile = open(os.path.join(path, "keywords.html"), "w")
+keywordsfile = open(os.path.join(path, "keywords.html"), "w", encoding="utf-8")
 keywordsfile.write(
     header1_tmpl.substitute(
         title="GRASS GIS %s Reference Manual: Keywords index" % grass_version

@@ -868,7 +868,7 @@ class IClassMapPanel(DoubleMapPanel):
             wx.EndBusyCursor()
             return False
 
-        dbFile = tempfile.NamedTemporaryFile(mode="w", delete=False)
+        dbFile = tempfile.NamedTemporaryFile(mode="w", delete=False, encoding="utf-8")
         if dbInfo["driver"] != "dbf":
             dbFile.write("BEGIN\n")
         # populate table

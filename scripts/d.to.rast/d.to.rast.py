@@ -37,7 +37,7 @@ def main():
                 d_cmd += " {param}={val}".format(param=param, val=val)
         if gcore.overwrite():
             d_cmd += " --overwrite"
-        with open(cmd_file, "a") as file_:
+        with open(cmd_file, "a", encoding="utf-8") as file_:
             file_.write(d_cmd)
     else:
         gcore.fatal(

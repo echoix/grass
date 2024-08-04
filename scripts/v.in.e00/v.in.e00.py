@@ -118,7 +118,7 @@ def main():
             inf.close()
         outf.close()
 
-    nuldev = open(os.devnull, "w+")
+    nuldev = open(os.devnull, "w+", encoding="utf-8")
 
     gcore.message(_("An error may appear next which will be ignored..."))
     if (

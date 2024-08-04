@@ -1215,7 +1215,7 @@ class Image(InstructionObject):
         # if eps, read info from header
         if os.path.splitext(fileName)[1].lower() == ".eps":
             bbInfo = "%%BoundingBox"
-            file = open(imagePath, "r")
+            file = open(imagePath, "r", encoding="utf-8")
             w = h = 0
             while file:
                 line = file.readline()

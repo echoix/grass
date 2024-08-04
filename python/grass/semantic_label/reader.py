@@ -35,7 +35,7 @@ class SemanticLabelReader:
         self.config = {}
         for json_file in self._json_files:
             try:
-                with open(json_file) as fd:
+                with open(json_file, encoding="utf-8") as fd:
                     config = json.load(fd, object_pairs_hook=OrderedDict)
             except json.decoder.JSONDecodeError as e:
                 raise SemanticLabelReaderError(

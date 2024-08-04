@@ -165,14 +165,14 @@ def main():
     if options["username"] and options["password"]:
         grass.message(_("Setting username and password..."))
         if os.path.isfile(options["username"]):
-            filecontent = Path(options["username"]).read_text()
+            filecontent = Path(options["username"]).read_text(encoding="utf-8")
             user = filecontent.strip()
         elif options["username"] in os.environ:
             user = os.environ[options["username"]]
         else:
             user = options["username"]
         if os.path.isfile(options["password"]):
-            filecontent = Path(options["password"]).read_text()
+            filecontent = Path(options["password"]).read_text(encoding="utf-8")
             pw = filecontent.strip()
         elif options["password"] in os.environ:
             pw = os.environ[options["password"]]

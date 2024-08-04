@@ -108,7 +108,7 @@ class DMonMap(Map):
         self.renderMgr = RenderMapMgr(self)
 
         # update legend file variable with the one d.mon uses
-        with open(monFile["env"], "r") as f:
+        with open(monFile["env"], "r", encoding="utf-8") as f:
             lines = f.readlines()
             for line in lines:
                 if "GRASS_LEGEND_FILE" in line:
@@ -123,7 +123,7 @@ class DMonMap(Map):
 
         nlayers = 0
         try:
-            fd = open(self.cmdfile, "r")
+            fd = open(self.cmdfile, "r", encoding="utf-8")
             lines = fd.readlines()
             fd.close()
             # detect d.out.file, delete the line from the cmd file and export
@@ -133,7 +133,7 @@ class DMonMap(Map):
                     "d.to.rast"
                 ):
                     dCmd = lines[-1].strip()
-                    fd = open(self.cmdfile, "w")
+                    fd = open(self.cmdfile, "w", encoding="utf-8")
                     fd.writelines(lines[:-1])
                     fd.close()
                     if lines[-1].startswith("d.out.file"):
@@ -143,7 +143,7 @@ class DMonMap(Map):
                     return
                 if lines[-1].startswith("d.what"):
                     dWhatCmd = lines[-1].strip()
-                    fd = open(self.cmdfile, "w")
+                    fd = open(self.cmdfile, "w", encoding="utf-8")
                     fd.writelines(lines[:-1])
                     fd.close()
                     if "=" in utils.split(dWhatCmd)[1]:
@@ -656,7 +656,7 @@ if __name__ == "__main__":
 
     # create pid file
     pidFile = os.path.join(monPath, "pid")
-    fd = open(pidFile, "w")
+    fd = open(pidFile, "w", encoding="utf-8")
     if not fd:
         grass.fatal(_("Unable to create file <%s>") % pidFile)
     fd.write("%s\n" % os.getpid())

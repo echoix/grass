@@ -77,8 +77,8 @@ def cleanup():
 
 
 def sortfile(infile, outfile):
-    inf = open(infile, "r")
-    outf = open(outfile, "w")
+    inf = open(infile, "r", encoding="utf-8")
+    outf = open(outfile, "w", encoding="utf-8")
 
     if gs.find_program("sort", "--help"):
         gs.run_command("sort", flags="n", stdin=inf, stdout=outf)
@@ -153,7 +153,7 @@ def main():
     if not driver:
         driver = None
 
-    tmpf = open(tmp, "w")
+    tmpf = open(tmp, "w", encoding="utf-8")
     gs.run_command(
         "db.select",
         flags="c",
@@ -166,7 +166,7 @@ def main():
     tmpf.close()
 
     # check if result is empty
-    tmpf = open(tmp)
+    tmpf = open(tmp, encoding="utf-8")
     if tmpf.read(1) == "":
         if output_format in {"plain", "shell"}:
             gs.fatal(_("Table <%s> contains no data.") % table)
@@ -183,7 +183,7 @@ def main():
     minv = 1e300
     maxv = -1e300
 
-    tmpf = open(tmp)
+    tmpf = open(tmp, encoding="utf-8")
     for line in tmpf:
         line = line.rstrip("\r\n")
         if len(line) == 0:
@@ -310,7 +310,7 @@ def main():
             ppos[i] = 1
         pval[i] = 0
 
-    inf = open(tmp + ".sort")
+    inf = open(tmp + ".sort", encoding="utf-8")
     line_number = 1
     for line in inf:
         line = line.rstrip("\r\n")

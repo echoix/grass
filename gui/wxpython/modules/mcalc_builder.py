@@ -737,7 +737,7 @@ class MapCalcFrame(wx.Frame):
                 return
 
             try:
-                fobj = open(path, "w")
+                fobj = open(path, "w", encoding="utf-8")
                 fobj.write(mctxt)
             finally:
                 fobj.close()
@@ -759,7 +759,7 @@ class MapCalcFrame(wx.Frame):
                 return
 
             try:
-                fobj = open(path, "r")
+                fobj = open(path, "r", encoding="utf-8")
                 mctxt = fobj.read()
             finally:
                 fobj.close()

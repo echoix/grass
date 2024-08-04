@@ -94,7 +94,7 @@ def db_table_exist(table, env=None, **args):
 
     :return: True for success, False otherwise
     """
-    nuldev = open(os.devnull, "w+")
+    nuldev = open(os.devnull, "w+", encoding="utf-8")
     ok = True
     try:
         run_command(
@@ -127,7 +127,7 @@ def db_connection(force=False, env=None):
     :return: parsed output of db.connect
     """  # noqa: E501
     try:
-        nuldev = open(os.devnull, "w")
+        nuldev = open(os.devnull, "w", encoding="utf-8")
         conn = parse_command("db.connect", flags="g", stderr=nuldev, env=env)
         nuldev.close()
     except CalledModuleError:
@@ -190,7 +190,7 @@ def db_select(sql=None, filename=None, table=None, env=None, **args):
     except CalledModuleError:
         fatal(_("Fetching data failed"))
 
-    ofile = open(fname)
+    ofile = open(fname, encoding="utf-8")
     result = [tuple(x.rstrip(os.linesep).split(args["sep"])) for x in ofile]
     ofile.close()
     try_remove(fname)
@@ -217,7 +217,7 @@ def db_table_in_vector(table, mapset=".", env=None):
     """
     from .vector import vector_db
 
-    nuldev = open(os.devnull, "w")
+    nuldev = open(os.devnull, "w", encoding="utf-8")
     used = []
     vects = list_strings("vector", mapset=mapset, env=env)
     for vect in vects:

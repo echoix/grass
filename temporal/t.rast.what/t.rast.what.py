@@ -373,7 +373,7 @@ def one_point_per_row_output(
     output is of type: x,y,start,end,value
     """
     # open the output file for writing
-    out_file = open(output, "w") if output != "-" else sys.stdout
+    out_file = open(output, "w", encoding="utf-8") if output != "-" else sys.stdout
 
     if write_header is True:
         out_str = ""
@@ -389,7 +389,7 @@ def one_point_per_row_output(
         file_name = output_files[count]
         gs.verbose(_("Transforming r.what output file %s" % (file_name)))
         map_list = output_time_list[count]
-        in_file = open(file_name, "r")
+        in_file = open(file_name, "r", encoding="utf-8")
         for line in in_file:
             line = line.split(separator)
             if vcat:
@@ -460,14 +460,14 @@ def one_point_per_col_output(
     Each row represents a single raster map, hence a single time stamp
     """
     # open the output file for writing
-    out_file = open(output, "w") if output != "-" else sys.stdout
+    out_file = open(output, "w", encoding="utf-8") if output != "-" else sys.stdout
 
     first = True
     for count in range(len(output_files)):
         file_name = output_files[count]
         gs.verbose(_("Transforming r.what output file %s" % (file_name)))
         map_list = output_time_list[count]
-        in_file = open(file_name, "r")
+        in_file = open(file_name, "r", encoding="utf-8")
         lines = in_file.readlines()
 
         matrix = []
@@ -554,7 +554,7 @@ def one_point_per_timerow_output(
      3730731.49590371|5642483.51236521|6|8|7|7
      3581249.04638104|5634411.97526282|5|8|7|7
     """  # noqa: E501
-    out_file = open(output, "w") if output != "-" else sys.stdout
+    out_file = open(output, "w", encoding="utf-8") if output != "-" else sys.stdout
 
     matrix = []
     header = ""
@@ -564,7 +564,7 @@ def one_point_per_timerow_output(
         file_name = output_files[count]
         gs.verbose("Transforming r.what output file %s" % (file_name))
         map_list = output_time_list[count]
-        in_file = open(file_name, "r")
+        in_file = open(file_name, "r", encoding="utf-8")
 
         if write_header:
             if first is True:

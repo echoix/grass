@@ -416,7 +416,7 @@ def createAbsoluteInterval():
     gs.mapcalc(exp="temp_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
+    fd = open(n1, "w", encoding="utf-8")
     fd.write(
         "prec_1|2001-01-01|2001-02-01\n"
         "prec_2|2001-04-01|2001-05-01\n"
@@ -428,7 +428,7 @@ def createAbsoluteInterval():
     fd.close()
 
     n2 = gs.read_command("g.tempfile", pid=2, flags="d").strip()
-    fd = open(n2, "w")
+    fd = open(n2, "w", encoding="utf-8")
     fd.write(
         "temp_1|2000-10-01|2001-01-01\n"
         "temp_2|2001-04-01|2001-05-01\n"
@@ -491,7 +491,7 @@ def createRelativeInterval():
     gs.mapcalc(exp="temp_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
+    fd = open(n1, "w", encoding="utf-8")
     fd.write(
         "prec_1|1|4\n"
         "prec_2|6|7\n"
@@ -503,7 +503,7 @@ def createRelativeInterval():
     fd.close()
 
     n2 = gs.read_command("g.tempfile", pid=2, flags="d").strip()
-    fd = open(n2, "w")
+    fd = open(n2, "w", encoding="utf-8")
     fd.write(
         "temp_1|5|6\n"
         "temp_2|6|7\n"
@@ -565,7 +565,7 @@ def createAbsolutePoint():
     gs.mapcalc(exp="prec_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
+    fd = open(n1, "w", encoding="utf-8")
     fd.write(
         "prec_1|2001-01-01\n"
         "prec_2|2001-03-01\n"
@@ -613,7 +613,7 @@ def createRelativePoint():
     gs.mapcalc(exp="prec_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
+    fd = open(n1, "w", encoding="utf-8")
     fd.write("prec_1|1\nprec_2|3\nprec_3|5\nprec_4|7\nprec_5|11\nprec_6|13\n")
     fd.close()
     name = "relpoint"

@@ -98,7 +98,7 @@ def img_in_html(filename, imagename) -> bool:
     # for some reason, calling search just once is much faster
     # than calling it on every line (time is spent in _compile)
     pattern = re.compile("<img .*src=.{0}.*>".format(imagename))
-    return bool(re.search(pattern, Path(filename).read_text()))
+    return bool(re.search(pattern, Path(filename).read_text(encoding="utf-8")))
 
 
 def file_matches(filename, patterns):
@@ -162,7 +162,7 @@ def main():
                     img_html_files[filename] = html_file
                     # for now suppose one image per html
 
-    with open(os.path.join(html_dir, output_name), "w") as output:
+    with open(os.path.join(html_dir, output_name), "w", encoding="utf-8") as output:
         output.write(
             header1_tmpl.substitute(
                 title="GRASS GIS %s Reference Manual: Manual gallery" % grass_version

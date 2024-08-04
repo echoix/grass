@@ -292,7 +292,7 @@ class IOValidationTest(TestCase):
         G_file_name_misc(cpath, sigdir, "scale", sigfile, self.mapset_name)
         misc_file = utils.decode(cpath.value)
         self.assertTrue(os.path.isfile(misc_file))
-        with open(misc_file) as rf:
+        with open(misc_file, encoding="utf-8") as rf:
             lines = rf.readlines()
             M, R = lines[0].strip().split(" ")
             self.assertTrue(float(M) > -1 and float(M) < 1)

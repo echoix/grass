@@ -46,7 +46,7 @@ class TestGhtml2man(TestCase):
         man_files = glob.glob("*.html")
         for man in man_files:
             parser = self.ghtml.HTMLParser(entities)
-            with open(man) as f:
+            with open(man, encoding="utf-8") as f:
                 for line in f:
                     parser.feed(line)
             content = []

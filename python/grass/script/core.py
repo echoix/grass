@@ -1066,7 +1066,7 @@ def _text_to_key_value_dict(
         {'a': ['Hello'], 'c': [1, 2, 3, 4, 5], 'b': [1.0], 'd': ['hello', 8, 0.1]}
 
     """
-    text = open(filename, "r").readlines()
+    text = open(filename, "r", encoding="utf-8").readlines()
     kvdict = KeyValue()
 
     for line in text:
@@ -1276,7 +1276,7 @@ def region_env(region3d=False, flags=None, env=None, **kwargs):
     windfile = os.path.join(
         gis_env["GISDBASE"], gis_env["LOCATION_NAME"], gis_env["MAPSET"], "WIND"
     )
-    with open(windfile, "r") as fd:
+    with open(windfile, "r", encoding="utf-8") as fd:
         grass_region = ""
         for line in fd:
             key, value = (x.strip() for x in line.split(":", 1))
@@ -1679,7 +1679,7 @@ def find_program(pgm, *args):
             or non-zero return code
     :return: True otherwise
     """
-    nuldev = open(os.devnull, "w+")
+    nuldev = open(os.devnull, "w+", encoding="utf-8")
     try:
         # TODO: the doc or impl is not correct, any return code is accepted
         call([pgm] + list(args), stdin=nuldev, stdout=nuldev, stderr=nuldev)
@@ -1922,7 +1922,9 @@ def _create_location_xy(database, location):
             "t-b resol:  1",
         ]
 
-        defwind = open(os.path.join(location, "PERMANENT", "DEFAULT_WIND"), "w")
+        defwind = open(
+            os.path.join(location, "PERMANENT", "DEFAULT_WIND"), "w", encoding="utf-8"
+        )
         for param in regioninfo:
             defwind.write(param + "%s" % os.linesep)
         defwind.close()
@@ -2030,7 +2032,7 @@ def create_environment(gisdbase, location, mapset, env=None):
     """Creates environment to be passed in run_command for example.
     Returns tuple with temporary file path and the environment. The user
     of this function is responsible for deleting the file."""
-    with NamedTemporaryFile(mode="w", delete=False) as f:
+    with NamedTemporaryFile(mode="w", delete=False, encoding="utf-8") as f:
         f.write("MAPSET: {mapset}\n".format(mapset=mapset))
         f.write("GISDBASE: {g}\n".format(g=gisdbase))
         f.write("LOCATION_NAME: {l}\n".format(l=location))

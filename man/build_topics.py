@@ -18,7 +18,7 @@ keywords = {}
 htmlfiles = glob.glob1(path, "*.html")
 
 for fname in htmlfiles:
-    fil = open(os.path.join(path, fname))
+    fil = open(os.path.join(path, fname), encoding="utf-8")
     # TODO maybe move to Python re (regex)
     lines = fil.readlines()
     try:
@@ -41,7 +41,7 @@ for fname in htmlfiles:
     elif fname not in keywords[key]:
         keywords[key][fname] = desc
 
-topicsfile = open(os.path.join(path, "topics.html"), "w")
+topicsfile = open(os.path.join(path, "topics.html"), "w", encoding="utf-8")
 topicsfile.write(
     header1_tmpl.substitute(
         title="GRASS GIS %s Reference Manual: Topics index" % grass_version
@@ -50,7 +50,7 @@ topicsfile.write(
 topicsfile.write(headertopics_tmpl)
 
 for key, values in sorted(keywords.items(), key=lambda s: s[0].lower()):
-    keyfile = open(os.path.join(path, "topic_%s.html" % key), "w")
+    keyfile = open(os.path.join(path, "topic_%s.html" % key), "w", encoding="utf-8")
     keyfile.write(
         header1_tmpl.substitute(
             title="GRASS GIS "

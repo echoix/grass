@@ -273,7 +273,7 @@ class AboutWindow(wx.Frame):
         """Copyright information"""
         copyfile = os.path.join(os.getenv("GISBASE"), "COPYING")
         if os.path.exists(copyfile):
-            copyrightFile = open(copyfile, "r")
+            copyrightFile = open(copyfile, "r", encoding="utf-8")
             copytext = copyrightFile.read()
             copyrightFile.close()
         else:
@@ -302,7 +302,7 @@ class AboutWindow(wx.Frame):
         """Licence about"""
         licfile = os.path.join(os.getenv("GISBASE"), "GPL.TXT")
         if os.path.exists(licfile):
-            licenceFile = open(licfile, "r")
+            licenceFile = open(licfile, "r", encoding="utf-8")
             license = "".join(licenceFile.readlines())
             licenceFile.close()
         else:
@@ -649,7 +649,7 @@ class AboutWindow(wx.Frame):
         fname = "translation_status.json"
         statsfile = os.path.join(os.getenv("GISBASE"), fname)
         if os.path.exists(statsfile):
-            statsFile = open(statsfile)
+            statsFile = open(statsfile, encoding="utf-8")
             import json
 
             jsStats = json.load(statsFile)

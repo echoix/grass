@@ -123,7 +123,7 @@ def writeData(data, file=None):
         return
 
     try:
-        f = open(file, "a")
+        f = open(file, "a", encoding="utf-8")
         try:
             f.write("\n")
         finally:
@@ -145,7 +145,7 @@ def main(argv=None):
         print(sys.stderr, __doc__, file=sys.stderr)
         return 1
 
-    nuldev = open(os.devnull, "w+")
+    nuldev = open(os.devnull, "w+", encoding="utf-8")
     grass.info("Step 1: running make...")
     grass.call(["make"], stderr=nuldev)
     grass.info("Step 2: parsing modules...")

@@ -29,7 +29,7 @@ if os.path.isfile(outfname):
     print(f"{outfname}: File already exists")
     sys.exit()
 
-inf = open(infname)
+inf = open(infname, encoding="utf-8")
 
 head = 0
 for inline in inf:
@@ -63,7 +63,7 @@ if head != 0x3F:
     inf.close()
     sys.exit()
 
-outf = open(outfname, "w")
+outf = open(outfname, "w", encoding="utf-8")
 outf.write(
     f"""\
 arc.to.gridatb.py {infname} {outfname}

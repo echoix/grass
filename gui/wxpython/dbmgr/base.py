@@ -4031,7 +4031,7 @@ class FieldStatistics(wx.Frame):
             return
 
         fd, sqlFilePath = tempfile.mkstemp(text=True)
-        sqlFile = open(sqlFilePath, "w")
+        sqlFile = open(sqlFilePath, "w", encoding="utf-8")
         stats = ["count", "min", "max", "avg", "sum", "null"]
         for fn in stats:
             if fn == "null":

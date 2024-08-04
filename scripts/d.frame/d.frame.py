@@ -91,7 +91,7 @@ def check_monitor():
 def read_monitor_file(monitor, ftype="env"):
     mfile = check_monitor_file(monitor, ftype)
     try:
-        fd = open(mfile, "r")
+        fd = open(mfile, "r", encoding="utf-8")
     except OSError as e:
         fatal(_("Unable to get monitor info. %s"), e)
 
@@ -122,7 +122,7 @@ def write_monitor_file(monitor, lines, ftype="env"):
     mfile = check_monitor_file(monitor, ftype)
 
     try:
-        fd = open(mfile, "w")
+        fd = open(mfile, "w", encoding="utf-8")
     except OSError as e:
         fatal(_("Unable to get monitor info. %s"), e)
 

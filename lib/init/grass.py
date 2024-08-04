@@ -167,7 +167,7 @@ def fatal(msg):
 
 def readfile(path):
     debug("Reading %s" % path)
-    f = open(path, "r")
+    f = open(path, "r", encoding="utf-8")
     s = f.read()
     f.close()
     return s
@@ -175,7 +175,7 @@ def readfile(path):
 
 def writefile(path, s):
     debug("Writing %s" % path)
-    f = open(path, "w")
+    f = open(path, "w", encoding="utf-8")
     f.write(s)
     f.close()
 
@@ -500,7 +500,7 @@ def create_gisrc(tmpdir, gisrcrc):
 def read_gisrc(filename):
     kv = {}
     try:
-        f = open(filename, "r")
+        f = open(filename, "r", encoding="utf-8")
     except OSError:
         return kv
 
@@ -526,20 +526,20 @@ def write_gisrcrc(gisrcrc, gisrc, skip_variable=None):
     """Reads gisrc file and write to gisrcrc"""
     debug("Reading %s" % gisrc)
     number = 0
-    with open(gisrc, "r") as f:
+    with open(gisrc, "r", encoding="utf-8") as f:
         lines = f.readlines()
         for line in lines:
             if skip_variable in line:
                 del lines[number]
             number += 1
-    with open(gisrcrc, "w") as f:
+    with open(gisrcrc, "w", encoding="utf-8") as f:
         for line in lines:
             f.write(line)
 
 
 def read_env_file(path):
     kv = {}
-    f = open(path, "r")
+    f = open(path, "r", encoding="utf-8")
     for line in f:
         k, v = line.split(":", 1)
         kv[k.strip()] = v.strip()
@@ -635,7 +635,7 @@ def check_gui(expected_gui):
     if os.getenv("DISPLAY") or WINDOWS or MACOS:
         # Check if python is working properly
         if expected_gui in {"wxpython", "gtext"}:
-            nul = open(os.devnull, "w")
+            nul = open(os.devnull, "w", encoding="utf-8")
             p = Popen(
                 [os.environ["GRASS_PYTHON"]],
                 stdin=subprocess.PIPE,
@@ -1118,7 +1118,9 @@ def set_language(grass_config_dir):
 
     # Override value is stored in wxGUI preferences file.
     try:
-        with open(os.path.join(grass_config_dir, "wx.json"), "r") as json_file:
+        with open(
+            os.path.join(grass_config_dir, "wx.json"), "r", encoding="utf-8"
+        ) as json_file:
             try:
                 language = json.load(json_file)["language"]["locale"]["lc_all"]
             except KeyError:
@@ -1585,7 +1587,7 @@ def say_hello():
     sys.stderr.write(_("Welcome to GRASS GIS %s") % GRASS_VERSION)
     if GRASS_VERSION.endswith("dev"):
         try:
-            filerev = open(gpath("etc", "VERSIONNUMBER"))
+            filerev = open(gpath("etc", "VERSIONNUMBER"), encoding="utf-8")
             linerev = filerev.readline().rstrip("\n")
             filerev.close()
 
@@ -1648,7 +1650,7 @@ def csh_startup(location, grass_env_file):
     try_remove(cshrc)
     try_remove(tcshrc)
 
-    f = open(cshrc, "w")
+    f = open(cshrc, "w", encoding="utf-8")
     f.write("set home = %s\n" % userhome)
     f.write("set history = 10000000 savehist = (10000000 merge) noclobber ignoreeof\n")
     f.write("set histfile = %s\n" % os.path.join(os.getenv("HOME"), ".history"))
@@ -1725,7 +1727,7 @@ def sh_like_startup(location, location_name, grass_env_file, sh):
     shell_rc_file = os.path.join(home, shrc)
     try_remove(shell_rc_file)
 
-    f = open(shell_rc_file, "w")
+    f = open(shell_rc_file, "w", encoding="utf-8")
 
     if sh == "zsh":
         f.write("test -r {home}/.alias && source {home}/.alias\n".format(home=userhome))
@@ -1795,7 +1797,7 @@ def sh_like_startup(location, location_name, grass_env_file, sh):
             try:
                 # Open with append so that if the file already exists there
                 # isn't any error.
-                fh = open(os.path.join(home, sudo_success_file), "a")
+                fh = open(os.path.join(home, sudo_success_file), "a", encoding="utf-8")
             finally:
                 fh.close()
 
@@ -1926,7 +1928,7 @@ def print_params(params):
         plat = gpath("include", "Make", "Platform.make")
         if not os.path.exists(plat):
             fatal(_("Please install the GRASS GIS development package"))
-        fileplat = open(plat)
+        fileplat = open(plat, encoding="utf-8")
         # this is in fact require only for some, but prepare it anyway
         linesplat = fileplat.readlines()
         fileplat.close()
@@ -1941,7 +1943,7 @@ def print_params(params):
             sys.stdout.write("%s\n" % val[0].split("=")[1].strip())
         elif arg == "build":
             build = gpath("include", "grass", "confparms.h")
-            filebuild = open(build)
+            filebuild = open(build, encoding="utf-8")
             val = filebuild.readline()
             filebuild.close()
             sys.stdout.write("%s\n" % val.strip().strip('"').strip())
@@ -1951,7 +1953,7 @@ def print_params(params):
         elif arg == "revision":
             sys.stdout.write("@GRASS_VERSION_GIT@\n")
         elif arg == "svn_revision":
-            filerev = open(gpath("etc", "VERSIONNUMBER"))
+            filerev = open(gpath("etc", "VERSIONNUMBER"), encoding="utf-8")
             linerev = filerev.readline().rstrip("\n")
             filerev.close()
             try:
@@ -1964,7 +1966,7 @@ def print_params(params):
         elif arg == "date":
             date_str = "#define GRASS_HEADERS_DATE "
             gdate = gpath("include", "grass", "version.h")
-            with open(gdate) as filegdate:
+            with open(gdate, encoding="utf-8") as filegdate:
                 for line in filegdate:
                     if line.startswith(date_str):
                         sys.stdout.write(

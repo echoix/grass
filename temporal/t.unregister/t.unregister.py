@@ -108,7 +108,7 @@ def main():
 
     # Read the map list from file
     if file:
-        fd = open(file, "r")
+        fd = open(file, "r", encoding="utf-8")
 
         line = True
         while True:

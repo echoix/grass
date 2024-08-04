@@ -97,7 +97,7 @@ def main():
 
     # check if table exists
     try:
-        nuldev = open(os.devnull, "w+")
+        nuldev = open(os.devnull, "w+", encoding="utf-8")
         s = gs.read_command("db.tables", flags="p", quiet=True, stderr=nuldev)
         nuldev.close()
     except CalledModuleError:
@@ -175,7 +175,7 @@ def main():
         gs.run_command("g.remove", flags="f", quiet=True, type="vector", name=output)
 
     # get rid of superfluous auto-added cat column (and cat_ if present)
-    nuldev = open(os.devnull, "w+")
+    nuldev = open(os.devnull, "w+", encoding="utf-8")
     gs.run_command(
         "db.dropcolumn",
         quiet=True,

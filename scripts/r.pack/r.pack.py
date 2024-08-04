@@ -93,7 +93,7 @@ def main():
         if map_file["file"]:
             vrt = os.path.join(map_file["file"], "vrt")
             if os.path.exists(vrt):
-                with open(vrt, "r") as f:
+                with open(vrt, "r", encoding="utf-8") as f:
                     for r in f:
                         map, mapset = r.split("@")
                         map_basedir = os.path.sep.join(

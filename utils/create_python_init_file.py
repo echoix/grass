@@ -32,7 +32,7 @@ def main(path):
             continue
         modules.append(os.path.splitext(os.path.basename(f))[0])
 
-    fd = open(os.path.join(path, "__init__.py"), "w")
+    fd = open(os.path.join(path, "__init__.py"), "w", encoding="utf-8")
     try:
         fd.write("all = [%s" % os.linesep)
         for m in modules:

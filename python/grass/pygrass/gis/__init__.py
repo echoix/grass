@@ -430,7 +430,7 @@ class VisibleMapset:
     def read(self):
         """Return the mapsets in the search path"""
         try:
-            with open(self.spath, "r") as f:
+            with open(self.spath, "r", encoding="utf-8") as f:
                 lines = f.readlines()
                 if lines:
                     return [line.strip() for line in lines]
@@ -444,7 +444,7 @@ class VisibleMapset:
         :param mapsets: a list of mapset's names
         :type mapsets: list
         """
-        with open(self.spath, "w") as f:
+        with open(self.spath, "w", encoding="utf-8") as f:
             ms = self.location.mapsets()
             for m in mapsets:
                 if m in ms:
@@ -458,7 +458,7 @@ class VisibleMapset:
         :type mapset: str
         """
         if mapset not in self.read() and mapset in self.location:
-            with open(self.spath, "a+") as f:
+            with open(self.spath, "a+", encoding="utf-8") as f:
                 f.write("%s\n" % mapset)
         else:
             raise TypeError("Mapset not found")

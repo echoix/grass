@@ -396,7 +396,9 @@ class AbstractSpaceTimeDataset(AbstractDataset):
 
             # Read the SQL template
             sql = open(
-                os.path.join(sql_path, "stds_map_register_table_template.sql"), "r"
+                os.path.join(sql_path, "stds_map_register_table_template.sql"),
+                "r",
+                encoding="utf-8",
             ).read()
 
             # Create a raster, raster3d or vector tables
@@ -2827,6 +2829,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                 f"update_stds_spatial_temporal_extent_template{template_suffix}.sql",
             ),
             "r",
+            encoding="utf-8",
         ).read()
         sql = sql.replace("GRASS_MAP", self.get_new_map_instance(None).get_type())
         sql = sql.replace("SPACETIME_REGISTER_TABLE", stds_register_table)
@@ -2843,6 +2846,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                 f"update_{self.get_type()}_metadata_template{template_suffix}.sql",
             ),
             "r",
+            encoding="utf-8",
         ).read()
 
         # Comment out update of semantic labels for DB version < 3
@@ -2859,6 +2863,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
             semantic_label_sql = open(
                 os.path.join(sql_path, "update_strds_metadata_template_v3.sql"),
                 "r",
+                encoding="utf-8",
             ).read()
             sql = sql + "\n" + semantic_label_sql
 

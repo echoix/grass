@@ -375,7 +375,7 @@ def export_stds(
 
     # Open the tar archive to add the files
     tar = tarfile.open(tmp_tar_file_name, flag)
-    list_file = open(list_file_name, "w")
+    list_file = open(list_file_name, "w", encoding="utf-8")
 
     fs = "|"
 
@@ -402,11 +402,11 @@ def export_stds(
     # Write projection and metadata
     proj = gs.read_command("g.proj", flags="j")
 
-    proj_file = open(proj_file_name, "w")
+    proj_file = open(proj_file_name, "w", encoding="utf-8")
     proj_file.write(proj)
     proj_file.close()
 
-    init_file = open(init_file_name, "w")
+    init_file = open(init_file_name, "w", encoding="utf-8")
     # Create the init string
     string = ""
     # This is optional, if not present strds will be assumed for backward
@@ -431,11 +431,11 @@ def export_stds(
     init_file.close()
 
     metadata = gs.read_command("t.info", type=type_, input=sp.get_id())
-    metadata_file = open(metadata_file_name, "w")
+    metadata_file = open(metadata_file_name, "w", encoding="utf-8")
     metadata_file.write(metadata)
     metadata_file.close()
 
-    read_file = open(read_file_name, "w")
+    read_file = open(read_file_name, "w", encoding="utf-8")
     if type_ == "strds":
         read_file.write(
             "This space time raster dataset was exported with "
