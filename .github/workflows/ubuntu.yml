@@ -171,11 +171,6 @@ jobs:
           printf "import coverage\ncoverage.process_startup()" \
             > "$(python -m site --user-site)/usercustomize.py"
 
-      - name: Set COVERAGE_PROCESS_START env variable
-        run: |
-          echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
-          echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
-
       - name: Run tests
         run: |
           export COVERAGE_PROCESS_START=${PWD}/.coveragerc
