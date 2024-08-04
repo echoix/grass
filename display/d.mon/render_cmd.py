@@ -153,7 +153,7 @@ def read_stdin(cmd):
 
     if opt:
         tmpfile = tempfile.NamedTemporaryFile(dir=path).name + ".txt"
-        fd = open(tmpfile, "w")
+        fd = open(tmpfile, "w", encoding="utf-8")
         while 1:
             line = sys.stdin.readline()
             if not line:

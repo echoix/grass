@@ -265,7 +265,7 @@ def get_git_commit_from_file(
         "core_modules_with_last_commit.json",
     )
     if os.path.exists(json_file_path):
-        with open(json_file_path) as f:
+        with open(json_file_path, encoding="utf-8") as f:
             core_modules_with_last_commit = json.load(f)
         if pgm in core_modules_with_last_commit:
             core_module = core_modules_with_last_commit[pgm]
@@ -513,7 +513,7 @@ GRASS GIS ${GRASS_VERSION} Reference Manual
 
 def read_file(name):
     try:
-        return Path(name).read_text()
+        return Path(name).read_text(encoding="utf-8")
     except OSError:
         return ""
 

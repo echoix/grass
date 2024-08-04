@@ -77,7 +77,7 @@ def main():
     sort = options["sort"]
     fs = separator(options["separator"])
 
-    nuldev = open(os.devnull, "w")
+    nuldev = open(os.devnull, "w", encoding="utf-8")
 
     if not gs.find_file(mapname, "vector")["file"]:
         gs.fatal(_("Vector map <%s> not found") % mapname)

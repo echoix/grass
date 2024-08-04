@@ -341,7 +341,7 @@ class GCPWizard:
         self.source_gisrc = utils.GetTempfile()
 
         try:
-            f = open(self.source_gisrc, mode="w")
+            f = open(self.source_gisrc, mode="w", encoding="utf-8")
             for line in self.gisrc_dict.items():
                 f.write(line[0] + ": " + line[1] + "\n")
         finally:
@@ -1531,7 +1531,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         """
         self.GCPcount = 0
         try:
-            f = open(self.file["points"], mode="w")
+            f = open(self.file["points"], mode="w", encoding="utf-8")
             # use os.linesep or '\n' here ???
             f.write("# Ground Control Points File\n")
             f.write("# \n")
@@ -2147,7 +2147,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         }
 
         try:
-            f = open(coord_file, mode="w")
+            f = open(coord_file, mode="w", encoding="utf-8")
             # NW corner
             f.write(str(region["e"]) + " " + str(region["n"]) + "\n")
             # NE corner
@@ -2723,7 +2723,7 @@ class VectGroup(wx.Dialog):
         self.listMap = CheckListBox(parent=self, id=wx.ID_ANY, choices=vectlist)
 
         if os.path.isfile(self.vgrpfile):
-            f = open(self.vgrpfile)
+            f = open(self.vgrpfile, encoding="utf-8")
             try:
                 checked = []
                 for line in f:
@@ -2797,7 +2797,7 @@ class VectGroup(wx.Dialog):
         if not os.path.exists(dirname):
             os.makedirs(dirname)
 
-        f = open(self.vgrpfile, mode="w")
+        f = open(self.vgrpfile, mode="w", encoding="utf-8")
         try:
             for vect in vgrouplist:
                 f.write(vect + "\n")
