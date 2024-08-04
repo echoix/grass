@@ -513,7 +513,7 @@ GRASS GIS ${GRASS_VERSION} Reference Manual
 
 def read_file(name):
     try:
-        return Path(name).read_text(encoding="utf-8")
+        return Path(name).read_text()
     except OSError:
         return ""
 
