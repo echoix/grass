@@ -144,7 +144,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
         connections[senderkey] = signals = {}
     # Keep track of senders for cleanup.
     # Is Anonymous something we want to clean up?
-    if sender not in (None, Anonymous, Any):
+    if sender not in {None, Anonymous, Any}:
 
         def remove(object, senderkey=senderkey):
             _removeSender(senderkey=senderkey)

@@ -61,7 +61,7 @@ def checkImages(images):
             # Check and convert dtype
             if im.dtype == np.uint8:
                 images2.append(im)  # Ok
-            elif im.dtype in [np.float32, np.float64]:
+            elif im.dtype in {np.float32, np.float64}:
                 theMax = im.max()
                 if theMax > 128 and theMax < 300:
                     pass  # assume 0:255
@@ -78,7 +78,7 @@ def checkImages(images):
             if im.ndim == 2:
                 pass  # ok
             elif im.ndim == 3:
-                if im.shape[2] not in [3, 4]:
+                if im.shape[2] not in {3, 4}:
                     raise ValueError("This array can not represent an image.")
             else:
                 raise ValueError("This array can not represent an image.")

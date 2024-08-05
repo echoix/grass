@@ -522,7 +522,7 @@ class VirtualAttributeList(
 
         if not self.dbMgrData["editable"] or self.columns[
             self.GetColumn(self._col).GetText()
-        ]["ctype"] not in (int, float):
+        ]["ctype"] not in {int, float}:
             subMenuItem.Enable(False)
 
         subMenu.Append(self.popupId["area"], _("Area size"))

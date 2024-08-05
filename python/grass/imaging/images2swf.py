@@ -107,7 +107,7 @@ def checkImages(images):
             # Check and convert dtype
             if im.dtype == np.uint8:
                 images2.append(im)  # Ok
-            elif im.dtype in [np.float32, np.float64]:
+            elif im.dtype in {np.float32, np.float64}:
                 theMax = im.max()
                 if theMax > 128 and theMax < 300:
                     pass  # assume 0:255
@@ -124,7 +124,7 @@ def checkImages(images):
             if im.ndim == 2:
                 pass  # ok
             elif im.ndim == 3:
-                if im.shape[2] not in [3, 4]:
+                if im.shape[2] not in {3, 4}:
                     raise ValueError("This array can not represent an image.")
             else:
                 raise ValueError("This array can not represent an image.")
@@ -543,7 +543,7 @@ class BitmapTag(DefinitionTag):
         # when storing RGB as ARGB).
 
         if len(im.shape) == 3:
-            if im.shape[2] in [3, 4]:
+            if im.shape[2] in {3, 4}:
                 tmp = np.ones((im.shape[0], im.shape[1], 4), dtype=np.uint8) * 255
                 for i in range(3):
                     tmp[:, :, i + 1] = im[:, :, i]
@@ -949,11 +949,11 @@ def readSwf(filename, asNumpy=True):
             # print(T, L2)
 
             # Read image if we can
-            if T in [20, 36]:
+            if T in {20, 36}:
                 im = _readPixels(bb, i + 6, T, L1)
                 if im is not None:
                     images.append(im)
-            elif T in [6, 21, 35, 90]:
+            elif T in {6, 21, 35, 90}:
                 print("Ignoring JPEG image: cannot read JPEG.")
             else:
                 pass  # Not an image tag

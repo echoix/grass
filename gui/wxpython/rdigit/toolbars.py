@@ -157,11 +157,11 @@ class RDigitToolbar(BaseToolbar):
         )
 
     def CheckSelectedTool(self, id):
-        if self.toolSwitcher.IsToolInGroup(tool=id, group="mouseUse") and id not in (
+        if self.toolSwitcher.IsToolInGroup(tool=id, group="mouseUse") and id not in {
             self.area,
             self.line,
             self.point,
-        ):
+        }:
             self._controller.SelectType(None)
 
     def UpdateRasterLayers(self, rasters):
