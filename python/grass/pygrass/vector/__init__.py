@@ -388,7 +388,7 @@ class VectorTopo(Vector):
 
         ..
         """
-        if vtype in _NUMOF.keys():
+        if vtype in _NUMOF:
             if isinstance(_NUMOF[vtype], tuple):
                 fn, ptype = _NUMOF[vtype]
                 return fn(self.c_mapinfo, ptype)
@@ -402,7 +402,7 @@ class VectorTopo(Vector):
     def num_primitives(self):
         """Return dictionary with the number of all primitives"""
         output = {}
-        for prim in VTYPE.keys():
+        for prim in VTYPE:
             output[prim] = self.num_primitive_of(prim)
         return output
 
@@ -448,7 +448,7 @@ class VectorTopo(Vector):
             >>> test_vect.close()
         """
         is2D = not self.is_3D()
-        if vtype in _GEOOBJ.keys():
+        if vtype in _GEOOBJ:
             if _GEOOBJ[vtype] is not None:
                 ids = (indx for indx in range(1, self.number_of(vtype) + 1))
                 if idonly:
@@ -855,7 +855,7 @@ class VectorTopo(Vector):
                 if not barray:
                     if error == -1:
                         raise GrassError(
-                            _("Unable to read line of feature %i" % (f_id))
+                            _("Unable to read line of feature %i") % (f_id)
                         )
                     if error == -2:
                         print("Empty feature %i" % (f_id))
@@ -947,7 +947,7 @@ class VectorTopo(Vector):
                     self.c_mapinfo, a_id, ctypes.byref(size)
                 )
                 if not barray:
-                    raise GrassError(_("Unable to read area with id %i" % (a_id)))
+                    raise GrassError(_("Unable to read area with id %i") % (a_id))
 
                 pcat = None
                 c_ok = libvect.Vect_get_area_cats(

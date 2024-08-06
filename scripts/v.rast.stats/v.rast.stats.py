@@ -143,10 +143,8 @@ def main():
         gs.fatal(
             _(
                 "Number of raster maps ({0}) different from \
-                      number of column prefixes ({1})".format(
-                    len(rasters), len(colprefixes)
-                )
-            )
+                      number of column prefixes ({1})"
+            ).format(len(rasters), len(colprefixes))
         )
 
     vector = vs[0]
@@ -340,10 +338,8 @@ def get_nr_of_categories(
         gs.warning(
             _(
                 "Not all vector categories converted to raster. \
-                        Converted {0} of {1}.".format(
-                    number, vect_cats_n
-                )
-            )
+                        Converted {0} of {1}."
+            ).format(number, vect_cats_n)
         )
 
     return number
@@ -408,7 +404,7 @@ def set_up_columns(vector, layer, percentile, colprefix, basecols, dbfdriver, c)
     extstat = ""
     for i in basecols:
         # this check the complete name of out input that should be truncated
-        for k in variables.keys():
+        for k in variables:
             if i in k:
                 i = k
                 break
