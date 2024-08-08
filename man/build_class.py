@@ -27,7 +27,7 @@ if len(sys.argv) > 3:
 
 filename = modclass + ".html"
 
-f = open(filename + ".tmp", "w")
+f = open(filename + ".tmp", "w", encoding="utf-8")
 
 write_html_header(
     f,

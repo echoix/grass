@@ -134,19 +134,19 @@ class SignaturesRemoveTestCase(TestCase):
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         sig_name2 = tempname(10)
         sig_dir2 = f"{self.mpath}/signatures/sig/{sig_name2}"
         os.makedirs(sig_dir2)
         self.sigdirs.append(sig_dir2)
         sigfile_name2 = f"{sig_dir2}/sig"
-        open(sigfile_name2, "a").close()
+        open(sigfile_name2, "a", encoding="utf-8").close()
         sig_name3 = tempname(10)
         sig_dir3 = f"{self.mpath}/signatures/sig/{sig_name3}"
         os.makedirs(sig_dir3)
         self.sigdirs.append(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
         # Try to remove with wrong type
         ret = I_signatures_remove(I_SIGFILE_TYPE_SIGSET, sig_name2)
         self.assertEqual(ret, 1)
@@ -181,7 +181,7 @@ class SignaturesRemoveTestCase(TestCase):
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         sig_name2 = tempname(10)
         # Do not create sig_name2 matching file
         sig_name3 = tempname(10)
@@ -189,7 +189,7 @@ class SignaturesRemoveTestCase(TestCase):
         os.makedirs(sig_dir3)
         self.sigdirs.append(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
         # Now remove one (should fail as file is absent)
         ret = I_signatures_remove(I_SIGFILE_TYPE_SIG, sig_name2)
         self.assertEqual(ret, 1)
@@ -213,19 +213,19 @@ class SignaturesRemoveTestCase(TestCase):
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         sig_name2 = tempname(10)
         sig_dir2 = f"{self.mpath}/signatures/sigset/{sig_name2}"
         os.makedirs(sig_dir2)
         self.sigdirs.append(sig_dir2)
         sigfile_name2 = f"{sig_dir2}/sig"
-        open(sigfile_name2, "a").close()
+        open(sigfile_name2, "a", encoding="utf-8").close()
         sig_name3 = tempname(10)
         sig_dir3 = f"{self.mpath}/signatures/sig/{sig_name3}"
         os.makedirs(sig_dir3)
         self.sigdirs.append(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
         # Try to remove with wrong type
         ret = I_signatures_remove(I_SIGFILE_TYPE_SIG, sig_name2)
         self.assertEqual(ret, 1)
@@ -260,7 +260,7 @@ class SignaturesRemoveTestCase(TestCase):
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         sig_name2 = tempname(10)
         # Do not create sig_name2 matching file
         sig_name3 = tempname(10)
@@ -268,7 +268,7 @@ class SignaturesRemoveTestCase(TestCase):
         os.makedirs(sig_dir3)
         self.sigdirs.append(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
         # Now remove one (should fail as file doesn't exist)
         ret = I_signatures_remove(I_SIGFILE_TYPE_SIGSET, sig_name2)
         self.assertEqual(ret, 1)
@@ -292,19 +292,19 @@ class SignaturesRemoveTestCase(TestCase):
         sig_dir1 = f"{self.mpath}/signatures/libsvm/{sig_name1}"
         os.makedirs(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         self.sigdirs.append(sig_dir1)
         sig_name2 = tempname(10)
         sig_dir2 = f"{self.mpath}/signatures/libsvm/{sig_name2}"
         os.makedirs(sig_dir2)
         sigfile_name2 = f"{sig_dir2}/sig"
-        open(sigfile_name2, "a").close()
+        open(sigfile_name2, "a", encoding="utf-8").close()
         self.sigdirs.append(sig_dir2)
         sig_name3 = tempname(10)
         sig_dir3 = f"{self.mpath}/signatures/sig/{sig_name3}"
         os.makedirs(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
         self.sigdirs.append(sig_dir3)
         # Try to remove with wrong type
         ret = I_signatures_remove(I_SIGFILE_TYPE_SIG, sig_name2)
@@ -339,7 +339,7 @@ class SignaturesRemoveTestCase(TestCase):
         sig_dir1 = f"{self.mpath}/signatures/sigset/{sig_name1}"
         os.makedirs(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         self.sigdirs.append(sig_dir1)
         sig_name2 = tempname(10)
         # Do not create sig_name2 matching file
@@ -347,7 +347,7 @@ class SignaturesRemoveTestCase(TestCase):
         sig_dir3 = f"{self.mpath}/signatures/libsvm/{sig_name3}"
         os.makedirs(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
         self.sigdirs.append(sig_dir3)
         # Now remove one (should fail as file is absent)
         ret = I_signatures_remove(I_SIGFILE_TYPE_LIBSVM, sig_name2)
@@ -389,7 +389,7 @@ class SignaturesCopyTestCase(TestCase):
         cls.src_sig_dir = f"{cls.src_mapset_path}/signatures/sig/{cls.src_sig}"
         os.makedirs(cls.src_sig_dir)
         cls.sigdirs.append(cls.src_sig_dir)
-        f = open(f"{cls.src_sig_dir}/sig", "w")
+        f = open(f"{cls.src_sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         os.makedirs(f"{cls.src_mapset_path}/signatures/sigset/")
@@ -397,7 +397,7 @@ class SignaturesCopyTestCase(TestCase):
         cls.src_sigset_dir = f"{cls.src_mapset_path}/signatures/sigset/{cls.src_sigset}"
         os.makedirs(cls.src_sigset_dir)
         cls.sigdirs.append(cls.src_sigset_dir)
-        f = open(f"{cls.src_sigset_dir}/sig", "w")
+        f = open(f"{cls.src_sigset_dir}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         os.makedirs(f"{cls.src_mapset_path}/signatures/libsvm/")
@@ -405,7 +405,7 @@ class SignaturesCopyTestCase(TestCase):
         cls.src_libsvm_dir = f"{cls.src_mapset_path}/signatures/libsvm/{cls.src_libsvm}"
         os.makedirs(cls.src_libsvm_dir)
         cls.sigdirs.append(cls.src_libsvm_dir)
-        f = open(f"{cls.src_libsvm_dir}/sig", "w")
+        f = open(f"{cls.src_libsvm_dir}/sig", "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
 
@@ -611,7 +611,7 @@ class SignaturesRenameTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/sig/{src_sig}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         dst = tempname(10)
@@ -633,7 +633,7 @@ class SignaturesRenameTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/sig/{src_sig}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         dst_name = tempname(10)
@@ -660,7 +660,7 @@ class SignaturesRenameTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/sigset/{src_sigset}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         dst = tempname(10)
@@ -682,7 +682,7 @@ class SignaturesRenameTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/sigset/{src_sigset}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         dst_name = tempname(10)
@@ -711,7 +711,7 @@ class SignaturesRenameTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/libsvm/{src_sig}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         dst = tempname(10)
@@ -733,7 +733,7 @@ class SignaturesRenameTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/libsvm/{src_sig}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         dst = tempname(10)
@@ -813,7 +813,7 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/sig/{local_sig}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         sig_list = self.list_ptr()
@@ -828,7 +828,7 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir = f"{self.mpath}/signatures/sigset/{local_sigset}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         sig_list = self.list_ptr()
@@ -844,7 +844,7 @@ class SignaturesListByTypeTestCase(TestCase):
         os.makedirs(sig_dir)
         sig_file = f"{sig_dir}/sig"
         self.sigdirs.append(sig_dir)
-        f = open(sig_file, "w")
+        f = open(sig_file, "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         sig_list = self.list_ptr()
@@ -862,7 +862,7 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir = f"{self.rnd_mapset_path}/signatures/sig/{rnd_sig}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         sig_list = self.list_ptr()
@@ -880,7 +880,7 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir = f"{self.rnd_mapset_path}/signatures/sigset/{rnd_sigset}"
         os.makedirs(sig_dir)
         self.sigdirs.append(sig_dir)
-        f = open(f"{sig_dir}/sig", "w")
+        f = open(f"{sig_dir}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         sigset_list = self.list_ptr()
@@ -897,7 +897,7 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir = f"{self.rnd_mapset_path}/signatures/libsvm/{rnd_sig}"
         os.makedirs(sig_dir)
         sig_file = f"{sig_dir}/sig"
-        f = open(sig_file, "w")
+        f = open(sig_file, "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         sig_list = self.list_ptr()
@@ -917,14 +917,14 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir1 = f"{self.rnd_mapset_path}/signatures/sig/{rnd_sig1}"
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
-        f = open(f"{sig_dir1}/sig", "w")
+        f = open(f"{sig_dir1}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         rnd_sig2 = tempname(10)
         sig_dir2 = f"{self.rnd_mapset_path}/signatures/sig/{rnd_sig2}"
         os.makedirs(sig_dir2)
         self.sigdirs.append(sig_dir2)
-        f = open(f"{sig_dir2}/sig", "w")
+        f = open(f"{sig_dir2}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         # POINTER(POINTER(c_char))
@@ -947,14 +947,14 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir1 = f"{self.rnd_mapset_path}/signatures/sigset/{rnd_sigset1}"
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
-        f = open(f"{sig_dir1}/sig", "w")
+        f = open(f"{sig_dir1}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         rnd_sigset2 = tempname(10)
         sig_dir2 = f"{self.rnd_mapset_path}/signatures/sigset/{rnd_sigset2}"
         os.makedirs(sig_dir2)
         self.sigdirs.append(sig_dir2)
-        f = open(f"{sig_dir2}/sig", "w")
+        f = open(f"{sig_dir2}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         sigset_list = self.list_ptr()
@@ -976,14 +976,14 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir1 = f"{self.rnd_mapset_path}/signatures/libsvm/{rnd_sig1}"
         os.makedirs(sig_dir1)
         sig_file1 = f"{sig_dir1}/sig"
-        f = open(sig_file1, "w")
+        f = open(sig_file1, "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         rnd_sig2 = tempname(10)
         sig_dir2 = f"{self.rnd_mapset_path}/signatures/libsvm/{rnd_sig2}"
         os.makedirs(sig_dir2)
         sig_file2 = f"{sig_dir2}/sig"
-        f = open(sig_file2, "w")
+        f = open(sig_file2, "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         # POINTER(POINTER(c_char))
@@ -1008,14 +1008,14 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir1 = f"{self.rnd_mapset_path}/signatures/sig/{rnd_sig1}"
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
-        f = open(f"{sig_dir1}/sig", "w")
+        f = open(f"{sig_dir1}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         rnd_sig2 = tempname(10)
         sig_dir2 = f"{self.mpath}/signatures/sig/{rnd_sig2}"
         os.makedirs(sig_dir2)
         self.sigdirs.append(sig_dir2)
-        f = open(f"{sig_dir2}/sig", "w")
+        f = open(f"{sig_dir2}/sig", "w", encoding="utf-8")
         f.write("A sig file")
         f.close()
         sig_list = self.list_ptr()
@@ -1059,14 +1059,14 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir1 = f"{self.rnd_mapset_path}/signatures/sigset/{rnd_sig1}"
         os.makedirs(sig_dir1)
         self.sigdirs.append(sig_dir1)
-        f = open(f"{sig_dir1}/sig", "w")
+        f = open(f"{sig_dir1}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         rnd_sig2 = tempname(10)
         sig_dir2 = f"{self.mpath}/signatures/sigset/{rnd_sig2}"
         os.makedirs(sig_dir2)
         self.sigdirs.append(sig_dir2)
-        f = open(f"{sig_dir2}/sig", "w")
+        f = open(f"{sig_dir2}/sig", "w", encoding="utf-8")
         f.write("A sigset file")
         f.close()
         sig_list = self.list_ptr()
@@ -1110,14 +1110,14 @@ class SignaturesListByTypeTestCase(TestCase):
         sig_dir1 = f"{self.rnd_mapset_path}/signatures/libsvm/{rnd_sig1}"
         os.makedirs(sig_dir1)
         sig_file1 = f"{sig_dir1}/sig"
-        f = open(sig_file1, "w")
+        f = open(sig_file1, "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         rnd_sig2 = tempname(10)
         sig_dir2 = f"{self.mpath}/signatures/libsvm/{rnd_sig2}"
         os.makedirs(sig_dir2)
         sig_file2 = f"{sig_dir2}/sig"
-        f = open(sig_file2, "w")
+        f = open(sig_file2, "w", encoding="utf-8")
         f.write("A libsvm file")
         f.close()
         self.sigdirs.append(sig_dir2)

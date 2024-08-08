@@ -39,7 +39,7 @@ def remove_mapfile(mapfile):
 # read environment variables from file
 def read_env_file(env_file):
     width = height = legfile = None
-    fd = open(env_file, "r")
+    fd = open(env_file, "r", encoding="utf-8")
     if fd is None:
         grass.fatal("Unable to open file '{0}'".format(env_file))
     lines = fd.readlines()
@@ -153,7 +153,7 @@ def read_stdin(cmd):
 
     if opt:
         tmpfile = tempfile.NamedTemporaryFile(dir=path).name + ".txt"
-        fd = open(tmpfile, "w")
+        fd = open(tmpfile, "w", encoding="utf-8")
         while 1:
             line = sys.stdin.readline()
             if not line:

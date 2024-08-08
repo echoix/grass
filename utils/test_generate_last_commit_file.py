@@ -33,7 +33,7 @@ def json_file():
 
 @pytest.fixture
 def read_json_file(json_file):
-    with open(json_file) as f:
+    with open(json_file, encoding="utf-8") as f:
         return json.load(f)
 
 

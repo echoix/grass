@@ -351,7 +351,7 @@ class GConsoleWindow(wx.SplitterWindow):
             path = dlg.GetPath()
 
             try:
-                output = open(path, "w")
+                output = open(path, "w", encoding="utf-8")
                 output.write(text)
             except OSError as e:
                 GError(

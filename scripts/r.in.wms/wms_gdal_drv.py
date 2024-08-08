@@ -156,7 +156,7 @@ class WMSGdalDrv(WMSBase):
         xml_file = self._createXML()
 
         # print xml file content for debug level 1
-        file = open(xml_file, "r")
+        file = open(xml_file, "r", encoding="utf-8")
         gs.debug("WMS request XML:\n%s" % file.read(), 1)
         file.close()
 

@@ -80,7 +80,9 @@ class TestRegisterFile(TestCase):
 
     def test_with_file_and_increment(self):
         tmp_file = gs.tempfile()
-        Path(tmp_file).write_text("prec_1\nprec_2\nprec_3\nprec_4\nprec_5\nprec_6")
+        Path(tmp_file).write_text(
+            "prec_1\nprec_2\nprec_3\nprec_4\nprec_5\nprec_6", encoding="utf-8"
+        )
 
         register_module = SimpleModule(
             "t.register",
@@ -122,7 +124,9 @@ class TestRegisterFile(TestCase):
 
     def test_with_file_and_no_increment(self):
         tmp_file = gs.tempfile()
-        Path(tmp_file).write_text("prec_1\nprec_2\nprec_3\nprec_4\nprec_5\nprec_6")
+        Path(tmp_file).write_text(
+            "prec_1\nprec_2\nprec_3\nprec_4\nprec_5\nprec_6", encoding="utf-8"
+        )
 
         register_module = SimpleModule(
             "t.register",
@@ -163,7 +167,9 @@ class TestRegisterFile(TestCase):
 
     def test_with_file_increment_and_intervall(self):
         tmp_file = gs.tempfile()
-        Path(tmp_file).write_text("prec_1\nprec_2\nprec_3\nprec_4\nprec_5\nprec_6")
+        Path(tmp_file).write_text(
+            "prec_1\nprec_2\nprec_3\nprec_4\nprec_5\nprec_6", encoding="utf-8"
+        )
 
         register_module = SimpleModule(
             "t.register",
@@ -217,7 +223,8 @@ class TestRegisterFile(TestCase):
                     "prec_5|2001-05-01",
                     "prec_6|2001-06-01",
                 ]
-            )
+            ),
+            encoding="utf-8",
         )
 
         register_module = SimpleModule(
@@ -268,7 +275,8 @@ class TestRegisterFile(TestCase):
                     "prec_5|2001-05-01",
                     "prec_6|2001-06-01",
                 ]
-            )
+            ),
+            encoding="utf-8",
         )
 
         register_module = SimpleModule(
@@ -296,7 +304,8 @@ class TestRegisterFile(TestCase):
                     "prec_5|2002-01-01|2002-04-01",
                     "prec_6|2002-04-01|2002-07-01",
                 ]
-            )
+            ),
+            encoding="utf-8",
         )
 
         register_module = SimpleModule(
@@ -325,7 +334,8 @@ class TestRegisterFile(TestCase):
                     f"prec_5@{mapset}|2002-01-01|2002-04-01|semantic_label",
                     f"prec_6@{mapset}|2002-04-01|2002-07-01|semantic_label",
                 ]
-            )
+            ),
+            encoding="utf-8",
         )
 
         register_module = SimpleModule(

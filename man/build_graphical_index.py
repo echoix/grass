@@ -117,7 +117,7 @@ index_items = [
 def main():
     html_dir = sys.argv[1]
 
-    with open(os.path.join(html_dir, output_name), "w") as output:
+    with open(os.path.join(html_dir, output_name), "w", encoding="utf-8") as output:
         output.write(
             header1_tmpl.substitute(
                 title="GRASS GIS %s Reference "

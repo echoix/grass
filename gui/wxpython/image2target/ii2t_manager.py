@@ -159,7 +159,7 @@ class GCPWizard:
         self.target_gisrc = os.environ["GISRC"]
         self.gisrc_dict = {}
         try:
-            f = open(self.target_gisrc, "r")
+            f = open(self.target_gisrc, "r", encoding="utf-8")
             for line in f:
                 line = line.replace("\n", "").strip()
                 if len(line) < 1:
@@ -360,7 +360,7 @@ class GCPWizard:
         self.source_gisrc = utils.GetTempfile()
 
         try:
-            f = open(self.source_gisrc, mode="w")
+            f = open(self.source_gisrc, mode="w", encoding="utf-8")
             for line in self.gisrc_dict.items():
                 f.write(line[0] + ": " + line[1] + "\n")
         finally:
@@ -964,7 +964,7 @@ class DispMapPage(TitledPage):
                 "VREF",
             )
 
-            f = open(vgrpfile)
+            f = open(vgrpfile, encoding="utf-8")
             try:
                 for vect in f:
                     vect = vect.strip("\n")
@@ -1502,7 +1502,9 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
             if os.path.exists(self.file["elevation"]):
                 # Parse the i.ortho.elev generated file
                 # Get all lines from file
-                lines = open(self.file["elevation"]).read().splitlines()
+                lines = (
+                    open(self.file["elevation"], encoding="utf-8").read().splitlines()
+                )
                 # Remove empty spaces in lines
                 lines = [x.replace(" ", "") for x in lines]
                 # Extract map@mapset
@@ -1546,7 +1548,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         """
         self.GCPcount = 0
         try:
-            f = open(self.file["control_points"], mode="w")
+            f = open(self.file["control_points"], mode="w", encoding="utf-8")
             # use os.linesep or '\n' here ???
             f.write("# Ground Control Points File\n")
             f.write("# \n")
@@ -1627,7 +1629,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
             GError(parent=self, message=_("target mapwin not defined"))
 
         try:
-            f = open(self.file["control_points"], "r")
+            f = open(self.file["control_points"], "r", encoding="utf-8")
             GCPcnt = 0
 
             for line in f:
@@ -1808,7 +1810,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
             self.grwiz.SwitchEnv("source")
 
             # make list of vectors to georectify from VREF
-            f = open(self.file["vgrp"])
+            f = open(self.file["vgrp"], encoding="utf-8")
             vectlist = []
             try:
                 for vect in f:
@@ -2087,7 +2089,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         }
 
         try:
-            f = open(coord_file, mode="w")
+            f = open(coord_file, mode="w", encoding="utf-8")
             # NW corner
             f.write(str(region["e"]) + " " + str(region["n"]) + "\n")
             # NE corner
@@ -2668,7 +2670,7 @@ class VectGroup(wx.Dialog):
         self.listMap = CheckListBox(parent=self, id=wx.ID_ANY, choices=vectlist)
 
         if os.path.isfile(self.vgrpfile):
-            f = open(self.vgrpfile)
+            f = open(self.vgrpfile, encoding="utf-8")
             try:
                 checked = []
                 for line in f:
@@ -2737,7 +2739,7 @@ class VectGroup(wx.Dialog):
                 continue
             vgrouplist.append(self.listMap.GetString(item) + "@" + self.xymapset)
 
-        f = open(self.vgrpfile, mode="w")
+        f = open(self.vgrpfile, mode="w", encoding="utf-8")
         try:
             for vect in vgrouplist:
                 f.write(vect + "\n")

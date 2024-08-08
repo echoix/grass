@@ -1070,7 +1070,7 @@ class VectMap:
             "head",
         )
         try:
-            head = open(headPath, "r")
+            head = open(headPath, "r", encoding="utf-8")
             for line in head:
                 i = line.find(
                     "MAP DATE:",
@@ -1159,11 +1159,11 @@ class History:
         self.currHistStep = 0
 
         newHistFile = grass.tempfile()
-        newHist = open(newHistFile, "w")
+        newHist = open(newHistFile, "w", encoding="utf-8")
 
         self._saveNewHistStep(newHist)
 
-        oldHist = open(self.histFile)
+        oldHist = open(self.histFile, encoding="utf-8")
         removedHistData = self._savePreviousHist(newHist, oldHist)
 
         oldHist.close()
@@ -1291,7 +1291,7 @@ class History:
 
     def _getHistStepData(self, histStep):
         """Load data saved in history step"""
-        hist = open(self.histFile)
+        hist = open(self.histFile, encoding="utf-8")
         histStepData = {}
 
         newHistStep = False

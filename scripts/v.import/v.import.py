@@ -250,7 +250,7 @@ def main():
 
     TMPLOC = gs.append_node_pid("tmp_v_import_location")
 
-    f = open(SRCGISRC, "w")
+    f = open(SRCGISRC, "w", encoding="utf-8")
     f.write("MAPSET: PERMANENT\n")
     f.write("GISDBASE: %s\n" % GISDBASE)
     f.write("LOCATION_NAME: %s\n" % TMPLOC)

@@ -34,7 +34,7 @@ def cleanup():
 
 
 def make_gradient(path):
-    fh = open(path)
+    fh = open(path, encoding="utf-8")
     text = fh.read()
     fh.close()
 

@@ -717,13 +717,13 @@ class RenderMapMgr(wx.EvtHandler):
 
         # Update legfile
         new_legend = []
-        with open(self.Map.legfile, "w") as outfile:
+        with open(self.Map.legfile, "w", encoding="utf-8") as outfile:
             for layer in reversed(self.layers):
                 if layer.GetType() not in {"vector", "thememap"}:
                     continue
 
                 if os.path.isfile(layer._legrow) and not layer.hidden:
-                    line = Path(layer._legrow).read_text()
+                    line = Path(layer._legrow).read_text(encoding="utf-8")
                     outfile.write(line)
                     new_legend.append(line)
 
@@ -898,7 +898,7 @@ class Map:
             env["GISDBASE"], env["LOCATION_NAME"], env["MAPSET"], "WIND"
         )
         try:
-            windfile = open(filename, "r")
+            windfile = open(filename, "r", encoding="utf-8")
         except OSError as e:
             sys.exit(
                 _("Error: Unable to open '%(file)s'. Reason: %(ret)s. wxGUI exited.\n")

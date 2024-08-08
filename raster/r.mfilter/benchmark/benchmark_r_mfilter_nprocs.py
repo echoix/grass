@@ -41,7 +41,8 @@ def benchmark(size, label, results):
                    1 2 1 2 1 2 1 2 1
                    1 1 1 1 1 1 1 1 1
                    DIVISOR 81
-                   TYPE    P"""
+                   TYPE    P""",
+        encoding="utf-8",
     )
 
     generate_map(rows=size, cols=size, fname=reference)

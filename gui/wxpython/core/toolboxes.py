@@ -205,7 +205,7 @@ def getMenudataFile(userRootFile, newFile, fallback):
 
             try:
                 xml = _getXMLString(tree.getroot())
-                fh = open(menudataFile, "w")
+                fh = open(menudataFile, "w", encoding="utf-8")
                 fh.write(xml)
                 fh.close()
                 return menudataFile
@@ -846,7 +846,7 @@ def module_test():
         return 0
 
     menudataFile = "data/test_toolboxes_menudata_ref.xml"
-    correct = str(Path(menudataFile).read_text())
+    correct = str(Path(menudataFile).read_text(encoding="utf-8"))
 
     import difflib
 

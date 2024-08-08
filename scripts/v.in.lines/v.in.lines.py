@@ -70,7 +70,7 @@ def main():
 
     if not infile:
         # read from stdin and write to tmpfile (v.in.mapgen wants a real file)
-        outf = open(tmp, "w")
+        outf = open(tmp, "w", encoding="utf-8")
         for line in inf:
             if len(line.lstrip()) == 0 or line[0] == "#":
                 continue
@@ -83,8 +83,8 @@ def main():
         if fs == " ":
             runfile = infile
         else:
-            inf = open(infile)
-            outf = open(tmp, "w")
+            inf = open(infile, encoding="utf-8")
+            outf = open(tmp, "w", encoding="utf-8")
 
             for line in inf:
                 if len(line.lstrip()) == 0 or line[0] == "#":
@@ -96,7 +96,7 @@ def main():
             runfile = tmp
 
     # check that there are at least two columns (three if -z is given)
-    inf = open(runfile)
+    inf = open(runfile, encoding="utf-8")
     for line in inf:
         if len(line.lstrip()) == 0 or line[0] == "#":
             continue

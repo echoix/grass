@@ -449,7 +449,7 @@ class VNETAnalyses:
         )
 
         self.coordsTmpFile = grass.tempfile()
-        coordsTmpFileOpened = open(self.coordsTmpFile, "w")
+        coordsTmpFileOpened = open(self.coordsTmpFile, "w", encoding="utf-8")
         coordsTmpFileOpened.write(inpPoints)
         coordsTmpFileOpened.close()
 
@@ -595,7 +595,7 @@ class VNETAnalyses:
         driver, database = dbInfo.GetDbSettings(tlayer)
 
         sqlFile = grass.tempfile()
-        sqlFile_f = open(sqlFile, "w")
+        sqlFile_f = open(sqlFile, "w", encoding="utf-8")
 
         for ival in intervals:
             from_angle = ival[0]
@@ -685,7 +685,7 @@ class VNETAnalyses:
 
         # TODO better tmp files cleanup (make class for managing tmp files)
         self.tmpPtsAsciiFile = grass.tempfile()
-        tmpPtsAsciiFileOpened = open(self.tmpPtsAsciiFile, "w")
+        tmpPtsAsciiFileOpened = open(self.tmpPtsAsciiFile, "w", encoding="utf-8")
         tmpPtsAsciiFileOpened.write(pt_ascii)
         tmpPtsAsciiFileOpened.close()
 

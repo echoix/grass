@@ -240,10 +240,10 @@ def plot_eps(psout):
     averagedirectionlegendy = 1.85 * halfframe
 
     ##########
-    outf = open(psout, "w")
+    outf = open(psout, "w", encoding="utf-8")
 
     prolog = os.path.join(os.environ["GISBASE"], "etc", "d.polar", "ps_defs.eps")
-    inf = open(prolog)
+    inf = open(prolog, encoding="utf-8")
     shutil.copyfileobj(inf, outf)
     inf.close()
 
@@ -458,11 +458,11 @@ def main():
     #################################
     # this file contains everything:
     rawfile = tmp + "_raw"
-    rawf = open(rawfile, "w")
+    rawf = open(rawfile, "w", encoding="utf-8")
     gcore.run_command("r.stats", flags="1", input=map, stdout=rawf)
     rawf.close()
 
-    rawf = open(rawfile)
+    rawf = open(rawfile, encoding="utf-8")
     totalnumber = 0
     for line in rawf:
         totalnumber += 1
@@ -473,7 +473,7 @@ def main():
     # wipe out NULL data and undef data if defined by user
     # - generate degree binned to integer, eliminate NO DATA (NULL):
     # change 360 to 0 to close polar diagram:
-    rawf = open(rawfile)
+    rawf = open(rawfile, encoding="utf-8")
     nvals = 0
     sumcos = 0
     sumsin = 0

@@ -25,7 +25,7 @@ def ensure_dir(directory):
 def add_gitignore_to_dir(directory):
     gitignore_path = Path(directory) / ".gitignore"
     if not Path(gitignore_path).exists():
-        Path(gitignore_path).write_text("*")
+        Path(gitignore_path).write_text("*", encoding="utf-8")
 
 
 def silent_rmtree(filename):

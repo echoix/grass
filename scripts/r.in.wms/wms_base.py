@@ -305,7 +305,7 @@ class WMSBase:
         # save to file
         if capfile_output:
             try:
-                Path(capfile_output).write_text(cap)
+                Path(capfile_output).write_text(cap, encoding="utf-8")
                 return
             except OSError as error:
                 gs.fatal(_("Unable to open file '%s'.\n%s\n" % (capfile_output, error)))
@@ -335,7 +335,7 @@ class WMSBase:
             temp_region = self._tempfile()
 
             try:
-                temp_region_opened = open(temp_region, "w")
+                temp_region_opened = open(temp_region, "w", encoding="utf-8")
                 temp_region_opened.write(
                     "%f %f\n%f %f\n%f %f\n%f %f\n"
                     % (
@@ -422,7 +422,7 @@ class WMSBase:
             self.temp_warpmap = gs.tempfile() + ".tif"
 
             if int(os.getenv("GRASS_VERBOSE", "2")) <= 2:
-                nuldev = open(os.devnull, "w+")
+                nuldev = open(os.devnull, "w+", encoding="utf-8")
             else:
                 nuldev = None
 

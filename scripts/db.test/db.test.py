@@ -44,7 +44,7 @@ def main():
     gcore.message(_("Using DB driver: %s") % dbconn["driver"])
 
     infile = os.path.join(os.environ["GISBASE"], "etc", "db.test", test_file)
-    inf = open(infile)
+    inf = open(infile, encoding="utf-8")
 
     while True:
         type = inf.readline()
@@ -60,7 +60,7 @@ def main():
             if type == "X":
                 gcore.write_command("db.execute", input="-", stdin=sql + "\n")
             else:
-                resf = open(result, "w")
+                resf = open(result, "w", encoding="utf-8")
                 gcore.write_command(
                     "db.select", input="-", flags="c", stdin=sql + "\n", stdout=resf
                 )
@@ -71,7 +71,7 @@ def main():
         else:
             gcore.message(_("EXECUTE: OK"))
 
-        expf = open(expected, "w")
+        expf = open(expected, "w", encoding="utf-8")
         while True:
             res = inf.readline().rstrip("\r\n")
             if not res:

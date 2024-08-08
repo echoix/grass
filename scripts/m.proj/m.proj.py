@@ -212,10 +212,10 @@ def main():
     if coords:
         x, y = coords.split(",")
         tmpfile = gcore.tempfile()
-        fd = open(tmpfile, "w")
+        fd = open(tmpfile, "w", encoding="utf-8")
         fd.write("%s%s%s\n" % (x, ifs, y))
         fd.close()
-        inf = open(tmpfile)
+        inf = open(tmpfile, encoding="utf-8")
     elif input == "-":
         infile = None
         inf = sys.stdin
@@ -223,7 +223,7 @@ def main():
         infile = input
         if not os.path.exists(infile):
             gcore.fatal(_("Unable to read input data"))
-        inf = open(infile)
+        inf = open(infile, encoding="utf-8")
         gcore.debug("input file=[%s]" % infile)
 
     # set up output file
@@ -232,7 +232,7 @@ def main():
         outf = sys.stdout
     else:
         outfile = output
-        outf = open(outfile, "w")
+        outf = open(outfile, "w", encoding="utf-8")
         gcore.debug("output file=[%s]" % outfile)
 
     # set up output style

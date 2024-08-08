@@ -40,7 +40,7 @@ maketrans = str.maketrans
 # TODO: this might be more extend then update
 def update_keyval_file(filename, module, returncode):
     if os.path.exists(filename):
-        keyval = text_to_keyvalue(Path(filename).read_text(), sep="=")
+        keyval = text_to_keyvalue(Path(filename).read_text(encoding="utf-8"), sep="=")
     else:
         keyval = {}
 
@@ -62,7 +62,7 @@ def update_keyval_file(filename, module, returncode):
     keyval["returncode"] = returncode
     keyval["test_file_authors"] = test_file_authors
 
-    Path(filename).write_text(keyvalue_to_text(keyval))
+    Path(filename).write_text(keyvalue_to_text(keyval), encoding="utf-8")
     return keyval
 
 
@@ -242,8 +242,8 @@ class GrassTestFilesInvoker:
         stdout = try_decode(stdout, encodings=encodings)
         stderr = try_decode(stderr, encodings=encodings)
 
-        Path(stdout_path).write_text(stdout)
-        with open(stderr_path, "w") as stderr_file:
+        Path(stdout_path).write_text(stdout, encoding="utf-8")
+        with open(stderr_path, "w", encoding="utf-8") as stderr_file:
             if type(stderr) == "bytes":
                 stderr_file.write(decode(stderr))
             elif isinstance(stderr, str):
@@ -343,7 +343,8 @@ class GrassTestFilesInvoker:
             " (testsuite directories)</li>"
             '<li><a href="testfiles.html">Results by test files</a></li>'
             "<ul>"
-            "</body></html>".format(location=location, type=location_type)
+            "</body></html>".format(location=location, type=location_type),
+            encoding="utf-8",
         )
 
         testsuite_dir_reporter = TestsuiteDirReporter(

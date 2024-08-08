@@ -393,14 +393,14 @@ def check_for_desc_override(basename):
 
 
 def read_file(name):
-    f = open(name, "r")
+    f = open(name, "r", encoding="utf-8")
     s = f.read()
     f.close()
     return s
 
 
 def write_file(name, contents):
-    f = open(name, "w")
+    f = open(name, "w", encoding="utf-8")
     f.write(contents)
     f.close()
 
@@ -476,7 +476,7 @@ def write_html_footer(f, index_url, year=None):
 
 
 def get_desc(cmd):
-    f = open(cmd, "r")
+    f = open(cmd, "r", encoding="utf-8")
     while True:
         line = f.readline()
         if not line:

@@ -43,21 +43,21 @@ class PrintSignaturesTestCase(TestCase):
         os.makedirs(sig_dir1)
         cls.sigdirs.append(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         # Fake signature of sigset type
         cls.sig_name2 = tempname(10)
         sig_dir2 = f"{cls.mpath}/signatures/sigset/{cls.sig_name2}"
         os.makedirs(sig_dir2)
         cls.sigdirs.append(sig_dir2)
         sigfile_name2 = f"{sig_dir2}/sig"
-        open(sigfile_name2, "a").close()
+        open(sigfile_name2, "a", encoding="utf-8").close()
         # Fake signature of libsvm type
         cls.sig_name3 = tempname(10)
         sig_dir3 = f"{cls.mpath}/signatures/libsvm/{cls.sig_name3}"
         os.makedirs(sig_dir3)
         cls.sigdirs.append(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
 
     @classmethod
     def tearDownClass(cls):
@@ -160,42 +160,42 @@ class ManageSignaturesTestCase(TestCase):
         os.makedirs(sig_dir1)
         cls.sigdirs.append(sig_dir1)
         sigfile_name1 = f"{sig_dir1}/sig"
-        open(sigfile_name1, "a").close()
+        open(sigfile_name1, "a", encoding="utf-8").close()
         # sig
         cls.sig_name2 = tempname(10)
         sig_dir2 = f"{cls.mpath}/signatures/sig/{cls.sig_name2}"
         os.makedirs(sig_dir2)
         cls.sigdirs.append(sig_dir2)
         sigfile_name2 = f"{sig_dir2}/sig"
-        open(sigfile_name2, "a").close()
+        open(sigfile_name2, "a", encoding="utf-8").close()
         # sigset
         cls.sig_name3 = tempname(10)
         sig_dir3 = f"{cls.mpath}/signatures/sigset/{cls.sig_name3}"
         os.makedirs(sig_dir3)
         cls.sigdirs.append(sig_dir3)
         sigfile_name3 = f"{sig_dir3}/sig"
-        open(sigfile_name3, "a").close()
+        open(sigfile_name3, "a", encoding="utf-8").close()
         # sigset
         cls.sig_name4 = tempname(10)
         sig_dir4 = f"{cls.mpath}/signatures/sigset/{cls.sig_name4}"
         os.makedirs(sig_dir4)
         cls.sigdirs.append(sig_dir4)
         sigfile_name4 = f"{sig_dir4}/sig"
-        open(sigfile_name4, "a").close()
+        open(sigfile_name4, "a", encoding="utf-8").close()
         # libsvm
         cls.sig_name5 = tempname(10)
         sig_dir5 = f"{cls.mpath}/signatures/libsvm/{cls.sig_name5}"
         os.makedirs(sig_dir5)
         cls.sigdirs.append(sig_dir5)
         sigfile_name5 = f"{sig_dir5}/sig"
-        open(sigfile_name5, "a").close()
+        open(sigfile_name5, "a", encoding="utf-8").close()
         # libsvm
         cls.sig_name6 = tempname(10)
         sig_dir6 = f"{cls.mpath}/signatures/libsvm/{cls.sig_name6}"
         os.makedirs(sig_dir6)
         cls.sigdirs.append(sig_dir6)
         sigfile_name6 = f"{sig_dir6}/sig"
-        open(sigfile_name6, "a").close()
+        open(sigfile_name6, "a", encoding="utf-8").close()
 
     @classmethod
     def tearDownClass(cls):

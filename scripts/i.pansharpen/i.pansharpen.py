@@ -765,7 +765,7 @@ def matchhist(original, target, matched):
             arrays[img][n] = (n, cdf)
 
     # open file for reclass rules
-    outfile = open(gs.tempfile(), "w")
+    outfile = open(gs.tempfile(), "w", encoding="utf-8")
 
     for i in arrays[original]:
         # for each grey value and corresponding cdf value in original, find the

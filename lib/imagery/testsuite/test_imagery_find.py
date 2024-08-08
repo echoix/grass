@@ -44,17 +44,17 @@ class FindSignatureTestCase(TestCase):
         cls.sig_dir1 = f"{cls.mpath}/signatures/sigset/{cls.sig_name1}"
         os.makedirs(cls.sig_dir1)
         cls.sigdirs.append(cls.sig_dir1)
-        open(f"{cls.sig_dir1}/sig", "a").close()
+        open(f"{cls.sig_dir1}/sig", "a", encoding="utf-8").close()
         cls.sig_name2 = tempname(10)
         cls.sig_dir2 = f"{cls.mpath}/signatures/sig/{cls.sig_name2}"
         os.makedirs(cls.sig_dir2)
         cls.sigdirs.append(cls.sig_dir2)
-        open(f"{cls.sig_dir2}/sig", "a").close()
+        open(f"{cls.sig_dir2}/sig", "a", encoding="utf-8").close()
         cls.sig_name3 = tempname(10)
         cls.sig_dir3 = f"{cls.mpath}/signatures/libsvm/{cls.sig_name3}"
         os.makedirs(cls.sig_dir3)
         cls.sigdirs.append(cls.sig_dir3)
-        open(f"{cls.sig_dir3}/sig", "a").close()
+        open(f"{cls.sig_dir3}/sig", "a", encoding="utf-8").close()
 
     @classmethod
     def tearDownClass(cls):

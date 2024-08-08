@@ -51,7 +51,7 @@ def main():
         for param, val in options.items():
             if val:
                 dout_cmd += " {param}={val}".format(param=param, val=val)
-        with open(cmd_file, "a") as file_:
+        with open(cmd_file, "a", encoding="utf-8") as file_:
             file_.write(dout_cmd)
     else:
         gcore.fatal(

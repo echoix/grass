@@ -134,7 +134,7 @@ def generate_page_for_category(
 ):
     filename = module_family + "_graphical.html"
 
-    output = open(filename + ".tmp", "w")
+    output = open(filename + ".tmp", "w", encoding="utf-8")
 
     output.write(
         header1_tmpl.substitute(

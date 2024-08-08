@@ -120,7 +120,7 @@ def main():
         sys.stderr.write("----------------------------------------------\n")
 
     if outpath:
-        outfile = open(outpath, "w")
+        outfile = open(outpath, "w", encoding="utf-8")
 
     for ttype in temporal_type.split(","):
         if ttype == "absolute":

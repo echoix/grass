@@ -69,11 +69,11 @@ def main():
                 )
                 line += 1
 
-                ofile = open(tmpfile, "w")
+                ofile = open(tmpfile, "w", encoding="utf-8")
                 gcore.run_command("r.stats", flags="cnA", input=(i, j), stdout=ofile)
                 ofile.close()
 
-                ifile = open(tmpfile, "r")
+                ifile = open(tmpfile, "r", encoding="utf-8")
                 first = True
                 for line in ifile:
                     f = line.rstrip("\r\n").split(" ")
@@ -95,7 +95,7 @@ def main():
                 p = gcore.feed_command("d.graph", color=color)
                 ofile = p.stdin
 
-                ifile = open(tmpfile, "r")
+                ifile = open(tmpfile, "r", encoding="utf-8")
                 for line in ifile:
                     f = line.rstrip("\r\n").split(" ")
                     x = float(f[0])

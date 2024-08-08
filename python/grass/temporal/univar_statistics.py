@@ -158,7 +158,7 @@ def print_gridded_dataset_univar_statistics(
     sp = open_old_stds(input, type, dbif)
 
     if output is not None:
-        out_file = open(output, "w")
+        out_file = open(output, "w", encoding="utf-8")
 
     spatial_extent = None
     if region_relation:
@@ -303,7 +303,7 @@ def print_vector_dataset_univar_statistics(
     dbif.connect()
 
     if output is not None:
-        out_file = open(output, "w")
+        out_file = open(output, "w", encoding="utf-8")
 
     mapset = get_current_mapset()
 

@@ -43,7 +43,7 @@ grass_version = core.version()["version"]
 today = date.today()
 
 copy("_templates/layout.html.template", "_templates/layout.html")
-with open("_templates/layout.html", "a") as f:
+with open("_templates/layout.html", "a", encoding="utf-8") as f:
     f.write(footer_tmpl.substitute(grass_version=grass_version, year=today.year))
     f.close()
 

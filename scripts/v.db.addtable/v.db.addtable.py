@@ -99,7 +99,7 @@ def main():
     database2 = database.replace("$MAP/", map_name + "/")
 
     # maybe there is already a table linked to the selected layer?
-    nuldev = open(os.devnull, "w")
+    nuldev = open(os.devnull, "w", encoding="utf-8")
     try:
         gs.vector_db(map_name, stderr=nuldev)[int(layer)]
         gs.fatal(_("There is already a table linked to layer <%s>") % layer)

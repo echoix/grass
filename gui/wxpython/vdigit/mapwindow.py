@@ -394,7 +394,7 @@ class VDigitWindow(BufferedMapWindow):
             return
 
         dbInfo = gselect.VectorDBInfo(vectorName)
-        sqlfile = tempfile.NamedTemporaryFile(mode="w")
+        sqlfile = tempfile.NamedTemporaryFile(mode="w", encoding="utf-8")
         for fid in fids:
             for layer, cats in self.digit.GetLineCats(fid).items():
                 table = dbInfo.GetTable(layer)

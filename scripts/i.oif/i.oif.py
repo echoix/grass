@@ -153,7 +153,7 @@ def main():
         for v, p in oif:
             sys.stdout.write(fmt % (p + (v,)))
     else:
-        outf = open(output, "w")
+        outf = open(output, "w", encoding="utf-8")
         for v, p in oif:
             outf.write(fmt % (p + (v,)))
         outf.close()

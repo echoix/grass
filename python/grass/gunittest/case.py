@@ -1227,8 +1227,8 @@ class TestCase(unittest.TestCase):
         """
         import difflib
 
-        fromlines = open(actual).readlines()
-        tolines = open(reference).readlines()
+        fromlines = open(actual, encoding="utf-8").readlines()
+        tolines = open(reference, encoding="utf-8").readlines()
         context_lines = 3  # number of context lines
         # TODO: filenames are set to "actual" and "reference", isn't it too general?
         # it is even more useful if map names or file names are some generated
@@ -1289,7 +1289,7 @@ class TestCase(unittest.TestCase):
                     context=True,
                     numlines=context_lines,
                 )
-                htmldiff_file = open(htmldiff_file_name, "w")
+                htmldiff_file = open(htmldiff_file_name, "w", encoding="utf-8")
                 for line in htmldiff:
                     htmldiff_file.write(line)
                 htmldiff_file.close()

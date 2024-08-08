@@ -436,7 +436,7 @@ class ProfileFrame(BasePlotFrame):
                         continue
 
                 try:
-                    fd = open(pfile[-1], "w")
+                    fd = open(pfile[-1], "w", encoding="utf-8")
                 except OSError as e:
                     GError(
                         parent=self,

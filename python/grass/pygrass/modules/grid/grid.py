@@ -121,7 +121,7 @@ def read_gisrc(gisrc):
     ...                                      genv['GISDBASE']))
     True
     """
-    with open(gisrc, "r") as gfile:
+    with open(gisrc, "r", encoding="utf-8") as gfile:
         gis = dict(
             [(k.strip(), v.strip()) for k, v in [row.split(":", 1) for row in gfile]]
         )
@@ -691,7 +691,11 @@ class GridModule:
                     dirpath = os.path.join(tmpdir, par.name)
                     if not os.path.isdir(dirpath):
                         os.makedirs(dirpath)
-                    fil = open(os.path.join(dirpath, self.out_prefix + par.value), "w+")
+                    fil = open(
+                        os.path.join(dirpath, self.out_prefix + par.value),
+                        "w+",
+                        encoding="utf-8",
+                    )
                     fil.close()
 
     def _clean(self):

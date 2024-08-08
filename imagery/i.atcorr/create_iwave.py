@@ -59,7 +59,7 @@ def read_input(csvfile):
     first column is wavelength
     values are those of the discrete band filter functions
     """
-    infile = open(csvfile, "r")
+    infile = open(csvfile, "r", encoding="utf-8")
 
     # get number of bands and band names
     bands = infile.readline().split(",")
@@ -249,7 +249,9 @@ def write_cpp(bands, values, sensor, folder):
             print("   %s (%inm - %inm)" % (bands[b], min_wavelength, max_wavelength))
 
     # writing...
-    outfile = open(os.path.join(folder, sensor + "_cpp_template.txt"), "w")
+    outfile = open(
+        os.path.join(folder, sensor + "_cpp_template.txt"), "w", encoding="utf-8"
+    )
     outfile.write("/* Following filter function created using create_iwave.py */\n\n")
 
     if len(bands) == 1:

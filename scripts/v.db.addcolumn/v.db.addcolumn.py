@@ -125,7 +125,7 @@ def main():
     sql_file = gs.tempfile()
     rm_files.append(sql_file)
     cols_add_str = ",".join([col[0] for col in columns])
-    Path(sql_file).write_text(add_str)
+    Path(sql_file).write_text(add_str, encoding="utf-8")
     try:
         gs.run_command(
             "db.execute",

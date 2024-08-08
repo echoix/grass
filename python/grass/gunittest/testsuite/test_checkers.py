@@ -367,15 +367,15 @@ class TestMd5Sums(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open(cls.correct_file_name_platform_nl, "w") as f:
+        with open(cls.correct_file_name_platform_nl, "w", encoding="utf-8") as f:
             for line in CORRECT_LINES:
                 # \n should be converted to platform newline
                 f.write(line + "\n")
-        with open(cls.correct_file_name_unix_nl, "w") as f:
+        with open(cls.correct_file_name_unix_nl, "w", encoding="utf-8") as f:
             for line in CORRECT_LINES:
                 # binary mode will write pure \n
                 f.write(line + "\n")
-        with open(cls.wrong_file_name, "w") as f:
+        with open(cls.wrong_file_name, "w", encoding="utf-8") as f:
             for line in INCORRECT_LINES:
                 # \n should be converted to platform newline
                 f.write(line + "\n")

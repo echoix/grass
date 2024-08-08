@@ -115,7 +115,7 @@ def main():
 
     gs.message(_("Current attribute table link(s):"))
     # silently test first to avoid confusing error messages
-    nuldev = open(os.devnull, "w")
+    nuldev = open(os.devnull, "w", encoding="utf-8")
     try:
         gs.run_command(
             "v.db.connect", flags="p", map=map, quiet=True, stdout=nuldev, stderr=nuldev

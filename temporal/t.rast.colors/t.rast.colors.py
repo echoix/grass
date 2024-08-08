@@ -148,7 +148,7 @@ def main():
     if rows:
         # Create the r.colors input file
         filename = gs.tempfile(True)
-        file = open(filename, "w")
+        file = open(filename, "w", encoding="utf-8")
 
         for row in rows:
             string = "%s\n" % (row["id"])

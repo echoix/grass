@@ -571,7 +571,7 @@ def get_default_branch(full_url):
 
 def etree_fromfile(filename):
     """Create XML element tree from a given file name"""
-    return etree.fromstring(Path(filename).read_text())
+    return etree.fromstring(Path(filename).read_text(encoding="utf-8"))
 
 
 def etree_fromurl(url):
@@ -1022,7 +1022,7 @@ def write_xml_modules(name, tree=None):
     :param name: file name
     :param tree: XML element tree
     """
-    file_ = open(name, "w")
+    file_ = open(name, "w", encoding="utf-8")
     file_.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file_.write('<!DOCTYPE task SYSTEM "grass-addons.dtd">\n')
     file_.write(f'<addons version="{VERSION[0]}">\n')
@@ -1068,7 +1068,7 @@ def write_xml_extensions(name, tree=None):
     :param name: file name
     :param tree: XML element tree
     """
-    file_ = open(name, "w")
+    file_ = open(name, "w", encoding="utf-8")
     file_.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file_.write('<!DOCTYPE task SYSTEM "grass-addons.dtd">\n')
     file_.write(f'<addons version="{VERSION[0]}">\n')
@@ -1124,7 +1124,7 @@ def write_xml_toolboxes(name, tree=None):
     :param name: file name
     :param tree: XML element tree
     """
-    file_ = open(name, "w")
+    file_ = open(name, "w", encoding="utf-8")
     file_.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file_.write('<!DOCTYPE toolbox SYSTEM "grass-addons.dtd">\n')
     file_.write(f'<addons version="{VERSION[0]}">\n')
@@ -1290,7 +1290,7 @@ def install_toolbox_xml(url, name):
         write_xml_modules(xml_file)
 
     # read XML file
-    tree = etree.fromstring(Path(xml_file).read_text())
+    tree = etree.fromstring(Path(xml_file).read_text(encoding="utf-8"))
 
     # update tree
     tnode = None
@@ -1613,7 +1613,7 @@ def install_extension_win(name):
 
     # to hide non-error messages from subprocesses
     if gs.verbosity() <= 2:
-        outdev = open(os.devnull, "w")
+        outdev = open(os.devnull, "w", encoding="utf-8")
     else:
         outdev = sys.stdout
 
@@ -1966,7 +1966,7 @@ def install_extension_std_platforms(name, source, url, branch):
 
     # to hide non-error messages from subprocesses
     if gs.verbosity() <= 2:
-        outdev = open(os.devnull, "w")
+        outdev = open(os.devnull, "w", encoding="utf-8")
     else:
         outdev = sys.stdout
 
@@ -1992,7 +1992,7 @@ def install_extension_std_platforms(name, source, url, branch):
         for filename in f:
             if filename == "Makefile":
                 # get the module name: PGM = <module name>
-                with open(os.path.join(r, "Makefile")) as fp:
+                with open(os.path.join(r, "Makefile"), encoding="utf-8") as fp:
                     for line in fp:
                         if re.match(r"PGM.*.=|PGM=", line):
                             try:
@@ -2407,7 +2407,7 @@ def update_manual_page(module):
     # read original html file
     htmlfile = os.path.join(options["prefix"], "docs", "html", module + ".html")
     try:
-        oldfile = open(htmlfile)
+        oldfile = open(htmlfile, encoding="utf-8")
         shtml = oldfile.read()
     except OSError as error:
         gs.fatal(_("Unable to read manual page: %s") % error)
@@ -2452,7 +2452,7 @@ def update_manual_page(module):
 
     # write updated html file
     try:
-        newfile = open(htmlfile, "w")
+        newfile = open(htmlfile, "w", encoding="utf-8")
         newfile.write(ohtml)
     except OSError as error:
         gs.fatal(_("Unable for write manual page: %s") % error)

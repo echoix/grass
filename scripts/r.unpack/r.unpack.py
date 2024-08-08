@@ -244,7 +244,7 @@ def main():
     if maps:
         if vrt_file and os.path.exists(vrt_file):
             files = "\n".join(maps)
-            Path(vrt_file).write_text(files)
+            Path(vrt_file).write_text(files, encoding="utf-8")
 
     grass.message(_("Raster map <{name}> unpacked".format(name=map_name)))
 

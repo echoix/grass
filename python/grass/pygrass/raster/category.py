@@ -299,7 +299,7 @@ class Category(list):
 
         """
         self.reset()
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding="utf-8") as f:
             for row in f:
                 cat = row.strip().split(sep)
                 if len(cat) == 2:
@@ -331,7 +331,7 @@ class Category(list):
             if cat[-1] is None:
                 cat = cat[:-1]
             cats.append(sep.join([str(i) for i in cat]))
-        Path(filename).write_text("\n".join(cats))
+        Path(filename).write_text("\n".join(cats), encoding="utf-8")
 
     def sort(self):
         libraster.Rast_sort_cats(ctypes.byref(self.c_cats))

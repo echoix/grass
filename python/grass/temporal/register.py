@@ -161,7 +161,7 @@ def register_maps_in_space_time_dataset(
         if hasattr(file, "readline"):
             fd = file
         else:
-            fd = open(file, "r")
+            fd = open(file, "r", encoding="utf-8")
 
         line = True
         while True:
@@ -616,7 +616,7 @@ def register_map_object_list(
     dbif, connection_state_changed = init_dbif(None)
 
     filename = gs.tempfile(True)
-    with open(filename, "w") as register_file:
+    with open(filename, "w", encoding="utf-8") as register_file:
         empty_maps = []
         for map_layer in map_list:
             # Read the map data
