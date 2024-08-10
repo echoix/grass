@@ -24,14 +24,17 @@ jobs:
           echo "macOS version $(sw_vers -productVersion)"
           echo "architecture $(uname -a)"
       - run: which gpg
-      - run: brew install gnupg
+      - run: brew install gnupg tree
       - name: Disabling Spotlight
         run: sudo mdutil -a -i off
       - name: Uninstalling Homebrew
         run: |
           echo "Moving directories..."
           sudo mkdir /opt/off
-          /usr/bin/sudo /usr/bin/find /usr/local /opt/homebrew -mindepth 1 -maxdepth 1 \
+          sudo mkdir /opt/offLocal
+          /usr/bin/sudo /usr/bin/find /usr/local -mindepth 1 -maxdepth 1 \
+            -type d -print -exec /bin/mv {} /opt/offLocal/ \;
+          /usr/bin/sudo /usr/bin/find /opt/homebrew -mindepth 1 -maxdepth 1 \
             -type d -print -exec /bin/mv {} /opt/off/ \;
           echo "Removing files..."
           /usr/bin/sudo /usr/bin/find /usr/local /opt/homebrew -mindepth 1 -maxdepth 1 \
