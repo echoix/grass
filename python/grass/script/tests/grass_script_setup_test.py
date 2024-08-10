@@ -8,7 +8,7 @@ import pytest
 
 import grass.script as gs
 
-xfail_mp_spawn = pytest.mark.xfail(
+xfail_mp_spawn2 = pytest.mark.xfail(
     multiprocessing.get_start_method() == "spawn",
     reason="Multiprocessing 'spawn' start method requires pickable functions",
     raises=AttributeError,
