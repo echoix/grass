@@ -329,18 +329,18 @@ def handle_errors(returncode, result, args, kwargs):
     passed in any case regardless of the *returncode*.
     """
 
-    def get_module_and_code(args, kwargs):
-        """Get module name and formatted command"""
-        # TODO: construction of the whole command is far from perfect
-        args = make_command(*args, **kwargs)
-        # Since we are in error handler, let's be extra cautious
-        # about an empty command.
-        if args:
-            module = args[0]
-        else:
-            module = None
-        code = " ".join(args)
-        return module, code
+    # def get_module_and_code(args, kwargs):
+    #     """Get module name and formatted command"""
+    #     # TODO: construction of the whole command is far from perfect
+    #     args = make_command(*args, **kwargs)
+    #     # Since we are in error handler, let's be extra cautious
+    #     # about an empty command.
+    #     if args:
+    #         module = args[0]
+    #     else:
+    #         module = None
+    #     code = " ".join(args)
+    #     return module, code
 
     handler = kwargs.get("errors", "raise")
     if handler.lower() == "status":
@@ -349,19 +349,40 @@ def handle_errors(returncode, result, args, kwargs):
         return result
     if handler.lower() == "ignore":
         return result
-    elif handler.lower() == "fatal":
-        module, code = get_module_and_code(args, kwargs)
-        fatal(
-            _(
-                "Module {module} ({code}) failed with"
-                " non-zero return code {returncode}"
-            ).format(module=module, code=code, returncode=returncode)
-        )
+    # elif handler.lower() == "fatal":
+    #     module, code = get_module_and_code(args, kwargs)
+    #     fatal(
+    #         _(
+    #             "Module {module} ({code}) failed with"
+    #             " non-zero return code {returncode}"
+    #         ).format(module=module, code=code, returncode=returncode)
+    #     )
     elif handler.lower() == "exit":
         sys.exit(returncode)
     else:
-        module, code = get_module_and_code(args, kwargs)
-        raise CalledModuleError(module=module, code=code, returncode=returncode)
+        # module, code = get_module_and_code(args, kwargs)
+        # raise CalledModuleError(module=module, code=code, returncode=returncode)
+
+        # Get module name and formatted command
+        # TODO: construction of the whole command is far from perfect
+        _args = make_command(*args, **kwargs)
+        # Since we are in error handler, let's be extra cautious
+        # about an empty command.
+        if _args:
+            module = _args[0]
+        else:
+            module = None
+        code = " ".join(_args)
+
+        if handler.lower() == "fatal":
+            fatal(
+                _(
+                    "Module {module} ({code}) failed with"
+                    " non-zero return code {returncode}"
+                ).format(module=module, code=code, returncode=returncode)
+            )
+        else:
+            raise CalledModuleError(module=module, code=code, returncode=returncode)
 
 
 def start_command(
