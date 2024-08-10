@@ -4,6 +4,13 @@ import multiprocessing
 
 import grass.script as gs
 
+xfail_mp_spawn = pytest.mark.xfail(
+    multiprocessing.get_start_method() == "spawn",
+    reason="Multiprocessing using 'spawn' start method requires pickable functions",
+    raises=AttributeError,
+    strict=True,
+)
+
 
 def run_in_subprocess(function):
     """Run function in a separate process
@@ -19,6 +26,7 @@ def run_in_subprocess(function):
     return result
 
 
+@xfail_mp_spawn
 def test_reading_respects_change_of_session(tmp_path):
     """Check new session file path is retrieved and the file is read"""
 
