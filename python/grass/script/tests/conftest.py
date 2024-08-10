@@ -1,14 +1,6 @@
 """Fixtures for grass.script"""
 
 import pytest
-import multiprocessing
-
-
-xfail_mp_spawn = pytest.mark.xfail(
-    multiprocessing.get_start_method() == "spawn",
-    reason="Multiprocessing 'spawn' start method requires pickable functions",
-    raises=AttributeError,
-)
 
 
 @pytest.fixture
