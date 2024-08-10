@@ -108,7 +108,7 @@ def test_init_finish_global_functions_capture_strerr0(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
-@xfail_mp_spawn
+@xfail_mp_spawn()
 def test_init_finish_global_functions_capture_strerrX(tmp_path):
     """Check that init and finish global functions work with global env"""
 
