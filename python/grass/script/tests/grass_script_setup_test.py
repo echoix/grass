@@ -66,9 +66,7 @@ def test_init_finish_global_functions_with_env(tmp_path):
 def init_finish_global_functions_capture_strerr0_partial(tmp_path, queue):
     gs.set_capture_stderr(True)
     location = "test"
-    gs.core._create_location_xy(  # pylint: disable=protected-access
-        tmp_path, location
-    )
+    gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
     gs.setup.init(tmp_path / location)
     gs.run_command("g.region", flags="p")
     runtime_present = bool(os.environ.get("GISBASE"))
@@ -79,7 +77,9 @@ def init_finish_global_functions_capture_strerr0_partial(tmp_path, queue):
 def test_init_finish_global_functions_capture_strerr0_partial(tmp_path):
     """Check that init and finish global functions work with global env using partial function"""
 
-    init_finish = partial(init_finish_global_functions_capture_strerr0_partial, tmp_path)
+    init_finish = partial(
+        init_finish_global_functions_capture_strerr0_partial, tmp_path
+    )
     session_file, runtime_present = run_in_subprocess(init_finish)
     assert session_file, "Expected file name from the subprocess"
     assert runtime_present, "Runtime (GISBASE) should be present"
