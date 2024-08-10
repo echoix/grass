@@ -15,6 +15,7 @@ xfail_mp_spawn = pytest.mark.xfail(
     strict=True,
 )
 
+
 # This is useful when we want to ensure that function like init does
 # not change the global environment.
 def run_in_subprocess(function):
