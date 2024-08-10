@@ -85,11 +85,6 @@ def raster_info(map, env=None):
 
     """
 
-    # def float_or_null(s):
-    #     if s == "NULL":
-    #         return None
-    #     else:
-    #         return float(s)
 
     s = read_command("r.info", flags="gre", map=map, env=env)
     kv = parse_key_val(s)
