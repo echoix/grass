@@ -8,10 +8,11 @@ import pytest
 
 import grass.script as gs
 
-xfail_mp_spawn2 = pytest.mark.xfail(
+xfail_mp_spawn = pytest.mark.xfail(
     multiprocessing.get_start_method() == "spawn",
-    reason="Multiprocessing 'spawn' start method requires pickable functions",
+    reason="Multiprocessing using 'spawn' start method requires pickable functions",
     raises=AttributeError,
+    strict=True,
 )
 
 # This is useful when we want to ensure that function like init does
@@ -91,7 +92,7 @@ def test_init_finish_global_functions_capture_strerr0_partial(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
-@pytest.mark.xfail(multiprocessing.get_start_method() == "spawn", reason="Local function isn't pickable and can't run with spawn", raises=AttributeError)
+@@xfail_mp_spawn
 def test_init_finish_global_functions_capture_strerr0(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -142,7 +143,7 @@ def test_init_finish_global_functions_capture_strerrX(tmp_path):
     assert runtime_present_after, "Runtime should continue to be present"
 
 
-@pytest.mark.xfail(multiprocessing.get_start_method() == "spawn", reason="Local function isn't pickable and can't run with spawn", raises=AttributeError)
+@xfail_mp_spawn
 def test_init_finish_global_functions_isolated(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -197,7 +198,7 @@ def test_init_finish_global_functions_isolated(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
-@pytest.mark.xfail(multiprocessing.get_start_method() == "spawn", reason="Local function isn't pickable and can't run with spawn", raises=AttributeError)
+@xfail_mp_spawn
 @pytest.mark.usefixtures("mock_no_session")
 def test_init_as_context_manager_env_attribute(tmp_path):
     """Check that session has global environment as attribute"""
