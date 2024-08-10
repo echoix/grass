@@ -45,6 +45,7 @@ jobs:
       # - run: brew install tree
       # - run: tree -a /opt
       - run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - run: brew install tree
       - run: tree /opt/homebrew
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Setup Mamba
