@@ -2,6 +2,8 @@
 
 import multiprocessing
 
+import pytest
+
 import grass.script as gs
 
 xfail_mp_spawn = pytest.mark.xfail(
