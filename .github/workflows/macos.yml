@@ -25,6 +25,7 @@ jobs:
           echo "architecture $(uname -a)"
       - run: which gpg
       - run: brew install gnupg tree
+      - run: tree -a /opt
       - name: Disabling Spotlight
         run: sudo mdutil -a -i off
       - name: Uninstalling Homebrew
