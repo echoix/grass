@@ -2,6 +2,7 @@
 
 import multiprocessing
 import os
+from functools import partial
 
 import pytest
 
@@ -60,6 +61,27 @@ def test_init_finish_global_functions_with_env(tmp_path):
     gs.setup.finish(env=env)
 
     assert not os.path.exists(session_file)
+
+def init_finish_global_functions_capture_strerr0_partial(tmp_path, queue):
+    gs.set_capture_stderr(True)
+    location = "test"
+    gs.core._create_location_xy(  # pylint: disable=protected-access
+        tmp_path, location
+    )
+    gs.setup.init(tmp_path / location)
+    gs.run_command("g.region", flags="p")
+    runtime_present = bool(os.environ.get("GISBASE"))
+    queue.put((os.environ["GISRC"], runtime_present))
+    gs.setup.finish()
+
+def test_init_finish_global_functions_capture_strerr0_partial(tmp_path):
+    """Check that init and finish global functions work with global env using partial function"""
+
+    init_finish = partial(init_finish_global_functions_capture_strerr0_partial, tmp_path)
+    session_file, runtime_present = run_in_subprocess(init_finish)
+    assert session_file, "Expected file name from the subprocess"
+    assert runtime_present, "Runtime (GISBASE) should be present"
+    assert not os.path.exists(session_file), "Session file not deleted"
 
 
 def test_init_finish_global_functions_capture_strerr0(tmp_path):
