@@ -62,6 +62,7 @@ def test_init_finish_global_functions_with_env(tmp_path):
 
     assert not os.path.exists(session_file)
 
+
 def init_finish_global_functions_capture_strerr0_partial(tmp_path, queue):
     gs.set_capture_stderr(True)
     location = "test"
@@ -74,6 +75,7 @@ def init_finish_global_functions_capture_strerr0_partial(tmp_path, queue):
     queue.put((os.environ["GISRC"], runtime_present))
     gs.setup.finish()
 
+
 def test_init_finish_global_functions_capture_strerr0_partial(tmp_path):
     """Check that init and finish global functions work with global env using partial function"""
 
@@ -84,6 +86,7 @@ def test_init_finish_global_functions_capture_strerr0_partial(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
+@pytest.mark.xfail(multiprocessing.get_start_method() == "spawn", raises=AttributeError)
 def test_init_finish_global_functions_capture_strerr0(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -105,6 +108,7 @@ def test_init_finish_global_functions_capture_strerr0(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
+@pytest.mark.xfail(multiprocessing.get_start_method() == "spawn", raises=AttributeError)
 def test_init_finish_global_functions_capture_strerrX(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -133,6 +137,7 @@ def test_init_finish_global_functions_capture_strerrX(tmp_path):
     assert runtime_present_after, "Runtime should continue to be present"
 
 
+@pytest.mark.xfail(multiprocessing.get_start_method() == "spawn", raises=AttributeError)
 def test_init_finish_global_functions_isolated(tmp_path):
     """Check that init and finish global functions work with global env"""
 
@@ -187,6 +192,7 @@ def test_init_finish_global_functions_isolated(tmp_path):
     assert not os.path.exists(session_file), "Session file not deleted"
 
 
+@pytest.mark.xfail(multiprocessing.get_start_method() == "spawn", raises=AttributeError)
 @pytest.mark.usefixtures("mock_no_session")
 def test_init_as_context_manager_env_attribute(tmp_path):
     """Check that session has global environment as attribute"""
