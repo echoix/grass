@@ -25,8 +25,8 @@ jobs:
           echo "architecture $(uname -a)"
       - run: which gpg
       - run: brew install gnupg tree
-      - run: tree -a /opt
-      - run: tree /opt
+      # - run: tree -a /opt/homebrew
+      - run: tree /opt/homebrew
       - name: Disabling Spotlight
         run: sudo mdutil -a -i off
       - name: Uninstalling Homebrew
@@ -44,6 +44,8 @@ jobs:
           hash -r
       # - run: brew install tree
       # - run: tree -a /opt
+      - run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - run: tree /opt/homebrew
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Setup Mamba
         uses: mamba-org/setup-micromamba@f8b8a1e23a26f60a44c853292711bacfd3eac822 # v1.9.0
