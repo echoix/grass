@@ -11,6 +11,7 @@ gettext
 ghostscript
 giflib
 git
+gnupg
 krb5
 lapack
 lastools
@@ -39,6 +40,7 @@ ply
 postgresql
 proj
 pytest
+pytest-cov
 pytest-github-actions-annotate-failures
 pytest-timeout
 pytest-xdist

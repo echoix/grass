@@ -73,9 +73,42 @@ jobs:
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
           pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
+            --cov \
+            --cov-context=test \
             -ra . \
             -m 'needs_solo_run'
+      - name: Fix non-standard installed script paths in coverage data
+        shell: bash -el {0}
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          python utils/coverage_mapper.py
+          coverage combine
+          coverage html
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        with:
+          verbose: true
+          flags: pytest-python-${{ runner.os }}
+          name: pytest-python-${{ runner.os }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Make python-only code coverage test report available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # v4.3.5
+        with:
+          name: python-codecoverage-report-${{ runner.os }}
+          path: coverage_html_report
+          retention-days: 1
+      - name: Remove coverage data and reports
+        shell: bash -el {0}
+        run: |
+          coverage erase
+          rm -rf ./coverage_html_report
 
       - name: Run gunittest tests
         shell: bash -el {0}
@@ -88,7 +121,7 @@ jobs:
               --min-success 100 --config .github/workflows/macos_gunittest.cfg
         env:
           SampleData: "https://grass.osgeo.org/sampledata/north_carolina/\
-                       nc_spm_full_v2alpha2.tar.gz"
+            nc_spm_full_v2alpha2.tar.gz"
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # v4.3.5
