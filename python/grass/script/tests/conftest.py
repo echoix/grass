@@ -3,6 +3,12 @@
 import pytest
 
 
+xfail_mp_spawn = pytest.mark.xfail(
+    multiprocessing.get_start_method() == "spawn",
+    reason="Multiprocessing 'spawn' start method requires pickable functions",
+    raises=AttributeError,
+)
+
 @pytest.fixture
 def mock_no_session(monkeypatch):
     """Set the environment variables as if there would be no background session.
