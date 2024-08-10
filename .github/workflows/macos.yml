@@ -49,6 +49,7 @@ jobs:
         run: |
           printenv | sort
           $CC --version
+      - run: brew install gnupg
       - run: which gpg
       - name: Create installation directory
         run: mkdir $HOME/install
