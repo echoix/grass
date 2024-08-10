@@ -23,6 +23,8 @@ jobs:
         run: |
           echo "macOS version $(sw_vers -productVersion)"
           echo "architecture $(uname -a)"
+      - run: which gpg
+      - run: brew install gnupg
       - name: Disabling Spotlight
         run: sudo mdutil -a -i off
       - name: Uninstalling Homebrew
@@ -47,6 +49,7 @@ jobs:
         run: |
           printenv | sort
           $CC --version
+      - run: which gpg
       - name: Create installation directory
         run: mkdir $HOME/install
       - name: Build and install
