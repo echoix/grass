@@ -23,6 +23,8 @@ jobs:
           - '3.8'
           - '3.10'
           - '3.12'
+          - '3.13'
+          - '3.14'
       fail-fast: true
 
     runs-on: ${{ matrix.os }}
@@ -38,6 +40,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
+          allow-prereleases: true
 
       - name: Install non-Python dependencies
         run: |
@@ -48,6 +51,9 @@ jobs:
 
       - uses: rui314/setup-mold@2e332a0b602c2fc65d2d3995941b1b29a5f554a0 # v1
 
+      - name: Allow install pre-release packages with pip if using unreleased Python versions
+        if: ${{ matrix.python-version == '3.13' || matrix.python-version == '3.14' }}
+        run: echo "PIP_PRE=1" >> $GITHUB_ENV
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip

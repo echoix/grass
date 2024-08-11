@@ -1,11 +1,19 @@
 """Test main functions of PyGRASS GridModule"""
 
 import multiprocessing
+from functools import partial
 
 import pytest
 
 import grass.script as gs
 from grass.pygrass.modules.grid import GridModule
+
+xfail_mp_spawn = pytest.mark.xfail(
+    multiprocessing.get_start_method() == "spawn",
+    reason="Multiprocessing using 'spawn' start method requires pickable functions",
+    raises=AttributeError,
+    strict=True,
+)
 
 
 def max_processes():
@@ -23,6 +31,7 @@ def run_in_subprocess(function):
     process.join()
 
 
+@xfail_mp_spawn
 @pytest.mark.needs_solo_run
 @pytest.mark.parametrize("processes", list(range(1, max_processes() + 1)) + [None])
 def test_processes(tmp_path, processes):
@@ -54,9 +63,42 @@ def test_processes(tmp_path, processes):
         assert info["min"] > 0
 
 
-# @pytest.mark.parametrize("split", [False])  # True does not work.
+def run_grid_module_processes_partial(processes, surface):
+    """run_grid_module function for test_processes_partial"""
+    grid = GridModule(
+        "r.slope.aspect",
+        width=10,
+        height=5,
+        overlap=2,
+        processes=processes,
+        elevation=surface,
+        slope="slope",
+        aspect="aspect",
+    )
+    grid.run()
 
 
+@pytest.mark.needs_solo_run
+@pytest.mark.parametrize("processes", list(range(1, max_processes() + 1)) + [None])
+def test_processes_partial(tmp_path, processes):
+    """Check that running with multiple processes works using a partial function"""
+    location = "test"
+    gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
+    with gs.setup.init(tmp_path / location):
+        gs.run_command("g.region", s=0, n=50, w=0, e=50, res=1)
+
+        surface = "surface"
+        gs.run_command("r.surf.fractal", output=surface)
+
+        run_grid_module = partial(run_grid_module_processes_partial, processes, surface)
+
+        run_in_subprocess(run_grid_module)
+
+        info = gs.raster_info("slope")
+        assert info["min"] > 0
+
+
+@xfail_mp_spawn
 @pytest.mark.parametrize("width", [5, 10, 50])  # None does not work.
 @pytest.mark.parametrize("height", [5, 10, 50])
 def test_tiling_schemes(tmp_path, width, height):
@@ -88,6 +130,72 @@ def test_tiling_schemes(tmp_path, width, height):
         assert info["min"] > 0
 
 
+def run_grid_module_base(*args, **kwargs):
+    grid = GridModule(*args, **kwargs)
+    grid.run()
+
+
+def run_grid_module_tiling_schemes_partial(*args, **kwargs):
+    grid = GridModule(*args, processes=max_processes(), **kwargs)
+    grid.run()
+
+
+@pytest.mark.parametrize("width", [5, 10, 50])  # None does not work.
+@pytest.mark.parametrize("height", [5, 10, 50])
+def test_tiling_schemes_base_partial(tmp_path, width, height):
+    """Check that different shapes of tiles work using a partial function"""
+    location = "test"
+    gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
+    with gs.setup.init(tmp_path / location):
+        gs.run_command("g.region", s=0, n=50, w=0, e=50, res=1)
+
+        surface = "surface"
+        gs.run_command("r.surf.fractal", output=surface)
+        run_grid_module = partial(
+            run_grid_module_base,
+            "r.slope.aspect",
+            width=width,
+            height=height,
+            overlap=2,
+            processes=max_processes(),
+            elevation=surface,
+            slope="slope",
+            aspect="aspect",
+        )
+        run_in_subprocess(run_grid_module)
+
+        info = gs.raster_info("slope")
+        assert info["min"] > 0
+
+
+@pytest.mark.parametrize("width", [5, 10, 50])  # None does not work.
+@pytest.mark.parametrize("height", [5, 10, 50])
+def test_tiling_schemes_partial(tmp_path, width, height):
+    """Check that different shapes of tiles work using a partial function"""
+    location = "test"
+    gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
+    with gs.setup.init(tmp_path / location):
+        gs.run_command("g.region", s=0, n=50, w=0, e=50, res=1)
+
+        surface = "surface"
+        gs.run_command("r.surf.fractal", output=surface)
+        run_grid_module = partial(
+            run_grid_module_tiling_schemes_partial,
+            "r.slope.aspect",
+            width=width,
+            height=height,
+            overlap=2,
+            elevation=surface,
+            slope="slope",
+            aspect="aspect",
+        )
+        run_in_subprocess(run_grid_module)
+
+        info = gs.raster_info("slope")
+        assert info["min"] > 0
+
+
+@xfail_mp_spawn
 @pytest.mark.parametrize("overlap", [0, 1, 2, 5])
 def test_overlaps(tmp_path, overlap):
     """Check that overlap accepts different values"""
@@ -117,6 +225,35 @@ def test_overlaps(tmp_path, overlap):
         assert info["min"] > 0
 
 
+@pytest.mark.parametrize("overlap", [0, 1, 2, 5])
+def test_overlaps_partial(tmp_path, overlap):
+    """Check that overlap accepts different values using a partial function"""
+    location = "test"
+    gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
+    with gs.setup.init(tmp_path / location):
+        gs.run_command("g.region", s=0, n=50, w=0, e=50, res=1)
+        surface = "surface"
+        gs.run_command("r.surf.fractal", output=surface)
+
+        run_grid_module = partial(
+            run_grid_module_base,
+            "r.slope.aspect",
+            width=10,
+            height=5,
+            overlap=overlap,
+            processes=max_processes(),
+            elevation=surface,
+            slope="slope",
+            aspect="aspect",
+        )
+
+        run_in_subprocess(run_grid_module)
+
+        info = gs.raster_info("slope")
+        assert info["min"] > 0
+
+
+@xfail_mp_spawn
 @pytest.mark.parametrize("clean", [True, False])
 @pytest.mark.parametrize("surface", ["surface", "non_exist_surface"])
 def test_cleans(tmp_path, clean, surface):
@@ -159,6 +296,7 @@ def test_cleans(tmp_path, clean, surface):
             assert prefixed, "Not even one prefixed mapset"
 
 
+@xfail_mp_spawn
 @pytest.mark.parametrize("patch_backend", [None, "r.patch", "RasterRow"])
 def test_patching_backend(tmp_path, patch_backend):
     """Check patching backend works"""
@@ -196,6 +334,7 @@ def test_patching_backend(tmp_path, patch_backend):
         assert abs(mean - mean_ref) < 0.0001
 
 
+@xfail_mp_spawn
 @pytest.mark.parametrize(
     "width, height, processes",
     [
@@ -233,6 +372,7 @@ def test_tiling(tmp_path, width, height, processes):
         assert info["min"] > 0
 
 
+@xfail_mp_spawn
 @pytest.mark.needs_solo_run
 @pytest.mark.parametrize(
     "processes, backend",

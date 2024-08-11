@@ -85,16 +85,10 @@ def raster_info(map, env=None):
 
     """
 
-    def float_or_null(s):
-        if s == "NULL":
-            return None
-        else:
-            return float(s)
-
     s = read_command("r.info", flags="gre", map=map, env=env)
     kv = parse_key_val(s)
     for k in ["min", "max"]:
-        kv[k] = float_or_null(kv[k])
+        kv[k] = None if kv[k] == "NULL" else float(kv[k])
     for k in ["north", "south", "east", "west"]:
         kv[k] = float(kv[k])
     for k in ["nsres", "ewres"]:
