@@ -85,7 +85,6 @@ def raster_info(map, env=None):
 
     """
 
-
     s = read_command("r.info", flags="gre", map=map, env=env)
     kv = parse_key_val(s)
     for k in ["min", "max"]:
