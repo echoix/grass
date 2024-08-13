@@ -12,6 +12,7 @@ ghostscript
 giflib
 git
 ipython
+ipywidgets
 krb5
 lapack
 lastools
