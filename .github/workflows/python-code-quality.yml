@@ -175,7 +175,7 @@ jobs:
         continue-on-error: true # DEBUG
         run: |
           pipx inject --include-apps pylint pytest
-          pipx inject pylint pytest-pylint pytest-github-actions-annotate-failures
+          pipx inject pylint pytest-pylint pytest-github-actions-annotate-failures pytest-timeout
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
           pytest --pylint -m pylint --pylint-rcfile=.pylintrc --pylint-jobs=$(nproc) \
