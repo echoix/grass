@@ -1,7 +1,9 @@
+from __future__ import annotations
 import itertools
 import fnmatch
 import os
 from sqlite3 import OperationalError
+from typing import Any, Literal, TYPE_CHECKING
 
 import grass.lib.gis as libgis
 
@@ -13,6 +15,9 @@ from grass.script import core as grasscore
 from grass.script import utils as grassutils
 
 from grass.pygrass.errors import GrassError
+
+if TYPE_CHECKING:
+    from python.grass.pygrass.vector import VectorTopo
 
 
 test_vector_name = "Utils_test_vector"
@@ -224,7 +229,9 @@ def pixel2coor(pixel, region):
     )
 
 
-def get_raster_for_points(poi_vector, raster, column=None, region=None):
+def get_raster_for_points(
+    poi_vector: VectorTopo, raster, column: str | None = None, region=None
+) -> Literal[True] | list[tuple[int, float, float, Any]]:
     """Query a raster map for each point feature of a vector
 
     Example
