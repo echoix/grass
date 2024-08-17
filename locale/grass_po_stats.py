@@ -138,7 +138,7 @@ def writejson(stats, outfile):
     # write a string with pretty style
     outjson = os.linesep.join([line.rstrip() for line in fjson.splitlines()])
     # write out file
-    fout = open(outfile, "w")
+    fout = open(outfile, "w", encoding="utf-8")
     fout.write(outjson)
     fout.write(os.linesep)
     fout.close()

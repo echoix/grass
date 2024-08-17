@@ -824,7 +824,7 @@ def _create_temporal_database_views(dbif):
         "stvds_views",
     ):
         sql_filepath = open(
-            os.path.join(template_path, sql_filename + ".sql"), "r"
+            os.path.join(template_path, sql_filename + ".sql"), "r", encoding="utf-8"
         ).read()
         dbif.execute_transaction(sql_filepath)
 
@@ -844,28 +844,32 @@ def create_temporal_database(dbif):
 
     # Read all SQL scripts and templates
     map_tables_template_sql = open(
-        os.path.join(template_path, "map_tables_template.sql"), "r"
+        os.path.join(template_path, "map_tables_template.sql"), "r", encoding="utf-8"
     ).read()
     raster_metadata_sql = open(
-        os.path.join(get_sql_template_path(), "raster_metadata_table.sql"), "r"
+        os.path.join(get_sql_template_path(), "raster_metadata_table.sql"),
+        "r",
+        encoding="utf-8",
     ).read()
     raster3d_metadata_sql = open(
-        os.path.join(template_path, "raster3d_metadata_table.sql"), "r"
+        os.path.join(template_path, "raster3d_metadata_table.sql"),
+        "r",
+        encoding="utf-8",
     ).read()
     vector_metadata_sql = open(
-        os.path.join(template_path, "vector_metadata_table.sql"), "r"
+        os.path.join(template_path, "vector_metadata_table.sql"), "r", encoding="utf-8"
     ).read()
     stds_tables_template_sql = open(
-        os.path.join(template_path, "stds_tables_template.sql"), "r"
+        os.path.join(template_path, "stds_tables_template.sql"), "r", encoding="utf-8"
     ).read()
     strds_metadata_sql = open(
-        os.path.join(template_path, "strds_metadata_table.sql"), "r"
+        os.path.join(template_path, "strds_metadata_table.sql"), "r", encoding="utf-8"
     ).read()
     str3ds_metadata_sql = open(
-        os.path.join(template_path, "str3ds_metadata_table.sql"), "r"
+        os.path.join(template_path, "str3ds_metadata_table.sql"), "r", encoding="utf-8"
     ).read()
     stvds_metadata_sql = open(
-        os.path.join(template_path, "stvds_metadata_table.sql"), "r"
+        os.path.join(template_path, "stvds_metadata_table.sql"), "r", encoding="utf-8"
     ).read()
 
     # Create the raster, raster3d and vector tables SQL statements
@@ -899,19 +903,23 @@ def create_temporal_database(dbif):
         # Set up the trigger that takes care of
         # the correct deletion of entries across the different tables
         delete_trigger_sql = open(
-            os.path.join(template_path, "sqlite3_delete_trigger.sql"), "r"
+            os.path.join(template_path, "sqlite3_delete_trigger.sql"),
+            "r",
+            encoding="utf-8",
         ).read()
         indexes_sql = open(
-            os.path.join(template_path, "sqlite3_indexes.sql"), "r"
+            os.path.join(template_path, "sqlite3_indexes.sql"), "r", encoding="utf-8"
         ).read()
     else:
         # Set up the trigger that takes care of
         # the correct deletion of entries across the different tables
         delete_trigger_sql = open(
-            os.path.join(template_path, "postgresql_delete_trigger.sql"), "r"
+            os.path.join(template_path, "postgresql_delete_trigger.sql"),
+            "r",
+            encoding="utf-8",
         ).read()
         indexes_sql = open(
-            os.path.join(template_path, "postgresql_indexes.sql"), "r"
+            os.path.join(template_path, "postgresql_indexes.sql"), "r", encoding="utf-8"
         ).read()
 
     # Connect now to the database
@@ -997,6 +1005,7 @@ def upgrade_temporal_database(dbif):
                 "upgrade_db_%s_to_%s.sql" % (upgrade_db_from, tgis_db_version),
             ),
             "r",
+            encoding="utf-8",
         ).read()
     except FileNotFoundError:
         msgr.fatal(
@@ -1004,7 +1013,9 @@ def upgrade_temporal_database(dbif):
             % (upgrade_db_from, tgis_db_version)
         )
 
-    drop_views_sql = open(os.path.join(template_path, "drop_views.sql"), "r").read()
+    drop_views_sql = open(
+        os.path.join(template_path, "drop_views.sql"), "r", encoding="utf-8"
+    ).read()
 
     msgr.message(
         _("Upgrading temporal database <%s> from version %s to %s...")

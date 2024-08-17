@@ -403,7 +403,7 @@ class ModelerPanel(wx.Panel, MainPageBase):
                 if not data:
                     continue
 
-                fd = open(finput, "w")
+                fd = open(finput, "w", encoding="utf-8")
                 try:
                     fd.write(data)
                 finally:
@@ -676,7 +676,7 @@ class ModelerPanel(wx.Panel, MainPageBase):
         :return: False on failure
         """
         self.ModelChanged(False)
-        tmpfile = tempfile.TemporaryFile(mode="w+")
+        tmpfile = tempfile.TemporaryFile(mode="w+", encoding="utf-8")
         try:
             WriteModelFile(fd=tmpfile, model=self.model)
         except Exception:
@@ -686,7 +686,7 @@ class ModelerPanel(wx.Panel, MainPageBase):
             return False
 
         try:
-            mfile = open(filename, "w")
+            mfile = open(filename, "w", encoding="utf-8")
             tmpfile.seek(0)
             for line in tmpfile.readlines():
                 mfile.write(line)
@@ -1714,7 +1714,7 @@ class PythonPanel(wx.Panel):
             if ret == wx.ID_NO:
                 return False
 
-        fd = tempfile.TemporaryFile(mode="r+")
+        fd = tempfile.TemporaryFile(mode="r+", encoding="utf-8")
         grassAPI = UserSettings.Get(group="modeler", key="grassAPI", subkey="selection")
         self.write_object(
             fd,
@@ -1777,7 +1777,7 @@ class PythonPanel(wx.Panel):
 
             dlg.Destroy()
 
-        fd = open(filename, "w")
+        fd = open(filename, "w", encoding="utf-8")
         try:
             if force:
                 self.write_object(fd, self.parent.GetModel())
@@ -1795,7 +1795,7 @@ class PythonPanel(wx.Panel):
         """Run Python script"""
         self.filename = grass.tempfile()
         try:
-            fd = open(self.filename, "w")
+            fd = open(self.filename, "w", encoding="utf-8")
             fd.write(self.body.GetText())
         except OSError as e:
             GError(_("Unable to launch Python script. %s") % e, parent=self)

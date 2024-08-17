@@ -1526,7 +1526,7 @@ class ManageSettingsWidget(wx.Panel):
         :return: -1 on failure
         """
         try:
-            fd = open(self.settingsFile, "w")
+            fd = open(self.settingsFile, "w", encoding="utf-8")
             fd.write("format_version=2.0\n")
             for key, values in self._settings.items():
                 first = True
@@ -1567,7 +1567,7 @@ class ManageSettingsWidget(wx.Panel):
             return data
 
         try:
-            fd = open(self.settingsFile, "r")
+            fd = open(self.settingsFile, "r", encoding="utf-8")
         except OSError:
             return data
 

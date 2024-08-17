@@ -31,7 +31,7 @@ process = subprocess.Popen(git_command, stdout=subprocess.PIPE, encoding="utf8")
 fin = process.stdout
 
 # Create a ChangeLog file in the current directory.
-fout = open("ChangeLog", "w")
+fout = open("ChangeLog", "w", encoding="utf-8")
 
 # Set up the loop variables in order to locate the blocks we want
 authorFound = False

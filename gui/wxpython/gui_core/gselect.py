@@ -832,7 +832,7 @@ class VectorDBInfo:
 
     def _CheckDBConnection(self):
         """Check DB connection"""
-        nuldev = open(os.devnull, "w+")
+        nuldev = open(os.devnull, "w+", encoding="utf-8")
         # if map is not defined (happens with vnet initialization) or it
         # doesn't exist
         try:

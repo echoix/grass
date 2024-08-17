@@ -89,7 +89,7 @@ def cleanup():
 
 
 def write2textf(what, output):
-    outf = open(output, "w")
+    outf = open(output, "w", encoding="utf-8")
     i = 0
     for row in enumerate(what):
         i += 1
@@ -102,7 +102,7 @@ def draw_gnuplot(what, xlabels, output, img_format, coord_legend):
 
     for i, row in enumerate(what):
         outfile = os.path.join(tmp_dir, "data_%d" % i)
-        outf = open(outfile, "w")
+        outf = open(outfile, "w", encoding="utf-8")
         xrange = max(xrange, len(row) - 2)
         for j, val in enumerate(row[3:]):
             outf.write("%d %s\n" % (j + 1, val))
@@ -149,7 +149,7 @@ def draw_gnuplot(what, xlabels, output, img_format, coord_legend):
     lines.append(cmd)
 
     plotfile = os.path.join(tmp_dir, "spectrum.gnuplot")
-    plotf = open(plotfile, "w")
+    plotf = open(plotfile, "w", encoding="utf-8")
     for line in lines:
         plotf.write(line + "\n")
     plotf.close()
@@ -165,14 +165,14 @@ def draw_linegraph(what):
 
     xfile = os.path.join(tmp_dir, "data_x")
 
-    xf = open(xfile, "w")
+    xf = open(xfile, "w", encoding="utf-8")
     for j, val in enumerate(what[0][3:]):
         xf.write("%d\n" % (j + 1))
     xf.close()
 
     for i, row in enumerate(what):
         yfile = os.path.join(tmp_dir, "data_y_%d" % i)
-        yf = open(yfile, "w")
+        yf = open(yfile, "w", encoding="utf-8")
         for j, val in enumerate(row[3:]):
             yf.write("%s\n" % val)
         yf.close()
@@ -210,7 +210,9 @@ def draw_linegraph(what):
                 " monitors {}.".format(", ".join(supported_monitors))
             )
         )
-    with open(gcore.parse_command("d.mon", flags="g", quiet=True)["env"]) as f:
+    with open(
+        gcore.parse_command("d.mon", flags="g", quiet=True)["env"], encoding="utf-8"
+    ) as f:
         for line in f:
             if "GRASS_RENDER_FILE=" in line:
                 gcore.info(

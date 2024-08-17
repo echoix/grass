@@ -51,8 +51,8 @@ def replace_in_file(file_path, pattern, repl):
     """
     # using tmp file to store the replaced content
     tmp_file_path = file_path + ".tmp"
-    old_file = open(file_path, "r")
-    new_file = open(tmp_file_path, "w")
+    old_file = open(file_path, "r", encoding="utf-8")
+    new_file = open(tmp_file_path, "w", encoding="utf-8")
     for line in old_file:
         new_file.write(re.sub(pattern=pattern, string=line, repl=repl))
     new_file.close()
@@ -457,9 +457,9 @@ def percent_to_html(percent):
 def wrap_stdstream_to_html(infile, outfile, module, stream):
     before = "<html><body><h1>%s</h1><pre>" % (module.name + " " + stream)
     after = "</pre></body></html>"
-    html = open(outfile, "w")
+    html = open(outfile, "w", encoding="utf-8")
     html.write(before)
-    with open(infile) as text:
+    with open(infile, encoding="utf-8") as text:
         for line in text:
             html.write(color_error_line(html_escape(line)))
     html.write(after)
@@ -478,13 +478,13 @@ def html_file_preview(filename):
     html = StringIO()
     html.write(before)
     if size < max_size:
-        with open(filename) as text:
+        with open(filename, encoding="utf-8") as text:
             for line in text:
                 html.write(color_error_line(html_escape(line)))
     elif size < 10 * max_size:
 
         def tail(filename, n):
-            return collections.deque(open(filename), n)
+            return collections.deque(open(filename, encoding="utf-8"), n)
 
         html.write("... (lines omitted)\n")
         for line in tail(filename, 50):
@@ -566,7 +566,7 @@ class GrassTestFilesHtmlReporter(GrassTestFilesCountingReporter):
         super().start(results_dir)
         # having all variables public although not really part of API
         main_page_name = os.path.join(results_dir, self._main_page_name)
-        self.main_index = open(main_page_name, "w")
+        self.main_index = open(main_page_name, "w", encoding="utf-8")
 
         # TODO: this can be moved to the counter class
         self.failures = 0
@@ -735,7 +735,7 @@ class GrassTestFilesHtmlReporter(GrassTestFilesCountingReporter):
         )
 
         file_index_path = os.path.join(cwd, "index.html")
-        file_index = open(file_index_path, "w")
+        file_index = open(file_index_path, "w", encoding="utf-8")
         file_index.write(
             '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>'
             "<h1>{m.name}</h1>"
@@ -909,7 +909,7 @@ class GrassTestFilesKeyValueReporter(GrassTestFilesCountingReporter):
 
         summary_filename = os.path.join(self.result_dir, "test_keyvalue_result.txt")
         text = keyvalue_to_text(summary, sep="=", vsep="\n", isep=",")
-        Path(summary_filename).write_text(text)
+        Path(summary_filename).write_text(text, encoding="utf-8")
 
     def end_file_test(
         self, module, cwd, returncode, stdout, stderr, test_summary, timed_out=None
@@ -1026,7 +1026,7 @@ class GrassTestFilesTextReporter(GrassTestFilesCountingReporter):
             width = 72
             self._stream.write(width * "=")
             self._stream.write("\n")
-            self._stream.write(Path(stderr).read_text())
+            self._stream.write(Path(stderr).read_text(encoding="utf-8"))
             self._stream.write(width * "=")
             self._stream.write("\n")
             self._stream.write(f"FAILED {module.file_path}")
@@ -1095,7 +1095,7 @@ class TestsuiteDirReporter:
             os.path.join(root, directory)
         ) == os.path.abspath(root):
             page_name = os.path.join(root, self.top_level_testsuite_page_name)
-        page = open(page_name, "w")
+        page = open(page_name, "w", encoding="utf-8")
         # TODO: should we use forward slashes also for the HTML because
         # it is simpler are more consistent with the rest on MS Windows?
         head = "<html><body><h1>{name} testsuite results</h1>".format(name=directory)
@@ -1116,7 +1116,9 @@ class TestsuiteDirReporter:
                 root, directory, test_file_name, "test_keyvalue_result.txt"
             )
             # if os.path.exists(summary_filename):
-            summary = text_to_keyvalue(Path(summary_filename).read_text(), sep="=")
+            summary = text_to_keyvalue(
+                Path(summary_filename).read_text(encoding="utf-8"), sep="="
+            )
             # else:
             # TODO: write else here
             #    summary = None
@@ -1235,7 +1237,7 @@ class TestsuiteDirReporter:
         # absolute/relative paths
 
         page_name = os.path.join(root, self.main_page_name)
-        page = open(page_name, "w")
+        page = open(page_name, "w", encoding="utf-8")
         head = "<html><body><h1>Testsuites results</h1>"
         tests_table_head = (
             "<table>"

@@ -89,8 +89,8 @@ def main():
     tmp = grass.tempfile()
 
     # create ascii vector file
-    inf = open(infile)
-    outf = open(tmp, "w")
+    inf = open(infile, encoding="utf-8")
+    outf = open(tmp, "w", encoding="utf-8")
 
     grass.message(_("Importing data..."))
     cat = 1
@@ -159,7 +159,7 @@ def main():
 
     # create digit header
     digfile = tmp + ".dig"
-    outf = open(digfile, "w")
+    outf = open(digfile, "w", encoding="utf-8")
     t = string.Template(
         """ORGANIZATION: GRASSroots organization
 DIGIT DATE:   $date
@@ -182,7 +182,7 @@ VERTI:
     outf.write(s)
 
     # process points list to ascii vector file (merge in vertices)
-    inf = open(tmp)
+    inf = open(tmp, encoding="utf-8")
     shutil.copyfileobj(inf, outf)
     inf.close()
 
@@ -190,7 +190,7 @@ VERTI:
 
     if not name:
         # if no name for vector file given, cat to stdout
-        inf = open(digfile)
+        inf = open(digfile, encoding="utf-8")
         shutil.copyfileobj(inf, sys.stdout)
         inf.close()
     else:

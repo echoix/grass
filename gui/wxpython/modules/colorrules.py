@@ -686,7 +686,7 @@ class ColorTable(wx.Frame):
             GMessage(message=_("Nothing to save."), parent=self)
             return
 
-        fd = open(path, "w")
+        fd = open(path, "w", encoding="utf-8")
         fd.write(rulestxt)
         fd.close()
 
@@ -698,7 +698,7 @@ class ColorTable(wx.Frame):
 
         self.rulesPanel.Clear()
 
-        fd = open(path, "r")
+        fd = open(path, "r", encoding="utf-8")
         self.ReadColorTable(ctable=fd.read())
         fd.close()
 
@@ -802,7 +802,7 @@ class ColorTable(wx.Frame):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
+        output = open(gtemp, "w", encoding="utf-8")
         try:
             output.write(rulestxt)
         finally:
@@ -1574,7 +1574,7 @@ class VectorColorTable(ColorTable):
 
         sep = ";"
         if self.inmap:
-            outFile = tempfile.NamedTemporaryFile(mode="w+")
+            outFile = tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8")
             ret = RunCommand(
                 "v.db.select",
                 quiet=True,
@@ -1842,7 +1842,7 @@ class VectorColorTable(ColorTable):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
+        output = open(gtemp, "w", encoding="utf-8")
         try:
             output.write(rulestxt)
         finally:

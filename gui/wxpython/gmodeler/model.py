@@ -546,7 +546,7 @@ class Model:
 
         for finput in self.fileInput:
             # read lines
-            fd = open(finput, "r")
+            fd = open(finput, "r", encoding="utf-8")
             try:
                 data = self.fileInput[finput] = fd.read()
             finally:
@@ -583,7 +583,7 @@ class Model:
 
             if not checkOnly:
                 if write:
-                    fd = open(finput, "w")
+                    fd = open(finput, "w", encoding="utf-8")
                     try:
                         fd.write(data)
                     finally:

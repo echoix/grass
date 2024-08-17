@@ -40,7 +40,7 @@ classes.sort(key=lambda tup: tup[0])
 
 # begin full index:
 filename = "full_index.html"
-f = open(filename + ".tmp", "w")
+f = open(filename + ".tmp", "w", encoding="utf-8")
 
 write_html_header(
     f, "GRASS GIS %s Reference Manual: Full index" % grass_version, body_width="80%"

@@ -99,7 +99,7 @@ def main():
     # we need a random name
     tmpname = gs.basename(tmp)
 
-    nuldev = open(os.devnull, "w")
+    nuldev = open(os.devnull, "w", encoding="utf-8")
 
     rasters = options["raster"].split(",")
     colprefixes = options["column_prefix"].split(",")
@@ -455,7 +455,7 @@ def perform_stats(
     colnames,
     extstat,
 ):
-    with open(sqltmp, "w") as f:
+    with open(sqltmp, "w", encoding="utf-8") as f:
         # do the stats
         p = gs.pipe_command(
             "r.univar",

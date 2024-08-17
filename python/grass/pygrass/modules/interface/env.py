@@ -13,7 +13,7 @@ def get_env():
     gisrc = os.environ.get("GISRC")
     if gisrc is None:
         raise RuntimeError("You are not in a GRASS session, GISRC not found.")
-    with open(gisrc, mode="r") as grc:
+    with open(gisrc, mode="r", encoding="utf-8") as grc:
         return dict(
             [
                 (k.strip(), v.strip())
@@ -34,5 +34,5 @@ def G_debug(level, *msg):
     debug_level = get_debug_level()
     if debug_level >= level:
         dfile = os.environ.get("GRASS_DEBUG_FILE")
-        fd = sys.stderr if dfile is None else open(dfile, mode="a")
+        fd = sys.stderr if dfile is None else open(dfile, mode="a", encoding="utf-8")
         print("D%d/%d: " % (level, debug_level), *msg, end="\n", file=fd)

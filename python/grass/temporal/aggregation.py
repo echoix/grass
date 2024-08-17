@@ -168,7 +168,7 @@ def aggregate_raster_maps(
 
     # Create the r.series input file
     filename = gs.tempfile(True)
-    file = open(filename, "w")
+    file = open(filename, "w", encoding="utf-8")
 
     for name in inputs:
         string = "%s\n" % (name)
@@ -365,7 +365,7 @@ def aggregate_by_topology(
             if len(aggregation_list) > 1:
                 # Create the r.series input file
                 filename = gs.tempfile(True)
-                file = open(filename, "w")
+                file = open(filename, "w", encoding="utf-8")
                 for name in aggregation_list:
                     string = "%s\n" % (name)
                     file.write(string)

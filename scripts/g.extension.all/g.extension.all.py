@@ -64,7 +64,7 @@ def get_extensions():
         return []
 
     # read XML file
-    fo = open(fXML, "r")
+    fo = open(fXML, "r", encoding="utf-8")
     try:
         tree = etree.fromstring(fo.read())
     except Exception as e:

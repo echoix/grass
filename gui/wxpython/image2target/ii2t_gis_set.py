@@ -102,7 +102,9 @@ class GRASSStartup(wx.Frame):
         # labels
         # crashes when LOCATION doesn't exist
         # get version & revision
-        versionFile = open(os.path.join(globalvar.ETCDIR, "VERSIONNUMBER"))
+        versionFile = open(
+            os.path.join(globalvar.ETCDIR, "VERSIONNUMBER"), encoding="utf-8"
+        )
         versionLine = versionFile.readline().rstrip("\n")
         versionFile.close()
         try:
@@ -541,7 +543,7 @@ class GRASSStartup(wx.Frame):
 
         if gisrc and os.path.isfile(gisrc):
             try:
-                rc = open(gisrc, "r")
+                rc = open(gisrc, "r", encoding="utf-8")
                 for line in rc:
                     try:
                         key, val = line.split(":", 1)

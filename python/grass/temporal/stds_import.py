@@ -295,7 +295,7 @@ def import_stds(
     # Check projection information
     if not location:
         temp_name = gs.tempfile()
-        temp_file = open(temp_name, "w")
+        temp_file = open(temp_name, "w", encoding="utf-8")
         proj_name = os.path.abspath(proj_file_name)
 
         # We need to convert projection strings generated
@@ -303,13 +303,13 @@ def import_stds(
         # new line format so that the grass file comparison function
         # can be used to compare the projections
         proj_name_tmp = temp_name + "_in_projection"
-        proj_file = open(proj_name, "r")
+        proj_file = open(proj_name, "r", encoding="utf-8")
         proj_content = proj_file.read()
         proj_content = proj_content.replace(" +", "\n+")
         proj_content = proj_content.replace("\t+", "\n+")
         proj_file.close()
 
-        proj_file = open(proj_name_tmp, "w")
+        proj_file = open(proj_name_tmp, "w", encoding="utf-8")
         proj_file.write(proj_content)
         proj_file.close()
 
@@ -336,7 +336,7 @@ def import_stds(
     old_env = gs.gisenv()
     if location:
         try:
-            proj4_string = open(proj_file_name, "r").read()
+            proj4_string = open(proj_file_name, "r", encoding="utf-8").read()
             gs.create_location(
                 dbase=old_env["GISDBASE"], location=location, proj4=proj4_string
             )
@@ -377,8 +377,8 @@ def import_stds(
         fs = "|"
         maplist = []
         mapset = get_current_mapset()
-        list_file = open(list_file_name, "r")
-        new_list_file = open(new_list_file_name, "w")
+        list_file = open(list_file_name, "r", encoding="utf-8")
+        new_list_file = open(new_list_file_name, "w", encoding="utf-8")
 
         # get number of lines to correctly form the suffix
         max_count = -1
@@ -431,7 +431,7 @@ def import_stds(
         # Read the init file
         fs = "="
         init = {}
-        init_file = open(init_file_name, "r")
+        init_file = open(init_file_name, "r", encoding="utf-8")
         while True:
             line = init_file.readline()
             if not line:

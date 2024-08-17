@@ -102,7 +102,7 @@ def main():
 
     # Read the dataset list from file
     if file:
-        fd = open(file, "r")
+        fd = open(file, "r", encoding="utf-8")
 
         line = True
         while True:

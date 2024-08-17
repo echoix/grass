@@ -922,7 +922,7 @@ class Settings:
             return dictionary
 
         try:
-            with open(self.filePath, "r") as f:
+            with open(self.filePath, "r", encoding="utf-8") as f:
                 update = json.load(f, object_hook=settings_JSON_decode_hook)
                 update_nested_dict_by_dict(settings, update)
         except json.JSONDecodeError as e:
@@ -942,7 +942,7 @@ class Settings:
             settings = self.userSettings
 
         try:
-            fd = open(self.legacyFilePath, "r")
+            fd = open(self.legacyFilePath, "r", encoding="utf-8")
         except OSError:
             sys.stderr.write(
                 _("Unable to read settings file <%s>\n") % self.legacyFilePath
@@ -996,7 +996,7 @@ class Settings:
                 GError(_("Unable to create settings directory"))
                 return
         try:
-            with open(self.filePath, "w") as f:
+            with open(self.filePath, "w", encoding="utf-8") as f:
                 json.dump(settings, f, indent=2, cls=SettingsJSONEncoder)
         except OSError as e:
             raise GException(e)

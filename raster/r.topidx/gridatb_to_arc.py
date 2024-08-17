@@ -29,7 +29,7 @@ if os.path.isfile(outfname):
     print(f"{outfname}: File already exists")
     sys.exit()
 
-inf = open(infname)
+inf = open(infname, encoding="utf-8")
 
 title = inf.readline()
 inline = inf.readline()
@@ -43,7 +43,7 @@ ncols = m.group(1)
 nrows = m.group(2)
 cellsize = m.group(3)
 
-outf = open(outfname, "w")
+outf = open(outfname, "w", encoding="utf-8")
 outf.write(
     f"""\
 ncols         {ncols}

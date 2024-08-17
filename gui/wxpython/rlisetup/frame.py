@@ -49,7 +49,7 @@ class ViewFrame(wx.Frame):
             parent=self.panel, id=wx.ID_ANY, style=wx.TE_MULTILINE, size=(-1, 75)
         )
         self.textCtrl.Bind(wx.EVT_TEXT, self.OnFileText)
-        f = open(self.pathfile)
+        f = open(self.pathfile, encoding="utf-8")
         self.textCtrl.SetValue("".join(f.readlines()))
         f.close()
         # BUTTONS      #definition

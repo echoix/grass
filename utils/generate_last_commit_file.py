@@ -99,6 +99,7 @@ def main():
             "core_modules_with_last_commit.json",
         ),
         "w",
+        encoding="utf-8",
     ) as f:
         json.dump(get_last_commit(src_dir), f, indent=4)
 

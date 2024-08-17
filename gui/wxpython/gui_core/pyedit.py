@@ -301,7 +301,7 @@ class PyEditController:
         :return str or None: file content or None
         """
         try:
-            return Path(file_path).read_text()
+            return Path(file_path).read_text(encoding="utf-8")
         except PermissionError:
             GError(
                 message=_(
@@ -327,7 +327,7 @@ class PyEditController:
         :return None or True: file written or None
         """
         try:
-            Path(file_path).write_text(content)
+            Path(file_path).write_text(content, encoding="utf-8")
             return True
         except PermissionError:
             GError(

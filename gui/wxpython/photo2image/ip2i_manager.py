@@ -118,7 +118,7 @@ class GCPWizard:
         self.source_gisrc = os.environ["GISRC"]
         self.gisrc_dict = {}
         try:
-            f = open(self.target_gisrc, "r")
+            f = open(self.target_gisrc, "r", encoding="utf-8")
             for line in f:
                 line = line.replace("\n", "").strip()
                 if len(line) < 1:
@@ -254,7 +254,7 @@ class GCPWizard:
         self.source_gisrc = utils.GetTempfile()
 
         try:
-            f = open(self.source_gisrc, mode="w")
+            f = open(self.source_gisrc, mode="w", encoding="utf-8")
             for line in self.gisrc_dict.items():
                 f.write(line[0] + ": " + line[1] + "\n")
         finally:
@@ -429,7 +429,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         import re
 
         try:
-            fc = open(self.file["camera"], mode="r")
+            fc = open(self.file["camera"], mode="r", encoding="utf-8")
             fc_count = 0
             for line in fc:
                 fc_count += 1
@@ -438,7 +438,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                     numberOfFiducial = int(line.split()[-1])
             dataFiducialX = []
             dataFiducialY = []
-            fc = open(self.file["camera"], mode="r")
+            fc = open(self.file["camera"], mode="r", encoding="utf-8")
             fc_count = 0
             for line in fc:
                 fc_count += 1
@@ -461,7 +461,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
 
         self.GCPcount = 0
         try:
-            f = open(self.file["points"], mode="w")
+            f = open(self.file["points"], mode="w", encoding="utf-8")
             # use os.linesep or '\n' here ???
             f.write("# Ground Control Points File\n")
             f.write("# \n")
@@ -881,7 +881,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         """
         self.GCPcount = 0
         try:
-            f = open(self.file["points"], mode="w")
+            f = open(self.file["points"], mode="w", encoding="utf-8")
             # use os.linesep or '\n' here ???
             f.write("# Ground Control Points File\n")
             f.write("# \n")
@@ -955,7 +955,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
             GError(parent=self, message=_("target mapwin not defined"))
 
         try:
-            f = open(self.file["points"], "r")
+            f = open(self.file["points"], "r", encoding="utf-8")
             GCPcnt = 0
 
             for line in f:
@@ -1371,7 +1371,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         }
 
         try:
-            f = open(coord_file, mode="w")
+            f = open(coord_file, mode="w", encoding="utf-8")
             # NW corner
             f.write(str(region["e"]) + " " + str(region["n"]) + "\n")
             # NE corner

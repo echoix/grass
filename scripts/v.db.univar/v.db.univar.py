@@ -115,5 +115,5 @@ def main():
 
 if __name__ == "__main__":
     options, flags = gs.parser()
-    nuldev = open(os.devnull, "w")
+    nuldev = open(os.devnull, "w", encoding="utf-8")
     main()

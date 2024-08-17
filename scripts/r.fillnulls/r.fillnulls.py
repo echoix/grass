@@ -293,7 +293,7 @@ def main():
             quiet=quiet,
         )
         cat_list = []
-        cats_file = open(cats_file_name)
+        cats_file = open(cats_file_name, encoding="utf-8")
         for line in cats_file:
             cat_list.append(line.rstrip("\n"))
         cats_file.close()
