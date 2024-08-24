@@ -1,7 +1,9 @@
 #!/bin/sh
 
+pwd
 echo "::group::Compile"
 echo "Inside group"
+make clean
 source ./.github/workflows/macos_install.sh $HOME/install || true
 # source ./.github/workflows/macos_install.sh $HOME/install || echo "::endgroup::" && exit 125
 echo "::endgroup::"
