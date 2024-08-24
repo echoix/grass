@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 100
-      - run: git checkout 1b4c6096efb6ed348a54775e0ffe090958cee3e9
+      - run: git checkout 9a1c3b7a4db3ae2b974f748fc7374e3f91a9e0e2
       - name: Setup Mamba
         uses: mamba-org/setup-micromamba@f8b8a1e23a26f60a44c853292711bacfd3eac822 # v1.9.0
         with:
