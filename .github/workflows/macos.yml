@@ -64,10 +64,11 @@ jobs:
       - name: Build and install
         shell: bash -l {0}
         run: |
+          cp ./.github/workflows/check_test_case.sh $HOME/check_test_case.sh
           git bisect start
           git bisect bad HEAD
           git bisect good e98d07b5eb48416c7544244db788bc0107ddb99b
-          git bisect run  bash -l -c "source ./.github/workflows/macos_install.sh $HOME/install || exit 125; ./.github/workflows/check_test_case.sh"
+          git bisect run  bash -l -c "source ./.github/workflows/macos_install.sh $HOME/install || exit 125; $HOME/check_test_case.sh"
           # source ./.github/workflows/macos_install.sh $HOME/install
       - name: Build and install
         shell: bash -l {0}
