@@ -47,6 +47,7 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 100
+      - run: git checkout e98d07b5eb48416c7544244db788bc0107ddb99b
       - name: Setup Mamba
         uses: mamba-org/setup-micromamba@f8b8a1e23a26f60a44c853292711bacfd3eac822 # v1.9.0
         with:
@@ -61,19 +62,19 @@ jobs:
           $CC --version
       - name: Create installation directory
         run: mkdir $HOME/install
-      - name: Build and install
-        shell: bash -l {0}
-        run: |
-          pwd
-          # ls -la
-          # ls -la $HOME
-          cp .github/workflows/check_test_cases.sh $HOME/check_test_cases.sh
-          # ls -la $HOME
-          git bisect start
-          git bisect bad HEAD
-          git bisect good e98d07b5eb48416c7544244db788bc0107ddb99b
-          git bisect run  bash -l -c "source $HOME/check_test_cases.sh"
-          # source ./.github/workflows/macos_install.sh $HOME/install
+      # - name: Build and install
+      #   shell: bash -l {0}
+      #   run: |
+      #     pwd
+      #     # ls -la
+      #     # ls -la $HOME
+      #     cp .github/workflows/check_test_cases.sh $HOME/check_test_cases.sh
+      #     # ls -la $HOME
+      #     git bisect start
+      #     git bisect bad HEAD
+      #     git bisect good e98d07b5eb48416c7544244db788bc0107ddb99b
+      #     git bisect run  bash -l -c "source $HOME/check_test_cases.sh"
+      #     # source ./.github/workflows/macos_install.sh $HOME/install
       - name: Build and install
         shell: bash -l {0}
         run: source ./.github/workflows/macos_install.sh $HOME/install
