@@ -16,6 +16,7 @@ import itertools
 import datetime
 import operator
 from collections import defaultdict, namedtuple
+from pathlib import Path
 
 from grass.gunittest.checkers import text_to_keyvalue
 from grass.gunittest.utils import ensure_dir
@@ -472,7 +473,7 @@ def main():
                 # skipping incomplete reports
                 # use only results list for further processing
                 continue
-            summary = text_to_keyvalue(open(summary_file).read(), sep="=")
+            summary = text_to_keyvalue(Path(summary_file).read_text(), sep="=")
             if use_timestamps:
                 test_timestamp = datetime.datetime.fromtimestamp(
                     os.path.getmtime(summary_file)
