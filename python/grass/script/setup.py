@@ -473,6 +473,13 @@ def clean_default_db(*, modified_after=None, env=None):
     process.wait()
 
 
+def call(cmd, **kwargs):
+    """Wrapper for subprocess.call to deal with platform-specific issues"""
+    if WINDOWS:
+        kwargs["shell"] = True
+    return subprocess.call(cmd, **kwargs)
+
+
 def clean_temp(env=None):
     """Clean mapset temporary directory"""
     # Lazy-importing to reduce dependencies (this can be eventually removed).
@@ -484,12 +491,8 @@ def clean_temp(env=None):
 
     gs.verbose(_("Cleaning up temporary files..."), env=env)
     gisbase = env["GISBASE"]
-    subprocess.run(
-        [os.path.join(gisbase, "etc", "clean_temp")],
-        stdout=subprocess.DEVNULL,
-        env=env,
-        shell=bool(WINDOWS),
-        check=True,
+    call(
+        [os.path.join(gisbase, "etc", "clean_temp")], stdout=subprocess.DEVNULL, env=env
     )
 
 
