@@ -55,6 +55,7 @@ import uuid
 import unicodedata
 import argparse
 import json
+from pathlib import Path
 
 
 # mechanism meant for debugging this script (only)
@@ -157,27 +158,22 @@ def message(msg):
 
 
 def warning(text):
-    sys.stderr.write(_("WARNING") + ": " + text + os.linesep)
+    sys.stderr.write(_("WARNING") + ": " + text + "\n")
 
 
 def fatal(msg):
-    sys.stderr.write("%s: " % _("ERROR") + msg + os.linesep)
+    sys.stderr.write("%s: " % _("ERROR") + msg + "\n")
     sys.exit(_("Exiting..."))
 
 
 def readfile(path):
     debug("Reading %s" % path)
-    f = open(path, "r")
-    s = f.read()
-    f.close()
-    return s
+    return Path(path).read_text()
 
 
 def writefile(path, s):
     debug("Writing %s" % path)
-    f = open(path, "w")
-    f.write(s)
-    f.close()
+    Path(path).write_text(s)
 
 
 def call(cmd, **kwargs):
@@ -539,21 +535,19 @@ def write_gisrcrc(gisrcrc, gisrc, skip_variable=None):
 
 def read_env_file(path):
     kv = {}
-    f = open(path, "r")
-    for line in f:
-        k, v = line.split(":", 1)
-        kv[k.strip()] = v.strip()
-    f.close()
+    with open(path) as f:
+        for line in f:
+            k, v = line.split(":", 1)
+            kv[k.strip()] = v.strip()
     return kv
 
 
 def write_gisrc(kv, filename, append=False):
     # use append=True to avoid a race condition between write_gisrc() and
     # grass_prompt() on startup (PR #548)
-    f = open(filename, "a" if append else "w")
-    for k, v in kv.items():
-        f.write("%s: %s\n" % (k, v))
-    f.close()
+    with open(filename, "a" if append else "w") as f:
+        for k, v in kv.items():
+            f.write("%s: %s\n" % (k, v))
 
 
 def add_mapset_to_gisrc(gisrc, grassdb, location, mapset):
@@ -1583,9 +1577,8 @@ def say_hello():
     sys.stderr.write(_("Welcome to GRASS GIS %s") % GRASS_VERSION)
     if GRASS_VERSION.endswith("dev"):
         try:
-            filerev = open(gpath("etc", "VERSIONNUMBER"))
-            linerev = filerev.readline().rstrip("\n")
-            filerev.close()
+            with open(gpath("etc", "VERSIONNUMBER")) as filerev:
+                linerev = filerev.readline().rstrip("\n")
 
             revision = linerev.split(" ")[1]
             sys.stderr.write(" (" + revision + ")")
@@ -1646,37 +1639,38 @@ def csh_startup(location, grass_env_file):
     try_remove(cshrc)
     try_remove(tcshrc)
 
-    f = open(cshrc, "w")
-    f.write("set home = %s\n" % userhome)
-    f.write("set history = 10000000 savehist = (10000000 merge) noclobber ignoreeof\n")
-    f.write("set histfile = %s\n" % os.path.join(os.getenv("HOME"), ".history"))
+    with open(cshrc, "w") as f:
+        f.write("set home = %s\n" % userhome)
+        f.write(
+            "set history = 10000000 savehist = (10000000 merge) noclobber ignoreeof\n"
+        )
+        f.write("set histfile = %s\n" % os.path.join(os.getenv("HOME"), ".history"))
 
-    f.write("alias _location g.gisenv get=LOCATION_NAME\n")
-    f.write("alias _mapset g.gisenv get=MAPSET\n")
-    f.write("alias precmd 'echo \"Mapset <`_mapset`> in project <`_location`>\"'\n")
-    f.write('set prompt="GRASS > "\n')
+        f.write("alias _location g.gisenv get=LOCATION_NAME\n")
+        f.write("alias _mapset g.gisenv get=MAPSET\n")
+        f.write("alias precmd 'echo \"Mapset <`_mapset`> in project <`_location`>\"'\n")
+        f.write('set prompt="GRASS > "\n')
 
-    # csh shell rc file left for backward compatibility
-    path = os.path.join(userhome, ".grass.cshrc")
-    if os.access(path, os.R_OK):
-        f.write(readfile(path) + "\n")
-    if os.access(grass_env_file, os.R_OK):
-        f.write(readfile(grass_env_file) + "\n")
-
-    mail_re = re.compile(r"^ *set  *mail *= *")
-
-    for filename in [".cshrc", ".tcshrc", ".login"]:
-        path = os.path.join(userhome, filename)
+        # csh shell rc file left for backward compatibility
+        path = os.path.join(userhome, ".grass.cshrc")
         if os.access(path, os.R_OK):
-            s = readfile(path)
-            lines = s.splitlines()
-            for line in lines:
-                if mail_re.match(line):
-                    f.write(line)
+            f.write(readfile(path) + "\n")
+        if os.access(grass_env_file, os.R_OK):
+            f.write(readfile(grass_env_file) + "\n")
 
-    path = os.getenv("PATH").split(":")
-    f.write("set path = ( %s ) \n" % " ".join(path))
-    f.close()
+        mail_re = re.compile(r"^ *set  *mail *= *")
+
+        for filename in [".cshrc", ".tcshrc", ".login"]:
+            path = os.path.join(userhome, filename)
+            if os.access(path, os.R_OK):
+                s = readfile(path)
+                lines = s.splitlines()
+                for line in lines:
+                    if mail_re.match(line):
+                        f.write(line)
+
+        path = os.getenv("PATH").split(":")
+        f.write("set path = ( %s ) \n" % " ".join(path))
     writefile(tcshrc, readfile(cshrc))
 
     process = start_shell()
@@ -1723,129 +1717,130 @@ def sh_like_startup(location, location_name, grass_env_file, sh):
     shell_rc_file = os.path.join(home, shrc)
     try_remove(shell_rc_file)
 
-    f = open(shell_rc_file, "w")
+    with open(shell_rc_file, "w") as f:
 
-    if sh == "zsh":
-        f.write("test -r {home}/.alias && source {home}/.alias\n".format(home=userhome))
-    else:
-        f.write("test -r ~/.alias && . ~/.alias\n")
+        if sh == "zsh":
+            f.write(
+                "test -r {home}/.alias && source {home}/.alias\n".format(home=userhome)
+            )
+        else:
+            f.write("test -r ~/.alias && . ~/.alias\n")
 
-    if os.getenv("ISISROOT"):
-        # GRASS GIS and ISIS blend
-        grass_name = "ISIS-GRASS"
-    else:
-        grass_name = "GRASS"
+        if os.getenv("ISISROOT"):
+            # GRASS GIS and ISIS blend
+            grass_name = "ISIS-GRASS"
+        else:
+            grass_name = "GRASS"
 
-    if sh == "zsh":
-        f.write("setopt PROMPT_SUBST\n")
-        f.write("PS1='{name} : %1~ > '\n".format(name=grass_name))
-    else:
+        if sh == "zsh":
+            f.write("setopt PROMPT_SUBST\n")
+            f.write("PS1='{name} : %1~ > '\n".format(name=grass_name))
+        else:
+            f.write(
+                "PS1='{name} {db_place}:\\W > '\n".format(
+                    name=grass_name, db_place="$_GRASS_DB_PLACE"
+                )
+            )
+
+        # TODO: have a function and/or module to test this
+        mask2d_test = 'test -f "$MAPSET_PATH/cell/MASK"'
+        mask3d_test = 'test -d "$MAPSET_PATH/grid3/RASTER3D_MASK"'
+
+        specific_addition = ""
+        if sh == "zsh":
+            specific_addition = """
+        local z_lo=`g.gisenv get=LOCATION_NAME`
+        local z_ms=`g.gisenv get=MAPSET`
+        ZLOC="Mapset <$z_ms> in <$z_lo>"
+        if [ "$_grass_old_mapset" != "$MAPSET_PATH" ] ; then
+            fc -A -I
+            HISTFILE="$MAPSET_PATH/{sh_history}"
+            fc -R
+            _grass_old_mapset="$MAPSET_PATH"
+        fi
+        """.format(
+                sh_history=sh_history
+            )
+        elif sh == "bash":
+            # Append existing history to file ("flush").
+            # Clear the (in-memory) history.
+            # Change the file.
+            # Read history from that file.
+            specific_addition = """
+        if [ "$_grass_old_mapset" != "$MAPSET_PATH" ] ; then
+            history -a
+            history -c
+            HISTFILE="$MAPSET_PATH/{sh_history}"
+            history -r
+            _grass_old_mapset="$MAPSET_PATH"
+        fi
+        """.format(
+                sh_history=sh_history
+            )
+            # Ubuntu sudo creates a file .sudo_as_admin_successful and bash checks
+            # for this file in the home directory from /etc/bash.bashrc and prints a
+            # message if it's not detected. This can be suppressed with either
+            # creating the file ~/.sudo_as_admin_successful (it's always empty) or
+            # by creating a file ~/.hushlogin (also an empty file)
+            # Here we create the file in the Mapset directory if it exists in the
+            # user's home directory.
+            sudo_success_file = ".sudo_as_admin_successful"
+            if os.path.exists(os.path.join(userhome, sudo_success_file)):
+                try:
+                    # Open with append so that if the file already exists there
+                    # isn't any error.
+                    fh = open(os.path.join(home, sudo_success_file), "a")
+                finally:
+                    fh.close()
+
+        # double curly brackets means single one for format function
+        # setting LOCATION for backwards compatibility
         f.write(
-            "PS1='{name} {db_place}:\\W > '\n".format(
-                name=grass_name, db_place="$_GRASS_DB_PLACE"
+            """grass_prompt() {{
+        MAPSET_PATH="`g.gisenv get=GISDBASE,LOCATION_NAME,MAPSET separator='/'`"
+        _GRASS_DB_PLACE="`g.gisenv get=LOCATION_NAME,MAPSET separator='/'`"
+        {specific_addition}
+        if {mask2d_test} && {mask3d_test} ; then
+            echo "[{both_masks}]"
+        elif {mask2d_test} ; then
+            echo "[{mask2d}]"
+        elif {mask3d_test} ; then
+            echo "[{mask3d}]"
+        fi
+    }}
+    PROMPT_COMMAND=grass_prompt\n""".format(
+                both_masks=_("2D and 3D raster MASKs present"),
+                mask2d=_("Raster MASK present"),
+                mask3d=_("3D raster MASK present"),
+                mask2d_test=mask2d_test,
+                mask3d_test=mask3d_test,
+                specific_addition=specific_addition,
             )
         )
 
-    # TODO: have a function and/or module to test this
-    mask2d_test = 'test -f "$MAPSET_PATH/cell/MASK"'
-    mask3d_test = 'test -d "$MAPSET_PATH/grid3/RASTER3D_MASK"'
+        if sh == "zsh":
+            f.write('precmd() { eval "$PROMPT_COMMAND" }\n')
+            f.write("RPROMPT='${ZLOC}'\n")
 
-    specific_addition = ""
-    if sh == "zsh":
-        specific_addition = """
-    local z_lo=`g.gisenv get=LOCATION_NAME`
-    local z_ms=`g.gisenv get=MAPSET`
-    ZLOC="Mapset <$z_ms> in <$z_lo>"
-    if [ "$_grass_old_mapset" != "$MAPSET_PATH" ] ; then
-        fc -A -I
-        HISTFILE="$MAPSET_PATH/{sh_history}"
-        fc -R
-        _grass_old_mapset="$MAPSET_PATH"
-    fi
-    """.format(
-            sh_history=sh_history
-        )
-    elif sh == "bash":
-        # Append existing history to file ("flush").
-        # Clear the (in-memory) history.
-        # Change the file.
-        # Read history from that file.
-        specific_addition = """
-    if [ "$_grass_old_mapset" != "$MAPSET_PATH" ] ; then
-        history -a
-        history -c
-        HISTFILE="$MAPSET_PATH/{sh_history}"
-        history -r
-        _grass_old_mapset="$MAPSET_PATH"
-    fi
-    """.format(
-            sh_history=sh_history
-        )
-        # Ubuntu sudo creates a file .sudo_as_admin_successful and bash checks
-        # for this file in the home directory from /etc/bash.bashrc and prints a
-        # message if it's not detected. This can be suppressed with either
-        # creating the file ~/.sudo_as_admin_successful (it's always empty) or
-        # by creating a file ~/.hushlogin (also an empty file)
-        # Here we create the file in the Mapset directory if it exists in the
-        # user's home directory.
-        sudo_success_file = ".sudo_as_admin_successful"
-        if os.path.exists(os.path.join(userhome, sudo_success_file)):
-            try:
-                # Open with append so that if the file already exists there
-                # isn't any error.
-                fh = open(os.path.join(home, sudo_success_file), "a")
-            finally:
-                fh.close()
+        # this line was moved here from below .grass.bashrc to allow ~ and $HOME in
+        # .grass.bashrc
+        f.write('export HOME="%s"\n' % userhome)  # restore user home path
 
-    # double curly brackets means single one for format function
-    # setting LOCATION for backwards compatibility
-    f.write(
-        """grass_prompt() {{
-    MAPSET_PATH="`g.gisenv get=GISDBASE,LOCATION_NAME,MAPSET separator='/'`"
-    _GRASS_DB_PLACE="`g.gisenv get=LOCATION_NAME,MAPSET separator='/'`"
-    {specific_addition}
-    if {mask2d_test} && {mask3d_test} ; then
-        echo "[{both_masks}]"
-    elif {mask2d_test} ; then
-        echo "[{mask2d}]"
-    elif {mask3d_test} ; then
-        echo "[{mask3d}]"
-    fi
-}}
-PROMPT_COMMAND=grass_prompt\n""".format(
-            both_masks=_("2D and 3D raster MASKs present"),
-            mask2d=_("Raster MASK present"),
-            mask3d=_("3D raster MASK present"),
-            mask2d_test=mask2d_test,
-            mask3d_test=mask3d_test,
-            specific_addition=specific_addition,
-        )
-    )
+        # read other settings (aliases, ...) since environmental variables
+        # have been already set by load_env(), see #3462
+        for env_file in [os.path.join(userhome, grass_shrc), grass_env_file]:
+            if not os.access(env_file, os.R_OK):
+                continue
+            for line in readfile(env_file).splitlines():
+                # Bug related to OS X "SIP", see
+                # https://trac.osgeo.org/grass/ticket/3462#comment:13
+                if MACOS or not line.startswith("export"):
+                    f.write(line + "\n")
 
-    if sh == "zsh":
-        f.write('precmd() { eval "$PROMPT_COMMAND" }\n')
-        f.write("RPROMPT='${ZLOC}'\n")
-
-    # this line was moved here from below .grass.bashrc to allow ~ and $HOME in
-    # .grass.bashrc
-    f.write('export HOME="%s"\n' % userhome)  # restore user home path
-
-    # read other settings (aliases, ...) since environmental variables
-    # have been already set by load_env(), see #3462
-    for env_file in [os.path.join(userhome, grass_shrc), grass_env_file]:
-        if not os.access(env_file, os.R_OK):
-            continue
-        for line in readfile(env_file).splitlines():
-            # Bug related to OS X "SIP", see
-            # https://trac.osgeo.org/grass/ticket/3462#comment:13
-            if MACOS or not line.startswith("export"):
-                f.write(line + "\n")
-
-    f.write('export PATH="%s"\n' % os.getenv("PATH"))
-    # fix trac issue #3009 https://trac.osgeo.org/grass/ticket/3009
-    # re: failure to "Quit GRASS" from GUI
-    f.write('trap "exit" TERM\n')
-    f.close()
+        f.write('export PATH="%s"\n' % os.getenv("PATH"))
+        # fix trac issue #3009 https://trac.osgeo.org/grass/ticket/3009
+        # re: failure to "Quit GRASS" from GUI
+        f.write('trap "exit" TERM\n')
 
     process = start_shell()
     os.environ["HOME"] = userhome
@@ -1924,10 +1919,10 @@ def print_params(params):
         plat = gpath("include", "Make", "Platform.make")
         if not os.path.exists(plat):
             fatal(_("Please install the GRASS GIS development package"))
-        fileplat = open(plat)
-        # this is in fact require only for some, but prepare it anyway
-        linesplat = fileplat.readlines()
-        fileplat.close()
+
+        with open(plat) as fileplat:
+            # this is in fact require only for some, but prepare it anyway
+            linesplat = fileplat.readlines()
 
     for arg in params:
         if arg == "path":
@@ -1939,9 +1934,8 @@ def print_params(params):
             sys.stdout.write("%s\n" % val[0].split("=")[1].strip())
         elif arg == "build":
             build = gpath("include", "grass", "confparms.h")
-            filebuild = open(build)
-            val = filebuild.readline()
-            filebuild.close()
+            with open(build) as filebuild:
+                val = filebuild.readline()
             sys.stdout.write("%s\n" % val.strip().strip('"').strip())
         elif arg == "compiler":
             val = grep("CC", linesplat)
@@ -1949,9 +1943,8 @@ def print_params(params):
         elif arg == "revision":
             sys.stdout.write("@GRASS_VERSION_GIT@\n")
         elif arg == "svn_revision":
-            filerev = open(gpath("etc", "VERSIONNUMBER"))
-            linerev = filerev.readline().rstrip("\n")
-            filerev.close()
+            with open(gpath("etc", "VERSIONNUMBER")) as filerev:
+                linerev = filerev.readline().rstrip("\n")
             try:
                 revision = linerev.split(" ")[1]
                 sys.stdout.write("%s\n" % revision[1:])
