@@ -82,7 +82,7 @@ class DictSQLSerializer:
         if type == "SELECT":
             sql += "SELECT "
             count = 0
-            for key in self.D:
+            for key in self.D.keys():
                 if count == 0:
                     sql += " %s " % key
                 else:
@@ -97,7 +97,7 @@ class DictSQLSerializer:
         if type == "INSERT":
             count = 0
             sql += "INSERT INTO " + table + " ("
-            for key in self.D:
+            for key in self.D.keys():
                 if count == 0:
                     sql += " %s " % key
                 else:
@@ -106,7 +106,7 @@ class DictSQLSerializer:
 
             count = 0
             sql += ") VALUES ("
-            for key in self.D:
+            for key in self.D.keys():
                 if count == 0:
                     if self.dbmi_paramstyle == "qmark":
                         sql += "?"
@@ -128,7 +128,7 @@ class DictSQLSerializer:
         if type == "UPDATE":
             count = 0
             sql += "UPDATE " + table + " SET "
-            for key in self.D:
+            for key in self.D.keys():
                 # Update only entries which are not None
                 if self.D[key] is not None:
                     if count == 0:
@@ -153,7 +153,7 @@ class DictSQLSerializer:
         if type == "UPDATE ALL":
             count = 0
             sql += "UPDATE " + table + " SET "
-            for key in self.D:
+            for key in self.D.keys():
                 if count == 0:
                     if self.dbmi_paramstyle == "qmark":
                         sql += " %s = ? " % key
@@ -181,7 +181,7 @@ class DictSQLSerializer:
         :param row: The dictionary like row to store in the internal dict
         """
         self.D = {}
-        for key in row:
+        for key in row.keys():
             self.D[key] = row[key]
 
     def clear(self):
