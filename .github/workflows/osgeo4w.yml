@@ -60,15 +60,15 @@ jobs:
             python3-pytest,python3-wxpython,regex-devel,zstd-devel"
 
       - run: python --version
-        shell: C:/OSGeo4W/OSGeo4W.bat {0}
+        shell: '%ComSpec% /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""'
       - run: python -c "import sys; print('\n'.join(sys.path))"
-        shell: C:/OSGeo4W/OSGeo4W.bat {0}
+        shell: '%ComSpec% /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""'
       - run: python -c "import sys; print(sys.executable)"
-        shell: C:/OSGeo4W/OSGeo4W.bat {0}
+        shell: '%ComSpec% /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""'
       - run: python -c "import sys; import os; import pprint; pprint.pp(os.environ)"
-        shell: C:/OSGeo4W/OSGeo4W.bat {0}
+        shell: '%ComSpec% /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""'
       - run: python -m pytest
-        shell: C:/OSGeo4W/OSGeo4W.bat {0}
+        shell: '%ComSpec% /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""'
 
       - name: Set number of cores for compilation
         run: |
