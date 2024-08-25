@@ -30,7 +30,7 @@ from core import globalvar
 try:
     from agw import aui
 except ImportError:
-    import wx.lib.agw.aui as aui
+    from wx.lib.agw import aui
 
 import wx
 
@@ -89,6 +89,7 @@ from startup.guiutils import (
     create_location_interactively,
 )
 from grass.grassdb.checks import is_first_time_user
+from grass.grassdb.history import Status
 
 
 class SingleWindowAuiManager(aui.AuiManager):
@@ -154,7 +155,7 @@ class GMFrame(wx.Frame):
         def show_menu_errors(messages):
             if messages:
                 self._gconsole.WriteError(
-                    _("There were some issues when loading menu" " or Tools:")
+                    _("There were some issues when loading menu or Tools:")
                 )
                 for message in messages:
                     self._gconsole.WriteError(message)
@@ -166,10 +167,10 @@ class GMFrame(wx.Frame):
         self._auimgr = SingleWindowAuiManager(self)
 
         # list of open dialogs
-        self.dialogs = dict()
+        self.dialogs = {}
         self.dialogs["preferences"] = None
         self.dialogs["nvizPreferences"] = None
-        self.dialogs["atm"] = list()
+        self.dialogs["atm"] = []
 
         # set pane sizes according to the full screen size of the primary monitor
         self.PANE_BEST_SIZE = tuple(t // 5 for t in self.size)
@@ -1067,11 +1068,11 @@ class GMFrame(wx.Frame):
 
     def _focusPage(self, notification):
         """Focus the 'Console' notebook page according to event notification."""
-        if (
-            notification == Notification.HIGHLIGHT
-            or notification == Notification.MAKE_VISIBLE
-            or notification == Notification.RAISE_WINDOW
-        ):
+        if notification in {
+            Notification.HIGHLIGHT,
+            Notification.MAKE_VISIBLE,
+            Notification.RAISE_WINDOW,
+        }:
             self.FocusPage("Console")
 
     def FocusPage(self, page_text):
@@ -1084,8 +1085,9 @@ class GMFrame(wx.Frame):
 
     def RunSpecialCmd(self, command):
         """Run command from command line, check for GUI wrappers"""
+        result = True
         if re.compile(r"^d\..*").search(command[0]):
-            self.RunDisplayCmd(command)
+            result = self.RunDisplayCmd(command)
         elif re.compile(r"r[3]?\.mapcalc").search(command[0]):
             self.OnMapCalculator(event=None, cmd=command)
         elif command[0] == "i.group":
@@ -1105,15 +1107,21 @@ class GMFrame(wx.Frame):
         elif command[0] == "cd":
             self.OnChangeCWD(event=None, cmd=command)
         else:
+            result = False
             raise ValueError(
                 "Layer Manager special command (%s)"
                 " not supported." % " ".join(command)
             )
+        if result:
+            self._gconsole.UpdateHistory(status=Status.SUCCESS)
+        else:
+            self._gconsole.UpdateHistory(status=Status.FAILED)
 
     def RunDisplayCmd(self, command):
         """Handles display commands.
 
         :param command: command in a list
+        :return int: False if failed, True if succcess
         """
         if not self.currentPage:
             self.NewDisplay(show=True)
@@ -1121,7 +1129,7 @@ class GMFrame(wx.Frame):
         if command[0] == "d.erase":
             # rest of d.erase is ignored
             self.GetLayerTree().DeleteAllLayers()
-            return
+            return False
         try:
             # display GRASS commands
             layertype = command2ltype[command[0]]
@@ -1134,7 +1142,7 @@ class GMFrame(wx.Frame):
                 )
                 % command[0],
             )
-            return
+            return False
 
         if layertype == "barscale":
             if len(command) > 1:
@@ -1188,6 +1196,7 @@ class GMFrame(wx.Frame):
                 lname=lname,
                 lcmd=command,
             )
+        return True
 
     def GetAuiManager(self):
         """Get aui manager
@@ -1232,7 +1241,7 @@ class GMFrame(wx.Frame):
             else:
                 return None
         else:  # -> return list of all mapdisplays
-            mlist = list()
+            mlist = []
             for idx in range(0, self.notebookLayers.GetPageCount()):
                 mlist.append(self.notebookLayers.GetPage(idx).maptree.GetMapDisplay())
 
@@ -1270,7 +1279,7 @@ class GMFrame(wx.Frame):
 
         # check list of dummy commands for GUI modules that do not have GRASS
         # bin modules or scripts.
-        if cmd in ["vcolors", "r.mapcalc", "r3.mapcalc"]:
+        if cmd in {"vcolors", "r.mapcalc", "r3.mapcalc"}:
             return cmdlist
 
         try:
@@ -1379,7 +1388,7 @@ class GMFrame(wx.Frame):
         if not os.path.exists(filename):
             GError(
                 parent=self,
-                message=_("Script file '%s' doesn't exist. " "Operation canceled.")
+                message=_("Script file '%s' doesn't exist. Operation canceled.")
                 % filename,
             )
             return
@@ -1527,9 +1536,7 @@ class GMFrame(wx.Frame):
             self._giface.WriteCmdLog(" ")
 
         def write_help():
-            self._giface.WriteLog(
-                _("Changes current working directory" " for this GUI.")
-            )
+            self._giface.WriteLog(_("Changes current working directory for this GUI."))
             self._giface.WriteLog(_("Usage: cd [directory]"))
             self._giface.WriteLog(_("Without parameters it opens a dialog."))
             # TODO: the following is longer then 80 chars
@@ -1562,7 +1569,7 @@ class GMFrame(wx.Frame):
         # use chdir or dialog
         if cmd and len(cmd) == 2:
             write_beginning(parameter=cmd[1])
-            if cmd[1] in ["-h", "--h", "--help", "help"]:
+            if cmd[1] in {"-h", "--h", "--help", "help"}:
                 write_help()
                 write_end()
                 return
@@ -1631,7 +1638,7 @@ class GMFrame(wx.Frame):
         # which appears in the platform.platform() string
         platform_ = decode(platform.platform())
         self._gconsole.WriteLog(
-            "%s: %s\n" "%s: %s\n" "%s: %s\n" "%s: %s\n"
+            "%s: %s\n%s: %s\n%s: %s\n%s: %s\n"
             # "%s: %s (%s)\n"
             "GDAL: %s\n"
             "PROJ: %s\n"
@@ -1831,7 +1838,7 @@ class GMFrame(wx.Frame):
 
         if not haveIClass:
             GError(
-                _('Unable to launch "Supervised Classification Tool".\n\n' "Reason: %s")
+                _('Unable to launch "Supervised Classification Tool".\n\nReason: %s')
                 % errMsg
             )
             return
@@ -2124,7 +2131,7 @@ class GMFrame(wx.Frame):
     def AddOrUpdateMap(self, mapName, ltype):
         """Add map layer or update"""
         # start new map display if no display is available
-        if ltype not in ["raster", "raster_3d", "vector"]:
+        if ltype not in {"raster", "raster_3d", "vector"}:
             GError(parent=self, message=_("Unsupported map layer type <%s>.") % ltype)
             return
 
@@ -2132,8 +2139,8 @@ class GMFrame(wx.Frame):
             self.AddMaps([mapName], ltype, check=True)
         else:
             display = self.GetMapDisplay()
-            mapLayers = map(
-                lambda x: x.GetName(), display.GetMap().GetListOfLayers(ltype=ltype)
+            mapLayers = (
+                x.GetName() for x in display.GetMap().GetListOfLayers(ltype=ltype)
             )
             if mapName in mapLayers:
                 display.GetWindow().UpdateMap(render=True)
@@ -2313,8 +2320,7 @@ class GMFrame(wx.Frame):
         # redraw map if auto-rendering is enabled
         # seems little too low level for this place
         # no redraw when Render is unchecked
-        if mapdisp.IsAutoRendered():
-            mapdisp.GetMapWindow().UpdateMap(render=False)
+        mapdisp.GetMapWindow().UpdateMap(render=False)
 
     def OnDeleteLayer(self, event):
         """Remove selected map layer from the current layer Tree"""
@@ -2335,12 +2341,12 @@ class GMFrame(wx.Frame):
 
             if len(layerName) > 2:  # <>
                 message = (
-                    _("Do you want to remove map layer(s)\n%s\n" "from layer tree?")
+                    _("Do you want to remove map layer(s)\n%s\nfrom layer tree?")
                     % layerName
                 )
             else:
                 message = _(
-                    "Do you want to remove selected map layer(s) " "from layer tree?"
+                    "Do you want to remove selected map layer(s) from layer tree?"
                 )
 
             dlg = wx.MessageDialog(
@@ -2434,13 +2440,12 @@ class GMFrame(wx.Frame):
         )
         if limitText:
             message += "\n\n%s" % _(limitText)
-        dlg = wx.MessageDialog(
+        return wx.MessageDialog(
             parent=self,
             message=message,
             caption=_("Constrain map to region geometry?"),
             style=wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION | wx.CENTRE,
         )
-        return dlg
 
     def _onMapsetWatchdog(self, map_path, map_dest):
         """Current mapset watchdog event handler

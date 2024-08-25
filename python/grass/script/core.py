@@ -27,6 +27,9 @@ import codecs
 import string
 import random
 import shlex
+import json
+import csv
+import io
 from tempfile import NamedTemporaryFile
 from pathlib import Path
 
@@ -37,7 +40,7 @@ from grass.grassdb.manage import resolve_mapset_path
 
 # subprocess wrapper that uses shell on Windows
 class Popen(subprocess.Popen):
-    _builtin_exts = set([".com", ".exe", ".bat", ".cmd"])
+    _builtin_exts = {".com", ".exe", ".bat", ".cmd"}
 
     @staticmethod
     def _escape_for_shell(arg):
@@ -121,14 +124,14 @@ def _make_unicode(val, enc):
     """
     if val is None or enc is None:
         return val
+
+    if enc == "default":
+        return decode(val)
     else:
-        if enc == "default":
-            return decode(val)
-        else:
-            return decode(val, encoding=enc)
+        return decode(val, encoding=enc)
 
 
-def get_commands():
+def get_commands(*, env=None):
     """Create list of available GRASS commands to use when parsing
     string from the command line
 
@@ -141,9 +144,19 @@ def get_commands():
     ['d.barscale', 'd.colorlist', 'd.colortable', 'd.correlate', 'd.erase']
 
     """
-    gisbase = os.environ["GISBASE"]
-    cmd = list()
-    scripts = {".py": list()} if sys.platform == "win32" else {}
+    if not env:
+        env = os.environ
+    gisbase = env.get("GISBASE")
+
+    # Lazy-importing to avoid circular dependencies.
+    # pylint: disable=import-outside-toplevel
+    if not gisbase:
+        from grass.script.setup import get_install_path
+
+        gisbase = get_install_path()
+
+    cmd = []
+    scripts = {".py": []} if sys.platform == "win32" else {}
 
     def scan(gisbase, directory):
         dir_path = os.path.join(gisbase, directory)
@@ -165,7 +178,7 @@ def get_commands():
     gui_path = os.path.join(gisbase, "etc", "gui", "scripts")
     if os.path.exists(gui_path):
         os.environ["PATH"] = os.getenv("PATH") + os.pathsep + gui_path
-        cmd = cmd + os.listdir(gui_path)
+        cmd += os.listdir(gui_path)
 
     return set(cmd), scripts
 
@@ -205,9 +218,7 @@ def get_real_command(cmd):
         if os.path.splitext(cmd)[1] == ".py":
             cmd = cmd[:-3]
         # PATHEXT is necessary to check on Windows (force lowercase)
-        pathext = list(
-            map(lambda x: x.lower(), os.environ["PATHEXT"].split(os.pathsep))
-        )
+        pathext = [x.lower() for x in os.environ["PATHEXT"].split(os.pathsep)]
         if ".py" not in pathext:
             # we assume that PATHEXT contains always '.py'
             os.environ["PATHEXT"] = ".py;" + os.environ["PATHEXT"]
@@ -543,26 +554,35 @@ def read_command(*args, **kwargs):
 
 def parse_command(*args, **kwargs):
     """Passes all arguments to read_command, then parses the output
-    by parse_key_val().
+    by default with parse_key_val().
 
-    Parsing function can be optionally given by <em>parse</em> parameter
+    If the command has parameter <em>format</em> and is called with
+    <em>format=json</em>, the output will be parsed into a dictionary.
+    Similarly, with <em>format=csv</em> the output will be parsed into
+    a list of lists (CSV rows).
+
+    ::
+
+        parse_command("v.db.select", ..., format="json")
+
+    Custom parsing function can be optionally given by <em>parse</em> parameter
     including its arguments, e.g.
 
     ::
 
-        parse_command(..., parse = (grass.parse_key_val, { 'sep' : ':' }))
+        parse_command(..., parse=(gs.parse_key_val, {'sep': ':'}))
 
-    or you can simply define <em>delimiter</em>
-
-    ::
-
-        parse_command(..., delimiter = ':')
+    Parameter <em>delimiter</em> is deprecated.
 
     :param args: list of unnamed arguments (see start_command() for details)
     :param kwargs: list of named arguments (see start_command() for details)
 
     :return: parsed module output
     """
+
+    def parse_csv(result):
+        return list(csv.DictReader(io.StringIO(result)))
+
     parse = None
     parse_args = {}
     if "parse" in kwargs:
@@ -570,13 +590,16 @@ def parse_command(*args, **kwargs):
             parse = kwargs["parse"][0]
             parse_args = kwargs["parse"][1]
         del kwargs["parse"]
-
-    if "delimiter" in kwargs:
-        parse_args = {"sep": kwargs["delimiter"]}
-        del kwargs["delimiter"]
+    elif kwargs.get("format") == "json":
+        parse = json.loads
+    elif kwargs.get("format") == "csv":
+        parse = parse_csv
 
     if not parse:
         parse = parse_key_val  # use default fn
+        if "delimiter" in kwargs:
+            parse_args = {"sep": kwargs["delimiter"]}
+            del kwargs["delimiter"]
 
     res = read_command(*args, **kwargs)
 
@@ -859,7 +882,7 @@ def _parse_opts(lines):
             flags[var[5:]] = bool(int(val))
         elif var.startswith("opt_"):
             options[var[4:]] = val
-        elif var in ["GRASS_OVERWRITE", "GRASS_VERBOSE"]:
+        elif var in {"GRASS_OVERWRITE", "GRASS_VERBOSE"}:
             os.environ[var] = val
         else:
             raise SyntaxError(
@@ -960,9 +983,7 @@ def tempname(length, lowercase=False):
     if not lowercase:
         chars += string.ascii_uppercase
     random_part = "".join(random.choice(chars) for _ in range(length))
-    randomname = "tmp_" + random_part
-
-    return randomname
+    return "tmp_" + random_part
 
 
 def _compare_projection(dic):
@@ -1138,16 +1159,15 @@ def compare_key_value_text_files(
                 return False
         elif isinstance(dict_a[key], float) or isinstance(dict_b[key], float):
             warning(
-                _("Mixing value types. Will try to compare after " "integer conversion")
+                _("Mixing value types. Will try to compare after integer conversion")
             )
             return int(dict_a[key]) == int(dict_b[key])
         elif key == "+towgs84":
             # We compare the sum of the entries
             if abs(sum(dict_a[key]) - sum(dict_b[key])) > precision:
                 return False
-        else:
-            if dict_a[key] != dict_b[key]:
-                return False
+        elif dict_a[key] != dict_b[key]:
+            return False
     return True
 
 
@@ -1172,7 +1192,7 @@ def gisenv(env=None):
 # interface to g.region
 
 
-def locn_is_latlong(env=None):
+def locn_is_latlong(env=None) -> bool:
     """Tests if location is lat/long. Value is obtained
     by checking the "g.region -pu" projection code.
 
@@ -1180,10 +1200,7 @@ def locn_is_latlong(env=None):
     """
     s = read_command("g.region", flags="pu", env=env)
     kv = parse_key_val(s, ":")
-    if kv["projection"].split(" ")[0] == "3":
-        return True
-    else:
-        return False
+    return kv["projection"].split(" ")[0] == "3"
 
 
 def region(region3d=False, complete=False, env=None):
@@ -1261,15 +1278,15 @@ def region_env(region3d=False, flags=None, env=None, **kwargs):
     )
     with open(windfile, "r") as fd:
         grass_region = ""
-        for line in fd.readlines():
-            key, value = map(lambda x: x.strip(), line.split(":", 1))
-            if kwargs and key not in ("proj", "zone"):
+        for line in fd:
+            key, value = (x.strip() for x in line.split(":", 1))
+            if kwargs and key not in {"proj", "zone"}:
                 continue
             if (
                 not kwargs
                 and not region3d
                 and key
-                in (
+                in {
                     "top",
                     "bottom",
                     "cols3",
@@ -1278,7 +1295,7 @@ def region_env(region3d=False, flags=None, env=None, **kwargs):
                     "e-w resol3",
                     "n-s resol3",
                     "t-b resol",
-                )
+                }
             ):
                 continue
 
@@ -1434,7 +1451,7 @@ def list_strings(type, pattern=None, mapset=None, exclude=None, flag="", env=Non
     if type == "cell":
         verbose(_('Element type should be "raster" and not "%s"') % type)
 
-    result = list()
+    result = []
     for line in read_command(
         "g.list",
         quiet=True,
@@ -1546,13 +1563,12 @@ def list_grouped(
                         name,
                     ]
                 }
+        elif mapset in result:
+            result[mapset].append(name)
         else:
-            if mapset in result:
-                result[mapset].append(name)
-            else:
-                result[mapset] = [
-                    name,
-                ]
+            result[mapset] = [
+                name,
+            ]
 
     return result
 
@@ -1760,11 +1776,11 @@ def create_project(
         env = os.environ.copy()
         setup_runtime_env(env=env)
 
-    if epsg or proj4 or filename or wkt:
-        # The names don't really matter here.
-        tmp_gisrc, env = create_environment(
-            mapset_path.directory, mapset_path.location, mapset_path.mapset, env=env
-        )
+    # Even g.proj and g.message need GISRC to be present.
+    # The names don't really matter here.
+    tmp_gisrc, env = create_environment(
+        mapset_path.directory, mapset_path.location, mapset_path.mapset, env=env
+    )
 
     # check if location already exists
     if Path(mapset_path.directory, mapset_path.location).exists():
@@ -1782,7 +1798,7 @@ def create_project(
         shutil.rmtree(os.path.join(mapset_path.directory, mapset_path.location))
 
     stdin = None
-    kwargs = dict()
+    kwargs = {}
     if datum:
         kwargs["datum"] = datum
     if datum_trans:
@@ -1984,7 +2000,7 @@ def legal_name(s):
         useful anyway for checking map names and column names.
     """
     if not s or s[0] == ".":
-        warning(_("Illegal filename <%s>. Cannot be 'NULL' or start with " "'.'.") % s)
+        warning(_("Illegal filename <%s>. Cannot be 'NULL' or start with '.'.") % s)
         return False
 
     illegal = [c for c in s if c in "/\"'@,=*~" or c <= " " or c >= "\177"]
