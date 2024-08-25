@@ -29,7 +29,6 @@ import os
 import shutil
 import tarfile
 import tempfile
-from pathlib import Path
 
 import grass.script as gs
 from grass.exceptions import CalledModuleError
@@ -375,128 +374,125 @@ def export_stds(
         flag = "w:"
 
     # Open the tar archive to add the files
+    tar = tarfile.open(tmp_tar_file_name, flag)
+    list_file = open(list_file_name, "w")
+
     fs = "|"
-    with (
-        tarfile.open(tmp_tar_file_name, flag) as tar,
-        open(list_file_name, "w") as list_file,
-    ):
 
-        if rows:
-            if type_ == "strds":
-                if format_ in {"GTiff", "AAIGrid"}:
-                    _export_raster_maps_as_gdal(
-                        rows,
-                        tar,
-                        list_file,
-                        new_cwd,
-                        fs,
-                        format_,
-                        datatype,
-                        **kwargs,
-                    )
-                else:
-                    _export_raster_maps(rows, tar, list_file, new_cwd, fs)
-            elif type_ == "stvds":
-                if format_ == "GML":
-                    _export_vector_maps_as_gml(rows, tar, list_file, new_cwd, fs)
-                elif format_ == "GPKG":
-                    _export_vector_maps_as_gpkg(rows, tar, list_file, new_cwd, fs)
-                else:
-                    _export_vector_maps(rows, tar, list_file, new_cwd, fs)
-            elif type_ == "str3ds":
-                _export_raster3d_maps(rows, tar, list_file, new_cwd, fs)
-
-        # Write projection and metadata
-        proj = gs.read_command("g.proj", flags="j")
-        Path(proj_file_name).write_text(proj)
-
-        # Create the init string
-        string = ""
-        # This is optional, if not present strds will be assumed for backward
-        # compatibility
-        string += "%s=%s\n" % ("stds_type", sp.get_type())
-        # This is optional, if not present gtiff will be assumed for
-        # backward compatibility
-        string += "%s=%s\n" % ("format", format_)
-        string += "%s=%s\n" % ("temporal_type", sp.get_temporal_type())
-        string += "%s=%s\n" % ("semantic_type", sp.get_semantic_type())
-        if sp.is_time_relative():
-            string += "%s=%s\n" % ("relative_time_unit", sp.get_relative_time_unit())
-        # replace sp.metadata.get_number_of_maps() with len(rows)
-        # sp.metadata.get_number_of_maps() doesn't  work with where option
-        string += "%s=%s\n" % ("number_of_maps", len(rows))
-        north, south, east, west, top, bottom = sp.get_spatial_extent_as_tuple()
-        string += "%s=%s\n" % ("north", north)
-        string += "%s=%s\n" % ("south", south)
-        string += "%s=%s\n" % ("east", east)
-        string += "%s=%s\n" % ("west", west)
-        Path(init_file_name).write_text(string)
-
-        metadata = gs.read_command("t.info", type=type_, input=sp.get_id())
-        Path(metadata_file_name).write_text(metadata)
-
-        with open(read_file_name, "w") as read_file:
-            if type_ == "strds":
-                read_file.write(
-                    "This space time raster dataset was exported with "
-                    "t.rast.export of GRASS GIS 8\n"
+    if rows:
+        if type_ == "strds":
+            if format_ in {"GTiff", "AAIGrid"}:
+                _export_raster_maps_as_gdal(
+                    rows, tar, list_file, new_cwd, fs, format_, datatype, **kwargs
                 )
-            elif type_ == "stvds":
-                read_file.write(
-                    "This space time vector dataset was exported with "
-                    "t.vect.export of GRASS GIS 8\n"
-                )
-            elif type_ == "str3ds":
-                read_file.write(
-                    "This space time 3D raster dataset was exported "
-                    "with t.rast3d.export of GRASS GIS 8\n"
-                )
-            read_file.write("\n")
-            read_file.write("Files:\n")
-            if type_ == "strds":
-                if format_ == "GTiff":
-                    # 123456789012345678901234567890
-                    read_file.write("       *.tif  -- GeoTIFF raster files\n")
-                    read_file.write("     *.color  -- GRASS GIS raster color rules\n")
-                elif format_ == "pack":
-                    read_file.write(
-                        "      *.pack  -- GRASS raster files packed with r.pack\n"
-                    )
-            elif type_ == "stvds":
-                # 123456789012345678901234567890
-                if format_ == "GML":
-                    read_file.write("       *.xml  -- Vector GML files\n")
-                else:
-                    read_file.write(
-                        "      *.pack  -- GRASS vector files packed with v.pack\n"
-                    )
-            elif type_ == "str3ds":
-                read_file.write(
-                    "      *.pack  -- GRASS 3D raster files packed with r3.pack\n"
-                )
-            read_file.write(
-                "%13s -- Projection information in PROJ.4 format\n" % (proj_file_name)
-            )
-            read_file.write(
-                "%13s -- GRASS GIS space time %s dataset information\n"
-                % (init_file_name, sp.get_new_map_instance(None).get_type())
-            )
-            read_file.write(
-                "%13s -- Time series file, lists all maps by name "
-                "with interval\n" % (list_file_name)
-            )
-            read_file.write(
-                "                 time stamps in ISO-Format. Field separator is |\n"
-            )
-            read_file.write("%13s -- The output of t.info\n" % (metadata_file_name))
-            read_file.write("%13s -- This file\n" % (read_file_name))
+            else:
+                _export_raster_maps(rows, tar, list_file, new_cwd, fs)
+        elif type_ == "stvds":
+            if format_ == "GML":
+                _export_vector_maps_as_gml(rows, tar, list_file, new_cwd, fs)
+            elif format_ == "GPKG":
+                _export_vector_maps_as_gpkg(rows, tar, list_file, new_cwd, fs)
+            else:
+                _export_vector_maps(rows, tar, list_file, new_cwd, fs)
+        elif type_ == "str3ds":
+            _export_raster3d_maps(rows, tar, list_file, new_cwd, fs)
 
-            # Append the file list
-            tar.add(list_file_name)
-            tar.add(proj_file_name)
-            tar.add(init_file_name)
-            tar.add(read_file_name)
-            tar.add(metadata_file_name)
+    list_file.close()
+
+    # Write projection and metadata
+    proj = gs.read_command("g.proj", flags="j")
+
+    proj_file = open(proj_file_name, "w")
+    proj_file.write(proj)
+    proj_file.close()
+
+    init_file = open(init_file_name, "w")
+    # Create the init string
+    string = ""
+    # This is optional, if not present strds will be assumed for backward
+    # compatibility
+    string += "%s=%s\n" % ("stds_type", sp.get_type())
+    # This is optional, if not present gtiff will be assumed for
+    # backward compatibility
+    string += "%s=%s\n" % ("format", format_)
+    string += "%s=%s\n" % ("temporal_type", sp.get_temporal_type())
+    string += "%s=%s\n" % ("semantic_type", sp.get_semantic_type())
+    if sp.is_time_relative():
+        string += "%s=%s\n" % ("relative_time_unit", sp.get_relative_time_unit())
+    # replace sp.metadata.get_number_of_maps() with len(rows)
+    # sp.metadata.get_number_of_maps() doesn't  work with where option
+    string += "%s=%s\n" % ("number_of_maps", len(rows))
+    north, south, east, west, top, bottom = sp.get_spatial_extent_as_tuple()
+    string += "%s=%s\n" % ("north", north)
+    string += "%s=%s\n" % ("south", south)
+    string += "%s=%s\n" % ("east", east)
+    string += "%s=%s\n" % ("west", west)
+    init_file.write(string)
+    init_file.close()
+
+    metadata = gs.read_command("t.info", type=type_, input=sp.get_id())
+    metadata_file = open(metadata_file_name, "w")
+    metadata_file.write(metadata)
+    metadata_file.close()
+
+    read_file = open(read_file_name, "w")
+    if type_ == "strds":
+        read_file.write(
+            "This space time raster dataset was exported with "
+            "t.rast.export of GRASS GIS 8\n"
+        )
+    elif type_ == "stvds":
+        read_file.write(
+            "This space time vector dataset was exported with "
+            "t.vect.export of GRASS GIS 8\n"
+        )
+    elif type_ == "str3ds":
+        read_file.write(
+            "This space time 3D raster dataset was exported "
+            "with t.rast3d.export of GRASS GIS 8\n"
+        )
+    read_file.write("\n")
+    read_file.write("Files:\n")
+    if type_ == "strds":
+        if format_ == "GTiff":
+            # 123456789012345678901234567890
+            read_file.write("       *.tif  -- GeoTIFF raster files\n")
+            read_file.write("     *.color  -- GRASS GIS raster color rules\n")
+        elif format_ == "pack":
+            read_file.write("      *.pack  -- GRASS raster files packed with r.pack\n")
+    elif type_ == "stvds":
+        # 123456789012345678901234567890
+        if format_ == "GML":
+            read_file.write("       *.xml  -- Vector GML files\n")
+        else:
+            read_file.write("      *.pack  -- GRASS vector files packed with v.pack\n")
+    elif type_ == "str3ds":
+        read_file.write("      *.pack  -- GRASS 3D raster files packed with r3.pack\n")
+    read_file.write(
+        "%13s -- Projection information in PROJ.4 format\n" % (proj_file_name)
+    )
+    read_file.write(
+        "%13s -- GRASS GIS space time %s dataset information\n"
+        % (init_file_name, sp.get_new_map_instance(None).get_type())
+    )
+    read_file.write(
+        "%13s -- Time series file, lists all maps by name "
+        "with interval\n" % (list_file_name)
+    )
+    read_file.write(
+        "                 time stamps in ISO-Format. Field separator is |\n"
+    )
+    read_file.write("%13s -- The output of t.info\n" % (metadata_file_name))
+    read_file.write("%13s -- This file\n" % (read_file_name))
+    read_file.close()
+
+    # Append the file list
+    tar.add(list_file_name)
+    tar.add(proj_file_name)
+    tar.add(init_file_name)
+    tar.add(read_file_name)
+    tar.add(metadata_file_name)
+    tar.close()
 
     os.chdir(old_cwd)
 
