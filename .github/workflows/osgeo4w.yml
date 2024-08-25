@@ -53,7 +53,6 @@ jobs:
         with:
           path-type: inherit
           location: D:\
-          msystem: mingw64
           update: true
           msystem: MINGW64
           install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
