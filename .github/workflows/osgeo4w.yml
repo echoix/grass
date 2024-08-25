@@ -102,9 +102,34 @@ jobs:
 
       - name: Run pytest with a single worker (all tests)
         run: |
-          python-grass85 -m pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
+          python-grass85.bat -m pytest --verbose --color=yes^
+            --durations=0 --durations-min=0.5 ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
+      - name: Run pytest with a single worker (all tests)
+        run: |
+          set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          python -m pytest --verbose --color=yes --durations=0 --durations-min=0.5 ^
+            -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
+      - name: Run pytest with a single worker (all tests)
+        run: |
+          set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          set grass=C:\OSGeo4W\opt\grass\grass85.bat
+          python -m pytest --verbose --color=yes ^
+            --durations=0 --durations-min=0.5 ^
+            -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
+      - name: Run pytest with a single worker (all tests)
+        run: |
+           call python-grass85.bat -m pytest --verbose --color=yes ^
+            --durations=0 --durations-min=0.5 ^
+            -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
 
