@@ -100,6 +100,11 @@ jobs:
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
 
+      - name: Run pytest with a single worker (all tests)
+        run: |
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
+            -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
 
