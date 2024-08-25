@@ -138,7 +138,7 @@ jobs:
         continue-on-error: true
       - name: Run pytest with a single worker (all tests)
         run: |
-          echo %PYTHONPATH%
+          rem echo %PYTHONPATH%
 
           set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
 
@@ -163,7 +163,7 @@ jobs:
         continue-on-error: true
       - name: Run pytest with a single worker (all tests)
         run: |
-          echo %PYTHONPATH%
+          rem echo %PYTHONPATH%
 
           set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
 
@@ -181,7 +181,7 @@ jobs:
           echo %PATH%
           echo %PYTHONPATH%
 
-          'C:\OSGeo4W\opt\grass\grass85.bat' --exec 'C:\OSGeo4W\bin\python3' -m pytest --verbose --color=yes ^
+          "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
