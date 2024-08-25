@@ -138,6 +138,8 @@ jobs:
         continue-on-error: true
       - name: Run pytest with a single worker (all tests)
         run: |
+          echo %PYTHONPATH%
+
           set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
 
           REM Uncomment if you want to use Bash instead of Cmd
@@ -147,12 +149,14 @@ jobs:
           set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
           set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
           
-          REM set PYTHONHOME=
+          set PYTHONHOME=C:\OSGeo4W\apps\Python312
           set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
           set GRASS_COMPATIBILITY_TEST=0
-          
+          path %PATH%;%GISBASE%\bin
+          echo %PATH%
           echo %PYTHONPATH%
-           python -m pytest --verbose --color=yes ^
+
+          python -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
