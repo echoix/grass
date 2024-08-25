@@ -491,13 +491,12 @@ def export_stds(
             read_file.write("%13s -- The output of t.info\n" % (metadata_file_name))
             read_file.write("%13s -- This file\n" % (read_file_name))
 
-        # Append the file list
-        tar.add(list_file_name)
-        tar.add(proj_file_name)
-        tar.add(init_file_name)
-        tar.add(read_file_name)
-        tar.add(metadata_file_name)
-        tar.close()
+            # Append the file list
+            tar.add(list_file_name)
+            tar.add(proj_file_name)
+            tar.add(init_file_name)
+            tar.add(read_file_name)
+            tar.add(metadata_file_name)
 
     os.chdir(old_cwd)
 
