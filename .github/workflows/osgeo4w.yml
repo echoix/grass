@@ -67,6 +67,14 @@ jobs:
         shell: cmd
         timeout-minutes: 1
         continue-on-error: true
+      - run: python -c "help('modules')"
+        continue-on-error: true
+      - run: python -c "help('modules')"
+        continue-on-error: true
+        shell: cmd
+      - run: python -c "help('modules')"
+        continue-on-error: true
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - run: python --version
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - run: python -c "import sys; print('\n'.join(sys.path))"
@@ -106,6 +114,15 @@ jobs:
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
 
+      - run: python -c "help('modules')"
+        continue-on-error: true
+      - run: python -c "help('modules')"
+        continue-on-error: true
+        shell: cmd
+      - run: python -c "help('modules')"
+        continue-on-error: true
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+
       - name: Run pytest with a single worker (all tests)
         run: |
           python-grass85.bat -m pytest --verbose --color=yes^
@@ -120,6 +137,36 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
+      - run: ${{env.GRASS_PYTHON}} -c "help('modules')"
+        shell: cmd
+        continue-on-error: true
+        env:
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+          # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+          GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
+          GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
+      - run: python -c "help('modules')"
+        shell: cmd
+        continue-on-error: true
+        env:
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+          # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+          GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
+          GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
+      - run: "C:\OSGeo4W\bin\python3" -c "help('modules')"
+        shell: cmd
+        continue-on-error: true
+        env:
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+          # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+          GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
+          GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
       - name: env more Run pytest with a single worker (all tests)
         run: | 
           ${{env.GRASS_PYTHON}} -m pytest --verbose --color=yes ^
