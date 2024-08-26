@@ -157,7 +157,8 @@ jobs:
           PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
           GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
           GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
-      - run: "C:\\OSGeo4W\\bin\\python3" -c "help('modules')"
+      - run: |
+          "C:\\OSGeo4W\\bin\\python3" -c "help('modules')"
         shell: cmd
         continue-on-error: true
         env:
