@@ -405,7 +405,6 @@ def export_stds(
 
     Path(proj_file_name).write_text(proj)
 
-    init_file = open(init_file_name, "w")
     # Create the init string
     string = ""
     # This is optional, if not present strds will be assumed for backward
@@ -426,8 +425,7 @@ def export_stds(
     string += "%s=%s\n" % ("south", south)
     string += "%s=%s\n" % ("east", east)
     string += "%s=%s\n" % ("west", west)
-    init_file.write(string)
-    init_file.close()
+    Path(init_file_name).write_text(string)
 
     metadata = gs.read_command("t.info", type=type_, input=sp.get_id())
     Path(metadata_file_name).write_text(metadata)
