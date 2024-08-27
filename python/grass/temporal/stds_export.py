@@ -452,8 +452,12 @@ def export_stds(
     if type_ == "strds":
         if format_ == "GTiff":
             # 123456789012345678901234567890
-            readme.append("       *.tif  -- GeoTIFF raster files\n")
-            readme.append("     *.color  -- GRASS GIS raster color rules\n")
+            readme.extend(
+                (
+                    "       *.tif  -- GeoTIFF raster files\n",
+                    "     *.color  -- GRASS GIS raster color rules\n",
+                )
+            )
         elif format_ == "pack":
             readme.append("      *.pack  -- GRASS raster files packed with r.pack\n")
     elif type_ == "stvds":
@@ -464,20 +468,18 @@ def export_stds(
             readme.append("      *.pack  -- GRASS vector files packed with v.pack\n")
     elif type_ == "str3ds":
         readme.append("      *.pack  -- GRASS 3D raster files packed with r3.pack\n")
-    readme.append(
-        "%13s -- Projection information in PROJ.4 format\n" % (proj_file_name)
+    readme.extend(
+        (
+            "%13s -- Projection information in PROJ.4 format\n" % proj_file_name,
+            "%13s -- GRASS GIS space time %s dataset information\n"
+            % (init_file_name, sp.get_new_map_instance(None).get_type()),
+            "%13s -- Time series file, lists all maps by name with interval\n"
+            % list_file_name,
+            "                 time stamps in ISO-Format. Field separator is |\n",
+            "%13s -- The output of t.info\n" % metadata_file_name,
+            "%13s -- This file\n" % read_file_name,
+        )
     )
-    readme.append(
-        "%13s -- GRASS GIS space time %s dataset information\n"
-        % (init_file_name, sp.get_new_map_instance(None).get_type())
-    )
-    readme.append(
-        "%13s -- Time series file, lists all maps by name with interval\n"
-        % (list_file_name)
-    )
-    readme.append("                 time stamps in ISO-Format. Field separator is |\n")
-    readme.append("%13s -- The output of t.info\n" % (metadata_file_name))
-    readme.append("%13s -- This file\n" % (read_file_name))
     with Path(read_file_name).open("w") as read_file_:
         read_file_.writelines(readme)
 
