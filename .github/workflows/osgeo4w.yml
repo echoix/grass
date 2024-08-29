@@ -123,6 +123,17 @@ jobs:
         continue-on-error: true
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
+      - name: run grass import grass.script
+        run: grass85 --tmp-project XY --exec python -c "import grass.script; print(grass.script)"
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
+      - name: run python import grass.script
+        run: |
+          for /f %%i in ('grass85 --config python_path') do set PYTHONPATH=%%i
+          rem set PYTHONPATH=$(grass --config python_path)
+          python -c "import grass.script; print(grass.script)"
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
       - name: Run pytest with a single worker (all tests)
         run: |
           python-grass85.bat -m pytest --verbose --color=yes^
