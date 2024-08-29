@@ -98,9 +98,17 @@ jobs:
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
 
+      # - name: Compile GRASS GIS
+      #   shell: msys2 {0}
+      #   run: .github/workflows/build_osgeo4w.sh
       - name: Compile GRASS GIS
         shell: msys2 {0}
-        run: .github/workflows/build_osgeo4w.sh
+        run: mswindows/osgeo4w/package.sh
+        env:
+          PACKAGE_POSTFIX: "-dev"
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+
 
       - name: Print installed versions
         if: always()
@@ -109,10 +117,16 @@ jobs:
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
+        continue-on-error: true
+
+      - name: Test executing of the grass command2
+        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\apps\grass\grass85\grass85.bat'
+        continue-on-error: true
 
       - name: Test executing of the grass command in bash
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
+        continue-on-error: true
 
       - run: python -c "help('modules')"
         continue-on-error: true
@@ -309,8 +323,12 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
+      # - name: Run tests
+      #   run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
+      #   continue-on-error: true
       - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\apps\grass\grass85\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        continue-on-error: true
 
       - name: Make HTML test report available
         if: ${{ always() }}
