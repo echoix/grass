@@ -103,12 +103,14 @@ jobs:
       #   run: .github/workflows/build_osgeo4w.sh
       - name: Compile GRASS GIS
         shell: msys2 {0}
-        run: mswindows/osgeo4w/package.sh
+        run: |
+          MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
+        	MSYSPATH=${MSYSPATH//\/cygdrive/}
+          PATH=$MSYSPATH mswindows/osgeo4w/package.sh
         env:
           PACKAGE_POSTFIX: "-dev"
           OSGEO4W_ROOT: "C:\\OSGeo4W"
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
-
 
       - name: Print installed versions
         if: always()
