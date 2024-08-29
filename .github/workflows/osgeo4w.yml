@@ -106,7 +106,7 @@ jobs:
         run: |
           MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
           MSYSPATH=${MSYSPATH//\/cygdrive/}
-          PATH=$MSYSPATH mswindows/osgeo4w/package.sh
+          PATH=$MSYSPATH bash.exe mswindows/osgeo4w/package.sh
         env:
           PACKAGE_POSTFIX: "-dev"
           OSGEO4W_ROOT: "C:\\OSGeo4W"
