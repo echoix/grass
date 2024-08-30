@@ -53,11 +53,32 @@ jobs:
           Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
             -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
         env:
-          Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
+          Deps-old: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-pytest,python3-wxpython,regex-devel,zstd-devel"
+          Deps: |
+            cairo-devel,\
+            freetype-devel,\
+            gdal-devel,\
+            geos-devel,\
+            libjpeg-turbo-devel,\
+            liblas-devel,\
+            libpng-devel,\
+            libpq-devel,\
+            libtiff-devel,\
+            netcdf-devel,\
+            proj-devel,\
+            python3-core,\
+            python3-numpy,\
+            python3-ply,\
+            python3-pytest,\
+            python3-pywin32,
+            python3-six,\
+            python3-wxpython,\
+            sqlite3-devel,\
+            zstd-devel
 
       - run: python --version
         shell: cmd
