@@ -58,8 +58,8 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-pytest,python3-wxpython,regex-devel,zstd-devel"
-          Deps: |
-            cairo-devel,\
+          Deps: |-
+            "cairo-devel,\
             freetype-devel,\
             gdal-devel,\
             geos-devel,\
@@ -78,7 +78,7 @@ jobs:
             python3-six,\
             python3-wxpython,\
             sqlite3-devel,\
-            zstd-devel
+            zstd-devel"
 
       - run: python --version
         shell: cmd
