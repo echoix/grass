@@ -58,8 +58,7 @@ jobs:
             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
             python3-pytest,python3-wxpython,regex-devel,zstd-devel"
-          Deps: |-
-            "cairo-devel,\
+          Deps: "cairo-devel,\
             freetype-devel,\
             gdal-devel,\
             geos-devel,\
