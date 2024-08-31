@@ -162,7 +162,7 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--with-cxx \
 		--with-fftw \
 		--with-freetype \
-		--with-freetype-includes=/mingw64/include/freetype2 \
+		--with-freetype-includes="${OSGEO4W_ROOT_MSYS}/include/freetype2" \
 		--with-gdal="${PWD}/mswindows/osgeo4w/gdal-config" \
 		--with-geos="${PWD}/mswindows/osgeo4w/geos-config" \
 		--with-lapack \
@@ -175,14 +175,14 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--with-openmp \
 		--with-postgres \
 		--with-postgres-includes="${OSGEO4W_ROOT_MSYS}/include" \
-		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
+		--with-postgres-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-proj-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-proj-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-proj-share="${OSGEO4W_ROOT_MSYS}/share/proj" \
 		--with-regex \
 		--with-sqlite \
 		--with-sqlite-includes="${OSGEO4W_ROOT_MSYS}/include" \
-		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
+		--with-sqlite-libs="${PWD}/mswindows/osgeo4w/lib" \
 		--with-zstd \
 		--without-pdal \
 		--without-x
