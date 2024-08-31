@@ -202,22 +202,33 @@ jobs:
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
-        run: .github/workflows/print_versions.sh
+        run: |
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          .github/workflows/print_versions.sh
         continue-on-error: true
+        env:
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
         continue-on-error: true
 
       - name: Test executing of the grass command2
-        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\apps\grass\grass85\grass85.bat'
+        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\bin\grass85.bat'
         continue-on-error: true
 
       - name: Test executing of the grass command in bash
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
         continue-on-error: true
-
+      - name: Test executing of the grass command in bash
+        shell: msys2 {0}
+        run: |
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          .github/workflows/test_simple.sh
+        continue-on-error: true
+        env:
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
       - run: python -c "help('modules')"
         continue-on-error: true
       - run: python -c "help('modules')"
@@ -238,6 +249,15 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
+
+      - name: Run pytest with a single worker (all tests)
+        run: |
+          python -m pytest --verbose --color=yes^
+            --durations=0 --durations-min=0.5 ^
+            -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
+
       - name: Run pytest with a single worker (all tests)
         run: |
           set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
@@ -290,15 +310,15 @@ jobs:
           PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
           GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
           GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
-      - name: Run pytest with a single worker (all tests)
-        run: |
-          set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
-          set grass=C:\OSGeo4W\opt\grass\grass85.bat
-          python -m pytest --verbose --color=yes ^
-            --durations=0 --durations-min=0.5 ^
-            -ra .
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-        continue-on-error: true
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     set grass=C:\OSGeo4W\opt\grass\grass85.bat
+      #     python -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       -ra .
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
       - name: Run pytest with a single worker (all tests)
         run: |
            call python-grass85.bat -m pytest --verbose --color=yes ^
@@ -306,30 +326,30 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
-      - name: envs Run pytest with a single worker (all tests)
-        run: | 
-          "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
-            --durations=0 --durations-min=0.5 ^
-            -ra .
-        shell: cmd
-        continue-on-error: true
-        env:
-          OSGEO4W_ROOT: "C:\\OSGeo4W"
-          PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
-          # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
-          PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
-      - name: env python Run pytest with a single worker (all tests)
-        run: | 
-          "C:\OSGeo4W\opt\grass\grass85.bat" --exec python -m pytest --verbose --color=yes ^
-            --durations=0 --durations-min=0.5 ^
-            -ra .
-        shell: cmd
-        continue-on-error: true
-        env:
-          OSGEO4W_ROOT: "C:\\OSGeo4W"
-          PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
-          # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
-          PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      # - name: envs Run pytest with a single worker (all tests)
+      #   run: | 
+      #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       -ra .
+      #   shell: cmd
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      # - name: env python Run pytest with a single worker (all tests)
+      #   run: | 
+      #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec python -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       -ra .
+      #   shell: cmd
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
       - name: env python direct Run pytest with a single worker (all tests)
         run: | 
           "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
@@ -367,51 +387,60 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       -ra .
+      #   shell: cmd
+      #   continue-on-error: true
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       -ra .
+      #   shell: cmd
+      #   continue-on-error: true
       - name: Run pytest with a single worker (all tests)
         run: |
-          "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+          "C:\OSGeo4W\bin\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             -ra .
         shell: cmd
         continue-on-error: true
-      - name: Run pytest with a single worker (all tests)
-        run: |
-          "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
-            --durations=0 --durations-min=0.5 ^
-            -ra .
-        shell: cmd
-        continue-on-error: true
-      - name: Run pytest with a single worker (all tests)
-        run: |
-          rem echo %PYTHONPATH%
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     rem echo %PYTHONPATH%
 
-          set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
+      #     set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
 
-          REM Uncomment if you want to use Bash instead of Cmd
-          REM Note that msys package must be also installed
-          REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
+      #     REM Uncomment if you want to use Bash instead of Cmd
+      #     REM Note that msys package must be also installed
+      #     REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
 
-          set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
-          set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
+      #     set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
+      #     set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
           
-          set PYTHONHOME=C:\OSGeo4W\apps\Python312
-          set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
-          set GRASS_COMPATIBILITY_TEST=0
-          path %PATH%;%GISBASE%\bin
-          echo %PATH%
-          echo %PYTHONPATH%
+      #     set PYTHONHOME=C:\OSGeo4W\apps\Python312
+      #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     set GRASS_COMPATIBILITY_TEST=0
+      #     path %PATH%;%GISBASE%\bin
+      #     echo %PATH%
+      #     echo %PYTHONPATH%
 
-          "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
-            --durations=0 --durations-min=0.5 ^
-            -ra .
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-        continue-on-error: true
+      #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       -ra .
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
       # - name: Run tests
       #   run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
       #   continue-on-error: true
+      # - name: Run tests
+      #   run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\apps\grass\grass85\grass85.bat' 'C:\OSGeo4W\bin\python3'
+      #   continue-on-error: true
       - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\apps\grass\grass85\grass85.bat' 'C:\OSGeo4W\bin\python3'
-        continue-on-error: true
+        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
 
       - name: Make HTML test report available
         if: ${{ always() }}
