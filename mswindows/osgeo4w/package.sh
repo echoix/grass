@@ -163,6 +163,12 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	echo "Ed:2 ls -la /mingw64/bin/ package.sh: start"
 	ls -la /mingw64/bin/
 	echo "Ed:2 ls -la /mingw64/bin/ package.sh: stop"
+	echo "Ed:2 gcc package.sh: start"
+	which gcc
+	echo "Ed:2 gcc package.sh: stop"
+	echo "Ed:2 g++ package.sh: start"
+	which g++
+	echo "Ed:2 g++ package.sh: stop"
 	./configure \
 		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
@@ -208,6 +214,21 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--without-pdal \
 		--without-x
 
+	echo "Ed:3 printenv package.sh: start"
+	printenv | sort
+	echo "Ed:3 printenv package.sh: stop"
+	echo "Ed:3 gcc package.sh: start"
+	which gcc
+	echo "Ed:3 gcc package.sh: stop"
+	echo "Ed:3 g++ package.sh: start"
+	which g++
+	echo "Ed:3 g++ package.sh: stop"
+	echo "Ed:3 which CC package.sh: start"
+	which $CC
+	echo "Ed:3 which CC package.sh: stop"
+	echo "Ed:3 which CXX package.sh: start"
+	which $CXX
+	echo "Ed:3 which CXX package.sh: stop"
 	touch mswindows/osgeo4w/configure-stamp
 fi
 
