@@ -187,6 +187,8 @@ jobs:
           OSGEO4W_ROOT: "C:\\OSGeo4W"
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
           PACKAGE_PATCH: ${{ github.sha }}-1
+          CC: "ccache $CC"
+          CXX: "ccache $CXX"
       # - name: Compile GRASS GIS 2
       #   shell: msys2 {0}
       #   continue-on-error: true
