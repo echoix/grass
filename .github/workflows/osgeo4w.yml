@@ -252,6 +252,8 @@ jobs:
           #export CXX="ccache $CXX"
           echo "CC is $CC"
           echo "CXX is $CXX"
+          ccache -p
+          ccache -z
           PATH=$MSYSPATH:$PATH mswindows/osgeo4w/package.sh
         env:
           PACKAGE_POSTFIX: "-dev"
