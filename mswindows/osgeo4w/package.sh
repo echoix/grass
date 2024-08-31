@@ -139,7 +139,7 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
 
 	mkdir -p mswindows/osgeo4w/lib
-	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
+	cp -uv ${OSGEO4W_ROOT_MSYS}/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
 
 	log configure
 	./configure \
