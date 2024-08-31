@@ -145,18 +145,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	log configure
 	./configure \
 		--host=x86_64-w64-mingw32 \
-		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
-		--with-includes=$OSGEO4W_ROOT_MSYS/include \
-		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
-		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
-		--bindir=$OSGEO4W_ROOT_MSYS/bin \
-		--includedir=$OSGEO4W_ROOT_MSYS/include \
+		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--libexecdir="${OSGEO4W_ROOT_MSYS}/bin" \
+		--prefix="${OSGEO4W_ROOT_MSYS}/apps/grass" \
+		--bindir="${OSGEO4W_ROOT_MSYS}/bin" \
+		--includedir="${OSGEO4W_ROOT_MSYS}/include" \
 		--enable-largefile \
 		--enable-shared \
 		--with-blas \
 		--with-bzlib \
 		--with-cairo \
-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
+		--with-cairo-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
 		--with-cxx \
 		--with-fftw \
@@ -167,20 +167,20 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--with-lapack \
 		--with-lapack-includes=/mingw64/include \
 		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
-		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
+		--with-netcdf="${OSGEO4W_ROOT_MSYS}/bin/nc-config" \
 		--with-nls \
 		--with-odbc \
 		--with-opengl=windows \
 		--with-openmp \
 		--with-postgres \
-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
+		--with-postgres-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
-		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
-		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
+		--with-proj-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-proj-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-proj-share="${OSGEO4W_ROOT_MSYS}/share/proj" \
 		--with-regex \
 		--with-sqlite \
-		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
+		--with-sqlite-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
 		--with-zstd \
 		--without-pdal \
