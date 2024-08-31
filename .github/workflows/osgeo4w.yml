@@ -248,8 +248,10 @@ jobs:
           ccache -s
           MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
           MSYSPATH=${MSYSPATH//\/cygdrive/}
-          CC="ccache $CC"
-          CXX="ccache $CXX"
+          export CC="ccache $CC"
+          export CXX="ccache $CXX"
+          echo "CC is $CC"
+          echo "CXX is $CXX"
           PATH=$MSYSPATH:$PATH mswindows/osgeo4w/package.sh
         env:
           PACKAGE_POSTFIX: "-dev"
