@@ -203,6 +203,7 @@ jobs:
         if: always()
         shell: msys2 {0}
         run: .github/workflows/print_versions.sh
+        continue-on-error: true
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
