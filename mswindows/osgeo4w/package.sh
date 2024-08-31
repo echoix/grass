@@ -157,6 +157,12 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	echo "Ed:2 printenv package.sh: start"
 	printenv | sort
 	echo "Ed:2 printenv package.sh: stop"
+	echo "Ed:2 ls -la /mingw64/lib/ccache/bin package.sh: start"
+	ls -la /mingw64/lib/ccache/bin
+	echo "Ed:2 ls -la /mingw64/lib/ccache/bin package.sh: stop"
+	echo "Ed:2 ls -la /mingw64/bin/ package.sh: start"
+	ls -la /mingw64/bin/
+	echo "Ed:2 ls -la /mingw64/bin/ package.sh: stop"
 	./configure \
 		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
