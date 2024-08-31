@@ -246,6 +246,7 @@ jobs:
         run: |
           python-grass85.bat -m pytest --verbose --color=yes^
             --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
@@ -254,6 +255,7 @@ jobs:
         run: |
           python -m pytest --verbose --color=yes^
             --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
@@ -262,6 +264,7 @@ jobs:
         run: |
           set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
           python -m pytest --verbose --color=yes --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
@@ -300,6 +303,7 @@ jobs:
         run: |
           ${{env.GRASS_PYTHON}} -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd
         continue-on-error: true
@@ -323,6 +327,7 @@ jobs:
         run: |
            call python-grass85.bat -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
@@ -354,6 +359,7 @@ jobs:
         run: | 
           "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd
         continue-on-error: true
@@ -384,6 +390,7 @@ jobs:
 
           python -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
@@ -405,6 +412,7 @@ jobs:
         run: |
           "C:\OSGeo4W\bin\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
+            --continue-on-collection-errors ^
             -ra .
         shell: cmd
         continue-on-error: true
