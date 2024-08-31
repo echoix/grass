@@ -1,7 +1,12 @@
 #!/usr/bin/bash
 
 set -e
-
+echo "Ed:1 ccache package.sh: start"
+which ccache
+echo "Ed:1 ccache package.sh: stop"
+echo "Ed:1 ccache stats package.sh: start"
+ccache -s
+echo "Ed:1 ccache stats package.sh: stop"
 PWD="$(pwd)"
 
 if ! [ -d mswindows ]; then
@@ -143,6 +148,12 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 
 	# --host=x86_64-w64-mingw32 \
 	log configure
+	echo "Ed:2 ccache package.sh: start"
+	which ccache
+	echo "Ed:2 ccache package.sh: stop"
+	echo "Ed:2 ccache stats package.sh: start"
+	ccache -s
+	echo "Ed:2 ccache stats package.sh: stop"
 	./configure \
 		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
