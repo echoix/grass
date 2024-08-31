@@ -149,97 +149,17 @@ jobs:
             sqlite3-devel,\
             zstd-devel
 
-      # - run: python --version
-      #   shell: cmd
-      # - run: |
-      #     C:/OSGeo4W/OSGeo4W.bat
-      #     python --version
-      #   shell: cmd
-      #   timeout-minutes: 1
-      #   continue-on-error: true
       - run: python -m pip install pytest-timeout
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
-      # - run: python -c "help('modules')"
-      #   continue-on-error: true
-      # - run: python -c "help('modules')"
-      #   continue-on-error: true
-      #   shell: cmd
-      # - run: python -c "help('modules')"
-      #   continue-on-error: true
-      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      # - run: python --version
-      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      # - run: python -c "import sys; print('\n'.join(sys.path))"
-      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      # - run: python -c "import sys; print(sys.executable)"
-      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      # - run: python -c "import sys; import os; import pprint; pprint.pp(os.environ)"
-      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      # - run: python -m pytest
-      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      #   continue-on-error: true
-      # - run: python -m pytest
-      #   continue-on-error: true
-      #   env:
-      #     OSGEO4W_ROOT: C:\OSGeo4W
-      #     GISBASE: C:\OSGeo4W\apps\grass\grass85
       - name: Configure ccache
         run: |
           echo "CCACHE_BASEDIR=${GITHUB_WORKSPACE}" >> "${GITHUB_ENV}"
           echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
           echo "CCACHE_MAXSIZE=400M" >> "${GITHUB_ENV}"
         shell: msys2 {0}
-        
-      # - name: Configure ccache
-      #   shell: cmake -P {0}
-      #   run: |
-      #     # set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
 
-      #     # if ("${ { runner.os } }" STREQUAL "Windows" AND NOT "x${ { matrix.config.environment_script } }" STREQUAL "x")
-      #     #   file(STRINGS environment_script_output.txt output_lines)
-      #     #   foreach(line IN LISTS output_lines)
-      #     #     if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-      #     #       set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-      #     #     endif()
-      #     #   endforeach()
-      #     # endif()
 
-      #     file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
-      #     set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
-      #     set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
-      #     set(ENV{CCACHE_COMPRESS} "true")
-      #     set(ENV{CCACHE_COMPRESSLEVEL} "6")
-      #     set(ENV{CCACHE_MAXSIZE} "400M")
-      #     # if ("${ { matrix.config.cxx } }" STREQUAL "cl")
-      #     #   set(ENV{CCACHE_MAXSIZE} "600M")
-      #     # endif()
-
-      #     execute_process(COMMAND ccache -p)
-      #     execute_process(COMMAND ccache -z)
-
-      #     # execute_process(
-      #     #   COMMAND cmake --build build
-      #     #   RESULT_VARIABLE result
-      #     #   OUTPUT_VARIABLE output
-      #     #   ERROR_VARIABLE output
-      #     #   ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
-      #     # )
-      #     # if (NOT result EQUAL 0)
-      #     #   string(REGEX MATCH "FAILED:.*$" error_message "${output}")
-      #     #   string(REPLACE "\n" "%0A" error_message "${error_message}")
-      #     #   message("::error::${error_message}")
-      #     #   message(FATAL_ERROR "Build failed")
-      #     # endif()
-
-      # - name: ccache statistics
-      #   shell: cmake -P {0}
-      #   run: |
-      #     file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
-      #     set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
-      #     set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
-
-      #     execute_process(COMMAND ccache -s)
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
