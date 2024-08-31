@@ -27,7 +27,6 @@ jobs:
       fail-fast: false
 
     steps:
-      - run: mkdir "D:/OSGeo4W_pkg"
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
@@ -71,7 +70,10 @@ jobs:
           #   -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
           # $setup = "${{ runner.temp }}/"+$exe
           # $setup = '.\' + $exe
-          $setup = "D:/OSGeo4W_pkg/"+$exe
+          $pkg_dir = "D:/OSGeo4W_pkg"
+          mkdir $pkg_dir
+          mkdir $pkg_dir
+          $setup = $pkg_dir + '/' + $exe
           Invoke-WebRequest $url -OutFile $setup
           $args = @(
             '-A',
@@ -80,6 +82,7 @@ jobs:
             '-q',
             '-s', 'http://download.osgeo.org/osgeo4w/v2/',
             '-P', '${{ env.Deps }}',
+            '--local-package-dir', $pkg_dir,
             '--root', '${{ env.OSGEO4W_ROOT }}'
           )
           & $setup $args | Out-Default
