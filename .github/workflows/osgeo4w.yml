@@ -69,7 +69,8 @@ jobs:
           # Start-Process ('.\'+$setup) -ArgumentList '-A -g -k -q \
           #   -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
           # $setup = "${{ runner.temp }}/"+$exe
-          $setup = '.\' + $exe
+          # $setup = '.\' + $exe
+          $setup = "D:/OSGeo4W_pkg/"+$exe
           Invoke-WebRequest $url -OutFile $setup
           $args = @(
             '-A',
