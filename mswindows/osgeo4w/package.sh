@@ -179,6 +179,7 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--with-proj-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--with-proj-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-proj-share="${OSGEO4W_ROOT_MSYS}/share/proj" \
+		--with-readline \
 		--with-regex \
 		--with-sqlite \
 		--with-sqlite-includes="${OSGEO4W_ROOT_MSYS}/include" \
