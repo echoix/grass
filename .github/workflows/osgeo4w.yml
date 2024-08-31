@@ -291,7 +291,7 @@ jobs:
           set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
           set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
 
-          execute_process(COMMAND ccache -s)
+          execute_process(COMMAND ccache -s --verbose --verbose)
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
