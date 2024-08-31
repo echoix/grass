@@ -32,6 +32,21 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Prepare ccache timestamp
+        id: ccache_cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+          message("::set-output name=timestamp::${current_date}")
+      - name: ccache cache files
+        uses: actions/cache@v4.0.2
+        with:
+          path: .ccache
+          key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+          restore-keys: |
+              ${{ matrix.os }}-ccache-
+
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
         with:
           path-type: inherit
@@ -157,7 +172,55 @@ jobs:
       #   env:
       #     OSGEO4W_ROOT: C:\OSGeo4W
       #     GISBASE: C:\OSGeo4W\apps\grass\grass85
-          
+      - name: Configure ccache
+        shell: cmake -P {0}
+        run: |
+          # set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
+
+          # if ("${ { runner.os } }" STREQUAL "Windows" AND NOT "x${ { matrix.config.environment_script } }" STREQUAL "x")
+          #   file(STRINGS environment_script_output.txt output_lines)
+          #   foreach(line IN LISTS output_lines)
+          #     if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+          #       set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+          #     endif()
+          #   endforeach()
+          # endif()
+
+          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
+          set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
+          set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
+          set(ENV{CCACHE_COMPRESS} "true")
+          set(ENV{CCACHE_COMPRESSLEVEL} "6")
+          set(ENV{CCACHE_MAXSIZE} "400M")
+          # if ("${ { matrix.config.cxx } }" STREQUAL "cl")
+          #   set(ENV{CCACHE_MAXSIZE} "600M")
+          # endif()
+
+          execute_process(COMMAND ccache -p)
+          execute_process(COMMAND ccache -z)
+
+          # execute_process(
+          #   COMMAND cmake --build build
+          #   RESULT_VARIABLE result
+          #   OUTPUT_VARIABLE output
+          #   ERROR_VARIABLE output
+          #   ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
+          # )
+          # if (NOT result EQUAL 0)
+          #   string(REGEX MATCH "FAILED:.*$" error_message "${output}")
+          #   string(REPLACE "\n" "%0A" error_message "${error_message}")
+          #   message("::error::${error_message}")
+          #   message(FATAL_ERROR "Build failed")
+          # endif()
+
+      - name: ccache statistics
+        shell: cmake -P {0}
+        run: |
+          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
+          set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
+          set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
+
+          execute_process(COMMAND ccache -s)
 
       - name: Set number of cores for compilation
         run: |
@@ -215,6 +278,14 @@ jobs:
           path: mswindows/osgeo4w/package
           include-hidden-files: true
           retention-days: 3
+      - name: ccache statistics
+        shell: cmake -P {0}
+        run: |
+          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
+          set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
+          set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
+
+          execute_process(COMMAND ccache -s)
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
