@@ -49,7 +49,7 @@ jobs:
           restore-keys: |
               ${{ matrix.os }}-ccache-
           save-always: true
-
+      - uses: ./.github/actions/setup-osgeo4w
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
         with:
           path-type: inherit
