@@ -141,9 +141,9 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	mkdir -p mswindows/osgeo4w/lib
 	cp -uv ${OSGEO4W_ROOT_MSYS}/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
 
+	# --host=x86_64-w64-mingw32 \
 	log configure
 	./configure \
-		# --host=x86_64-w64-mingw32 \
 		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
 		--libexecdir="${OSGEO4W_ROOT_MSYS}/bin" \
