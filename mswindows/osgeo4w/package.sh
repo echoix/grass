@@ -154,6 +154,9 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	echo "Ed:2 ccache stats package.sh: start"
 	ccache -s
 	echo "Ed:2 ccache stats package.sh: stop"
+	echo "Ed:2 printenv package.sh: start"
+	printenv | sort
+	echo "Ed:2 printenv package.sh: stop"
 	./configure \
 		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
