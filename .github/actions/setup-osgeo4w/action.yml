@@ -1,0 +1,54 @@
+---
+name: Setup OSGeo4W environment
+description: Install OSGeo4W and OSGeo4W packages on Windows
+author: "Edouard Choinière"
+
+inputs:
+  packages:
+    description: List of OSGeo4W packages to install
+    required: false
+  root:
+    description: Root installation directory, by default C:\OSGeo4W.
+    required: false
+    default: C:\OSGeo4W
+  package-dir:
+    description: Location where to download packages. Using a folder in a faster drive, like D:\OSGeo4W_pkg, reduces installation time.
+    required: false
+  site:
+    description: Download site URL to use
+    required: false
+    default: "http://download.osgeo.org/osgeo4w/v2/"
+runs:
+  using: "composite"
+  steps:
+    - name: Download installer
+      id: download
+      shell: pwsh
+      run: |
+        $exe = 'osgeo4w-setup.exe'
+        $url = '${{ inputs.site }}' + $exe
+        $setup = '.\' + $exe
+        echo "setup_path=$setup" >> "$env:GITHUB_OUTPUT"
+        Invoke-WebRequest $url -OutFile $setup
+    - name: Ensure package dir exists
+      if: ${{ inputs.package-dir }}
+      shell: pwsh
+      run: mkdir -Force '${{ inputs.package-dir }}'
+    - name: Run setup
+      shell: pwsh
+      run: |
+        $setup = '${{ steps.download.outputs.setup_path }}'
+        echo "Setup path is $setup"
+        $args = @(
+            '-A',
+            '-g',
+            '-k',
+            '-q',
+            '-s', 'http://download.osgeo.org/osgeo4w/v2/',
+            # '-P', '${{ env.Deps }}',
+            # '--local-package-dir', $pkg_dir,
+            # '--root', '${{ env.OSGEO4W_ROOT }}'
+          )
+        & $setup $args | Out-Default
+
+
