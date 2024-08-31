@@ -74,11 +74,53 @@ jobs:
             python3-numpy,\
             python3-ply,\
             python3-pytest,\
-            python3-pywin32,
+            python3-pywin32,\
             python3-six,\
             python3-wxpython,\
             sqlite3-devel,\
             zstd-devel"
+          Deps3: |
+            cairo-devel,\
+            freetype-devel,\
+            gdal-devel,\
+            geos-devel,\
+            libjpeg-turbo-devel,\
+            liblas-devel,\
+            libpng-devel,\
+            libpq-devel,\
+            libtiff-devel,\
+            netcdf-devel,\
+            proj-devel,\
+            python3-core,\
+            python3-numpy,\
+            python3-ply,\
+            python3-pytest,\
+            python3-pywin32,\
+            python3-six,\
+            python3-wxpython,\
+            sqlite3-devel,\
+            zstd-devel
+          Deps4: |-
+            cairo-devel,\
+            freetype-devel,\
+            gdal-devel,\
+            geos-devel,\
+            libjpeg-turbo-devel,\
+            liblas-devel,\
+            libpng-devel,\
+            libpq-devel,\
+            libtiff-devel,\
+            netcdf-devel,\
+            proj-devel,\
+            python3-core,\
+            python3-numpy,\
+            python3-ply,\
+            python3-pytest,\
+            python3-pywin32,\
+            python3-six,\
+            python3-wxpython,\
+            sqlite3-devel,\
+            zstd-devel
 
       - run: python --version
         shell: cmd
