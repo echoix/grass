@@ -21,7 +21,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Download installer
+    - name: "Download installer"
       id: download
       shell: pwsh
       run: |
