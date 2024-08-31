@@ -157,7 +157,8 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--with-bzlib \
 		--with-cairo \
 		--with-cairo-includes="${OSGEO4W_ROOT_MSYS}/include" \
-		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
+		--with-cairo-ldflags="-L${PWD}/mswindows/osgeo4w/lib -lcairo" \
+		--with-cairo-libs="${OSGEO4W_ROOT_MSYS}/lib" \
 		--with-cxx \
 		--with-fftw \
 		--with-freetype \
