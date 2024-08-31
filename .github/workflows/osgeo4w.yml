@@ -130,30 +130,30 @@ jobs:
         shell: cmd
         timeout-minutes: 1
         continue-on-error: true
-      - run: python -c "help('modules')"
-        continue-on-error: true
-      - run: python -c "help('modules')"
-        continue-on-error: true
-        shell: cmd
-      - run: python -c "help('modules')"
-        continue-on-error: true
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      - run: python --version
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      - run: python -c "import sys; print('\n'.join(sys.path))"
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      - run: python -c "import sys; print(sys.executable)"
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      - run: python -c "import sys; import os; import pprint; pprint.pp(os.environ)"
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-      - run: python -m pytest
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
-        continue-on-error: true
-      - run: python -m pytest
-        continue-on-error: true
-        env:
-          OSGEO4W_ROOT: C:\OSGeo4W
-          GISBASE: C:\OSGeo4W\apps\grass\grass85
+      # - run: python -c "help('modules')"
+      #   continue-on-error: true
+      # - run: python -c "help('modules')"
+      #   continue-on-error: true
+      #   shell: cmd
+      # - run: python -c "help('modules')"
+      #   continue-on-error: true
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      # - run: python --version
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      # - run: python -c "import sys; print('\n'.join(sys.path))"
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      # - run: python -c "import sys; print(sys.executable)"
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      # - run: python -c "import sys; import os; import pprint; pprint.pp(os.environ)"
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      # - run: python -m pytest
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
+      # - run: python -m pytest
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: C:\OSGeo4W
+      #     GISBASE: C:\OSGeo4W\apps\grass\grass85
           
 
       - name: Set number of cores for compilation
@@ -186,18 +186,18 @@ jobs:
           PACKAGE_POSTFIX: "-dev"
           OSGEO4W_ROOT: "C:\\OSGeo4W"
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
-      - name: Compile GRASS GIS 2
-        shell: msys2 {0}
-        continue-on-error: true
-        run: |
-          #MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
-          #MSYSPATH=${MSYSPATH//\/cygdrive/}
-          PATH=/usr/bin:/mingw64/bin:/c/osgeo4w/bin:/c/windows/syswow64:${PATH}
-          mswindows/osgeo4w/package.sh
-        env:
-          PACKAGE_POSTFIX: "-dev"
-          OSGEO4W_ROOT: "C:\\OSGeo4W"
-          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+      # - name: Compile GRASS GIS 2
+      #   shell: msys2 {0}
+      #   continue-on-error: true
+      #   run: |
+      #     #MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
+      #     #MSYSPATH=${MSYSPATH//\/cygdrive/}
+      #     PATH=/usr/bin:/mingw64/bin:/c/osgeo4w/bin:/c/windows/syswow64:${PATH}
+      #     mswindows/osgeo4w/package.sh
+      #   env:
+      #     PACKAGE_POSTFIX: "-dev"
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
 
       - name: Print installed versions
         if: always()
