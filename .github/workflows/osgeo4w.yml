@@ -175,7 +175,7 @@ jobs:
       #     PACKAGE_POSTFIX: "-dev"
       #     OSGEO4W_ROOT: "C:\\OSGeo4W"
       #     OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
-      - name: Compile GRASS GIS 0
+      - name: Compile GRASS GIS
         shell: msys2 {0}
         continue-on-error: true
         run: |
