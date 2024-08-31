@@ -27,6 +27,7 @@ jobs:
       fail-fast: false
 
     steps:
+      - run: mkdir "D:/OSGeo4W_pkg"
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
