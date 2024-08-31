@@ -46,6 +46,7 @@ jobs:
           key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
           restore-keys: |
               ${{ matrix.os }}-ccache-
+          save-always: true
 
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
         with:
