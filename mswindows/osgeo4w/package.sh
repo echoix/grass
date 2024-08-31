@@ -162,11 +162,11 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--with-fftw \
 		--with-freetype \
 		--with-freetype-includes=/mingw64/include/freetype2 \
-		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
-		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
+		--with-gdal="${PWD}/mswindows/osgeo4w/gdal-config" \
+		--with-geos="${PWD}/mswindows/osgeo4w/geos-config" \
 		--with-lapack \
 		--with-lapack-includes=/mingw64/include \
-		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
+		--with-liblas="${PWD}/mswindows/osgeo4w/liblas-config" \
 		--with-netcdf="${OSGEO4W_ROOT_MSYS}/bin/nc-config" \
 		--with-nls \
 		--with-odbc \
