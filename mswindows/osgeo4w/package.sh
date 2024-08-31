@@ -239,7 +239,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
 
     # copy dependencies (TODO: to be reduced)
     cp -uv $DLLS apps/grass/grass$POSTFIX/bin
-    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
+
+    # copy R batch files
+    cp -uv $SRC/mswindows/external/rbatch/* apps/grass/grass$POSTFIX/bin
 
     # creating grass package
     /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
