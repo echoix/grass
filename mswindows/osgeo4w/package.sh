@@ -223,12 +223,12 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	echo "Ed:3 g++ package.sh: start"
 	which g++
 	echo "Ed:3 g++ package.sh: stop"
-	echo "Ed:3 which CC package.sh: start"
-	which $CC
-	echo "Ed:3 which CC package.sh: stop"
-	echo "Ed:3 which CXX package.sh: start"
-	which $CXX
-	echo "Ed:3 which CXX package.sh: stop"
+	# echo "Ed:3 which CC package.sh: start"
+	# which $CC
+	# echo "Ed:3 which CC package.sh: stop"
+	# echo "Ed:3 which CXX package.sh: start"
+	# which $CXX
+	# echo "Ed:3 which CXX package.sh: stop"
 	touch mswindows/osgeo4w/configure-stamp
 fi
 
