@@ -533,6 +533,7 @@ jobs:
             -ra .
         shell: cmd
         continue-on-error: true
+        timeout-minutes: 2
       # - name: Run pytest with a single worker (all tests)
       #   run: |
       #     rem echo %PYTHONPATH%
