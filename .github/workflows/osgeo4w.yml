@@ -319,6 +319,7 @@ jobs:
             --continue-on-collection-errors ^
             -ra .
         shell: cmd
+        timeout-minutes: 2
         continue-on-error: true
         env:
           OSGEO4W_ROOT: "C:\\OSGeo4W"
@@ -344,6 +345,7 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
+        timeout-minutes: 5
       # - name: envs Run pytest with a single worker (all tests)
       #   run: | 
       #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
@@ -375,6 +377,7 @@ jobs:
             --continue-on-collection-errors ^
             -ra .
         shell: cmd
+        timeout-minutes: 2
         continue-on-error: true
         env:
           OSGEO4W_ROOT: "C:\\OSGeo4W"
@@ -407,6 +410,7 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         continue-on-error: true
+        timeout-minutes: 2
       # - name: Run pytest with a single worker (all tests)
       #   run: |
       #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
