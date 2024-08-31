@@ -20,6 +20,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       PYTHONWARNINGS: always
+      # OSGEO4W_PKG_DIR: "${{ github.workspace }}/OSGeo4W_pkg"
+      OSGEO4W_PKG_DIR: "D:/OSGeo4W_pkg"
     strategy:
       matrix:
         os:
@@ -70,8 +72,7 @@ jobs:
           #   -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
           # $setup = "${{ runner.temp }}/"+$exe
           # $setup = '.\' + $exe
-          $pkg_dir = "D:/OSGeo4W_pkg"
-          mkdir -Force $pkg_dir
+          $pkg_dir = "${{ env.OSGEO4W_PKG_DIR }}"
           mkdir -Force $pkg_dir
           $setup = $pkg_dir + '/' + $exe
           Invoke-WebRequest $url -OutFile $setup
