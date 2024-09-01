@@ -54,5 +54,3 @@ runs:
             # '--root', '${{ env.OSGEO4W_ROOT }}'
           )
         & $setup $args | Out-Default
-
-
