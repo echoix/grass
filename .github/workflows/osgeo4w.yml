@@ -46,6 +46,29 @@ jobs:
           package-dir: D:/pkg_osgeo4w2
           # upgrade-also: false
           packages: ",,,,,"
+      - name: Setup OSGeo4W environment
+        uses: ./.github/actions/setup-osgeo4w
+        with:
+          package-dir: D:/pkg_osgeo4w2
+          # upgrade-also: false
+          packages: |
+            cairo-devel,\
+            freetype-devel,\
+            gdal-devel,
+            geos-devel
+            libjpeg-turbo-devel,    	     liblas-devel,
+            libpng-devel	,\
+            libpq-devel,\
+            libtiff-devel,\
+            netcdf-devel,	proj-devel,\
+            python3-core,\
+            python3-numpy,\
+            python3-ply	python3-pytest,\
+            python3-pywin32,\
+            python3-six,\
+            python3-wxpython,
+            sqlite3-devel, 
+            zstd-devel     
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
