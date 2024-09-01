@@ -51,7 +51,7 @@ runs:
           Out-Null
         "::group::Run setup"
         $setup = '${{ steps.download.outputs.setup_path }}'
-        echo "::debug::Setup path is $setup"
+        echo "Setup executable is $setup"
         $args = @(
             '-A',
             '-g',
