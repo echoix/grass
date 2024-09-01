@@ -38,7 +38,7 @@ jobs:
         uses: ./.github/actions/setup-osgeo4w
         with:
           package-dir: D:/pkg_osgeo4w
-          upgrade-also: false
+          # upgrade-also: false
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
