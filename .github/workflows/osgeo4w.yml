@@ -34,7 +34,10 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-
+      - name: Setup OSGeo4W environment
+        uses: ./.github/actions/setup-osgeo4w
+        with:
+          package-dir: D:/pkg_osgeo4w
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
@@ -49,9 +52,6 @@ jobs:
           restore-keys: |
               ${{ matrix.os }}-ccache-
           save-always: true
-      - uses: ./.github/actions/setup-osgeo4w
-        with:
-          package-dir: D:/pkg_osgeo4w
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
         with:
           path-type: inherit
