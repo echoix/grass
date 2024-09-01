@@ -49,7 +49,7 @@ runs:
       run: |
         echo "::group::Run setup"
         $setup = '${{ steps.download.outputs.setup_path }}'
-        echo "Setup path is $setup"
+        Write-Information "Setup path is $setup"
         $args = @(
             '-A',
             '-g',
