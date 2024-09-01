@@ -21,16 +21,18 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Download installer"
+    - name: "Download OSGeo4W installer"
       id: download
       shell: pwsh
       run: |
-        echo ": Download installer"
+        echo ": Download OSGeo4W installer"
+        echo "Starting download of $url..."
         $exe = 'osgeo4w-setup.exe'
         $url = '${{ inputs.site }}' + $exe
         $setup = '.\' + $exe
         echo "setup_path=$setup" >> "$env:GITHUB_OUTPUT"
         Invoke-WebRequest $url -OutFile $setup
+        echo "Download completed"
     - name: Ensure package dir exists
       if: ${{ inputs.package-dir }}
       shell: pwsh
