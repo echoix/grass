@@ -62,6 +62,13 @@ runs:
         if ('${{ inputs.upgrade-also }}' -eq $true) {
           $args += '--upgrade-also'
         }
+        $deps = '${{ inputs.packages }}'
+        $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim(',') -ne ''}
+        if ($depsList.Count -gt 0) {
+          $args += '--packages'  # Specify packages to install
+          $args += $depsList -Join(',')
+        }
+
         "Command to execute: & $setup $args | Out-Default"
         & $setup $args | Out-Default
         echo "::endgroup::"
