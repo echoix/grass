@@ -49,10 +49,12 @@ runs:
       run: |
         Write-Information "S2etup path is $setup"
         Write-Verbose -Message "Searching the Application Event Log."
+        Write-Warning "This is only a test warning."
         echo "::group::Run setup"
         $setup = '${{ steps.download.outputs.setup_path }}'
         Write-Information "Setup path is $setup"
         Write-Verbose -Message "S3earching the Application Event Log."
+        Write-Warning "T4his is only a test warning."
         $args = @(
             '-A',
             '-g',
