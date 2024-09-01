@@ -53,10 +53,9 @@ runs:
         $setup = '${{ steps.download.outputs.setup_path }}'
         echo "Setup executable is $setup"
         $args = @(
-            '-A',
-            '-g',
+            '--advanced', # Advanced install (default)'
             '-k',
-            '-q',
+            '--quiet-mode', # Unattended setup mode
             '-s', 'http://download.osgeo.org/osgeo4w/v2/'
             # '-P', '${{ env.Deps }}',
             # '--local-package-dir', $pkg_dir,
