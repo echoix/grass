@@ -37,24 +37,31 @@ runs:
         echo "Download completed"
         "::endgroup::"
 
-        echo "::group::Ensure package dir exists"
-        $pkg_dir = $env:INPUT_PACKAGE_DIR
-        if ($pkg_dir)
-        {
-            echo '$pkg_dir is true'
-        } else {
-            echo '$pkg_dir is false'
-        }
-
-        mkdir -Force $env:INPUT_PACKAGE_DIR
-        echo "::endgroup::"
-        "::group::Run setup"
-        $setup = '${{ steps.download.outputs.setup_path }}'
-        echo "Setup executable is $setup"
         $args_ = @(
             '--advanced', # Advanced install (default)
             '--autoaccept', # Accept all licenses
-            '--quiet-mode', # Unattended setup mode
+            '--quiet-mode' # Unattended setup mode
+        )
+
+        echo "::group::Ensure package dir exists"
+        $pkg_dir = $env:INPUT_PACKAGE_DIR
+        $pkg_dir = $pkg_dir.Trim()
+        if ($pkg_dir) {
+            echo "Creating local package directory: $pkg_dir"
+            mkdir -Force $pkg_dir
+            $args_ += '--local-package-dir'
+            $args_ += $pkg_dir
+        }
+        else {
+            echo "Using default package directory"
+        }
+        echo "::endgroup::"
+
+
+        echo "::group::Run setup"
+        $setup = '${{ steps.download.outputs.setup_path }}'
+        echo "Setup executable is $setup"
+        $args_ += @(
             '--site', '${{ inputs.site }}', # Download site
             '--root', '${{ inputs.root }}'  # Root installation directory
         )
@@ -63,6 +70,8 @@ runs:
         if ('${{ inputs.upgrade-also }}' -eq $true) {
             $args_ += '--upgrade-also'
         }
+
+        $args_ | Format-Table -Wrap -AutoSize
       shell: pwsh
       env:
         INPUT_SITE: ${{ inputs.site }}
