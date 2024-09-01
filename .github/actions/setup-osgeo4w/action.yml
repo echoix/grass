@@ -56,9 +56,9 @@ runs:
             , '--quiet-mode' # Unattended setup mode
             , '--site', '${{ inputs.site }}' # Download site
             , '--root', '${{ inputs.root }}' # Root installation directory
-            # '-P', '${{ env.Deps }}',
-            # '--local-package-dir', $pkg_dir,
           )
+          # '-P', '${{ env.Deps }}',
+          # '--local-package-dir', $pkg_dir,
         if ('${{ inputs.upgrade-also }}' -eq $true) {
           $args += '--upgrade-also'
         }
