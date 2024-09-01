@@ -43,7 +43,7 @@ jobs:
       - name: Setup OSGeo4W environment
         uses: ./.github/actions/setup-osgeo4w
         with:
-          package-dir: D:/pkg_osgeo4w2
+          package-dir: D:/pkg_osgeo4 w2
           # upgrade-also: false
           packages: ",,,,,"
       - name: Setup OSGeo4W environment
