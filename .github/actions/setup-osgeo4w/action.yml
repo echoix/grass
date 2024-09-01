@@ -71,7 +71,8 @@ runs:
         #   $args += '--packages'  # Specify packages to install
         #   $args += $depsList -Join(',')
         # }
-        $packages = '${{ inputs.packages }}'
+        # $packages = '${{ inputs.packages }}'
+        $packages = $env:pkgs
         $pkg_list = $packages.Split('', [System.StringSplitOptions]::RemoveEmptyEntries)
         echo "pkg_list is:"
         echo $pkg_list
@@ -89,3 +90,5 @@ runs:
         & $setup $args | Out-Default
         echo "::endgroup::"
       shell: pwsh
+      env:
+        pkgs: "${{ inputs.packages }}"
