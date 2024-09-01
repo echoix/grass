@@ -25,6 +25,22 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup OSGeo4W environment
+      run: |-
+        "Setup OSGeo4W environment action"
+        "::group::Download OSGeo4W installer"
+        $exe = 'osgeo4w-setup.exe'
+        $url = '${{ inputs.site }}' + $exe
+        $setup = '.\' + $exe
+        echo "Starting download of $url..."
+        Invoke-WebRequest $url -OutFile $setup
+        echo "Download completed"
+        "::endgroup::"
+        echo "::group::Ensure package dir exists"
+        mkdir -Force '${{ inputs.package-dir }}'
+        echo "::endgroup::"
+        "::group::Run setup"
+      shell: pwsh
     # - name: "Download OSGeo4W installer"
     #   id: download
     #   shell: pwsh
