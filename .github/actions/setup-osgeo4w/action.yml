@@ -54,7 +54,7 @@ runs:
             '--advanced',   # Advanced install (default)'
             '--autoaccept', # Accept all licenses
             '--quiet-mode', # Unattended setup mode
-            '--site', 'http://download.osgeo.org/osgeo4w/v2/'
+            '--site', '${{ inputs.site }}', # Download site
             # '-P', '${{ env.Deps }}',
             # '--local-package-dir', $pkg_dir,
             # '--root', '${{ env.OSGEO4W_ROOT }}'
