@@ -41,6 +41,8 @@ runs:
         echo "::endgroup::"
         "::group::Run setup"
       shell: pwsh
+    - run: npm install @actions/tool-cache
+      shell: sh
     - uses: actions/github-script@v7
       with:
         script: |
