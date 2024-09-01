@@ -45,7 +45,7 @@ runs:
             '-g',
             '-k',
             '-q',
-            '-s', 'http://download.osgeo.org/osgeo4w/v2/',
+            '-s', 'http://download.osgeo.org/osgeo4w/v2/'
             # '-P', '${{ env.Deps }}',
             # '--local-package-dir', $pkg_dir,
             # '--root', '${{ env.OSGEO4W_ROOT }}'
