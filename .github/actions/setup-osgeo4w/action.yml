@@ -64,7 +64,7 @@ runs:
         }
         $deps = '${{ inputs.packages }}'
         # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim(',') -ne ''}
-        $depsList = $deps -split '\s+' -match '\s' | where {$_.Trim(',') -ne ''}
+        $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim() -ne ''}
         $depsList = $depsList | % { $_.Trim() }
         if ($depsList.Count -gt 0) {
           $args += '--packages'  # Specify packages to install
