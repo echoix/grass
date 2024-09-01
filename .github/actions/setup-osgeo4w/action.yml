@@ -41,6 +41,27 @@ runs:
         echo "::endgroup::"
         "::group::Run setup"
       shell: pwsh
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          function parseInput() {
+            let p_root = core.getInput('root');
+            let p_site = core.getInput('site');
+            let input = new Input();
+              input.root = p_root;
+              input.site = p_site;
+              # input.pathtype = p_pathtype;
+              # input.msystem = p_msystem;
+              # input.install = p_install_list;
+              # input.pacboy = p_pacboy_list;
+              # input.platformcheckseverity = p_platformcheckseverity;
+              # input.location = (p_location == "RUNNER_TEMP") ? process.env['RUNNER_TEMP'] : p_location;
+              # input.cache = p_cache;
+             return input;
+          }
+          const input2 = parseInput();
+          import tc from '@actions/tool-cache';
+          console.log(input2);
     # - name: "Download OSGeo4W installer"
     #   id: download
     #   shell: pwsh
