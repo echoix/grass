@@ -1,4 +1,5 @@
-Remove-Item dl/*
+mkdir -Force "dl"
+Remove-Item "dl/*"
 $url = "https://download.osgeo.org/osgeo4w/v2/x86_64/release/proj/proj-data/proj-data-1.17-1.tar.bz2"
 $destCurl = "dl/curl-proj-data-1.17-1.tar.bz2"
 $destIwr1 = "dl/iwr1-proj-data-1.17-1.tar.bz2"
