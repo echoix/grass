@@ -62,15 +62,23 @@ runs:
         if ('${{ inputs.upgrade-also }}' -eq $true) {
           $args += '--upgrade-also'
         }
-        $deps = '${{ inputs.packages }}'
-        # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim(',') -ne ''}
-        $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim() -ne ''}
-        $depsList = $depsList | % { $_.Trim() }
-        if ($depsList.Count -gt 0) {
-          $args += '--packages'  # Specify packages to install
-          $args += $depsList -Join(',')
+        # $deps = '${{ inputs.packages }}'
+        # # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim(',') -ne ''}
+        # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim() -ne ''}
+        # $depsList = $depsList | % { $_.Trim() }
+        # $depsList = $depsList | % { $_.Trim(',') }
+        # if ($depsList.Count -gt 0) {
+        #   $args += '--packages'  # Specify packages to install
+        #   $args += $depsList -Join(',')
+        # }
+        $packages = '${{ inputs.packages }}'
+        $pkg_list = $packages.Split('', [System.StringSplitOptions]::RemoveEmptyEntries)
+        $pkg_list = $pkg_list | % { $_.Trim() }
+        $pkg_list = $pkg_list | % { $_.Trim(',') }
+        if ($pkg_list.Count -gt 0) {
+          $args += '-P'
+          $args += $pkg_list -Join(',')
         }
-
         "Command to execute: & $setup $args | Out-Default"
         & $setup $args | Out-Default
         echo "::endgroup::"
