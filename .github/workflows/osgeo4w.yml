@@ -52,9 +52,9 @@ jobs:
           # package-dir: D:/pkg_osgeo4w2
           # upgrade-also: false
           packages: |
-            cairo-devel,\
-            freetype-devel,\
-            gdal-devel,
+            cairo-devel
+            freetype-devel
+            gdal-devel
             geos-devel
             libjpeg-turbo-devel,    	     liblas-devel,
             libpng-devel	,\
