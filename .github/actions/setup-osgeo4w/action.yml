@@ -51,13 +51,13 @@ runs:
         $setup = '${{ steps.download.outputs.setup_path }}'
         echo "Setup executable is $setup"
         $args = @(
-            '--advanced',   # Advanced install (default)'
-            '--autoaccept', # Accept all licenses
-            '--quiet-mode', # Unattended setup mode
-            '--site', '${{ inputs.site }}' # Download site
+            '--advanced'     # Advanced install (default)'
+            , '--autoaccept' # Accept all licenses
+            , '--quiet-mode' # Unattended setup mode
+            , '--site', '${{ inputs.site }}' # Download site
+            , '--root', '${{ inputs.root }}' # Root installation directory
             # '-P', '${{ env.Deps }}',
             # '--local-package-dir', $pkg_dir,
-            # '--root', '${{ env.OSGEO4W_ROOT }}'
           )
         if ('${{ inputs.upgrade-also }}' -eq $true) {
           $args += '--upgrade-also'
