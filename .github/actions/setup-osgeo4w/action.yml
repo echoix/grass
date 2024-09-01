@@ -62,6 +62,7 @@ runs:
         if ('${{ inputs.upgrade-also }}' -eq $true) {
           $args += '--upgrade-also'
         }
+        "Command to execute: & $setup $args | Out-Default"
         & $setup $args | Out-Default
         echo "::endgroup::"
       shell: powershell
