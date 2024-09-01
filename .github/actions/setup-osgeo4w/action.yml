@@ -46,8 +46,8 @@ runs:
        mkdir -Force '${{ inputs.package-dir }}'
        echo "::endgroup::"
     - name: Run setup
-      shell: pwsh
       run: |
+        echo "::group::Run setup"
         $setup = '${{ steps.download.outputs.setup_path }}'
         echo "Setup path is $setup"
         $args = @(
@@ -61,3 +61,5 @@ runs:
             # '--root', '${{ env.OSGEO4W_ROOT }}'
           )
         & $setup $args | Out-Default
+        echo "::endgroup::"
+      shell: pwsh
