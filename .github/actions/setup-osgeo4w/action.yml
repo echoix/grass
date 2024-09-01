@@ -62,7 +62,7 @@ runs:
         if ('${{ inputs.upgrade-also }}' -eq $true) {
           $args += '--upgrade-also'
         }
-        # $deps = '${{ inputs.packages }}'
+        # $deps = '${ { inputs.packages } }'
         # # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim(',') -ne ''}
         # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim() -ne ''}
         # $depsList = $depsList | % { $_.Trim() }
@@ -71,7 +71,7 @@ runs:
         #   $args += '--packages'  # Specify packages to install
         #   $args += $depsList -Join(',')
         # }
-        # $packages = '${{ inputs.packages }}'
+        # $packages = '${ { inputs.packages } }'
         $packages = $env:pkgs
         $pkg_list = $packages.Split('', [System.StringSplitOptions]::RemoveEmptyEntries)
         echo "pkg_list is:"
