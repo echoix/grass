@@ -64,4 +64,4 @@ runs:
         }
         & $setup $args | Out-Default
         echo "::endgroup::"
-      shell: pwsh
+      shell: powershell
