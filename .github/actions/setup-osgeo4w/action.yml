@@ -73,8 +73,14 @@ runs:
         # }
         $packages = '${{ inputs.packages }}'
         $pkg_list = $packages.Split('', [System.StringSplitOptions]::RemoveEmptyEntries)
+        echo "pkg_list is:"
+        echo $pkg_list
         $pkg_list = $pkg_list | % { $_.Trim() }
+        echo "pkg_list trim1 is:"
+        echo $pkg_list
         $pkg_list = $pkg_list | % { $_.Trim(',') }
+        echo "pkg_list trim2 is:"
+        echo $pkg_list
         if ($pkg_list.Count -gt 0) {
           $args += '-P'
           $args += $pkg_list -Join(',')
