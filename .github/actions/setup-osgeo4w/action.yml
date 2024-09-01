@@ -47,12 +47,12 @@ runs:
        echo "::endgroup::"
     - name: Run setup
       run: |
-        Write-Information "S2etup path is $setup"
+        Write-Information "S2etup path is $setup" -InformationAction Continue  
         Write-Verbose -Message "Searching the Application Event Log."
         Write-Warning "This is only a test warning."
         echo "::group::Run setup"
         $setup = '${{ steps.download.outputs.setup_path }}'
-        Write-Information "Setup path is $setup"
+        Write-Information "Setup path is $setup" -InformationAction Continue  
         Write-Verbose -Message "S3earching the Application Event Log."
         Write-Warning "T4his is only a test warning."
         $args = @(
