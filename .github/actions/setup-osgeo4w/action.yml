@@ -59,6 +59,9 @@ runs:
             # '--local-package-dir', $pkg_dir,
             # '--root', '${{ env.OSGEO4W_ROOT }}'
           )
+        if ('${{ inputs.upgrade-also }}' -eq $true) {
+          $args += '--upgrade-also'
+        }
         & $setup $args | Out-Default
         echo "::endgroup::"
       shell: pwsh
