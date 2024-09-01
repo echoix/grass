@@ -34,6 +34,7 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - run: .\downloadtest.ps1
       - name: Setup OSGeo4W environment
         uses: ./.github/actions/setup-osgeo4w
         with:
