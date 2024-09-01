@@ -51,7 +51,7 @@ runs:
         $setup = '${{ steps.download.outputs.setup_path }}'
         echo "Setup executable is $setup"
         $args = @(
-            '--advanced'     # Advanced install (default)'
+            '--advanced'     # Advanced install (default)
             , '--autoaccept' # Accept all licenses
             , '--quiet-mode' # Unattended setup mode
             , '--site', '${{ inputs.site }}' # Download site
