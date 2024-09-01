@@ -30,17 +30,43 @@ runs:
         "Setup OSGeo4W environment action"
         "::group::Download OSGeo4W installer"
         $exe = 'osgeo4w-setup.exe'
-        $url = '${{ inputs.site }}' + $exe
+        $url = $env:INPUT_SITE + $exe
         $setup = '.\' + $exe
         echo "Starting download of $url..."
         Invoke-WebRequest $url -OutFile $setup
         echo "Download completed"
         "::endgroup::"
+
         echo "::group::Ensure package dir exists"
-        mkdir -Force '${{ inputs.package-dir }}'
+        $pkg_dir = $env:INPUT_PACKAGE_DIR
+        if ($pkg_dir)
+        {
+            echo '$pkg_dir is true'
+        } else {
+            echo '$pkg_dir is false'
+        }
+
+        mkdir -Force $env:INPUT_PACKAGE_DIR
         echo "::endgroup::"
         "::group::Run setup"
+        $setup = '${{ steps.download.outputs.setup_path }}'
+        echo "Setup executable is $setup"
+        $args_ = @(
+            '--advanced', # Advanced install (default)
+            '--autoaccept', # Accept all licenses
+            '--quiet-mode', # Unattended setup mode
+            '--site', '${{ inputs.site }}', # Download site
+            '--root', '${{ inputs.root }}'  # Root installation directory
+        )
+        # '-P', '${{ env.Deps }}',
+        # '--local-package-dir', $pkg_dir,
+        if ('${{ inputs.upgrade-also }}' -eq $true) {
+            $args_ += '--upgrade-also'
+        }
       shell: pwsh
+      env:
+        INPUT_SITE: ${{ inputs.site }}
+        INPUT_PACKAGE_DIR: ${{ inputs.package-dir }}
     # - name: "Download OSGeo4W installer"
     #   id: download
     #   shell: pwsh
