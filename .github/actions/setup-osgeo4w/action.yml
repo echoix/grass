@@ -53,7 +53,8 @@ runs:
         $args = @(
             '--advanced'     # Advanced install (default)
             , '--autoaccept' # Accept all licenses
-            , '--quiet-mode' # Unattended setup mode
+            , '--quiet-mode'
+            # Unattended setup mode
             , '--site', '${{ inputs.site }}' # Download site
             , '--root', '${{ inputs.root }}' # Root installation directory
           )
