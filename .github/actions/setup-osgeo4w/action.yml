@@ -25,7 +25,6 @@ runs:
       id: download
       shell: pwsh
       run: |
-        
         echo ": Download installer"
         $exe = 'osgeo4w-setup.exe'
         $url = '${{ inputs.site }}' + $exe
