@@ -44,6 +44,14 @@ runs:
     - uses: actions/github-script@v7
       with:
         script: |
+          class Input {
+            constructor() {
+              /** @type {string} */
+              this.site;
+              /** @type {string} */
+              this.root;
+            }
+          }
           function parseInput() {
             let p_root = core.getInput('root');
             let p_site = core.getInput('site');
