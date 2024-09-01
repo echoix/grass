@@ -53,7 +53,8 @@ runs:
              return input;
           }
           const input2 = parseInput();
-          import tc from '@actions/tool-cache';
+          //import tc from '@actions/tool-cache';
+          const tc = require('@actions/tool-cache');
           console.log(input2);
     # - name: "Download OSGeo4W installer"
     #   id: download
