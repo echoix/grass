@@ -14,7 +14,7 @@ inputs:
   package-dir:
     description: Location where to download packages. Using a folder in a faster drive, like D:\OSGeo4W_pkg, reduces installation time.
     required: false
-  site1:
+  site:
     description: Download site URL to use
     required: false
     default: "https://download.osgeo.org/osgeo4w/v2/"
@@ -31,7 +31,7 @@ runs:
       run: |
         "::group::Download OSGeo4W installer"
         $exe = 'osgeo4w-setup.exe'
-        $url = '${{ inputs.site1 }}' + $exe
+        $url = '${{ inputs.site }}' + $exe
         $setup = '.\' + $exe
         echo "Starting download of $url..."
         echo "setup_path=$setup" >> "$env:GITHUB_OUTPUT"
@@ -54,7 +54,7 @@ runs:
             '--advanced'     # Advanced install (default)
             , '--autoaccept' # Accept all licenses
             , '--quiet-mode' # Unattended setup mode
-            , '--site', '${{ inputs.site1 }}' # Download site
+            , '--site', '${{ inputs.site }}' # Download site
             , '--root', '${{ inputs.root }}' # Root installation directory
           )
           # '-P', '${{ env.Deps }}',
