@@ -38,9 +38,9 @@ runs:
         "::endgroup::"
 
         $args_ = @(
-            '--advanced', # Advanced install (default)
-            '--autoaccept', # Accept all licenses
-            '--quiet-mode' # Unattended setup mode
+            '--advanced'     # Advanced install (default)
+            , '--autoaccept' # Accept all licenses
+            , '--quiet-mode' # Unattended setup mode
         )
 
         echo "::group::Ensure package dir exists"
