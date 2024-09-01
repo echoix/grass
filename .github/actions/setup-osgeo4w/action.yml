@@ -17,7 +17,7 @@ inputs:
   site:
     description: Download site URL to use
     required: false
-    default: "http://download.osgeo.org/osgeo4w/v2/"
+    default: "https://download.osgeo.org/osgeo4w/v2/"
   upgrade-also:
     description: Also upgrade installed packages
     required: false
