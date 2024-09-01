@@ -82,6 +82,9 @@ runs:
         $pkg_list = $pkg_list | % { $_.Trim(',') }
         echo "pkg_list trim2 is:"
         echo $pkg_list
+        $pkg_list = $pkg_list | % { $_.Trim('\') }
+        echo "pkg_list trim3 is:"
+        echo $pkg_list
         if ($pkg_list.Count -gt 0) {
           $args += '-P'
           $args += $pkg_list -Join(',')
