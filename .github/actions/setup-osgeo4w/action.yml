@@ -47,9 +47,8 @@ runs:
        echo "::endgroup::"
     - name: Run setup
       run: |
-        `
-        "Run setup" >
-         Out-Null
+        "Run setup" | 
+          Out-Null
         "::group::Run setup"
         $setup = '${{ steps.download.outputs.setup_path }}'
         echo "Setup path is $setup"
