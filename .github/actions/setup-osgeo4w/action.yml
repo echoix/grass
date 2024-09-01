@@ -29,7 +29,8 @@ runs:
       id: download
       shell: pwsh
       run: |
-        "::group::Download OSGeo4W installer"
+        "Download OSGeo4W installer"
+        # "::group::Download OSGeo4W installer"
         $exe = 'osgeo4w-setup.exe'
         $url = '${{ inputs.site }}' + $exe
         $setup = '.\' + $exe
@@ -37,7 +38,7 @@ runs:
         echo "setup_path=$setup" >> "$env:GITHUB_OUTPUT"
         Invoke-WebRequest $url -OutFile $setup
         "Download completed"
-        echo "::endgroup::"
+        # echo "::endgroup::"
     - name: Ensure package dir exists
       if: ${{ inputs.package-dir }}
       shell: pwsh
