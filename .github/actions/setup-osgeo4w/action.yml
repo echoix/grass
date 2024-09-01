@@ -65,4 +65,4 @@ runs:
         "Command to execute: & $setup $args | Out-Default"
         & $setup $args | Out-Default
         echo "::endgroup::"
-      shell: powershell
+      shell: pwsh
