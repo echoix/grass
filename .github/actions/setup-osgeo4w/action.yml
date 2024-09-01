@@ -42,9 +42,9 @@ runs:
       if: ${{ inputs.package-dir }}
       shell: pwsh
       run: |
-       echo "::group::Ensure package dir exists"
-       mkdir -Force '${{ inputs.package-dir }}'
-       echo "::endgroup::"
+        echo "::group::Ensure package dir exists"
+        mkdir -Force '${{ inputs.package-dir }}'
+        echo "::endgroup::"
     - name: Run setup
       run: |
         "::group::Run setup"
