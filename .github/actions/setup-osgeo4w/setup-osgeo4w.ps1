@@ -40,14 +40,14 @@ if ("$env:INPUT_UPGRADE_ALSO".ToLowerInvariant().Trim() -eq "true") {
 }
 
 echo "::group::Selected packages"
-$packages = @()
-$packages += "$env:INPUT_PACKAGES".ToString() -Split '[,\s\\]+' -match '\S' | ForEach-Object { $_.ToString() }
+$packages = @($env:INPUT_PACKAGES -Split '[,\s\\]+' -match '\S')
+$packages = $packages | Sort-Object | Get-Unique
 if ($packages.Count -gt 0) {
     $args_ += '--packages' # Specify packages to install
     $args_ += $packages -Join (',')
 }
-# Use comma to show information of the collection itself in the header
-Format-Table -InputObject $packages -Expand Both
+Write-Output "Selected $($packages.Count)"
+$packages | Format-Table
 echo "::endgroup::"
 
 
