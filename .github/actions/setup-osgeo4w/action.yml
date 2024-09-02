@@ -40,7 +40,12 @@ runs:
         # $PSStyle.OutputRendering = 'Ansi'
         # $PSStyle.OutputRendering = 'PlainText'
         Get-PSReadLineOption
+        "Starting..." | Out-String
+        "Starting..." | Out-Host
+        Write-Host -ForegroundColor Blue "Starting..."
         "Starting..." | Write-Host -ForegroundColor Blue
+        "Starting..." | Write-Host -ForegroundColor Blue | Out-Host
+        "Starting..." | Write-Host -ForegroundColor Blue | Out-String
         . ${{ github.action_path }}/setup-osgeo4w.ps1
       shell: pwsh -noprofile {0}
       env:
