@@ -1,6 +1,7 @@
 # mkdir -Force "dl"
 # Remove-Item "dl/*"
-$pkg_dir = "./pkgd"
+# $pkg_dir = "./pkgd"
+$pkg_dir = $env:OSGEO4W_PKG_DIR ?? "./pkgd"
 New-Item -ItemType "directory" -Path "$pkg_dir" -Force
 # mkdir -Force "$pkg_dir"
 $site = "https://download.osgeo.org/osgeo4w/v2/"
