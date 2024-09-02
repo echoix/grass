@@ -33,9 +33,11 @@ runs:
     - name: Setup OSGeo4W environment
       run: |-
         "Setup OSGeo4W environment action"
+        $PSStyle.OutputRendering
         Get-PSReadLineOption
+        $PSStyle.OutputRendering
         # $PSStyle.OutputRendering = 'Ansi'
-        $PSStyle.OutputRendering = 'PlainText'
+        # $PSStyle.OutputRendering = 'PlainText'
         Get-PSReadLineOption
         "Starting..." | Write-Host -ForegroundColor Blue
         . ${{ github.action_path }}/setup-osgeo4w.ps1
