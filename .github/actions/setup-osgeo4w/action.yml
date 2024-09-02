@@ -36,7 +36,7 @@ runs:
         $PSStyle.OutputRendering = 'Ansi'
         "Starting..." | Write-Host -ForegroundColor Blue
         . ${{ github.action_path }}/setup-osgeo4w.ps1
-      shell: pwsh
+      shell: pwsh -noprofile {0}
       env:
         INPUT_PACKAGES: ${{ inputs.packages }}
         INPUT_PACKAGE_DIR: ${{ inputs.package-dir }}
