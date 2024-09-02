@@ -46,6 +46,10 @@ runs:
         "Starting..." | Write-Host -ForegroundColor Blue
         "Starting..." | Write-Host -ForegroundColor Blue | Out-Host
         "Starting..." | Write-Host -ForegroundColor Blue | Out-String
+        Write-Host -ForegroundColor Green "Starting green..."
+        "Starting green..." | Write-Host -ForegroundColor Green
+        "Starting green..." | Write-Host -ForegroundColor Green | Out-Host
+        "Starting green..." | Write-Host -ForegroundColor Green | Out-String
         . ${{ github.action_path }}/setup-osgeo4w.ps1
       shell: pwsh -noprofile {0}
       env:
