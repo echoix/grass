@@ -5,14 +5,19 @@ author: "Edouard Choinière"
 
 inputs:
   packages:
-    description: List of OSGeo4W packages to install
+    description: >-
+      List of OSGeo4W packages to install.
+      Use newlines, spaces, or commas in between package names.
     required: false
   root:
     description: Root installation directory, by default C:\OSGeo4W.
     required: false
     default: C:\OSGeo4W
   package-dir:
-    description: Location where to download packages. Using a folder in a faster drive, like D:\OSGeo4W_pkg, reduces installation time.
+    description: >-
+      Location where to download packages.
+      Using a folder in a faster drive, like D:\OSGeo4W_pkg, reduces installation time.
+      Use a different folder than the one used for the `root` input.
     required: false
   site:
     description: Download site URL to use
@@ -21,7 +26,7 @@ inputs:
   upgrade-also:
     description: Also upgrade installed packages
     required: false
-    default: true
+    default: "true"
 runs:
   using: "composite"
   steps:
