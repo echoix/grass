@@ -30,19 +30,19 @@ echo "::endgroup::"
 
 
 echo "::group::Run setup"
-$setup = '${{ steps.download.outputs.setup_path }}'
 echo "Setup executable is $setup"
 $args_ += @(
-    '--site', '${{ inputs.site }}', # Download site
-    '--root', '${{ inputs.root }}'  # Root installation directory
+    '--site', "$env:INPUT_SITE", # Download site
+    '--root', "$env:INPUT_ROOT"  # Root installation directory
 )
 # '-P', '${{ env.Deps }}',
 # '--local-package-dir', $pkg_dir,
-if ('${{ inputs.upgrade-also }}' -eq $true) {
+if ("$env:INPUT_UPGRADE_ALSO".ToLowerInvariant().Trim() -eq "true") {
     $args_ += '--upgrade-also'
 }
 
 $args_ | Format-Table -Wrap -AutoSize
+Exit-PSSession
 # $deps = '${ { inputs.packages } }'
 # # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim(',') -ne ''}
 # $depsList = $deps -split '\s+' -match '\S' | where {$_.Trim() -ne ''}
