@@ -46,7 +46,8 @@ if ($packages.Count -gt 0) {
     $args_ += '--packages' # Specify packages to install
     $args_ += $packages -Join (',')
 }
-$packages | Format-Table -Expand Both
+# Use comma to show information of the collection itself in the header
+,$packages | Format-Table -Expand Both
 echo "::endgroup::"
 
 
