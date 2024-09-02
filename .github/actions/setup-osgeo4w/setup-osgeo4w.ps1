@@ -1,4 +1,3 @@
-"Setup OSGeo4W environment action"
 "::group::Download OSGeo4W installer"
 $exe = 'osgeo4w-setup.exe'
 $url = $env:INPUT_SITE + $exe
