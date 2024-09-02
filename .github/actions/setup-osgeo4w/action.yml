@@ -28,54 +28,14 @@ runs:
     - name: Setup OSGeo4W environment
       run: |-
         "Setup OSGeo4W environment action"
-        "::group::Download OSGeo4W installer"
-        $exe = 'osgeo4w-setup.exe'
-        $url = $env:INPUT_SITE + $exe
-        $setup = '.\' + $exe
-        echo "Starting download of $url..."
-        Invoke-WebRequest $url -OutFile $setup
-        echo "Download completed"
-        "::endgroup::"
-
-        $args_ = @(
-            '--advanced'     # Advanced install (default)
-            , '--autoaccept' # Accept all licenses
-            , '--quiet-mode' # Unattended setup mode
-        )
-
-        echo "::group::Ensure package dir exists"
-        $pkg_dir = $env:INPUT_PACKAGE_DIR
-        $pkg_dir = $pkg_dir.Trim()
-        if ($pkg_dir) {
-            echo "Creating local package directory: $pkg_dir"
-            mkdir -Force $pkg_dir
-            $args_ += '--local-package-dir'
-            $args_ += $pkg_dir
-        }
-        else {
-            echo "Using default package directory"
-        }
-        echo "::endgroup::"
-
-
-        echo "::group::Run setup"
-        $setup = '${{ steps.download.outputs.setup_path }}'
-        echo "Setup executable is $setup"
-        $args_ += @(
-            '--site', '${{ inputs.site }}', # Download site
-            '--root', '${{ inputs.root }}'  # Root installation directory
-        )
-        # '-P', '${{ env.Deps }}',
-        # '--local-package-dir', $pkg_dir,
-        if ('${{ inputs.upgrade-also }}' -eq $true) {
-            $args_ += '--upgrade-also'
-        }
-
-        $args_ | Format-Table -Wrap -AutoSize
+        .\${{ github.action_path }}/setup-osgeo4w.ps1
       shell: pwsh
       env:
-        INPUT_SITE: ${{ inputs.site }}
+        INPUT_PACKAGES: ${{ inputs.packages }}
         INPUT_PACKAGE_DIR: ${{ inputs.package-dir }}
+        INPUT_ROOT: ${{ inputs.root }}
+        INPUT_SITE: ${{ inputs.site }}
+        INPUT_UPGRADE_ALSO: ${{ inputs.upgrade-also }}
     # - name: "Download OSGeo4W installer"
     #   id: download
     #   shell: pwsh
