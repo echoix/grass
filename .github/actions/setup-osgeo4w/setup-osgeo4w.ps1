@@ -49,7 +49,7 @@ if ($packages.Count -gt 0) {
 Write-Host -ForegroundColor Blue "Selected $($packages.Count) packages:"
 $packages | Format-Table
 echo "::endgroup::"
-
+Get-PSReadLineOption
 
 echo "::group::Run setup"
 echo "Setup executable is $setup"
