@@ -36,6 +36,8 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       # - run: .\downloadtest.ps1
       # - run: .\readini.ps1
+      - name: Setup OSGeo4W environment
+        uses: ./.github/actions/setup-osgeo4w
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
