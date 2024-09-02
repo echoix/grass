@@ -41,7 +41,7 @@ if ("$env:INPUT_UPGRADE_ALSO".ToLowerInvariant().Trim() -eq "true") {
 
 echo "::group::Selected packages"
 $packages = @()
-$packages += "$env:INPUT_PACKAGES".ToString() -Split '[,\s\\]+' -match '\S'
+$packages += "$env:INPUT_PACKAGES".ToString() -Split '[,\s\\]+' -match '\S' | ForEach-Object { $_.ToString() }
 if ($packages.Count -gt 0) {
     $args_ += '--packages' # Specify packages to install
     $args_ += $packages -Join (',')
