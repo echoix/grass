@@ -243,7 +243,7 @@ function Load-OSGeo4WSetupIni (
 # | Format-Table
 
 
-$var2 = Get-Content "./setup2.ini"
+# $var2 = Get-Content "./setup2.ini"
 
 # # $var2  -replace '#.*$', '' -replace '^\s+', ''
 # $var2 -split '\r?\n' -replace '#.*$', '' -replace '^\s+', ''
