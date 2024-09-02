@@ -36,41 +36,6 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       # - run: .\downloadtest.ps1
       # - run: .\readini.ps1
-      - name: Setup OSGeo4W environment
-        uses: ./.github/actions/setup-osgeo4w
-        with:
-          package-dir: D:/pkg_osgeo4w
-          # upgrade-also: false
-          packages: 
-      - name: Setup OSGeo4W environment
-        uses: ./.github/actions/setup-osgeo4w
-        with:
-          package-dir: D:/pkg_osgeo4 w2
-          # upgrade-also: false
-          packages: ",,,,,"
-      - name: Setup OSGeo4W environment
-        uses: ./.github/actions/setup-osgeo4w
-        with:
-          # package-dir: D:/pkg_osgeo4w2
-          # upgrade-also: false
-          packages: |
-            cairo-devel
-            freetype-devel
-            gdal-devel
-            geos-devel
-            libjpeg-turbo-devel,    	     liblas-devel,
-            libpng-devel	,\
-            libpq-devel,\
-            libtiff-devel,\
-            netcdf-devel,	proj-devel,\
-            python3-core,\
-            python3-numpy,\
-            python3-ply	python3-pytest,\
-            python3-pywin32,\
-            python3-six,\
-            python3-wxpython,
-            sqlite3-devel, 
-            zstd-devel     
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
@@ -97,100 +62,29 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre mingw-w64-x86_64-openmp mingw-w64-x86_64-readline
-
-      - name: Install OSGeo4W
-        run: |
-          $exe = 'osgeo4w-setup.exe'
-          $url = 'https://download.osgeo.org/osgeo4w/v2/' + $exe
-          # (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          # Start-Process ('.\'+$setup) -ArgumentList '-A -g -k -q \
-          #   -s https://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
-          # $setup = "${{ runner.temp }}/"+$exe
-          # $setup = '.\' + $exe
-          $pkg_dir = "${{ env.OSGEO4W_PKG_DIR }}"
-          mkdir -Force $pkg_dir
-          $setup = $pkg_dir + '/' + $exe
-          Invoke-WebRequest $url -OutFile $setup
-          $args = @(
-            '-A',
-            '-g',
-            '-k',
-            '-q',
-            '-s', 'https://download.osgeo.org/osgeo4w/v2/',
-            '-P', '${{ env.Deps }}',
-            '--local-package-dir', $pkg_dir,
-            '--root', '${{ env.OSGEO4W_ROOT }}'
-          )
-          & $setup $args | Out-Default
-        env:
-          OSGEO4W_ROOT: "C:/OSGeo4W"
-          Deps-old: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
-            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
-            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
-            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-pytest,python3-wxpython,regex-devel,zstd-devel"
-          Deps: "cairo-devel,freetype-devel,gdal-devel,geos-devel,libjpeg-turbo-devel,liblas-devel,libpng-devel,libpq-devel,libtiff-devel,netcdf-devel,proj-devel,python3-core,python3-numpy,python3-ply,python3-pytest,python3-pywin32,python3-six,python3-wxpython,sqlite3-devel,zstd-devel"
-          Deps2: "cairo-devel,\
-            freetype-devel,\
-            gdal-devel,\
-            geos-devel,\
-            libjpeg-turbo-devel,\
-            liblas-devel,\
-            libpng-devel,\
-            libpq-devel,\
-            libtiff-devel,\
-            netcdf-devel,\
-            proj-devel,\
-            python3-core,\
-            python3-numpy,\
-            python3-ply,\
-            python3-pytest,\
-            python3-pywin32,\
-            python3-six,\
-            python3-wxpython,\
-            sqlite3-devel,\
-            zstd-devel"
-          Deps3: |
-            cairo-devel,\
-            freetype-devel,\
-            gdal-devel,\
-            geos-devel,\
-            libjpeg-turbo-devel,\
-            liblas-devel,\
-            libpng-devel,\
-            libpq-devel,\
-            libtiff-devel,\
-            netcdf-devel,\
-            proj-devel,\
-            python3-core,\
-            python3-numpy,\
-            python3-ply,\
-            python3-pytest,\
-            python3-pywin32,\
-            python3-six,\
-            python3-wxpython,\
-            sqlite3-devel,\
-            zstd-devel
-          Deps4: |-
-            cairo-devel,\
-            freetype-devel,\
-            gdal-devel,\
-            geos-devel,\
-            libjpeg-turbo-devel,\
-            liblas-devel,\
-            libpng-devel,\
-            libpq-devel,\
-            libtiff-devel,\
-            netcdf-devel,\
-            proj-devel,\
-            python3-core,\
-            python3-numpy,\
-            python3-ply,\
-            python3-pytest,\
-            python3-pywin32,\
-            python3-six,\
-            python3-wxpython,\
-            sqlite3-devel,\
+      - name: Setup OSGeo4W environment
+        uses: ./.github/actions/setup-osgeo4w
+        with:
+          packages: |
+            cairo-devel
+            freetype-devel
+            gdal-devel
+            geos-devel
+            libjpeg-turbo-devel
+            liblas-devel
+            libpng-devel
+            libpq-devel
+            libtiff-devel
+            netcdf-devel
+            proj-devel
+            python3-core
+            python3-numpy
+            python3-ply
+            python3-pytest
+            python3-pywin32
+            python3-six
+            python3-wxpython
+            sqlite3-devel
             zstd-devel
 
       - run: python -m pip install pytest-timeout
