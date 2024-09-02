@@ -8,6 +8,7 @@ Invoke-WebRequest $url -OutFile $setup
 echo "Download completed"
 "::endgroup::"
 
+# Array to store arguments to pass to the installer
 $args_ = @(
     '--advanced'     # Advanced install (default)
     , '--autoaccept' # Accept all licenses
@@ -20,6 +21,8 @@ $pkg_dir = $pkg_dir.Trim()
 if ($pkg_dir) {
     echo "Creating local package directory: $pkg_dir"
     mkdir -Force $pkg_dir
+
+    # add arguments
     $args_ += '--local-package-dir'
     $args_ += $pkg_dir
 }
@@ -28,13 +31,11 @@ else {
 }
 echo "::endgroup::"
 
-
-
+# add arguments
 $args_ += @(
     '--site', "$env:INPUT_SITE", # Download site
     '--root', "$env:INPUT_ROOT"  # Root installation directory
 )
-# '-P', '${{ env.Deps }}',
 if ("$env:INPUT_UPGRADE_ALSO".ToLowerInvariant().Trim() -eq "true") {
     $args_ += '--upgrade-also'
 }
@@ -42,13 +43,13 @@ if ("$env:INPUT_UPGRADE_ALSO".ToLowerInvariant().Trim() -eq "true") {
 echo "::group::Selected packages"
 $packages = $env:INPUT_PACKAGES -Split '[,\s\\]+' -match '\S'
 if ($packages.Count -gt 0) {
-    $args_ += '--packages'  # Specify packages to install
+    $args_ += '--packages' # Specify packages to install
     $args_ += $packages -Join (',')
 }
 $packages | Format-Table -Expand Both
 echo "::endgroup::"
 
-$args_ | Format-Table -Wrap -AutoSize
+
 echo "::group::Run setup"
 echo "Setup executable is $setup"
 "Command to execute: & $setup $args_ | Out-Default"
