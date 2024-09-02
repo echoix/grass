@@ -543,7 +543,7 @@ $pkgListAdded.Length
 $pkgs = $pkgListAdded 
 | Select-Object -Property @{n = 'Name'; e = { $_ } }, @{Name = 'install'; Expression = { ($setupIniParsed.Packages[$_]['install'] -split '\s+') } }
 | Select-Object -Property Name, @{Name = 'Size'; Expression = { [Int] $_.'install'[1] } }, @{n = "Url"; e = { $_.'install'[0] } }, @{n = "Digest"; e = { $_.'install'[2] } }
-| Select-Object -Property *, @{Name = "Uri"; Expression = { [System.Uri]("$site/$($_.Url)" ) } }, @{Name = "OutFile"; Expression = { $pkg_dir + '/' + $siteFolder + $_.Url } }
+| Select-Object -Property *, @{Name = "Uri"; Expression = { [System.Uri]("$site/$($_.Url)" ) } }, @{Name = "OutFile"; Expression = { $pkg_dir + '/' + $siteFolder + '/' + $_.Url } }
 | Sort-Object -Property Name
 | Sort-Object -Property Size -Descending
 # $pkgListAdded | Select-Object -Property @{name='Size';Expression={($setupIniParsed.Packages[$_]['install'] -split'\s+')[1]}}
