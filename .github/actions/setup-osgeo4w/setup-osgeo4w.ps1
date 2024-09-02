@@ -45,7 +45,7 @@ if ($packages.Count -gt 0) {
     $args_ += '--packages'  # Specify packages to install
     $args_ += $packages -Join (',')
 }
-$packages | Select-Object -Property { ($_.Length) }   | Format-Table  -Expand Both
+$packages | Format-Table -Expand Both
 echo "::endgroup::"
 
 $args_ | Format-Table -Wrap -AutoSize
