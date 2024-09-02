@@ -1,7 +1,7 @@
 # mkdir -Force "dl"
 # Remove-Item "dl/*"
 $pkg_dir = "./pkgd"
-New-Item -ItemType "directory" -Path "$pkg_dir"
+New-Item -ItemType "directory" -Path "$pkg_dir" -Force
 # mkdir -Force "$pkg_dir"
 $site = "https://download.osgeo.org/osgeo4w/v2/"
 $url = $site + "x86_64/setup.ini"
@@ -573,23 +573,23 @@ $jobs = @()
 Measure-Command {
 
 
-foreach ($file in $pkgs) {
-# foreach ($file in $files) {
-    # mkdir -Force 
-    $jobs += Start-ThreadJob -Name $file.OutFile -ScriptBlock {
-        $params = $using:file
-        New-Item -ItemType "directory" -Path (Split-Path -Parent $params.OutFile)
-        # New-Item -Path "c:\" -Name "logfiles" -ItemType "directory"
-        # mkdir -Force (Split-Path -Parent $params.OutFile)
-        $params2 = @{Uri = $params.Uri; OutFile = $params.OutFile }
-        Invoke-WebRequest @params2
+    foreach ($file in $pkgs) {
+        # foreach ($file in $files) {
+        # mkdir -Force 
+        $jobs += Start-ThreadJob -Name $file.OutFile -ScriptBlock {
+            $params = $using:file
+            New-Item -ItemType "directory" -Path (Split-Path -Parent $params.OutFile) -Force
+            # New-Item -Path "c:\" -Name "logfiles" -ItemType "directory"
+            # mkdir -Force (Split-Path -Parent $params.OutFile)
+            $params2 = @{Uri = $params.Uri; OutFile = $params.OutFile }
+            Invoke-WebRequest @params2
+        }
     }
-}
 
-Write-Host "Downloads started..."
-Wait-Job -Job $jobs
+    Write-Host "Downloads started..."
+    Wait-Job -Job $jobs
 
-foreach ($job in $jobs) {
-    Receive-Job -Job $job
-}
+    foreach ($job in $jobs) {
+        Receive-Job -Job $job
+    }
 }
