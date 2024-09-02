@@ -254,7 +254,8 @@ $var2 = Get-Content "./setup2.ini"
 
 "w1"
 # $var2 | Load-OSGeo4WSetupIni 
-$setupIniParsed = Get-Content -Raw './setup2.ini' | Load-OSGeo4WSetupIni 
+$setupIniParsed = iwr -Uri $url | Load-OSGeo4WSetupIni 
+# $setupIniParsed = Get-Content -Raw './setup2.ini' | Load-OSGeo4WSetupIni 
 $setupIniParsed | Select-Object -First 15 
 # | ForEach-Object { [PSCustomObject]@{ len = $_.Length; val = $_ } }
 | Format-Table
