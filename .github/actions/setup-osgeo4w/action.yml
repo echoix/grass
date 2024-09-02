@@ -33,7 +33,7 @@ runs:
     - name: Setup OSGeo4W environment
       run: |-
         "Setup OSGeo4W environment action"
-        Write-Host -ForegroundColor Blue "Starting..."
+        "Starting..." | Write-Host -ForegroundColor Blue
         . ${{ github.action_path }}/setup-osgeo4w.ps1
       shell: pwsh
       env:
