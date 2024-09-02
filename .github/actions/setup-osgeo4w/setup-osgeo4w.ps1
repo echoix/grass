@@ -46,7 +46,7 @@ if ($packages.Count -gt 0) {
     $args_ += $packages -Join (',')
 }
 # Use comma to show information of the collection itself in the header
-,$packages | Format-Table -Expand Both
+, $packages | Format-Table -Expand Both
 echo "::endgroup::"
 
 
