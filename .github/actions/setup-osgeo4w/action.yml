@@ -51,7 +51,7 @@ runs:
         "Starting green..." | Write-Host -ForegroundColor Green | Out-Host
         "Starting green..." | Write-Host -ForegroundColor Green | Out-String
         . ${{ github.action_path }}/setup-osgeo4w.ps1
-      shell: pwsh -noprofile {0}
+      shell: pwsh
       env:
         INPUT_PACKAGES: ${{ inputs.packages }}
         INPUT_PACKAGE_DIR: ${{ inputs.package-dir }}
