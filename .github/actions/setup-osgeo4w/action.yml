@@ -35,6 +35,7 @@ runs:
         "Setup OSGeo4W environment action"
         $PSStyle.OutputRendering
         Get-PSReadLineOption
+        $PSStyle
         $PSStyle.OutputRendering
         # $PSStyle.OutputRendering = 'Ansi'
         # $PSStyle.OutputRendering = 'PlainText'
