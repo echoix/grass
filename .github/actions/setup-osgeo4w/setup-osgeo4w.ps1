@@ -46,13 +46,14 @@ if ($packages.Count -gt 0) {
     $args_ += '--packages' # Specify packages to install
     $args_ += $packages -Join (',')
 }
-Write-Output "Selected $($packages.Count)"
+Write-Host -ForegroundColor Blue "Selected $($packages.Count) packages:"
 $packages | Format-Table
 echo "::endgroup::"
 
 
 echo "::group::Run setup"
 echo "Setup executable is $setup"
-"Command to execute: & $setup $args_ | Out-Default"
+"Command to execute:"
+Write-Host -ForegroundColor Blue "& $setup $args_ | Out-Default"
 & $setup $args_ | Out-Default
 echo "::endgroup::"
