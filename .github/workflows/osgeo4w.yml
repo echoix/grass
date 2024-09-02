@@ -48,7 +48,7 @@ jobs:
           path: .ccache
           key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
           restore-keys: |
-              ${{ matrix.os }}-ccache-
+            ${{ matrix.os }}-ccache-
           save-always: true
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
         with:
@@ -56,7 +56,8 @@ jobs:
           location: D:\
           update: true
           msystem: MINGW64
-          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
+          install: >-
+            tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
@@ -96,7 +97,6 @@ jobs:
           echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
           echo "CCACHE_MAXSIZE=400M" >> "${GITHUB_ENV}"
         shell: msys2 {0}
-
 
       - name: Set number of cores for compilation
         run: |
@@ -305,7 +305,7 @@ jobs:
       #   continue-on-error: true
       #   timeout-minutes: 5
       # # - name: envs Run pytest with a single worker (all tests)
-      # #   run: | 
+      # #   run: |
       # #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
       # #       --durations=0 --durations-min=0.5 ^
       # #       -ra .
@@ -317,7 +317,7 @@ jobs:
       # #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
       # #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
       # # - name: env python Run pytest with a single worker (all tests)
-      # #   run: | 
+      # #   run: |
       # #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec python -m pytest --verbose --color=yes ^
       # #       --durations=0 --durations-min=0.5 ^
       # #       -ra .
@@ -329,7 +329,7 @@ jobs:
       # #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
       # #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
       # - name: env python direct Run pytest with a single worker (all tests)
-      #   run: | 
+      #   run: |
       #     "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
       #       --durations=0 --durations-min=0.5 ^
       #       --continue-on-collection-errors ^
@@ -354,7 +354,7 @@ jobs:
 
       #     set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
       #     set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
-          
+
       #     set PYTHONHOME=C:\OSGeo4W\apps\Python312
       #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
       #     set GRASS_COMPATIBILITY_TEST=0
@@ -404,7 +404,7 @@ jobs:
 
       # #     set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
       # #     set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
-          
+
       # #     set PYTHONHOME=C:\OSGeo4W\apps\Python312
       # #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
       # #     set GRASS_COMPATIBILITY_TEST=0
