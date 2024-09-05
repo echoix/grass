@@ -148,13 +148,10 @@ def main():
     if rows:
         # Create the r.colors input file
         filename = gs.tempfile(True)
-        file = open(filename, "w")
-
-        for row in rows:
-            string = "%s\n" % (row["id"])
-            file.write(string)
-
-        file.close()
+        with open(filename, "w") as _file:
+            for row in rows:
+                string = "%s\n" % (row["id"])
+                _file.write(string)
 
         flags_ = ""
         if remove:
