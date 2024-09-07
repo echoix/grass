@@ -33,6 +33,21 @@ runs:
     - name: Setup OSGeo4W environment
       run: |-
         "Setup OSGeo4W environment action"
+        $Object = "Hello object!"
+        Write-Host $Object -ForegroundColor Green -BackgroundColor Yellow -NoNewline
+        Write-Host
+
+        [Enum]::GetValues([ConsoleColor]) |
+        ForEach-Object {
+          $color = $_.ToString().Trim()
+          if (($color -like 'dark*') -or ($color -like 'black')) {
+            Write-Host "`n$color" -ForegroundColor $color
+            Write-Host "$color" -ForegroundColor White -BackgroundColor $color -NoNewline
+          } else {
+            Write-Host "`n$color" -ForegroundColor $color
+            Write-Host "$color" -ForegroundColor Black -BackgroundColor $color -NoNewline
+          }
+        }
         $PSStyle.OutputRendering
         Get-PSReadLineOption
         $PSStyle
