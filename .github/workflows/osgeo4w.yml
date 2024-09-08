@@ -133,6 +133,21 @@ jobs:
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
         continue-on-error: true
+      - name: Test executing of the grass command in bash msys
+        shell: msys2 {0}
+        run: |
+          PWD="$(pwd)"
+          SRC="${PWD}"
+          export ARCH=x86_64-w64-mingw32
+          export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin"
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          export PYTHONHOME="${PYTHONHOME}"
+          export PYTHONUTF8=1
+          printenv | sort
+          .github/workflows/test_simple_msys.sh
+        continue-on-error: true
+        env:
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
