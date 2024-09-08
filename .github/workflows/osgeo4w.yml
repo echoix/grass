@@ -157,6 +157,7 @@ jobs:
           export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
           export PYTHONHOME="${PYTHONHOME}"
           export PYTHONUTF8=1
+          export GISBASE=${OSGEO4W_ROOT}/apps/grass/grass85
           printenv | sort
           .github/workflows/test_simple_msys.sh
         continue-on-error: true
@@ -173,6 +174,7 @@ jobs:
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run tests osgeo4w shell pythonpath
         run: |
+          set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
           set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
           .github/workflows/test_thorough.bat "C:\OSGeo4W\bin\grass85.bat" "C:\OSGeo4W\bin\python3"
         continue-on-error: true
