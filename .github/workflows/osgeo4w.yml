@@ -102,7 +102,11 @@ jobs:
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
-        run: .github/workflows/print_versions.sh
+        run: |
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          .github/workflows/print_versions.sh
+        env:
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
