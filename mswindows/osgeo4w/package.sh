@@ -151,40 +151,43 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--prefix="${OSGEO4W_ROOT_MSYS}/apps/grass" \
 		--bindir="${OSGEO4W_ROOT_MSYS}/bin" \
 		--includedir="${OSGEO4W_ROOT_MSYS}/include" \
-		--with-opengl=windows \
-		--without-x \
-		--with-cxx \
-		--enable-shared \
 		--enable-largefile \
+		--enable-shared \
+		--with-blas \
+		--with-bzlib \
+		--with-cairo \
+		--with-cairo-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-cairo-ldflags="-L${PWD}/mswindows/osgeo4w/lib -lcairo" \
+		--with-cairo-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-cxx \
 		--with-fftw \
 		--with-freetype \
-		--with-freetype-includes=/mingw64/include/freetype2 \
-		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
-		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
-		--with-postgres \
-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
-		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
-		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
-		--with-sqlite \
-		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
-		--with-regex \
-		--with-nls \
-		--with-zstd \
-		--with-odbc \
-		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
-		--with-blas \
+		--with-freetype-includes="${OSGEO4W_ROOT_MSYS}/include/freetype2" \
+		--with-gdal="${PWD}/mswindows/osgeo4w/gdal-config" \
+		--with-geos="${PWD}/mswindows/osgeo4w/geos-config" \
 		--with-lapack \
 		--with-lapack-includes=/mingw64/include \
+		--with-liblas="${PWD}/mswindows/osgeo4w/liblas-config" \
+		--with-libpng="${PWD}/mswindows/osgeo4w/libpng-config" \
+		--with-netcdf="${OSGEO4W_ROOT_MSYS}/bin/nc-config" \
+		--with-nls \
+		--with-odbc \
+		--with-opengl=windows \
 		--with-openmp \
-		--with-cairo \
-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
-		--with-bzlib \
-		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
-		--without-pdal
+		--with-postgres \
+		--with-postgres-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-postgres-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-proj-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-proj-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-proj-share="${OSGEO4W_ROOT_MSYS}/share/proj" \
+		--with-readline \
+		--with-regex \
+		--with-sqlite \
+		--with-sqlite-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-sqlite-libs="${PWD}/mswindows/osgeo4w/lib" \
+		--with-zstd \
+		--without-pdal \
+		--without-x
 
 	touch mswindows/osgeo4w/configure-stamp
 fi
