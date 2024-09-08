@@ -51,26 +51,9 @@ jobs:
         with:
           package-dir: "D:/OSGeo4W_pkg"
           packages: |
-            cairo-devel
-            freetype-devel
-            gdal-devel
-            geos-devel
-            libjpeg-turbo-devel
-            liblas-devel
-            libpng-devel
-            libpq-devel
-            libtiff-devel
-            netcdf-devel
-            proj-devel
             python3-core
-            python3-numpy
-            python3-ply
+            grass-dev
             python3-pytest
-            python3-pywin32
-            python3-six
-            python3-wxpython
-            sqlite3-devel
-            zstd-devel
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
@@ -86,17 +69,20 @@ jobs:
             ${{ matrix.os }}-ccache-
           save-always: true
       - name: Configure ccache
+        if: ${{ false }}
         run: |
           echo "CCACHE_BASEDIR=${GITHUB_WORKSPACE}" >> "${GITHUB_ENV}"
           echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
           echo "CCACHE_MAXSIZE=400M" >> "${GITHUB_ENV}"
         shell: msys2 {0}
       - name: Set number of cores for compilation
+        if: ${{ false }}
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
 
       - name: Compile GRASS GIS
+        if: ${{ false }}
         shell: msys2 {0}
         run: |
           ccache --show-stats
@@ -112,7 +98,7 @@ jobs:
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
           PACKAGE_PATCH: ${{ github.sha }}-1
       - name: Upload OSGeo4W grass package artifact
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && false }}
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: grass-osgeo4w-package-${{ matrix.os }}
