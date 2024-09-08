@@ -138,7 +138,7 @@ jobs:
         continue-on-error: true
 
       - name: Test executing of the grass command
-        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\bin\grass85.bat'
+        run: .github/workflows/test_simple.bat "C:\OSGeo4W\bin\grass85.bat"
         continue-on-error: true
 
       - name: Test executing of the grass command in bash
@@ -166,13 +166,13 @@ jobs:
         continue-on-error: true
       - name: Run tests osgeo4w shell
         run: |
-          .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
+          .github/workflows/test_thorough.bat "C:\OSGeo4W\bin\grass85.bat" "C:\OSGeo4W\bin\python3"
         continue-on-error: true
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run tests osgeo4w shell pythonpath
         run: |
           set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
-          .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
+          .github/workflows/test_thorough.bat "C:\OSGeo4W\bin\grass85.bat" "C:\OSGeo4W\bin\python3"
         continue-on-error: true
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
