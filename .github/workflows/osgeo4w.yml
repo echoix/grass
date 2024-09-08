@@ -65,6 +65,7 @@ jobs:
             python3-core
             python3-numpy
             python3-ply
+            python3-pytest
             python3-pywin32
             python3-six
             python3-wxpython
