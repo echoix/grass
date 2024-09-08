@@ -117,7 +117,17 @@ jobs:
           path: mswindows/osgeo4w/package
           include-hidden-files: true
           retention-days: 3
-
+      - name: Add msys to paths loaded by OSGeo4W
+        run: |
+          $msys_path=";C:/msys64/usr/bin;C:/msys64/mingw64/bin"
+          $line="set PATH=%OSGEO4W_ROOT%\bin${msys_path};%PATH%"
+          $line | Out-File -FilePath $env:OSGEO4W_ROOT/etc/ini/z_msys.bat
+        env:
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+        continue-on-error: true
+      - run: grep ^ /dev/null /c/OSGeo4W/etc/ini/*
+        shell: msys2 {0}
+        continue-on-error: true
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
