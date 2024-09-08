@@ -33,6 +33,7 @@ jobs:
           git config --global core.eol lf
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
+        if: ${{ false }}
         with:
           path-type: inherit
           location: D:\
