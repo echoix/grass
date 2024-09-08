@@ -77,6 +77,20 @@ jobs:
         run: |
           string(TIMESTAMP current_date "%Y-%m-%d-%H-%M-%S" UTC)
           file(APPEND "$ENV{GITHUB_OUTPUT}" "timestamp=${current_date}")
+      - name: ccache cache files
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        with:
+          path: .ccache
+          key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+          restore-keys: |
+            ${{ matrix.os }}-ccache-
+          save-always: true
+      - name: Configure ccache
+        run: |
+          echo "CCACHE_BASEDIR=${GITHUB_WORKSPACE}" >> "${GITHUB_ENV}"
+          echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
+          echo "CCACHE_MAXSIZE=400M" >> "${GITHUB_ENV}"
+        shell: msys2 {0}
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
@@ -85,9 +99,13 @@ jobs:
       - name: Compile GRASS GIS
         shell: msys2 {0}
         run: |
+          ccache --show-stats
           MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
           MSYSPATH=${MSYSPATH//\/cygdrive/}
+          ccache --show-config
+          ccache --zero-stats
           PATH=$MSYSPATH:$PATH mswindows/osgeo4w/package.sh
+          ccache --show-stats --verbose --verbose
         env:
           PACKAGE_POSTFIX: "-dev"
           OSGEO4W_ROOT: "C:\\OSGeo4W"
