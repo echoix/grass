@@ -52,27 +52,23 @@ jobs:
           package-dir: "D:/OSGeo4W_pkg"
           packages: |
             cairo-devel
-            fftw
             freetype-devel
             gdal-devel
-            gdal-ecw
-            gdal-mrsid
             geos-devel
+            libjpeg-turbo-devel
             liblas-devel
             libpng-devel
             libpq-devel
             libtiff-devel
-            libxdr
             netcdf-devel
-            pdal-devel
-            pdcurses
             proj-devel
-            python3-matplotlib
+            python3-core
             python3-numpy
             python3-ply
             python3-pywin32
+            python3-six
             python3-wxpython
-            regex-devel
+            sqlite3-devel
             zstd-devel
 
       - name: Set number of cores for compilation
