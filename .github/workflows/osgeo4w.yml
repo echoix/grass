@@ -129,9 +129,9 @@ jobs:
           # export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/bash_bin"
           export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc:${PATH}"
           export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
-          cp ${OSGEO4W_ROOT_MSYS}/bin/${GRASS_EXECUTABLE}.bat ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
+          # cp ${OSGEO4W_ROOT_MSYS}/bin/${GRASS_EXECUTABLE}.bat ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
           .github/workflows/print_versions.sh
-          rm ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
+          # rm ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
         env:
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
           GRASS_EXECUTABLE: grass85
