@@ -136,7 +136,7 @@ jobs:
         continue-on-error: true
 
       - name: Test executing of the grass command
-        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
+        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\bin\grass85.bat'
         continue-on-error: true
 
       - name: Test executing of the grass command in bash
@@ -145,7 +145,7 @@ jobs:
         continue-on-error: true
 
       - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
         continue-on-error: true
 
       - name: Make HTML test report available
