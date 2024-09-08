@@ -46,6 +46,17 @@ jobs:
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
             mingw-w64-x86_64-pcre mingw-w64-x86_64-openmp mingw-w64-x86_64-readline
+      - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
+        with:
+          path-type: inherit
+          location: D:\
+          update: true
+          msystem: MINGW64
+          install: >-
+            tar libintl make diffutils git dos2unix zip mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-libiconv
+            mingw-w64-x86_64-bzip2
 
       - name: Setup OSGeo4W environment
         uses: echoix/setup-OSGeo4W@17deecd39e077a80bf1081443998ea8edd6f15bf  # v0.1.0
