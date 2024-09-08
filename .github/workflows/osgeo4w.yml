@@ -90,6 +90,14 @@ jobs:
           OSGEO4W_ROOT: "C:\\OSGeo4W"
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
           PACKAGE_PATCH: ${{ github.sha }}-1
+      - name: Upload OSGeo4W grass package artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: grass-osgeo4w-package-${{ matrix.os }}
+          path: mswindows/osgeo4w/package
+          include-hidden-files: true
+          retention-days: 3
 
       - name: Print installed versions
         if: always()
