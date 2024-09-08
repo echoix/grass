@@ -4,8 +4,8 @@
 set -e
 
 # Test execution of binary command
-grass85 --tmp-project EPSG:4326 --exec g.region res=0.1 -p
+grass85.py --tmp-project EPSG:4326 --exec g.region res=0.1 -p
 # Test if python modules without extension are found
-grass85 --tmp-project EPSG:4326 --exec which t.create
+grass85.py --tmp-project EPSG:4326 --exec which t.create
 # Test if python modules can be called
-grass85 --tmp-project EPSG:4326 --exec t.create --help
+grass85.py --tmp-project EPSG:4326 --exec t.create --help
