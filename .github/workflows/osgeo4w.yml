@@ -169,6 +169,12 @@ jobs:
           .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
         continue-on-error: true
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      - name: Run tests osgeo4w shell pythonpath
+        run: |
+          set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        continue-on-error: true
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
       - name: Make HTML test report available
         if: ${{ always() }}
