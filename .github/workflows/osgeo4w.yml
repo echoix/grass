@@ -127,9 +127,12 @@ jobs:
         shell: msys2 {0}
         run: |
           export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          cp ${OSGEO4W_ROOT_MSYS}/bin/${GRASS_EXECUTABLE}.bat ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
           .github/workflows/print_versions.sh
+          rm ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
         env:
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+          GRASS_EXECUTABLE: grass85
         continue-on-error: true
 
       - name: Test executing of the grass command
