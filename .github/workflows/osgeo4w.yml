@@ -171,7 +171,8 @@ jobs:
         continue-on-error: true
         env:
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
-
+      - run: rm -r ./db
+        shell: msys2 {0}
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
         continue-on-error: true
