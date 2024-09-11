@@ -1,0 +1,8 @@
+{
+    "pylint.importStrategy": "fromEnvironment",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.extraPaths": [
+        "dist.x86_64-pc-linux-gnu/etc/python"
+    ],
+    "python.analysis.typeCheckingMode": "standard"
+}

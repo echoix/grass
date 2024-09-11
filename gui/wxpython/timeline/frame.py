@@ -43,7 +43,7 @@ except ImportError as e:
             "(python-matplotlib and on some systems also python-matplotlib-wx) "
             "package(s) to be installed. {}"
         ).format(e)
-    )
+    ) from e
 
 import grass.script as gs
 
@@ -527,7 +527,7 @@ class TimelineFrame(wx.Frame):
             elif len(indices) >= 2:
                 dlg = wx.SingleChoiceDialog(
                     self,
-                    message=_("Please specify the space time dataset <%s>." % dataset),
+                    message=_("Please specify the space time dataset <%s>.") % dataset,
                     caption=_("Ambiguous dataset name"),
                     choices=[
                         (

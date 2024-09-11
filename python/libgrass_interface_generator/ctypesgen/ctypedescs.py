@@ -258,7 +258,7 @@ class CtypesPointerCast(object):
 
 
 class CtypesFunction(CtypesType):
-    def __init__(self, restype, parameters, variadic, attrib=dict()):
+    def __init__(self, restype, parameters, variadic, attrib={}):
         super(CtypesFunction, self).__init__()
         self.restype = restype
         self.errcheck = CtypesNoErrorCheck()

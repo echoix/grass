@@ -166,7 +166,7 @@ def get_commands(*, env=None):
                     name, ext = os.path.splitext(fname)
                     if ext != ".manifest":
                         cmd.append(name)
-                    if ext in scripts.keys():
+                    if ext in scripts:
                         scripts[ext].append(name)
                 else:
                     cmd.append(fname)
@@ -469,7 +469,7 @@ def run_command(*args, **kwargs):
     if "encoding" in kwargs:
         encoding = kwargs["encoding"]
 
-    if _capture_stderr and "stderr" not in kwargs.keys():
+    if _capture_stderr and "stderr" not in kwargs:
         kwargs["stderr"] = PIPE
     ps = start_command(*args, **kwargs)
     if _capture_stderr:
@@ -537,7 +537,7 @@ def read_command(*args, **kwargs):
     if "encoding" in kwargs:
         encoding = kwargs["encoding"]
 
-    if _capture_stderr and "stderr" not in kwargs.keys():
+    if _capture_stderr and "stderr" not in kwargs:
         kwargs["stderr"] = PIPE
     process = pipe_command(*args, **kwargs)
     stdout, stderr = process.communicate()
@@ -639,7 +639,7 @@ def write_command(*args, **kwargs):
         stdin = encode(stdin)
     else:
         stdin = encode(stdin, encoding=encoding)
-    if _capture_stderr and "stderr" not in kwargs.keys():
+    if _capture_stderr and "stderr" not in kwargs:
         kwargs["stderr"] = PIPE
     process = feed_command(*args, **kwargs)
     unused, stderr = process.communicate(stdin)
@@ -867,8 +867,8 @@ def _parse_opts(lines):
             break
         try:
             var, val = line.split(b"=", 1)
-        except ValueError:
-            raise SyntaxError("invalid output from g.parser: {}".format(line))
+        except ValueError as err:
+            raise SyntaxError("invalid output from g.parser: {}".format(line)) from err
         try:
             var = decode(var)
             val = decode(val)
@@ -877,7 +877,7 @@ def _parse_opts(lines):
                 "invalid output from g.parser ({error}): {line}".format(
                     error=error, line=line
                 )
-            )
+            ) from error
         if var.startswith("flag_"):
             flags[var[5:]] = bool(int(val))
         elif var.startswith("opt_"):
@@ -1152,7 +1152,7 @@ def compare_key_value_text_files(
         return False
 
     # We compare matching keys
-    for key in dict_a.keys():
+    for key in dict_a:
         # Floating point values must be handled separately
         if isinstance(dict_a[key], float) and isinstance(dict_b[key], float):
             if abs(dict_a[key] - dict_b[key]) > precision:
@@ -1883,7 +1883,7 @@ def _set_location_description(path, location, text):
             fd.write(os.linesep)
         fd.close()
     except OSError as e:
-        raise ScriptError(repr(e))
+        raise ScriptError(repr(e)) from e
 
 
 def _create_location_xy(database, location):
@@ -1934,7 +1934,7 @@ def _create_location_xy(database, location):
 
         os.chdir(cur_dir)
     except OSError as e:
-        raise ScriptError(repr(e))
+        raise ScriptError(repr(e)) from e
 
 
 # interface to g.version

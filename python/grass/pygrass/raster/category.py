@@ -68,7 +68,7 @@ class Category(list):
 
     def _set_mtype(self, mtype):
         if mtype.upper() not in {"CELL", "FCELL", "DCELL"}:
-            raise ValueError(_("Raster type: {0} not supported".format(mtype)))
+            raise ValueError(_("Raster type: {0} not supported").format(mtype))
         self._mtype = mtype
         self._gtype = RTYPE[self.mtype]["grass type"]
 
@@ -110,8 +110,8 @@ class Category(list):
         if type(index) == str:
             try:
                 index = self.labels().index(index)
-            except ValueError:
-                raise KeyError(index)
+            except ValueError as error:
+                raise KeyError(index) from error
         return index
 
     def _chk_value(self, value):

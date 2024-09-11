@@ -4,23 +4,37 @@ Created on Tue Mar 19 11:09:30 2013
 @author: pietro
 """
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import grass.lib.vector as libvect
-
 from grass.pygrass.errors import must_be_open
-
-from grass.pygrass.vector.basic import Ilist, BoxList
-from grass.pygrass.vector.geometry import read_line, Isle, Area, Node
+from grass.pygrass.vector.basic import BoxList, Ilist
+from grass.pygrass.vector.geometry import Area, Isle, Node, read_line
 
 # For test purposes
 test_vector_name = "find_doctest_map"
 
+if TYPE_CHECKING:
+    from ctypes import _Pointer
+
+    from grass.lib.vector import Map_info
+    from grass.pygrass.vector.table import Table
+
 
 class AbstractFinder:
-    def __init__(self, c_mapinfo, table=None, writeable=False):
-        """Abstract finder
-        -----------------
+    def __init__(
+        self,
+        c_mapinfo: _Pointer[Map_info],
+        table: Table | None = None,
+        writeable: bool = False,
+    ):
+        """Find geometry feature(s) around a point.
 
-        Find geometry feature around a point.
+        :param c_mapinfo: Pointer to the vector layer mapinfo structure
+        :param table: Attribute table of the vector layer
+        :param writable: True or False
         """
         self.c_mapinfo = c_mapinfo
         self.table = table
@@ -47,20 +61,6 @@ class PointFinder(AbstractFinder):
     of a vector map that are close to a point. The PointFinder class
     is part of a topological vector map object.
     """
-
-    def __init__(self, c_mapinfo, table=None, writeable=False):
-        """Find geometry feature(s) around a point.
-
-        :param c_mapinfo: Pointer to the vector layer mapinfo structure
-        :type c_mapinfo: ctypes pointer to mapinfo structure
-
-        :param table: Attribute table of the vector layer
-        :type table: Class Table from grass.pygrass.table
-
-        :param writable: True or False
-        :type writeable: boolean
-        """
-        super().__init__(c_mapinfo, table, writeable)
 
     @must_be_open
     def node(self, point, maxdist):
@@ -114,14 +114,13 @@ class PointFinder(AbstractFinder):
             )
 
     @must_be_open
-    def geo(self, point, maxdist, type="all", exclude=0):
+    def geo(self, point, maxdist: float, type="all", exclude=0) -> Node | None:
         """Find the nearest vector feature around a specific point.
 
         :param point: The point to search
         :type point: grass.pygrass.vector.geometry.Point
 
         :param maxdist: The maximum search distance around the point
-        :type maxdist: float
 
         :param type: The type of feature to search for
                      Valid type are all the keys in find.vtype dictionary
@@ -395,25 +394,12 @@ class BboxFinder(AbstractFinder):
     of a vector map that are inside or intersect a boundingbox.
     The BboxFinder class is part of a topological vector map object.
 
+    Find geometry feature(s)that are insider or intersect
+    with a boundingbox.
     """
 
-    def __init__(self, c_mapinfo, table=None, writeable=False):
-        """Find geometry feature(s)that are insider or intersect
-        with a boundingbox.
-
-         :param c_mapinfo: Pointer to the vector layer mapinfo structure
-         :type c_mapinfo: ctypes pointer to mapinfo structure
-
-         :param table: Attribute table of the vector layer
-         :type table: Class Table from grass.pygrass.table
-
-         :param writable: True or False
-         :type writeable: boolean
-        """
-        super().__init__(c_mapinfo, table, writeable)
-
     @must_be_open
-    def geos(self, bbox, type="all", bboxlist_only=False):
+    def geos(self, bbox, type="all", bboxlist_only: bool = False):
         """Find vector features inside a boundingbox.
 
         :param bbox: The boundingbox to search in
@@ -665,8 +651,6 @@ class BboxFinder(AbstractFinder):
 
 
 class PolygonFinder(AbstractFinder):
-    def __init__(self, c_mapinfo, table=None, writeable=False):
-        super().__init__(c_mapinfo, table, writeable)
 
     def lines(self, polygon, isles=None):
         pass
@@ -677,12 +661,13 @@ class PolygonFinder(AbstractFinder):
 
 if __name__ == "__main__":
     import doctest
+
     from grass.pygrass import utils
 
     utils.create_test_vector_map(test_vector_name)
     doctest.testmod()
 
-    """Remove the generated vector map, if exist"""
+    # Remove the generated vector map, if exist
     from grass.pygrass.utils import get_mapset_vector
     from grass.script.core import run_command
 

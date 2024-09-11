@@ -1856,11 +1856,11 @@ class VectorAreasPage(TitledPage):
             GError(
                 parent=self,
                 message=_(
-                    "The raster map <%s> already exists."
+                    "The raster map <{map_name}> already exists."
                     " Please remove or rename the maps "
                     "with the prefix '%s' or select the "
-                    "option to overwrite existing maps" % (self.outname, self.outpref)
-                ),
+                    "option to overwrite existing maps"
+                ).format(self.outname, self.outpref),
             )
             self.parent.wizard.ShowPage(self.parent.samplingareapage)
             return
