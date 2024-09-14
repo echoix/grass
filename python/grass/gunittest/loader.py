@@ -46,6 +46,7 @@ def fnmatch_exclude_with_base(files, base, exclude):
         if not matches:
             not_excluded.append(filename)
 
+    print(f"Ed: fnmatch_exclude_with_base, base: {base}")
     print(f"Ed: fnmatch_exclude_with_base, files: {files}")
     print(f"Ed: fnmatch_exclude_with_base, not_excluded: {not_excluded}")
     return not_excluded
