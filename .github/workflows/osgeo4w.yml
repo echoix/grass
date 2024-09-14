@@ -176,6 +176,8 @@ jobs:
         shell: msys2 {0}
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
         continue-on-error: true
