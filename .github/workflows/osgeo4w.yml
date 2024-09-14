@@ -171,8 +171,8 @@ jobs:
         continue-on-error: true
         env:
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
-      - run: rm -r ./db
-        if: ${{ false }}
+      - run: rm -r python/grass/pygrass/modules/interface/testsuite/test_modules.py
+        #if: ${{ false }}
         shell: msys2 {0}
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
