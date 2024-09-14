@@ -60,6 +60,8 @@ def fnmatch_exclude_with_base(
         if not matches:
             not_excluded.append(filename)
 
+    print(f"Ed: fnmatch_exclude_with_base, exclude: {exclude}")
+    print(f"Ed: fnmatch_exclude_with_base, patterns: {patterns}")
     print(f"Ed: fnmatch_exclude_with_base, base: {base}")
     print(f"Ed: fnmatch_exclude_with_base, base_path: {base_path}")
     print(f"Ed: fnmatch_exclude_with_base, files: {files}")
