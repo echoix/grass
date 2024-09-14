@@ -177,7 +177,7 @@ jobs:
       - name: Replace gunittest
         run: |
           rm -r /c/osgeo4w/apps/grass/grass85/etc/python/grass/gunittest
-          cp python/grass/gunittest /c/osgeo4w/apps/grass/grass85/etc/python/grass/gunittest
+          cp -r python/grass/gunittest /c/osgeo4w/apps/grass/grass85/etc/python/grass/gunittest
         shell: msys2 {0}
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
