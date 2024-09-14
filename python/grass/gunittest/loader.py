@@ -9,22 +9,32 @@ for details.
 :authors: Vaclav Petras
 """
 
+from __future__ import annotations
+
 import os
 import fnmatch
 import unittest
 import collections
 import re
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, MutableSequence
 
 
-def fnmatch_exclude_with_base(files, base, exclude):
+def fnmatch_exclude_with_base(
+    files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
+) -> list[str | Path]:
     """Return list of files not matching any exclusion pattern
 
     :param files: list of file names
     :param base: directory (path) where the files are
     :param exclude: list of fnmatch glob patterns for exclusion
     """
-    not_excluded = []
-    patterns = []
+    not_excluded: list[str | Path] = []
+    patterns: MutableSequence[str] = []
+    base_path = Path(base)
     # Make all dir separators slashes and drop leading current dir
     # for both patterns and (later) for files.
     for pattern in exclude:
@@ -34,19 +44,24 @@ def fnmatch_exclude_with_base(files, base, exclude):
         else:
             patterns.append(pattern)
     for filename in files:
-        full_file_path = os.path.join(base, filename)
-        test_filename = full_file_path.replace(os.sep, "/")
-        if full_file_path.startswith("./"):
-            test_filename = full_file_path[2:]
+        full_file_path: Path = base_path / filename
+        # test_filename = full_file_path.replace(os.sep, "/")
+        test_filename = full_file_path
+        # if full_file_path.startswith("./"):
+        #     test_filename = full_file_path[2:]
         matches = False
         for pattern in patterns:
-            if fnmatch.fnmatch(test_filename, pattern):
+            # if fnmatch.fnmatch(test_filename, pattern):
+            #     matches = True
+            #     break
+            if test_filename.match(pattern):
                 matches = True
                 break
         if not matches:
             not_excluded.append(filename)
 
     print(f"Ed: fnmatch_exclude_with_base, base: {base}")
+    print(f"Ed: fnmatch_exclude_with_base, base_path: {base_path}")
     print(f"Ed: fnmatch_exclude_with_base, files: {files}")
     print(f"Ed: fnmatch_exclude_with_base, not_excluded: {not_excluded}")
     return not_excluded
