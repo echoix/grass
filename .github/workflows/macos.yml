@@ -62,7 +62,7 @@ jobs:
         with:
           duration: 15m
           authorized-users: echoix
-          shell: micromamba-shell
+          shell: micromamba-shell bash
       - name: Create installation directory
         run: mkdir $HOME/install
         shell: micromamba-shell {0}
