@@ -270,7 +270,11 @@ def fnmatch_exclude_with_base_old1(
     return not_excluded
 
 
-def fnmatch_exclude_with_base_pathlib(files, base, exclude):
+def fnmatch_exclude_with_base_pathlib(
+    files: Iterable[str],
+    base: str | os.PathLike,
+    exclude: Iterable[str | os.PathLike | PurePath],
+) -> list[str]:
     """Return list of files not matching any exclusion pattern
 
     :param files: list of file names
@@ -278,14 +282,10 @@ def fnmatch_exclude_with_base_pathlib(files, base, exclude):
     :param exclude: list of fnmatch glob patterns for exclusion
     """
     not_excluded = []
-    patterns = []
-    base_path = Path(base)
-    # Make all dir separators slashes and drop leading current dir
-    # for both patterns and (later) for files.
-    for pattern in exclude:
-        patterns.append(Path(pattern))
+    patterns = {str(PurePath(pat)) for pat in exclude}
+    base_path = PurePath(base)
     for filename in files:
-        test_filename: Path = base_path / filename
+        test_filename: PurePath = base_path / filename
         matches = False
         for pattern in patterns:
             if fnmatch.fnmatch(str(test_filename), pattern):
@@ -302,10 +302,14 @@ def fnmatch_exclude_with_base_pathlib(files, base, exclude):
     return not_excluded
 
 
-def fnmatch_exclude_with_base(
-    files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
-) -> list[str | Path]:
+def fnmatch_exclude_with_base(files, base, exclude):
     return fnmatch_exclude_with_base_pathlib(files, base, exclude)
+
+
+# def fnmatch_exclude_with_base(
+#     files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
+# ) -> list[str | Path]:
+#     return fnmatch_exclude_with_base_pathlib(files, base, exclude)
 
 
 # TODO: resolve test file versus test module
