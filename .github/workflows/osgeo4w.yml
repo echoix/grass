@@ -189,9 +189,10 @@ jobs:
         env:
           OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
       - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+        uses: mxschmitt/action-tmate@master
         with:
           detached: true
+          connect-timeout-seconds: 180
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'D:\OSGeo4W\bin\grass85.bat' 'D:\OSGeo4W\bin\python3'
         # run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
