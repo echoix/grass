@@ -1,7 +1,12 @@
 #!/usr/bin/bash
 
 set -e
-
+echo "Ed:1 ccache package.sh: start"
+which ccache
+echo "Ed:1 ccache package.sh: stop"
+echo "Ed:1 ccache stats package.sh: start"
+ccache -s
+echo "Ed:1 ccache stats package.sh: stop"
 PWD="$(pwd)"
 
 if ! [ -d mswindows ]; then
@@ -110,29 +115,20 @@ DLLS="
 	/mingw64/bin/zlib1.dll
 	/mingw64/bin/libbz2-1.dll
 	/mingw64/bin/libiconv-2.dll
-	/mingw64/bin/libfontconfig-1.dll
 	/mingw64/bin/libgfortran-5.dll
-	/mingw64/bin/libbrotlidec.dll
-	/mingw64/bin/libbrotlicommon.dll
 	/mingw64/bin/libintl-8.dll
 	/mingw64/bin/libsystre-0.dll
 	/mingw64/bin/libtre-5.dll
 	/mingw64/bin/libwinpthread-1.dll
-	/mingw64/bin/libcairo-2.dll
-	/mingw64/bin/libpixman-1-0.dll
-	/mingw64/bin/libpng16-16.dll
-	/mingw64/bin/libfreetype-6.dll
-	/mingw64/bin/libharfbuzz-0.dll
-	/mingw64/bin/libglib-2.0-0.dll
+    /mingw64/bin/libomp.dll
 	/mingw64/bin/libgomp-1.dll
-	/mingw64/bin/libgraphite2.dll
-	/mingw64/bin/libpcre-1.dll
 	/mingw64/bin/libstdc++-6.dll
 	/mingw64/bin/libgcc_s_seh-1.dll
 	/mingw64/bin/libfftw3-3.dll
 	/mingw64/bin/libblas.dll
 	/mingw64/bin/liblapack.dll
 	/mingw64/bin/libquadmath-0.dll
+    /mingw64/bin/libreadline8.dll
 "
 
 if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
@@ -148,53 +144,91 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
 
 	mkdir -p mswindows/osgeo4w/lib
-	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
-	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
+	cp -uv ${OSGEO4W_ROOT_MSYS}/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
 
+	# --host=x86_64-w64-mingw32 \
 	log configure
+	echo "Ed:2 ccache package.sh: start"
+	which ccache
+	echo "Ed:2 ccache package.sh: stop"
+	echo "Ed:2 ccache stats package.sh: start"
+	ccache -s
+	echo "Ed:2 ccache stats package.sh: stop"
+	echo "Ed:2 printenv package.sh: start"
+	printenv | sort
+	echo "Ed:2 printenv package.sh: stop"
+	echo "Ed:2 ls -la /mingw64/lib/ccache/bin package.sh: start"
+	ls -la /mingw64/lib/ccache/bin
+	echo "Ed:2 ls -la /mingw64/lib/ccache/bin package.sh: stop"
+	echo "Ed:2 ls -la /mingw64/bin/ package.sh: start"
+	ls -la /mingw64/bin/
+	echo "Ed:2 ls -la /mingw64/bin/ package.sh: stop"
+	echo "Ed:2 gcc package.sh: start"
+	which gcc
+	echo "Ed:2 gcc package.sh: stop"
+	echo "Ed:2 g++ package.sh: start"
+	which g++
+	echo "Ed:2 g++ package.sh: stop"
 	./configure \
-		--host=x86_64-w64-mingw32 \
-		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
-		--with-includes=$OSGEO4W_ROOT_MSYS/include \
-		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
-		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
-		--bindir=$OSGEO4W_ROOT_MSYS/bin \
-		--includedir=$OSGEO4W_ROOT_MSYS/include \
-		--with-opengl=windows \
-		--without-x \
-		--with-cxx \
-		--enable-shared \
+		--with-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--libexecdir="${OSGEO4W_ROOT_MSYS}/bin" \
+		--prefix="${OSGEO4W_ROOT_MSYS}/apps/grass" \
+		--bindir="${OSGEO4W_ROOT_MSYS}/bin" \
+		--includedir="${OSGEO4W_ROOT_MSYS}/include" \
 		--enable-largefile \
+		--enable-shared \
+		--with-blas \
+		--with-bzlib \
+		--with-cairo \
+		--with-cairo-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-cairo-ldflags="-L${PWD}/mswindows/osgeo4w/lib -lcairo" \
+		--with-cairo-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-cxx \
 		--with-fftw \
 		--with-freetype \
-		--with-freetype-includes=/mingw64/include/freetype2 \
-		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
-		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
-		--with-postgres \
-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
-		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
-		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
-		--with-sqlite \
-		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
-		--with-regex \
-		--with-nls \
-		--with-zstd \
-		--with-odbc \
-		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
-		--with-blas \
+		--with-freetype-includes="${OSGEO4W_ROOT_MSYS}/include/freetype2" \
+		--with-gdal="${PWD}/mswindows/osgeo4w/gdal-config" \
+		--with-geos="${PWD}/mswindows/osgeo4w/geos-config" \
 		--with-lapack \
 		--with-lapack-includes=/mingw64/include \
+		--with-liblas="${PWD}/mswindows/osgeo4w/liblas-config" \
+		--with-libpng="${PWD}/mswindows/osgeo4w/libpng-config" \
+		--with-netcdf="${OSGEO4W_ROOT_MSYS}/bin/nc-config" \
+		--with-nls \
+		--with-odbc \
+		--with-opengl=windows \
 		--with-openmp \
-		--with-cairo \
-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
-		--with-bzlib \
-		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
-		--without-pdal
+		--with-postgres \
+		--with-postgres-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-postgres-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-proj-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-proj-libs="${OSGEO4W_ROOT_MSYS}/lib" \
+		--with-proj-share="${OSGEO4W_ROOT_MSYS}/share/proj" \
+		--with-readline \
+		--with-regex \
+		--with-sqlite \
+		--with-sqlite-includes="${OSGEO4W_ROOT_MSYS}/include" \
+		--with-sqlite-libs="${PWD}/mswindows/osgeo4w/lib" \
+		--with-zstd \
+		--without-pdal \
+		--without-x
 
+	echo "Ed:3 printenv package.sh: start"
+	printenv | sort
+	echo "Ed:3 printenv package.sh: stop"
+	echo "Ed:3 gcc package.sh: start"
+	which gcc
+	echo "Ed:3 gcc package.sh: stop"
+	echo "Ed:3 g++ package.sh: start"
+	which g++
+	echo "Ed:3 g++ package.sh: stop"
+	# echo "Ed:3 which CC package.sh: start"
+	# which $CC
+	# echo "Ed:3 which CC package.sh: stop"
+	# echo "Ed:3 which CXX package.sh: start"
+	# which $CXX
+	# echo "Ed:3 which CXX package.sh: stop"
 	touch mswindows/osgeo4w/configure-stamp
 fi
 
@@ -248,7 +282,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
 
     # copy dependencies (TODO: to be reduced)
     cp -uv $DLLS apps/grass/grass$POSTFIX/bin
-    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
+
+    # copy R batch files
+    cp -uv $SRC/mswindows/external/rbatch/* apps/grass/grass$POSTFIX/bin
 
     # creating grass package
     /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \

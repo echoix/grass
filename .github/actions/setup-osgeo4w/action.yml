@@ -1,0 +1,75 @@
+---
+name: Setup OSGeo4W environment
+description: Install OSGeo4W and OSGeo4W packages on Windows
+author: "Edouard Choinière"
+
+inputs:
+  packages:
+    description: >-
+      List of OSGeo4W packages to install.
+      Use newlines, spaces, or commas in between package names.
+    required: false
+  root:
+    description: Root installation directory, by default C:\OSGeo4W.
+    required: false
+    default: C:\OSGeo4W
+  package-dir:
+    description: >-
+      Location where to download packages.
+      Using a folder in a faster drive, like D:\OSGeo4W_pkg, reduces installation time.
+      Use a different folder than the one used for the `root` input.
+    required: false
+  site:
+    description: Download site URL to use
+    required: false
+    default: "https://download.osgeo.org/osgeo4w/v2/"
+  upgrade-also:
+    description: Also upgrade installed packages
+    required: false
+    default: "true"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup OSGeo4W environment
+      run: |-
+        "Setup OSGeo4W environment action"
+        $Object = "Hello object!"
+        Write-Host $Object -ForegroundColor Green -BackgroundColor Yellow -NoNewline
+        Write-Host
+
+        [Enum]::GetValues([ConsoleColor]) |
+        ForEach-Object {
+          $color = $_.ToString().Trim()
+          if (($color -like 'dark*') -or ($color -like 'black')) {
+            Write-Host "`n$color" -ForegroundColor $color
+            Write-Host "$color" -ForegroundColor White -BackgroundColor $color -NoNewline
+          } else {
+            Write-Host "`n$color" -ForegroundColor $color
+            Write-Host "$color" -ForegroundColor Black -BackgroundColor $color -NoNewline
+          }
+        }
+        $PSStyle.OutputRendering
+        Get-PSReadLineOption
+        $PSStyle
+        $PSStyle.OutputRendering
+        # $PSStyle.OutputRendering = 'Ansi'
+        # $PSStyle.OutputRendering = 'PlainText'
+        Get-PSReadLineOption
+        "Starting..." | Out-String
+        "Starting..." | Out-Host
+        Write-Host -ForegroundColor Blue "Starting..."
+        "Starting..." | Write-Host -ForegroundColor Blue
+        "Starting..." | Write-Host -ForegroundColor Blue | Out-Host
+        "Starting..." | Write-Host -ForegroundColor Blue | Out-String
+        Write-Host -ForegroundColor Green "Starting green..."
+        "Starting green..." | Write-Host -ForegroundColor Green
+        "Starting green..." | Write-Host -ForegroundColor Green | Out-Host
+        "Starting green..." | Write-Host -ForegroundColor Green | Out-String
+        . ${{ github.action_path }}/setup-osgeo4w.ps1
+      shell: pwsh
+      env:
+        INPUT_PACKAGES: ${{ inputs.packages }}
+        INPUT_PACKAGE_DIR: ${{ inputs.package-dir }}
+        INPUT_ROOT: ${{ inputs.root }}
+        INPUT_SITE: ${{ inputs.site }}
+        INPUT_UPGRADE_ALSO: ${{ inputs.upgrade-also }}

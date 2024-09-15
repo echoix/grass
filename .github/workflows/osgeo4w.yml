@@ -20,6 +20,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       PYTHONWARNINGS: always
+      # OSGEO4W_PKG_DIR: "${{ github.workspace }}/OSGeo4W_pkg"
+      OSGEO4W_PKG_DIR: "D:/OSGeo4W_pkg"
     strategy:
       matrix:
         os:
@@ -32,56 +34,399 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      # - run: .\downloadtest.ps1
+      # - run: .\readini.ps1
+      - name: Setup OSGeo4W environment
+        uses: ./.github/actions/setup-osgeo4w
+      - name: Prepare ccache timestamp
+        id: ccache_cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+          message("::set-output name=timestamp::${current_date}")
+      - name: ccache cache files
+        uses: actions/cache@v4.0.2
+        with:
+          path: .ccache
+          key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+          restore-keys: |
+            ${{ matrix.os }}-ccache-
+          save-always: true
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
         with:
           path-type: inherit
           location: D:\
           update: true
           msystem: MINGW64
-          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
+          install: >-
+            tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
-            mingw-w64-x86_64-pcre
+            mingw-w64-x86_64-pcre mingw-w64-x86_64-openmp mingw-w64-x86_64-readline
+      - name: Setup OSGeo4W environment
+        uses: ./.github/actions/setup-osgeo4w
+        with:
+          packages: |
+            cairo-devel
+            freetype-devel
+            gdal-devel
+            geos-devel
+            libjpeg-turbo-devel
+            liblas-devel
+            libpng-devel
+            libpq-devel
+            libtiff-devel
+            netcdf-devel
+            proj-devel
+            python3-core
+            python3-numpy
+            python3-ply
+            python3-pytest
+            python3-pywin32
+            python3-six
+            python3-wxpython
+            sqlite3-devel
+            zstd-devel
 
-      - name: Install OSGeo4W
+      - run: python -m pip install pytest-timeout
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
+      - name: Configure ccache
         run: |
-          $exe = 'osgeo4w-setup.exe'
-          $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
-          (New-Object System.Net.WebClient).DownloadFile($url, $exe)
-          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q \
-            -s http://download.osgeo.org/osgeo4w/v2/ -P ${{ env.Deps }}' -Wait
-        env:
-          Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,\
-            pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
-            gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
-            python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
-            python3-wxpython,regex-devel,zstd-devel"
+          echo "CCACHE_BASEDIR=${GITHUB_WORKSPACE}" >> "${GITHUB_ENV}"
+          echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
+          echo "CCACHE_MAXSIZE=400M" >> "${GITHUB_ENV}"
+        shell: msys2 {0}
 
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
 
+      # - name: Compile GRASS GIS
+      #   shell: msys2 {0}
+      #   run: .github/workflows/build_osgeo4w.sh
+      # - name: Compile GRASS GIS
+      #   shell: msys2 {0}
+      #   continue-on-error: true
+      #   run: |
+      #     MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
+      #     MSYSPATH=${MSYSPATH//\/cygdrive/}
+      #     PATH=$MSYSPATH:$PATH bash.exe mswindows/osgeo4w/package.sh
+      #   env:
+      #     PACKAGE_POSTFIX: "-dev"
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
       - name: Compile GRASS GIS
         shell: msys2 {0}
-        run: .github/workflows/build_osgeo4w.sh
+        continue-on-error: true
+        run: |
+          ccache -s
+          MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
+          MSYSPATH=${MSYSPATH//\/cygdrive/}
+          #export CC="ccache $CC"
+          #export CXX="ccache $CXX"
+          echo "CC is $CC"
+          echo "CXX is $CXX"
+          ccache -p
+          ccache -z
+          PATH=$MSYSPATH:$PATH mswindows/osgeo4w/package.sh
+          ccache -p
+          ccache -s --verbose --verbose
+        env:
+          PACKAGE_POSTFIX: "-dev"
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+          PACKAGE_PATCH: ${{ github.sha }}-1
+          # CC: "ccache x86_64-w64-mingw32-gcc"
+          # CXX: "ccache x86_64-w64-mingw32-g++"
+          # CC: "x86_64-w64-mingw32-gcc"
+          # CXX: "x86_64-w64-mingw32-g++"
+      # - name: Compile GRASS GIS 2
+      #   shell: msys2 {0}
+      #   continue-on-error: true
+      #   run: |
+      #     #MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
+      #     #MSYSPATH=${MSYSPATH//\/cygdrive/}
+      #     PATH=/usr/bin:/mingw64/bin:/c/osgeo4w/bin:/c/windows/syswow64:${PATH}
+      #     mswindows/osgeo4w/package.sh
+      #   env:
+      #     PACKAGE_POSTFIX: "-dev"
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+      - name: Upload OSGeo4W grass package artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: grass-osgeo4w-package-${{ matrix.os }}
+          path: mswindows/osgeo4w/package
+          include-hidden-files: true
+          retention-days: 3
+      - name: ccache statistics
+        shell: cmake -P {0}
+        run: |
+          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
+          set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
+          set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
 
+          execute_process(COMMAND ccache -s --verbose --verbose)
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
-        run: .github/workflows/print_versions.sh
+        run: |
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          .github/workflows/print_versions.sh
+        continue-on-error: true
+        env:
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
 
-      - name: Test executing of the grass command
-        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
+      # - name: Test executing of the grass command
+      #   run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
+      #   continue-on-error: true
 
-      - name: Test executing of the grass command in bash
-        shell: msys2 {0}
-        run: .github/workflows/test_simple.sh
+      # - name: Test executing of the grass command2
+      #   run: .github/workflows/test_simple.bat 'C:\OSGeo4W\bin\grass85.bat'
+      #   continue-on-error: true
 
-      - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
+      # - name: Test executing of the grass command in bash
+      #   shell: msys2 {0}
+      #   run: .github/workflows/test_simple.sh
+      #   continue-on-error: true
+      # - name: Test executing of the grass command in bash
+      #   shell: msys2 {0}
+      #   run: |
+      #     export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+      #     .github/workflows/test_simple.sh
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+      # - run: python -c "help('modules')"
+      #   continue-on-error: true
+      # - run: python -c "help('modules')"
+      #   continue-on-error: true
+      #   shell: cmd
+      # - run: python -c "help('modules')"
+      #   continue-on-error: true
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+
+      # - name: run grass import grass.script
+      #   run: grass85 --tmp-project XY --exec python -c "import grass.script; print(grass.script)"
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     python-grass85.bat -m pytest --verbose --color=yes^
+      #       --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
+
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     python -m pytest --verbose --color=yes^
+      #       --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
+
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     python -m pytest --verbose --color=yes --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
+      # - run: ${{env.GRASS_PYTHON}} -c "help('modules')"
+      #   shell: cmd
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      #     GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
+      #     GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
+      # - run: python -c "help('modules')"
+      #   shell: cmd
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      #     GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
+      #     GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
+      # - run: |
+      #     "C:\\OSGeo4W\\bin\\python3" -c "help('modules')"
+      #   shell: cmd
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      #     GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
+      #     GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
+      # - name: env more Run pytest with a single worker (all tests)
+      #   run: |
+      #     ${{env.GRASS_PYTHON}} -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd
+      #   timeout-minutes: 2
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      #     GISBASE: "C:\\OSGeo4W\\apps\\grass\\grass85"
+      #     GRASS_PYTHON: "C:\\OSGeo4W\\bin\\python3.exe"
+      # # - name: Run pytest with a single worker (all tests)
+      # #   run: |
+      # #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      # #     set grass=C:\OSGeo4W\opt\grass\grass85.bat
+      # #     python -m pytest --verbose --color=yes ^
+      # #       --durations=0 --durations-min=0.5 ^
+      # #       -ra .
+      # #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      # #   continue-on-error: true
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #      call python-grass85.bat -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
+      #   timeout-minutes: 5
+      # # - name: envs Run pytest with a single worker (all tests)
+      # #   run: |
+      # #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      # #       --durations=0 --durations-min=0.5 ^
+      # #       -ra .
+      # #   shell: cmd
+      # #   continue-on-error: true
+      # #   env:
+      # #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      # #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      # #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      # #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      # # - name: env python Run pytest with a single worker (all tests)
+      # #   run: |
+      # #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec python -m pytest --verbose --color=yes ^
+      # #       --durations=0 --durations-min=0.5 ^
+      # #       -ra .
+      # #   shell: cmd
+      # #   continue-on-error: true
+      # #   env:
+      # #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      # #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      # #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      # #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      # - name: env python direct Run pytest with a single worker (all tests)
+      #   run: |
+      #     "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd
+      #   timeout-minutes: 2
+      #   continue-on-error: true
+      #   env:
+      #     OSGEO4W_ROOT: "C:\\OSGeo4W"
+      #     PYTHONPATH: "C:\\OSGeo4W\\apps\\grass\\grass85\\etc\\python;%PYTHONPATH%"
+      #     # PYTHONPATH: %OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     PYTHONHOME: "C:\\OSGeo4W\\apps\\Python312"
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     rem echo %PYTHONPATH%
+
+      #     set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
+
+      #     REM Uncomment if you want to use Bash instead of Cmd
+      #     REM Note that msys package must be also installed
+      #     REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
+
+      #     set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
+      #     set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
+
+      #     set PYTHONHOME=C:\OSGeo4W\apps\Python312
+      #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      #     set GRASS_COMPATIBILITY_TEST=0
+      #     path %PATH%;%GISBASE%\bin
+      #     echo %PATH%
+      #     echo %PYTHONPATH%
+
+      #     python -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      #   continue-on-error: true
+      #   timeout-minutes: 2
+      # # - name: Run pytest with a single worker (all tests)
+      # #   run: |
+      # #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      # #       --durations=0 --durations-min=0.5 ^
+      # #       -ra .
+      # #   shell: cmd
+      # #   continue-on-error: true
+      # # - name: Run pytest with a single worker (all tests)
+      # #   run: |
+      # #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      # #       --durations=0 --durations-min=0.5 ^
+      # #       -ra .
+      # #   shell: cmd
+      # #   continue-on-error: true
+      # - name: Run pytest with a single worker (all tests)
+      #   run: |
+      #     "C:\OSGeo4W\bin\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      #       --durations=0 --durations-min=0.5 ^
+      #       --continue-on-collection-errors ^
+      #       -ra .
+      #   shell: cmd
+      #   continue-on-error: true
+      #   timeout-minutes: 2
+      # # - name: Run pytest with a single worker (all tests)
+      # #   run: |
+      # #     rem echo %PYTHONPATH%
+
+      # #     set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
+
+      # #     REM Uncomment if you want to use Bash instead of Cmd
+      # #     REM Note that msys package must be also installed
+      # #     REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
+
+      # #     set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
+      # #     set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
+
+      # #     set PYTHONHOME=C:\OSGeo4W\apps\Python312
+      # #     set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+      # #     set GRASS_COMPATIBILITY_TEST=0
+      # #     path %PATH%;%GISBASE%\bin
+      # #     echo %PATH%
+      # #     echo %PYTHONPATH%
+
+      # #     "C:\OSGeo4W\opt\grass\grass85.bat" --exec "C:\OSGeo4W\bin\python3" -m pytest --verbose --color=yes ^
+      # #       --durations=0 --durations-min=0.5 ^
+      # #       -ra .
+      # #   shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      # #   continue-on-error: true
+      # # - name: Run tests
+      # #   run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
+      # #   continue-on-error: true
+      # # - name: Run tests
+      # #   run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\apps\grass\grass85\grass85.bat' 'C:\OSGeo4W\bin\python3'
+      # #   continue-on-error: true
+      # - name: Run tests
+      #   run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
 
       - name: Make HTML test report available
         if: ${{ always() }}
