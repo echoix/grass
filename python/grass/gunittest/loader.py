@@ -12,18 +12,101 @@ for details.
 from __future__ import annotations
 
 import os
+from os.path import sep
+import sys
 import fnmatch
 import unittest
 import collections
 import re
-from pathlib import Path
+from pathlib import Path, PurePath
+from posixpath import sep as posix_sep
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, MutableSequence
 
 
-def fnmatch_exclude_with_base(
+def fnmatch_ex(pattern: str, path: str | os.PathLike[str]) -> bool:
+    """A port of FNMatcher from py.path.common which works with PurePath() instances.
+
+    The difference between this algorithm and PurePath.match() is that the
+    latter matches "**" glob expressions for each part of the path, while
+    this algorithm uses the whole path instead.
+
+    For example:
+        "tests/foo/bar/doc/test_foo.py" matches pattern "tests/**/doc/test*.py"
+        with this algorithm, but not with PurePath.match().
+
+    This algorithm was ported to keep backward-compatibility with existing
+    settings which assume paths match according this logic.
+
+    References:
+    * https://bugs.python.org/issue29249
+    * https://bugs.python.org/issue34731
+    """
+    path = PurePath(path)
+    iswin32 = sys.platform.startswith("win")
+
+    if iswin32 and sep not in pattern and posix_sep in pattern:
+        # Running on Windows, the pattern has no Windows path separators,
+        # and the pattern has one or more Posix path separators. Replace
+        # the Posix path separators with the Windows path separator.
+        pattern = pattern.replace(posix_sep, sep)
+
+    if sep not in pattern:
+        name = path.name
+    else:
+        name = str(path)
+        if path.is_absolute() and not os.path.isabs(pattern):
+            pattern = f"*{os.sep}{pattern}"
+    return fnmatch.fnmatch(name, pattern)
+
+
+def fnmatch_exclude_with_base_fnmatch_ex(
+    files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
+) -> list[str | Path]:
+    """Return list of files not matching any exclusion pattern
+
+    :param files: list of file names
+    :param base: directory (path) where the files are
+    :param exclude: list of fnmatch glob patterns for exclusion
+    """
+    not_excluded: list[str | Path] = []
+    patterns: MutableSequence[str] = []
+    base_path = PurePath(base)
+    # Make all dir separators slashes and drop leading current dir
+    # for both patterns and (later) for files.
+
+    for pattern in exclude:
+        pattern = pattern.replace(os.sep, "/")
+        pattern = pattern.removeprefix("./")
+        # pattern = pattern.replace(posix_sep, os.sep)
+        # pattern = pattern.replace(posix_sep, "\\")
+        patterns.append(pattern)
+    for filename in files:
+        full_file_path: PurePath = base_path / filename
+        # test_filename = full_file_path.replace(os.sep, "/")
+        test_filename = full_file_path
+        # if full_file_path.startswith("./"):
+        #     test_filename = full_file_path[2:]
+        matches = False
+        for pattern in patterns:
+            if fnmatch_ex(pattern, test_filename):
+                matches = True
+                break
+        if not matches:
+            not_excluded.append(filename)
+
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex, exclude: {exclude}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex, patterns: {patterns}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex, base: {base}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex, base_path: {base_path}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex, files: {files}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex, not_excluded: {not_excluded}")
+    return not_excluded
+
+
+def fnmatch_exclude_with_base_old1(
     files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
 ) -> list[str | Path]:
     """Return list of files not matching any exclusion pattern
@@ -67,6 +150,12 @@ def fnmatch_exclude_with_base(
     print(f"Ed: fnmatch_exclude_with_base, files: {files}")
     print(f"Ed: fnmatch_exclude_with_base, not_excluded: {not_excluded}")
     return not_excluded
+
+
+def fnmatch_exclude_with_base(
+    files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
+) -> list[str | Path]:
+    return fnmatch_exclude_with_base_fnmatch_ex(files, base, exclude)
 
 
 # TODO: resolve test file versus test module
