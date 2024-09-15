@@ -51,7 +51,8 @@ jobs:
           init-shell: bash
           environment-file: .github/workflows/macos_dependencies.txt
           environment-name: grass-env
-          cache-environment: true
+          # cache-environment: true
+          cache-downloads: true
       - name: Environment info
         shell: micromamba-shell {0}
         run: |
