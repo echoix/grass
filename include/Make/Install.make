@@ -113,7 +113,7 @@ real-install: | $(DESTDIR) $(DESTDIR)$(INST_DIR) $(DESTDIR)$(UNIX_BIN)
 	-rm $(DESTDIR)$(INST_DIR)/$(GRASSMAKE)
 	$(MAKE) $(DESTDIR)$(INST_DIR)/$(GRASSMAKE)
 
-	-$(CHMOD) -R a+rX $(DESTDIR)$(INST_DIR) 2>/dev/null
+	-$(CHMOD) -R a+rX $(DESTDIR)$(INST_DIR)
 
 $(DESTDIR):
 	$(MAKE_DIR_CMD) -p $@
