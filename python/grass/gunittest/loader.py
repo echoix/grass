@@ -62,6 +62,65 @@ def fnmatch_ex(pattern: str, path: str | os.PathLike[str]) -> bool:
     return fnmatch.fnmatch(name, pattern)
 
 
+def fnmatch_exclude_with_base_fnmatch_ex3(
+    files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
+) -> list[str | Path]:
+    """Return list of files not matching any exclusion pattern
+
+    :param files: list of file names
+    :param base: directory (path) where the files are
+    :param exclude: list of fnmatch glob patterns for exclusion
+    """
+    not_excluded: list[str | Path] = []
+    patterns: MutableSequence[str] = []
+    base_path = PurePath(base)
+    iswin32 = sys.platform.startswith("win")
+    # Make all dir separators slashes and drop leading current dir
+    # for both patterns and (later) for files.
+
+    for pattern in exclude:
+        if iswin32 and sep not in pattern and posix_sep in pattern:
+            # Running on Windows, the pattern has no Windows path separators,
+            # and the pattern has one or more Posix path separators. Replace
+            # the Posix path separators with the Windows path separator.
+            pattern = pattern.replace(posix_sep, sep)
+            print("ED: IN IFWIN32 pattern.replace(posix_sep, sep)")
+        pattern = pattern.removeprefix("./")
+        patterns.append(pattern)
+    for filename in files:
+        full_file_path: PurePath = base_path / filename
+        # test_filename = full_file_path.replace(os.sep, "/")
+        test_filename = full_file_path
+        # if full_file_path.startswith("./"):
+        #     test_filename = full_file_path[2:]
+        matches = False
+        for pattern in patterns:
+            if sep not in pattern:
+                name = test_filename.name
+                print('ED: IN "if sep not in pattern:"')
+            else:
+                name = str(test_filename)
+                print('ED: IN ELSE of "if sep not in pattern:"')
+                if test_filename.is_absolute() and not os.path.isabs(pattern):
+                    pattern = f"*{os.sep}{pattern}"
+                    print(
+                        'ED: IN "test_filename.is_absolute() and not os.path.isabs(pattern):"'
+                    )
+
+            if fnmatch.fnmatch(name, pattern):
+                matches = True
+                break
+        if not matches:
+            not_excluded.append(filename)
+    # print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex, exclude: {exclude}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex3, patterns: {patterns}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex3, base: {base}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex3, base_path: {base_path}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex3, files: {files}")
+    print(f"Ed: fnmatch_exclude_with_base_fnmatch_ex3, not_excluded: {not_excluded}")
+    return not_excluded
+
+
 def fnmatch_exclude_with_base_fnmatch_ex2(
     files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
 ) -> list[str | Path]:
@@ -107,7 +166,9 @@ def fnmatch_exclude_with_base_fnmatch_ex2(
                 print('ED: IN ELSE of "if sep not in pattern:"')
                 if test_filename.is_absolute() and not os.path.isabs(pattern):
                     pattern = f"*{os.sep}{pattern}"
-                    print('ED: IN "test_filename.is_absolute() and not os.path.isabs(pattern):"')
+                    print(
+                        'ED: IN "test_filename.is_absolute() and not os.path.isabs(pattern):"'
+                    )
 
             if fnmatch.fnmatch(name, pattern):
                 matches = True
@@ -217,7 +278,7 @@ def fnmatch_exclude_with_base_old1(
 def fnmatch_exclude_with_base(
     files: Iterable[str | Path], base: str | os.PathLike, exclude: Iterable[str]
 ) -> list[str | Path]:
-    return fnmatch_exclude_with_base_fnmatch_ex2(files, base, exclude)
+    return fnmatch_exclude_with_base_fnmatch_ex3(files, base, exclude)
 
 
 # TODO: resolve test file versus test module
