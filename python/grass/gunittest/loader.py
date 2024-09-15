@@ -85,14 +85,12 @@ def fnmatch_exclude_with_base_fnmatch_ex3(
             # the Posix path separators with the Windows path separator.
             pattern = pattern.replace(posix_sep, sep)
             print("ED: IN IFWIN32 pattern.replace(posix_sep, sep)")
-        pattern = pattern.removeprefix("./")
+        pattern = pattern.removeprefix(f".{sep}")
         patterns.append(pattern)
     for filename in files:
         full_file_path: PurePath = base_path / filename
         # test_filename = full_file_path.replace(os.sep, "/")
         test_filename = full_file_path
-        # if full_file_path.startswith("./"):
-        #     test_filename = full_file_path[2:]
         matches = False
         for pattern in patterns:
             if sep not in pattern:
@@ -103,9 +101,6 @@ def fnmatch_exclude_with_base_fnmatch_ex3(
                 print('ED: IN ELSE of "if sep not in pattern:"')
                 if test_filename.is_absolute() and not os.path.isabs(pattern):
                     pattern = f"*{os.sep}{pattern}"
-                    print(
-                        'ED: IN "test_filename.is_absolute() and not os.path.isabs(pattern):"'
-                    )
 
             if fnmatch.fnmatch(name, pattern):
                 matches = True
