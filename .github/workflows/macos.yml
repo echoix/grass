@@ -56,6 +56,12 @@ jobs:
         run: |
           printenv | sort
           $CC --version
+      - name: Breakpoint
+        uses: namespacelabs/breakpoint-action@main
+        with:
+          duration: 15m
+          authorized-users: echoix
+          shell: micromamba-shell {0}
       - name: Create installation directory
         run: mkdir $HOME/install
         shell: micromamba-shell {0}
