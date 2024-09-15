@@ -71,7 +71,7 @@ jobs:
         if: failure()
         uses: namespacelabs/breakpoint-action@main
         with:
-          duration: 5m
+          duration: 15m
           authorized-users: echoix
       - name: Run pytest with multiple workers in parallel
         shell: bash -leo pipefail {0}
