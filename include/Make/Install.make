@@ -97,7 +97,7 @@ PLATMAKE = include/Make/Platform.make
 GRASSMAKE = include/Make/Grass.make
 
 real-install: | $(DESTDIR) $(DESTDIR)$(INST_DIR) $(DESTDIR)$(UNIX_BIN)
-	-tar cBCf $(GISBASE) - . | tar xBCf $(DESTDIR)$(INST_DIR) - 2>/dev/null
+	-tar cBCf $(GISBASE) - . | tar xBCf $(DESTDIR)$(INST_DIR) -
 	-rm $(DESTDIR)$(INST_DIR)/$(GRASS_NAME).tmp
 	$(MAKE) $(STARTUP)
 
