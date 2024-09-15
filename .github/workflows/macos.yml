@@ -67,7 +67,12 @@ jobs:
         if: ${{ !cancelled() }}
         shell: bash -leo pipefail {0}
         run: source ./.github/workflows/print_versions.sh
-
+      - name: Breakpoint if tests failed
+        if: failure()
+        uses: namespacelabs/breakpoint-action@main
+        with:
+          duration: 5m
+          authorized-users: echoix
       - name: Run pytest with multiple workers in parallel
         shell: bash -leo pipefail {0}
         run: |
