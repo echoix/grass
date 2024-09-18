@@ -51,12 +51,10 @@ def replace_in_file(file_path, pattern, repl):
     """
     # using tmp file to store the replaced content
     tmp_file_path = file_path + ".tmp"
-    old_file = open(file_path, "r")
-    new_file = open(tmp_file_path, "w")
-    for line in old_file:
-        new_file.write(re.sub(pattern=pattern, string=line, repl=repl))
-    new_file.close()
-    old_file.close()
+    with open(file_path, "r") as old_file, open(tmp_file_path, "w") as new_file:
+        for line in old_file:
+            new_file.write(re.sub(pattern=pattern, string=line, repl=repl))
+
     # remove old file since it must not exist for rename/move
     os.remove(file_path)
     # replace old file by new file
@@ -455,13 +453,11 @@ def percent_to_html(percent):
 def wrap_stdstream_to_html(infile, outfile, module, stream):
     before = "<html><body><h1>%s</h1><pre>" % (module.name + " " + stream)
     after = "</pre></body></html>"
-    html = open(outfile, "w")
-    html.write(before)
-    with open(infile) as text:
+    with open(outfile, "w") as html, open(infile) as text:
+        html.write(before)
         for line in text:
             html.write(color_error_line(html_escape(line)))
-    html.write(after)
-    html.close()
+        html.write(after)
 
 
 def html_file_preview(filename):
@@ -482,7 +478,8 @@ def html_file_preview(filename):
     elif size < 10 * max_size:
 
         def tail(filename, n):
-            return collections.deque(open(filename), n)
+            with open(filename) as _file:
+                return collections.deque(_file, n)
 
         html.write("... (lines omitted)\n")
         for line in tail(filename, 50):
@@ -733,93 +730,95 @@ class GrassTestFilesHtmlReporter(GrassTestFilesCountingReporter):
         )
 
         file_index_path = os.path.join(cwd, "index.html")
-        file_index = open(file_index_path, "w")
-        file_index.write(
-            '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>'
-            "<h1>{m.name}</h1>"
-            "<h2>{m.tested_dir} &ndash; {m.name}</h2>"
-            "{status}".format(
-                m=module,
-                status=returncode_to_success_html_par(returncode),
-            )
-        )
-
-        # TODO: include optionally hyper link to test suite
-        # TODO: file_path is reconstructed in a naive way
-        # file_path should be stored in the module/test file object and just used here
-        summary_section = (
-            "<table><tbody>"
-            "<tr><td>Test</td><td>{m}</td></tr>"
-            "<tr><td>Testsuite</td><td>{d}</td></tr>"
-            "<tr><td>Test file</td><td>{file_path}</td></tr>"
-            "<tr><td>Status</td><td>{status}</td></tr>"
-            "<tr><td>Return code</td><td>{rc}</td></tr>"
-            "<tr><td>Number of tests</td><td>{ntests}</td></tr>"
-            "<tr><td>Successful tests</td><td>{stests}</td></tr>"
-            "<tr><td>Failed tests</td><td>{ftests}</td></tr>"
-            "<tr><td>Percent successful</td><td>{ptests}</td></tr>"
-            "<tr><td>Test duration</td><td>{dur}</td></tr>".format(
-                d=module.tested_dir,
-                m=module.name,
-                file_path=os.path.join(
-                    module.tested_dir, "testsuite", module.name + "." + module.file_type
-                ),
-                status=returncode_to_html_text(returncode, timed_out),
-                stests=successes,
-                ftests=bad_ones,
-                ntests=total,
-                ptests=pass_per,
-                rc=returncode,
-                dur=self.file_time,
-            )
-        )
-        file_index.write(summary_section)
-
-        modules = test_summary.get("tested_modules", None)
-        if modules:
-            # TODO: replace by better handling of potential lists when parsing
-            # TODO: create link to module if running in grass or in addons
-            # alternatively a link to module test summary
-            if type(modules) is not list:
-                modules = [modules]
+        with open(file_index_path, "w") as file_index:
             file_index.write(
-                "<tr><td>Tested modules</td><td>{0}</td></tr>".format(
-                    ", ".join(sorted(set(modules)))
+                '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>'
+                "<h1>{m.name}</h1>"
+                "<h2>{m.tested_dir} &ndash; {m.name}</h2>"
+                "{status}".format(
+                    m=module,
+                    status=returncode_to_success_html_par(returncode),
                 )
             )
-        file_index.write("</tbody></table>")
 
-        # here we would have also links to coverage, profiling, ...
-        # '<li><a href="testcodecoverage/index.html">code coverage</a></li>'
-        files_section = (
-            "<h3>Supplementary files</h3>"
-            "<ul>"
-            '<li><a href="stdout.html">standard output (stdout)</a></li>'
-            '<li><a href="stderr.html">standard error output (stderr)</a></li>'
-        )
-        file_index.write(files_section)
+            # TODO: include optionally hyper link to test suite
+            # TODO: file_path is reconstructed in a naive way
+            # file_path should be stored in the module/test file object
+            # and just used here
+            summary_section = (
+                "<table><tbody>"
+                "<tr><td>Test</td><td>{m}</td></tr>"
+                "<tr><td>Testsuite</td><td>{d}</td></tr>"
+                "<tr><td>Test file</td><td>{file_path}</td></tr>"
+                "<tr><td>Status</td><td>{status}</td></tr>"
+                "<tr><td>Return code</td><td>{rc}</td></tr>"
+                "<tr><td>Number of tests</td><td>{ntests}</td></tr>"
+                "<tr><td>Successful tests</td><td>{stests}</td></tr>"
+                "<tr><td>Failed tests</td><td>{ftests}</td></tr>"
+                "<tr><td>Percent successful</td><td>{ptests}</td></tr>"
+                "<tr><td>Test duration</td><td>{dur}</td></tr>".format(
+                    d=module.tested_dir,
+                    m=module.name,
+                    file_path=os.path.join(
+                        module.tested_dir,
+                        "testsuite",
+                        module.name + "." + module.file_type,
+                    ),
+                    status=returncode_to_html_text(returncode, timed_out),
+                    stests=successes,
+                    ftests=bad_ones,
+                    ntests=total,
+                    ptests=pass_per,
+                    rc=returncode,
+                    dur=self.file_time,
+                )
+            )
+            file_index.write(summary_section)
 
-        supplementary_files = test_summary.get("supplementary_files", None)
-        if supplementary_files:
-            # this is something we might want to do once for all and not
-            # risk that it will be done twice or rely that somebody else
-            # will do it for use
-            # the solution is perhaps do the multi reporter more grass-specific
-            # and do all common things, so that other can rely on it and
-            # moreover something can be shared with other explicitly
-            # using constructors as seems advantageous for counting
-            self._file_anonymizer.anonymize(supplementary_files)
-            for f in supplementary_files:
-                file_index.write('<li><a href="{f}">{f}</a></li>'.format(f=f))
+            modules = test_summary.get("tested_modules", None)
+            if modules:
+                # TODO: replace by better handling of potential lists when parsing
+                # TODO: create link to module if running in grass or in addons
+                # alternatively a link to module test summary
+                if type(modules) is not list:
+                    modules = [modules]
+                file_index.write(
+                    "<tr><td>Tested modules</td><td>{0}</td></tr>".format(
+                        ", ".join(sorted(set(modules)))
+                    )
+                )
+            file_index.write("</tbody></table>")
 
-        file_index.write("</ul>")
+            # here we would have also links to coverage, profiling, ...
+            # '<li><a href="testcodecoverage/index.html">code coverage</a></li>'
+            files_section = (
+                "<h3>Supplementary files</h3>"
+                "<ul>"
+                '<li><a href="stdout.html">standard output (stdout)</a></li>'
+                '<li><a href="stderr.html">standard error output (stderr)</a></li>'
+            )
+            file_index.write(files_section)
 
-        if returncode:
-            file_index.write("<h3>Standard error output (stderr)</h3>")
-            file_index.write(html_file_preview(stderr))
+            supplementary_files = test_summary.get("supplementary_files", None)
+            if supplementary_files:
+                # this is something we might want to do once for all and not
+                # risk that it will be done twice or rely that somebody else
+                # will do it for use
+                # the solution is perhaps do the multi reporter more grass-specific
+                # and do all common things, so that other can rely on it and
+                # moreover something can be shared with other explicitly
+                # using constructors as seems advantageous for counting
+                self._file_anonymizer.anonymize(supplementary_files)
+                for f in supplementary_files:
+                    file_index.write('<li><a href="{f}">{f}</a></li>'.format(f=f))
 
-        file_index.write("</body></html>")
-        file_index.close()
+            file_index.write("</ul>")
+
+            if returncode:
+                file_index.write("<h3>Standard error output (stderr)</h3>")
+                file_index.write(html_file_preview(stderr))
+
+            file_index.write("</body></html>")
 
         if returncode:
             pass
@@ -1093,7 +1092,7 @@ class TestsuiteDirReporter:
             os.path.join(root, directory)
         ) == os.path.abspath(root):
             page_name = os.path.join(root, self.top_level_testsuite_page_name)
-        page = open(page_name, "w")
+
         # TODO: should we use forward slashes also for the HTML because
         # it is simpler are more consistent with the rest on MS Windows?
         head = "<html><body><h1>{name} testsuite results</h1>".format(name=directory)
@@ -1106,106 +1105,109 @@ class TestsuiteDirReporter:
             "<th>Failed</th><th>Percent successful</th>"
             "</tr></thead><tbody>"
         )
-        page.write(head)
-        page.write(tests_table_head)
-        for test_file_name in test_files:
-            # TODO: put keyvalue fine name to constant
-            summary_filename = os.path.join(
-                root, directory, test_file_name, "test_keyvalue_result.txt"
+        with open(page_name, "w") as page:
+            page.write(head)
+            page.write(tests_table_head)
+
+            for test_file_name in test_files:
+                # TODO: put keyvalue fine name to constant
+                summary_filename = os.path.join(
+                    root, directory, test_file_name, "test_keyvalue_result.txt"
+                )
+                # if os.path.exists(summary_filename):
+                summary = text_to_keyvalue(Path(summary_filename).read_text(), sep="=")
+                # else:
+                # TODO: write else here
+                #    summary = None
+
+                if "total" not in summary:
+                    bad_ones = successes = UNKNOWN_NUMBER_HTML
+                    total = None
+                else:
+                    bad_ones = summary["failures"] + summary["errors"]
+                    successes = summary["successes"]
+                    total = summary["total"]
+
+                    self.failures += summary["failures"]
+                    self.errors += summary["errors"]
+                    self.skipped += summary["skipped"]
+                    self.successes += summary["successes"]
+                    self.expected_failures += summary["expected_failures"]
+                    self.unexpected_successes += summary["unexpected_successes"]
+                    self.total += summary["total"]
+
+                    dir_failures += summary["failures"]
+                    dir_errors += summary["failures"]
+                    dir_skipped += summary["skipped"]
+                    dir_successes += summary["successes"]
+                    dir_expected_failures += summary["expected_failures"]
+                    dir_unexpected_success += summary["unexpected_successes"]
+                    dir_total += summary["total"]
+
+                # TODO: keyvalue method should have types for keys function
+                # perhaps just the current post processing function is enough
+                test_file_authors = summary.get("test_file_authors")
+                if not test_file_authors:
+                    test_file_authors = []
+                if type(test_file_authors) is not list:
+                    test_file_authors = [test_file_authors]
+                test_files_authors.extend(test_file_authors)
+
+                file_total += 1
+                # Use non-zero return code in case it is missing.
+                # (This can happen when the test has timed out.)
+                return_code = summary.get("returncode", 1)
+                file_successes += 0 if return_code else 1
+
+                pass_per = success_to_html_percent(total=total, successes=successes)
+                row = (
+                    "<tr>"
+                    '<td><a href="{f}/index.html">{f}</a></td>'
+                    "<td>{status}</td>"
+                    "<td>{ntests}</td><td>{stests}</td>"
+                    "<td>{ftests}</td><td>{ptests}</td>"
+                    "<tr>".format(
+                        f=test_file_name,
+                        status=returncode_to_html_text(return_code),
+                        stests=successes,
+                        ftests=bad_ones,
+                        ntests=total,
+                        ptests=pass_per,
+                    )
+                )
+                page.write(row)
+
+            self.testsuites += 1
+            self.testsuites_successes += 1 if file_successes == file_total else 0
+            self.files += file_total
+            self.files_successes += file_successes
+
+            dir_pass_per = success_to_html_percent(
+                total=dir_total, successes=dir_successes
             )
-            # if os.path.exists(summary_filename):
-            summary = text_to_keyvalue(Path(summary_filename).read_text(), sep="=")
-            # else:
-            # TODO: write else here
-            #    summary = None
-
-            if "total" not in summary:
-                bad_ones = successes = UNKNOWN_NUMBER_HTML
-                total = None
-            else:
-                bad_ones = summary["failures"] + summary["errors"]
-                successes = summary["successes"]
-                total = summary["total"]
-
-                self.failures += summary["failures"]
-                self.errors += summary["errors"]
-                self.skipped += summary["skipped"]
-                self.successes += summary["successes"]
-                self.expected_failures += summary["expected_failures"]
-                self.unexpected_successes += summary["unexpected_successes"]
-                self.total += summary["total"]
-
-                dir_failures += summary["failures"]
-                dir_errors += summary["failures"]
-                dir_skipped += summary["skipped"]
-                dir_successes += summary["successes"]
-                dir_expected_failures += summary["expected_failures"]
-                dir_unexpected_success += summary["unexpected_successes"]
-                dir_total += summary["total"]
-
-            # TODO: keyvalue method should have types for keys function
-            # perhaps just the current post processing function is enough
-            test_file_authors = summary.get("test_file_authors")
-            if not test_file_authors:
-                test_file_authors = []
-            if type(test_file_authors) is not list:
-                test_file_authors = [test_file_authors]
-            test_files_authors.extend(test_file_authors)
-
-            file_total += 1
-            # Use non-zero return code in case it is missing.
-            # (This can happen when the test has timed out.)
-            return_code = summary.get("returncode", 1)
-            file_successes += 0 if return_code else 1
-
-            pass_per = success_to_html_percent(total=total, successes=successes)
-            row = (
-                "<tr>"
-                '<td><a href="{f}/index.html">{f}</a></td>'
+            file_pass_per = success_to_html_percent(
+                total=file_total, successes=file_successes
+            )
+            tests_table_foot = (
+                "</tbody><tfoot><tr>"
+                "<td>Summary</td>"
                 "<td>{status}</td>"
                 "<td>{ntests}</td><td>{stests}</td>"
                 "<td>{ftests}</td><td>{ptests}</td>"
-                "<tr>".format(
-                    f=test_file_name,
-                    status=returncode_to_html_text(return_code),
-                    stests=successes,
-                    ftests=bad_ones,
-                    ntests=total,
-                    ptests=pass_per,
+                "</tr></tfoot></table>".format(
+                    status=file_pass_per,
+                    stests=dir_successes,
+                    ftests=dir_failures + dir_errors,
+                    ntests=dir_total,
+                    ptests=dir_pass_per,
                 )
             )
-            page.write(row)
-
-        self.testsuites += 1
-        self.testsuites_successes += 1 if file_successes == file_total else 0
-        self.files += file_total
-        self.files_successes += file_successes
-
-        dir_pass_per = success_to_html_percent(total=dir_total, successes=dir_successes)
-        file_pass_per = success_to_html_percent(
-            total=file_total, successes=file_successes
-        )
-        tests_table_foot = (
-            "</tbody><tfoot><tr>"
-            "<td>Summary</td>"
-            "<td>{status}</td>"
-            "<td>{ntests}</td><td>{stests}</td>"
-            "<td>{ftests}</td><td>{ptests}</td>"
-            "</tr></tfoot></table>".format(
-                status=file_pass_per,
-                stests=dir_successes,
-                ftests=dir_failures + dir_errors,
-                ntests=dir_total,
-                ptests=dir_pass_per,
+            page.write(tests_table_foot)
+            test_authors = get_html_test_authors_table(
+                directory=directory, tests_authors=test_files_authors
             )
-        )
-        page.write(tests_table_foot)
-        test_authors = get_html_test_authors_table(
-            directory=directory, tests_authors=test_files_authors
-        )
-        page.write(test_authors)
-        page.write("</body></html>")
-        page.close()
+            page.write(test_authors)
+            page.write("</body></html>")
 
         status = success_to_html_text(total=file_total, successes=file_successes)
         return (
@@ -1233,7 +1235,7 @@ class TestsuiteDirReporter:
         # absolute/relative paths
 
         page_name = os.path.join(root, self.main_page_name)
-        page = open(page_name, "w")
+
         head = "<html><body><h1>Testsuites results</h1>"
         tests_table_head = (
             "<table>"
@@ -1246,40 +1248,43 @@ class TestsuiteDirReporter:
             "<th>Failed</th><th>Percent successful</th>"
             "</tr></thead><tbody>"
         )
-        page.write(head)
-        page.write(tests_table_head)
+        with open(page_name, "w", encoding="utf-8") as page:
+            page.write(head)
+            page.write(tests_table_head)
 
-        for directory, test_files in directories.items():
-            row = self.report_for_dir(
-                root=root, directory=directory, test_files=test_files
-            )
-            page.write(row)
+            for directory, test_files in directories.items():
+                row = self.report_for_dir(
+                    root=root, directory=directory, test_files=test_files
+                )
+                page.write(row)
 
-        pass_per = success_to_html_percent(total=self.total, successes=self.successes)
-        file_pass_per = success_to_html_percent(
-            total=self.files, successes=self.files_successes
-        )
-        testsuites_pass_per = success_to_html_percent(
-            total=self.testsuites, successes=self.testsuites_successes
-        )
-        tests_table_foot = (
-            "<tfoot>"
-            "<tr>"
-            "<td>Summary</td><td>{status}</td>"
-            "<td>{nfiles}</td><td>{sfiles}</td><td>{pfiles}</td>"
-            "<td>{ntests}</td><td>{stests}</td>"
-            "<td>{ftests}</td><td>{ptests}</td>"
-            "</tr>"
-            "</tfoot>".format(
-                status=testsuites_pass_per,
-                nfiles=self.files,
-                sfiles=self.files_successes,
-                pfiles=file_pass_per,
-                stests=self.successes,
-                ftests=self.failures + self.errors,
-                ntests=self.total,
-                ptests=pass_per,
+            pass_per = success_to_html_percent(
+                total=self.total, successes=self.successes
             )
-        )
-        page.write(tests_table_foot)
-        page.write("</body></html>")
+            file_pass_per = success_to_html_percent(
+                total=self.files, successes=self.files_successes
+            )
+            testsuites_pass_per = success_to_html_percent(
+                total=self.testsuites, successes=self.testsuites_successes
+            )
+            tests_table_foot = (
+                "<tfoot>"
+                "<tr>"
+                "<td>Summary</td><td>{status}</td>"
+                "<td>{nfiles}</td><td>{sfiles}</td><td>{pfiles}</td>"
+                "<td>{ntests}</td><td>{stests}</td>"
+                "<td>{ftests}</td><td>{ptests}</td>"
+                "</tr>"
+                "</tfoot>".format(
+                    status=testsuites_pass_per,
+                    nfiles=self.files,
+                    sfiles=self.files_successes,
+                    pfiles=file_pass_per,
+                    stests=self.successes,
+                    ftests=self.failures + self.errors,
+                    ntests=self.total,
+                    ptests=pass_per,
+                )
+            )
+            page.write(tests_table_foot)
+            page.write("</body></html>")

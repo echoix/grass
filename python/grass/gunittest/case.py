@@ -1227,8 +1227,12 @@ class TestCase(unittest.TestCase):
         """
         import difflib
 
-        fromlines = open(actual).readlines()
-        tolines = open(reference).readlines()
+        fromlines = []
+        tolines = []
+        with open(actual) as file_actual, open(reference) as file_reference:
+            fromlines = file_actual.readlines()
+            tolines = file_reference.readlines()
+
         context_lines = 3  # number of context lines
         # TODO: filenames are set to "actual" and "reference", isn't it too general?
         # it is even more useful if map names or file names are some generated
@@ -1252,18 +1256,19 @@ class TestCase(unittest.TestCase):
             os.remove(reference)
         stdmsg = "There is a difference between vectors when compared as ASCII files.\n"
 
-        output = StringIO()
-        # TODO: there is a diff size constant which we can use
-        # we are setting it unlimited but we can just set it large
-        maxlines = 100
-        i = 0
-        for line in diff:
-            if i >= maxlines:
-                break
-            output.write(line)
-            i += 1
-        stdmsg += output.getvalue()
-        output.close()
+        with StringIO() as output_io:
+            # TODO: there is a diff size constant which we can use
+            # we are setting it unlimited but we can just set it large
+            maxlines = 100
+            i = 0
+            for line in diff:
+                if i >= maxlines:
+                    break
+                output_io.write(line)
+                i += 1
+            stdmsg += output_io.getvalue()
+            output_io.close()
+
         # it seems that there is not better way of asking whether there was
         # a difference (always a iterator object is returned)
         if i > 0:
@@ -1289,10 +1294,9 @@ class TestCase(unittest.TestCase):
                     context=True,
                     numlines=context_lines,
                 )
-                htmldiff_file = open(htmldiff_file_name, "w")
-                for line in htmldiff:
-                    htmldiff_file.write(line)
-                htmldiff_file.close()
+                with open(htmldiff_file_name, "w") as htmldiff_file:
+                    for line in htmldiff:
+                        htmldiff_file.write(line)
 
             self.fail(self._formatMessage(msg, stdmsg))
 
