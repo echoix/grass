@@ -66,6 +66,7 @@ jobs:
             python3-core
             grass-dev
             python3-pytest
+            python3-jupyter
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
