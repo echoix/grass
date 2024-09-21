@@ -199,7 +199,7 @@ jobs:
       - name: Run pytest tests
         run: |
           set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
-          set PATH=%OSGEO4W_ROOT%\apps\grass\grass85\bin;%PATH%
+          set PATH=%OSGEO4W_ROOT%\apps\grass\grass85\bin;%OSGEO4W_ROOT%\apps\grass\grass85\lib;%PATH%
           set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
           set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
           set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
