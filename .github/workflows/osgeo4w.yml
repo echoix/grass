@@ -192,6 +192,11 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         with:
           detached: true
+      - name: Run pytest tests
+        run: pytest -ra . --continue-on-collection-errors
+        continue-on-error: true
+        timeout-minutes: 7
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'D:\OSGeo4W\bin\grass85.bat' 'D:\OSGeo4W\bin\python3'
         # run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
