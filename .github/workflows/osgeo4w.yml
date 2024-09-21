@@ -194,7 +194,7 @@ jobs:
           detached: true
       - name: Run pytest tests
         run: |
-          python-grass85 -m pytest -ra . --continue-on-collection-errors --color=yes
+          python-grass85 -m pytest  --verbose -ra . --continue-on-collection-errors --color=yes
         continue-on-error: true
         timeout-minutes: 7
         shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
