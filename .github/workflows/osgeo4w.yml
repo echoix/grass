@@ -199,7 +199,7 @@ jobs:
       - name: Run pytest tests
         run: |
           set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
-          python-grass85 -m pytest  --verbose -ra . --continue-on-collection-errors --color=yes
+          pytest  --verbose -ra . --continue-on-collection-errors --color=yes
         continue-on-error: true
         timeout-minutes: 7
         shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
