@@ -189,7 +189,7 @@ jobs:
         env:
           OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
       - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+        uses: mxschmitt/action-tmate@master
         with:
           detached: true
       - name: Run pytest tests
