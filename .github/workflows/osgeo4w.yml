@@ -114,7 +114,6 @@ jobs:
             --durations=0 --durations-min=0.5 `
             -ra .
       - name: Run pytest with a single worker
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
         run: |
           call o4w_env
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
@@ -123,6 +122,7 @@ jobs:
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Setup tmate session
         if: ${{ failure() }}
         uses: mxschmitt/action-tmate@master
