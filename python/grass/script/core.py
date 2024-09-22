@@ -536,6 +536,8 @@ def read_command(*args, **kwargs):
     encoding = "default"
     if "encoding" in kwargs:
         encoding = kwargs["encoding"]
+    if "universal_newlines" not in kwargs:
+        kwargs["universal_newlines"] = True
 
     if _capture_stderr and "stderr" not in kwargs.keys():
         kwargs["stderr"] = PIPE
@@ -1923,8 +1925,7 @@ def _create_location_xy(database, location):
         ]
 
         defwind = open(os.path.join(location, "PERMANENT", "DEFAULT_WIND"), "w")
-        for param in regioninfo:
-            defwind.write(param + "%s" % os.linesep)
+        defwind.writelines(f"{param}\n" for param in regioninfo)
         defwind.close()
 
         shutil.copy(

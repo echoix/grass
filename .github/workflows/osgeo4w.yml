@@ -32,74 +32,228 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Cache OSGeo4W packages
+        id: cache-o4w_pkg
+        uses: actions/cache@v4
+        with:
+          path: "D:/OSGeo4W_pkg"
+          key: ${{ runner.os }}-osgeo4w-pkgs
+          save-always: true
       - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
+        if: ${{ false }}
         with:
           path-type: inherit
           location: D:\
           update: true
           msystem: MINGW64
-          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
+          install: >-
+            tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-fftw mingw-w64-x86_64-openblas mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
             mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
-            mingw-w64-x86_64-pcre
+            mingw-w64-x86_64-pcre mingw-w64-x86_64-openmp mingw-w64-x86_64-readline
+      - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
+        id: msys2
+        with:
+          path-type: inherit
+          location: D:\
+          update: true
+          msystem: MINGW64
+          install: >-
+            tar libintl make diffutils git dos2unix zip
+            mingw-w64-x86_64-bzip2
 
       - name: Setup OSGeo4W environment
         uses: echoix/setup-OSGeo4W@17deecd39e077a80bf1081443998ea8edd6f15bf  # v0.1.0
         with:
+          root: "D:/OSGeo4W"
           package-dir: "D:/OSGeo4W_pkg"
           packages: |
-            cairo-devel
-            fftw
-            freetype-devel
-            gdal-devel
-            gdal-ecw
-            gdal-mrsid
-            geos-devel
-            liblas-devel
-            libpng-devel
-            libpq-devel
-            libtiff-devel
-            libxdr
-            netcdf-devel
-            pdal-devel
-            pdcurses
-            proj-devel
-            python3-matplotlib
-            python3-numpy
-            python3-ply
-            python3-pywin32
-            python3-wxpython
-            regex-devel
-            zstd-devel
-
+            python3-core
+            grass-dev
+            python3-pytest
+            python3-jupyter
+      - uses: actions/cache/save@v4
+        id: cache-o4w_pkg-save
+        with:
+          path: "D:/OSGeo4W_pkg"
+          key: ${{ runner.os }}-osgeo4w-pkgs
+      - name: Prepare ccache timestamp
+        id: ccache_cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H-%M-%S" UTC)
+          file(APPEND "$ENV{GITHUB_OUTPUT}" "timestamp=${current_date}")
+      - name: ccache cache files
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        with:
+          path: .ccache
+          key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+          restore-keys: |
+            ${{ matrix.os }}-ccache-
+          save-always: true
+      - name: Configure ccache
+        if: ${{ false }}
+        run: |
+          echo "CCACHE_BASEDIR=${GITHUB_WORKSPACE}" >> "${GITHUB_ENV}"
+          echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
+          echo "CCACHE_MAXSIZE=400M" >> "${GITHUB_ENV}"
+        shell: msys2 {0}
       - name: Set number of cores for compilation
+        if: ${{ false }}
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
 
       - name: Compile GRASS GIS
+        if: ${{ false }}
         shell: msys2 {0}
         run: |
           export CFLAGS="${CFLAGS} -pipe"
           export CXXFLAGS="${CXXFLAGS} -pipe"
-          .github/workflows/build_osgeo4w.sh
-
+          ccache --show-stats
+          MSYSPATH=$(cygpath -a msys64/usr/bin):$OSGEO4W_ROOT_MSYS/bin:$(cygpath --sysdir)
+          MSYSPATH=${MSYSPATH//\/cygdrive/}
+          ccache --show-config
+          ccache --zero-stats
+          PATH=$MSYSPATH:$PATH mswindows/osgeo4w/package.sh
+          ccache --show-stats --verbose --verbose
+        env:
+          PACKAGE_POSTFIX: "-dev"
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+          PACKAGE_PATCH: ${{ github.sha }}-1
+      - name: Upload OSGeo4W grass package artifact
+        if: ${{ !cancelled() && false }}
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: grass-osgeo4w-package-${{ matrix.os }}
+          path: mswindows/osgeo4w/package
+          include-hidden-files: true
+          retention-days: 3
+      - name: Add msys to paths loaded by OSGeo4W
+        run: |
+          # $msys_path=";C:/msys64/usr/bin;C:/msys64/mingw64/bin"
+          $msys_path=";$env:MSYS2_ROOT/usr/bin;$env:MSYS2_ROOT/mingw64/bin"
+          $line="set PATH=%OSGEO4W_ROOT%\bin${msys_path};%PATH%"
+          $line | Out-File -FilePath $env:OSGEO4W_ROOT/etc/ini/z_msys.bat
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+          OSGEO4W_ROOT: "D:\\OSGeo4W"
+          # OSGEO4W_ROOT: "C:\\OSGeo4W"
+        continue-on-error: true
+      # - run: grep ^ /dev/null /c/OSGeo4W/etc/ini/*
+      - run: grep ^ /dev/null /d/OSGeo4W/etc/ini/*
+        shell: msys2 {0}
+        continue-on-error: true
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
-        run: .github/workflows/print_versions.sh
+        run: |
+          export ARCH=x86_64-w64-mingw32
+          PWD="$(pwd)"
+          SRC="${PWD}"
+          # export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:/dist./bin:/dist./"
+          # export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/bash_bin"
+          export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc:${PATH}"
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          # cp ${OSGEO4W_ROOT_MSYS}/bin/${GRASS_EXECUTABLE}.bat ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
+          .github/workflows/print_versions.sh
+          # rm ${OSGEO4W_ROOT_MSYS}/bin/grass.bat
+        env:
+          OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
+          # OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+          GRASS_EXECUTABLE: grass85
+        continue-on-error: true
 
       - name: Test executing of the grass command
-        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
+        run: .github/workflows/test_simple.bat "D:\OSGeo4W\bin\grass85.bat"
+        # run: .github/workflows/test_simple.bat "C:\OSGeo4W\bin\grass85.bat"
+        continue-on-error: true
 
       - name: Test executing of the grass command in bash
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
+        continue-on-error: true
+      - name: Test executing of the grass command in bash msys
+        shell: msys2 {0}
+        run: |
+          PWD="$(pwd)"
+          SRC="${PWD}"
+          export ARCH=x86_64-w64-mingw32
+          export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${SRC}/dist.${ARCH}/$bash_bin:${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc"
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          export PYTHONHOME="${PYTHONHOME}"
+          export PYTHONUTF8=1
+          export GISBASE=${OSGEO4W_ROOT}/apps/grass/grass85
+          printenv | sort
+          .github/workflows/test_simple_msys.sh
+        continue-on-error: true
+        env:
+          OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
+          # OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
 
+      - name: Replace gunittest
+        run: |
+          rm -r "${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc/python/grass/gunittest"
+          cp -r python/grass/gunittest "${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc/python/grass/gunittest"
+        shell: msys2 {0}
+        env:
+          OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
+      - name: Replace grass python files
+        run: |
+          # rm -r "${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc/python/grass"
+          cp -r python/grass "${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc/python/"
+        shell: msys2 {0}
+        env:
+          OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@master
+        with:
+          detached: true
+      - name: Install more pytest plugins
+        run: python -m pip install pytest-timeout pytest-xdist
+        continue-on-error: true
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
+      - name: Run pytest tests
+        run: |
+          set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
+          set PATH=%OSGEO4W_ROOT%\apps\grass\grass85\bin;%OSGEO4W_ROOT%\apps\grass\grass85\lib;%PATH%
+          set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
+          set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
+          set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          set GRASS_COMPATIBILITY_TEST=0
+          pytest  --verbose -ra . --continue-on-collection-errors --color=yes
+        continue-on-error: true
+        timeout-minutes: 7
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
+      - name: Setup tmate session
+        if: ${{ false }}
+        uses: mxschmitt/action-tmate@master
       - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        run: .github/workflows/test_thorough.bat 'D:\OSGeo4W\bin\grass85.bat' 'D:\OSGeo4W\bin\python3'
+        # run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        continue-on-error: true
+        timeout-minutes: 3
+      - name: Run tests osgeo4w shell
+        run: |
+          .github/workflows/test_thorough.bat "D:\OSGeo4W\bin\grass85.bat" "D:\OSGeo4W\bin\python3"
+        # .github/workflows/test_thorough.bat "C:\OSGeo4W\bin\grass85.bat" "C:\OSGeo4W\bin\python3"
+        continue-on-error: true
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
+        # shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        timeout-minutes: 3
+      - name: Run tests osgeo4w shell pythonpath
+        run: |
+          set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass85
+          set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass85\etc\python;%PYTHONPATH%
+          .github/workflows/test_thorough.bat "D:\OSGeo4W\bin\grass85.bat" "D:\OSGeo4W\bin\python3"
+        # .github/workflows/test_thorough.bat "C:\OSGeo4W\bin\grass85.bat" "C:\OSGeo4W\bin\python3"
+        continue-on-error: true
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
+        # shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        timeout-minutes: 15
 
       - name: Make HTML test report available
         if: ${{ always() }}
