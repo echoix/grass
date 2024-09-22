@@ -161,8 +161,7 @@ jobs:
           # OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
           GRASS_EXECUTABLE: grass85
         continue-on-error: true
-      - run: exit 1
-        shell: msys2 {0}
+
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat "D:\OSGeo4W\bin\grass85.bat"
         # run: .github/workflows/test_simple.bat "C:\OSGeo4W\bin\grass85.bat"
