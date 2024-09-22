@@ -15,6 +15,7 @@
 
 import os
 import shutil
+import sys
 
 import grass.script as gs
 
@@ -318,7 +319,7 @@ class TimeSeriesMap(BaseSeriesMap):
         filename,
         duration=500,
         label=True,
-        font="DejaVuSans.ttf",
+        font=None,
         text_size=12,
         text_color="gray",
     ):
@@ -340,6 +341,9 @@ class TimeSeriesMap(BaseSeriesMap):
         # Render images if they have not been already
         if not self._layers_rendered:
             self.render()
+
+        if font is None and sys.platform.startswith("win"):
+            font = "DejaVuSans.ttf"
 
         input_files = []
         for date in self._labels:
