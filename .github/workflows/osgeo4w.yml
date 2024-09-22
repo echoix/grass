@@ -109,6 +109,9 @@ jobs:
           pytest --verbose --color=yes `
             --durations=0 --durations-min=0.5 `
             -ra .
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@master
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
