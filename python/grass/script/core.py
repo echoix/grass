@@ -536,6 +536,8 @@ def read_command(*args, **kwargs):
     encoding = "default"
     if "encoding" in kwargs:
         encoding = kwargs["encoding"]
+        if "universal_newlines" not in kwargs:
+            kwargs["universal_newlines"] = True
 
     if _capture_stderr and "stderr" not in kwargs.keys():
         kwargs["stderr"] = PIPE
