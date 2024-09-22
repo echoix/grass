@@ -108,6 +108,7 @@ jobs:
       - name: Run pytest with a single worker
         run: |
           $Env:PATH = $(C:/OSGeo4W/OSGeo4W.bat grass85 --config python_path);$PYTHONPATH
+          $Env:PATH
           pytest --verbose --color=yes `
             --durations=0 --durations-min=0.5 `
             -ra .
