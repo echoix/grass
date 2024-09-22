@@ -209,7 +209,6 @@ jobs:
         env:
           OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
       - name: Setup tmate session
-        if: ${{ false }}
         uses: mxschmitt/action-tmate@master
         with:
           detached: true
@@ -230,6 +229,7 @@ jobs:
         timeout-minutes: 7
         shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Setup tmate session
+        if: ${{ false }}
         uses: mxschmitt/action-tmate@master
       - name: Run tests
         run: .github/workflows/test_thorough.bat 'D:\OSGeo4W\bin\grass85.bat' 'D:\OSGeo4W\bin\python3'
