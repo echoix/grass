@@ -1925,7 +1925,7 @@ def _create_location_xy(database, location):
         ]
 
         defwind = open(os.path.join(location, "PERMANENT", "DEFAULT_WIND"), "w")
-        defwind.writelines(regioninfo)
+        defwind.writelines(f"{param}\n" for param in regioninfo)
         defwind.close()
 
         shutil.copy(
