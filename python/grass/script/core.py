@@ -402,7 +402,7 @@ def start_command(
     :return: Popen object
     """
     options = {}
-    popts = {"universal_newlines": True}
+    popts = {}
     for opt, val in kwargs.items():
         if opt in _popen_args:
             popts[opt] = val
