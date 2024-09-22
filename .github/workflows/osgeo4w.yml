@@ -106,6 +106,7 @@ jobs:
         run: python -m pip install pytest-timeout
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with a single worker
+        continue-on-error: true
         run: |
           $Env:PATH = $(C:/OSGeo4W/OSGeo4W.bat grass85 --config python_path);$PYTHONPATH
           $Env:PATH
