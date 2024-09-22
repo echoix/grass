@@ -199,7 +199,7 @@ jobs:
       - name: Replace grass python files
         run: |
           # rm -r "${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc/python/grass"
-          cp -r python/grass "${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc/python/grass"
+          cp -r python/grass "${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc/python/"
         shell: msys2 {0}
         env:
           OSGEO4W_ROOT_MSYS: "/d/OSGeo4W"
