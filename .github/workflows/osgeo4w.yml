@@ -74,6 +74,11 @@ jobs:
             grass-dev
             python3-pytest
             python3-jupyter
+      - uses: actions/cache/save@v4
+        id: cache-o4w_pkg-save
+        with:
+          path: "D:/OSGeo4W_pkg"
+          key: ${{ runner.os }}-osgeo4w-pkgs
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
