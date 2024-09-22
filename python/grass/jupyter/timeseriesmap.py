@@ -342,7 +342,7 @@ class TimeSeriesMap(BaseSeriesMap):
         if not self._layers_rendered:
             self.render()
 
-        if font is None and sys.platform.startswith("win"):
+        if font is None and not sys.platform.startswith("win"):
             font = "DejaVuSans.ttf"
 
         input_files = []
