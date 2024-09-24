@@ -110,6 +110,8 @@ jobs:
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
           set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          set INITIAL_GISBASE=%GISBASE%
+          set INITIAL_PWD=%CD%
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             --cov ^
@@ -122,7 +124,7 @@ jobs:
           set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           set INITIAL_GISBASE=%GISBASE%
-          export INITIAL_PWD=%CD%
+          set INITIAL_PWD=%CD%
           python utils/coverage_mapper.py
           coverage combine
           coverage html
