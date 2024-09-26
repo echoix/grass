@@ -217,8 +217,10 @@ jobs:
         run: |
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
-          export PYTHON="${PYTHON} --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
-          export PYTHON="${PYTHON} --source ${INITIAL_GISBASE}/scripts"
+          #export PYTHON="${PYTHON} --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
+          #export PYTHON="${PYTHON} --source ${INITIAL_GISBASE}/scripts"
+          echo "$PYTHON"
+          export PYTHON="${PYTHON} --source .,${INITIAL_PWD}/,${INITIAL_GISBASE}/,${INITIAL_GISBASE}/scripts"
           echo "$PYTHON"
           .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
         env:
@@ -226,7 +228,7 @@ jobs:
             python -m slipcover
             --json
             --out slipcover.json
-            --source .
+          # --source .
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
       - run: cat slipcover.json
