@@ -164,6 +164,7 @@ jobs:
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
       - name: Replace scripts with symbolic links to have files with .py extensions
+        if: ${{ false }}
         run: |
           cd "$(grass --config path)"
           cp -R scripts/ scrips_orig/
