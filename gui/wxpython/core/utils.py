@@ -3,7 +3,7 @@
 
 @brief Misc utilities for wxGUI
 
-(C) 2007-2015 by the GRASS Development Team
+(C) 2007-2024 by the GRASS Development Team
 
 This program is free software under the GNU General Public License
 (>=v2). Read the file COPYING that comes with GRASS for details.
@@ -23,10 +23,11 @@ import operator
 
 from grass.script import core as grass
 from grass.script import task as gtask
+from grass.app.runtime import get_grass_config_dir
 
 from core.gcmd import RunCommand
 from core.debug import Debug
-from core.globalvar import ETCDIR, wxPythonPhoenix
+from core.globalvar import wxPythonPhoenix
 
 
 def cmp(a, b):
@@ -76,7 +77,7 @@ def GetTempfile(pref=None):
             return os.path.join(pref, file)
         else:
             return tempfile
-    except:
+    except Exception:
         return None
 
 
@@ -254,7 +255,7 @@ def ListOfCatsToRange(cats):
 
     try:
         cats = list(map(int, cats))
-    except:
+    except ValueError:
         return catstr
 
     i = 0
@@ -578,7 +579,7 @@ def GetListOfLocations(dbase):
                 os.path.join(location, "*")
             ):
                 listOfLocations.append(os.path.basename(location))
-        except:
+        except OSError:
             pass
 
     ListSortLower(listOfLocations)
@@ -631,7 +632,7 @@ def _getGDALFormats():
     """Get dictionary of available GDAL drivers"""
     try:
         ret = grass.read_command("r.in.gdal", quiet=True, flags="f")
-    except:
+    except grass.CalledModuleError:
         ret = None
 
     return _parseFormats(ret), _parseFormats(ret, writableOnly=True)
@@ -641,7 +642,7 @@ def _getOGRFormats():
     """Get dictionary of available OGR drivers"""
     try:
         ret = grass.read_command("v.in.ogr", quiet=True, flags="f")
-    except:
+    except grass.CalledModuleError:
         ret = None
 
     return _parseFormats(ret), _parseFormats(ret, writableOnly=True)
@@ -796,19 +797,8 @@ vectorFormatExtension = {
 
 def GetSettingsPath():
     """Get full path to the settings directory"""
-    try:
-        verFd = open(os.path.join(ETCDIR, "VERSIONNUMBER"))
-        version = int(verFd.readlines()[0].split(" ")[0].split(".")[0])
-    except (OSError, ValueError, TypeError, IndexError) as e:
-        sys.exit(_("ERROR: Unable to determine GRASS version. Details: %s") % e)
-
-    verFd.close()
-
-    # keep location of settings files rc and wx in sync with lib/init/grass.py
-    if sys.platform == "win32":
-        return os.path.join(os.getenv("APPDATA"), "GRASS%d" % version)
-
-    return os.path.join(os.getenv("HOME"), ".grass%d" % version)
+    version_major, version_minor, _ = grass.version()["version"].split(".")
+    return get_grass_config_dir(version_major, version_minor, os.environ)
 
 
 def StoreEnvVariable(key, value=None, envFile=None):
@@ -837,8 +827,12 @@ def StoreEnvVariable(key, value=None, envFile=None):
     if os.path.exists(envFile):
         try:
             fd = open(envFile)
-        except OSError as e:
-            sys.stderr.write(_("Unable to open file '%s'\n") % envFile)
+        except OSError as error:
+            sys.stderr.write(
+                _("Unable to open file '{name}': {error}\n").format(
+                    name=envFile, error=error
+                )
+            )
             return
         for line in fd:
             line = line.rstrip(os.linesep)
@@ -867,8 +861,12 @@ def StoreEnvVariable(key, value=None, envFile=None):
     # write update env file
     try:
         fd = open(envFile, "w")
-    except OSError as e:
-        sys.stderr.write(_("Unable to create file '%s'\n") % envFile)
+    except OSError as error:
+        sys.stderr.write(
+            _("Unable to create file '{name}': {error}\n").format(
+                name=envFile, error=error
+            )
+        )
         return
     if windows:
         expCmd = "set"

@@ -1378,15 +1378,20 @@ class DataCatalogTree(TreeView):
                     )
                     if not new_name:
                         continue
-                callback = lambda gisrc2=gisrc2, gisrc=gisrc, cLayer=self.copy_layer[
-                    i
-                ], cMapset=self.copy_mapset[
-                    i
-                ], cMode=self.copy_mode, sMapset=self.selected_mapset[
-                    0
-                ], name=new_name: self._onDoneReprojection(
-                    env2, gisrc2, gisrc, cLayer, cMapset, cMode, sMapset, name
-                )
+
+                def callback(
+                    gisrc2=gisrc2,
+                    gisrc=gisrc,
+                    cLayer=self.copy_layer[i],
+                    cMapset=self.copy_mapset[i],
+                    cMode=self.copy_mode,
+                    sMapset=self.selected_mapset[0],
+                    name=new_name,
+                ):
+                    self._onDoneReprojection(
+                        env2, gisrc2, gisrc, cLayer, cMapset, cMode, sMapset, name
+                    )
+
                 dlg = CatalogReprojectionDialog(
                     self,
                     self._giface,
@@ -1677,9 +1682,9 @@ class DataCatalogTree(TreeView):
             all_names.append(name)
         # if self.selected_location[0].data['name'] == gisenv()['LOCATION_NAME'] and
         # self.selected_mapset[0]:
-        for ltype in names:
-            if names[ltype]:
-                self._giface.lmgr.AddMaps(list(reversed(names[ltype])), ltype, True)
+        for ltype, value in names.items():
+            if value:
+                self._giface.lmgr.AddMaps(list(reversed(value)), ltype, True)
 
         if len(self._giface.GetLayerList()) == 1:
             # zoom to map if there is only one map layer

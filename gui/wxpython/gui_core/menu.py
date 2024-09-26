@@ -68,8 +68,6 @@ class MenuBase:
 
                 self._createMenuItem(menu, label=child.label, **data)
 
-        self.parent.Bind(wx.EVT_MENU_HIGHLIGHT_ALL, self.OnMenuHighlight)
-
         return menu
 
     def _createMenuItem(
@@ -135,19 +133,6 @@ class MenuBase:
         :return: dictionary of commands
         """
         return self.menucmd
-
-    def OnMenuHighlight(self, event):
-        """
-        Default menu help handler
-        """
-        # Show how to get menu item info from this event handler
-        id = event.GetMenuId()
-        item = self.FindItemById(id)
-        if item:
-            help = item.GetHelp()
-
-        # but in this case just call Skip so the default is done
-        event.Skip()
 
 
 class Menu(MenuBase, wx.MenuBar):
@@ -227,7 +212,7 @@ class SearchModuleWindow(wx.Panel):
         self._btnAdvancedSearch.Bind(wx.EVT_BUTTON, lambda evt: self.AdvancedSearch())
 
         self._tree.selectionChanged.connect(self.OnItemSelected)
-        self._tree.itemActivated.connect(self.Run)
+        self._tree.itemActivated.connect(lambda node: self.Run(node))
 
         self._layout()
 
