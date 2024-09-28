@@ -43,6 +43,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+      - run: echo "Has milestone"
+        if: ${{ github.event.pull_request.milestone }}
+      - run: echo "Does not have a milestone"
+        if: ${{ !github.event.pull_request.milestone }}
       - name: Get VERSION file
         id: version-file
         run: |
@@ -55,7 +59,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-      - run: echo $VERSIONFILE
+      - name: Show version file
+        run: echo $VERSIONFILE
         env:
           VERSIONFILE: ${{ steps.version-file.outputs.version}}
       - name: Get milestone title from VERSION file
