@@ -35,11 +35,11 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-      - run: gh pr view ${{ github.event.pull_request.url }}
+      - run: gh pr view ${{ github.event.pull_request.html_url }}
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-      - run: gh pr view ${{ github.event.pull_request.url }} --json milestone
+      - run: gh pr view ${{ github.event.pull_request.html_url }} --json milestone
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
