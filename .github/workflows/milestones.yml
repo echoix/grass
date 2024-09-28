@@ -43,6 +43,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+      - run: |
+          echo "hgfjhgfj" >> include/VERSION_TWO
       - name: Show VERSION file
         run: |
           gh api \
