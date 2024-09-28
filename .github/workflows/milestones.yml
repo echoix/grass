@@ -35,7 +35,20 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-      - run: gh pr view --json milestone
+      - run: gh pr view ${{ github.event.pull_request.url }}
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+      - run: gh pr view ${{ github.event.pull_request.url }} --json milestone
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+      # - uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       github.rest.issues.addLabels({
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         labels: ['Triage']
+      #       })
