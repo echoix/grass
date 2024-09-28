@@ -43,10 +43,30 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+      - run: |
+          gh pr view ${{ github.event.pull_request.html_url }} --json milestone \
+            --jq .milestone.title
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+      - name: Get current milestone title
+        id: current-milestone
+        run: |
+          echo "milestone<<EOF" >> "${GITHUB_OUTPUT}"
+          gh pr view ${{ github.event.pull_request.html_url }} --json milestone \
+            --jq .milestone.title >> "${GITHUB_OUTPUT}"
+          echo 'EOF' >> "${GITHUB_OUTPUT}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
       - run: echo "Has milestone"
         if: ${{ github.event.pull_request.milestone.title }}
       - run: echo "Does not have a milestone"
         if: ${{ !github.event.pull_request.milestone.title }}
+      - run: echo "Has milestone gh cli"
+        if: ${{ steps.current-milestone.outputs.milestone }}
+      - run: echo "Does not have a milestone gh cli"
+        if: ${{ !steps.current-milestone.outputs.milestone}}
       - name: Get VERSION file
         id: version-file
         run: |
