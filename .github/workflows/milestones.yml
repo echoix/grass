@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged || true
     steps:
+      - run: echo "pull_request is merged"
+        if: github.event.pull_request.merged
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
