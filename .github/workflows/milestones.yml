@@ -44,9 +44,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
       - run: echo "Has milestone"
-        if: ${{ github.event.pull_request.milestone }}
+        if: ${{ github.event.pull_request.milestone.title }}
       - run: echo "Does not have a milestone"
-        if: ${{ !github.event.pull_request.milestone }}
+        if: ${{ !github.event.pull_request.milestone.title }}
       - name: Get VERSION file
         id: version-file
         run: |
