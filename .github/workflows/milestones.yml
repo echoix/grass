@@ -71,7 +71,7 @@ jobs:
       - name: Get milestone title from VERSION file
         id: version
         run: |
-          version=$($VERSIONFILE | head -n 3 | xargs | sed 's/ /./g' | sed 's/\(RC\|dev\)//g')
+          version=$("$VERSIONFILE" | head -n 3 | xargs | sed 's/ /./g' | sed 's/\(RC\|dev\)//g')
           echo "version=$version" >> "${GITHUB_OUTPUT}"
         env:
           VERSIONFILE: ${{ steps.version-file.outputs.version}}
