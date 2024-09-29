@@ -122,6 +122,7 @@ jobs:
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - run: cat slipcover.json
+        continue-on-error: true
         shell: msys2 {0}
       - run: jq . slipcover.json
         continue-on-error: true
