@@ -29,7 +29,7 @@ def map_scripts_paths(old_path):
     if p.match(str(temporal_base)):
         return str(Path(INITIAL_PWD) / "temporal" / (p_name) / (p_name)) + extension
     if p.match(str(base)):
-        return str(Path(INITIAL_PWD) / "scripts" / (p.name) / (p.name)) + extension
+        return str(Path(INITIAL_PWD) / "scripts" / (p_name) / (p_name)) + extension
 
     return old_path
 
