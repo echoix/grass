@@ -128,6 +128,7 @@ jobs:
       - name: Convert slipcover's output to coverage.py data file
         run: python utils/slipcover_to_coverage.py slipcover.json .coverage.slipcover
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
       - run: ls -la
         shell: msys2 {0}
       - name: Fix non-standard installed script paths in coverage data
@@ -144,6 +145,7 @@ jobs:
           coverage report
           coverage json
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        continue-on-error: true
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
         with:
