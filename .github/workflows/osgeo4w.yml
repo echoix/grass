@@ -151,6 +151,16 @@ jobs:
           flags: pytest-osgeo4w
           name: pytest-osgeo4w
           token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Make slipcover code coverage files available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: python-slipcover-${{ matrix.os }}
+          path: |
+            slipcover.json
+            .coverage.slipcover
+            .coverage
+          retention-days: 3
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
