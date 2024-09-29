@@ -103,7 +103,7 @@ jobs:
         run: .github/workflows/test_simple.sh
 
       - name: Install pytest plugins
-        run: python -m pip install --upgrade pytest-timeout pytest-cov
+        run: python -m pip install --upgrade pytest-timeout slipcover coverage
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with a single worker
         run: |
@@ -112,12 +112,24 @@ jobs:
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           set INITIAL_GISBASE=%GISBASE%
           set INITIAL_PWD=%CD%
+          python -m slipcover ^
+            --json ^
+            --out slipcover.json ^
+            --source .,%INITIAL_PWD%,$INITIAL_GISBASE%,%INITIAL_GISBASE%/scripts ^
+            -m ^
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
-            --cov ^
-            --cov-context=test ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      - run: cat slipcover.json
+        shell: msys2 {0}
+      - run: jq . slipcover.json
+        continue-on-error: true
+      - name: Convert slipcover's output to coverage.py data file
+        run: python utils/slipcover_to_coverage.py slipcover.json .coverage.slipcover
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      - run: ls -la
+        shell: msys2 {0}
       - name: Fix non-standard installed script paths in coverage data
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
@@ -125,6 +137,7 @@ jobs:
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           set INITIAL_GISBASE=%GISBASE%
           set INITIAL_PWD=%CD%
+          coverage combine
           python utils/coverage_mapper.py
           coverage combine
           coverage html
