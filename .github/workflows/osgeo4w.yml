@@ -117,7 +117,7 @@ jobs:
           python -m slipcover ^
             --json ^
             --out slipcover.json ^
-            --source .,$INITIAL_GISBASE% ^
+            --source .,%INITIAL_GISBASE% ^
             -m ^
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
