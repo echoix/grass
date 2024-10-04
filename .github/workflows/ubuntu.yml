@@ -102,9 +102,11 @@ jobs:
       - name: Get dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y wget git gawk findutils
+          sudo apt-get install eatmydata
+          sudo eatmydata apt-get install -y wget git gawk findutils
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
-              sudo apt-get install -y --no-install-recommends --no-install-suggests
+              sudo eatmydata apt-get install -y --no-install-recommends --no-install-suggests
+          sync 
 
       - name: Create installation directory
         run: |
