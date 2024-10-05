@@ -3,7 +3,7 @@ import pytest
 import grass.script as gs
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def session(tmp_path_factory):
     """Set up a GRASS session for the tests."""
     tmp_path = tmp_path_factory.mktemp("grass_session")
