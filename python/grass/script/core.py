@@ -1769,7 +1769,7 @@ def create_project(
     # Lazy-importing to avoid circular dependencies.
     # pylint: disable=import-outside-toplevel
     if os.environ.get("GISBASE"):
-        env = os.environ
+        env = os.environ.copy()
     else:
         from grass.script.setup import setup_runtime_env
 
