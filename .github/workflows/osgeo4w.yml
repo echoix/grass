@@ -118,7 +118,7 @@ jobs:
             --cov-context=test ^
             --cov-append ^
             -ra . ^
-            -m 'needs_solo_run'
+            -m "needs_solo_run"
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with multiple workers in parallel
         run: |
