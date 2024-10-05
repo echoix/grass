@@ -103,7 +103,7 @@ jobs:
         run: .github/workflows/test_simple.sh
 
       - name: Install pytest plugins
-        run: python -m pip install --upgrade pytest-timeout pytest-cov pytest-xdist
+        run: python -m pip install --upgrade pytest pytest-timeout pytest-cov pytest-xdist
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with multiple workers in parallel
         run: |
