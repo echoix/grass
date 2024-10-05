@@ -117,8 +117,8 @@ jobs:
             --cov ^
             --cov-context=test ^
             --cov-append ^
-            -m 'needs_solo_run' ^
-            -ra .
+            -ra . ^
+            -m 'needs_solo_run'
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with multiple workers in parallel
         run: |
@@ -130,8 +130,8 @@ jobs:
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             --numprocesses auto ^
-            -m 'not needs_solo_run' ^
-            -ra .
+            -ra . ^
+            -m 'not needs_solo_run'
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Fix non-standard installed script paths in coverage data
         run: |
