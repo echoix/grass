@@ -114,8 +114,6 @@ jobs:
           set INITIAL_PWD=%CD%
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
-            --cov ^
-            --cov-context=test ^
             --numprocesses auto ^
             -m 'not needs_solo_run' ^
             -ra .
