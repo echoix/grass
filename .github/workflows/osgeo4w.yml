@@ -131,7 +131,7 @@ jobs:
             --durations=0 --durations-min=0.5 ^
             --numprocesses auto ^
             -ra . ^
-            -m 'not needs_solo_run'
+            -m "not needs_solo_run"
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Fix non-standard installed script paths in coverage data
         run: |
