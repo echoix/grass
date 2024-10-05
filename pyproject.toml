@@ -258,12 +258,10 @@ ignore = [
     "TRY201",  # verbose-raise
     "TRY300",  # try-consider-else
     "TRY301",  # raise-within-try
-    "UP015",   # redundant-open-modes
     "UP030",   # format-literals
     "UP031",   # printf-string-formatting
     "UP032",   # f-string
     "UP036",   # outdated-version-block
-    "W605",    # invalid-escape-sequence
 ]
 
 
