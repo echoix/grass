@@ -10,17 +10,26 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
+import asyncio
+import concurrent.futures
+import multiprocessing
 from grass.exceptions import FatalError
 import time
 import threading
 import sys
 from multiprocessing import Process, Lock, Pipe
 import logging
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from asyncio.tasks import _FutureLike
 
 ###############################################################################
 
 
-def dummy_server(lock, conn):
+def dummy_server(lock: multiprocessing.Lock, conn: multiprocessing.Pipe):
     """Dummy server process
 
     :param lock: A multiprocessing.Lock
@@ -29,16 +38,16 @@ def dummy_server(lock, conn):
 
     while True:
         # Avoid busy waiting
-        conn.poll(None)
+        conn.poll()
+        # conn.poll(None)
         data = conn.recv()
-        lock.acquire()
-        if data[0] == 0:
-            conn.close()
-            lock.release()
-            sys.exit()
-        if data[0] == 1:
-            raise Exception("Server process intentionally killed by exception")
-        lock.release()
+        with lock:
+            if data[0] == 0:
+                conn.close()
+                lock.release()
+                sys.exit()
+            if data[0] == 1:
+                raise Exception("Server process intentionally killed by exception")
 
 
 class RPCServerBase:
@@ -83,11 +92,13 @@ class RPCServerBase:
     """
 
     def __init__(self):
+        self.loop = None
         self.client_conn = None
         self.server_conn = None
+        self.stopThread = False
         self.queue = None
         self.server = None
-        self.checkThread = None
+        self.checkThread: _FutureLike | None = None
         self.threadLock = threading.Lock()
         self.start_server()
         self.start_checker_thread()
@@ -101,22 +112,59 @@ class RPCServerBase:
     def is_check_thread_alive(self):
         return self.checkThread.is_alive()
 
-    def start_checker_thread(self):
-        if self.checkThread is not None and self.checkThread.is_alive():
-            self.stop_checker_thread()
+    # def start_checker_thread(self):
+    #     if self.checkThread is not None and self.checkThread.is_alive():
+    #         self.stop_checker_thread()
 
-        self.checkThread = threading.Thread(target=self.thread_checker)
-        self.checkThread.daemon = True
-        self.stopThread = False
-        self.checkThread.start()
+    #     self.checkThread = threading.Thread(target=self.thread_checker)
+    #     self.checkThread.daemon = True
+    #     self.stopThread = False
+    #     self.checkThread.start()
+    def start_checker_thread(self):
+        asyncio.run(self._start_checker_thread(), debug=True)
+
+    async def _start_checker_thread(self):
+        if self.checkThread is not None and self.checkThread.running():
+            # if self.checkThread is not None and self.checkThread.is_alive():
+            self.stop_checker_thread()
+        if self.loop is None:
+            self.loop = asyncio.get_running_loop()
+            self.loop.set_debug(enabled=True)
+        # self.checkThread = threading.Thread(target=self.thread_checker)
+        # self.checkThread.daemon = True
+        # self.stopThread = False
+        # self.checkThread.start()
+        # 2. Run in a custom thread pool:
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            self.stopThread = False
+            # self.stopped = False
+            self.checkThread = self.loop.run_in_executor(pool, self.thread_checkerOld)
+            # self.checkThread = await self.loop.run_in_executor(
+            #     pool, self.thread_checkerOld
+            # )
+            # self.checkThread = await self.thread_checker()
+            print("custom thread pool", self.checkThread)
 
     def stop_checker_thread(self):
-        self.threadLock.acquire()
-        self.stopThread = True
-        self.threadLock.release()
-        self.checkThread.join(None)
+        with self.threadLock:
+            self.stopThread = True
+        # self.threadLock.acquire()
+        # self.stopThread = True
+        # self.threadLock.release()
+        self.checkThread.cancel()
+        # self.checkThread.join(None)
 
-    def thread_checker(self):
+    async def thread_checker(self):
+        """Check every 200 micro seconds if the server process is alive"""
+        while True:
+            await asyncio.sleep(1)
+            # time.sleep(1)
+            self._check_restart_server(caller="Server check thread")
+            with self.threadLock:
+                if self.stopThread is True:
+                    return
+
+    def thread_checkerOld(self):
         """Check every 200 micro seconds if the server process is alive"""
         while True:
             time.sleep(0.2)
@@ -144,20 +192,19 @@ class RPCServerBase:
         """Restart the server if it was terminated"""
         logging.debug("Check libgis server restart")
 
-        self.threadLock.acquire()
-        if self.server.is_alive() is True:
-            self.threadLock.release()
-            return
-        self.client_conn.close()
-        self.server_conn.close()
-        self.start_server()
+        with self.threadLock:
+            if self.server.is_alive() is True:
+                return
+            self.client_conn.close()
+            self.server_conn.close()
+            self.start_server()
 
-        if self.stopped is not True:
-            logging.warning(
-                "Needed to restart the libgis server, caller: {caller}", caller=caller
-            )
+            if self.stopped is not True:
+                logging.warning(
+                    "Needed to restart the libgis server, caller: {caller}",
+                    caller=caller,
+                )
 
-        self.threadLock.release()
         self.stopped = False
 
     def safe_receive(self, message):
