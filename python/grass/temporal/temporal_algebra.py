@@ -439,11 +439,6 @@ for details.
 
 """
 
-try:
-    from ply import lex, yacc
-except:
-    pass
-
 import copy
 import os
 from datetime import datetime
@@ -468,6 +463,7 @@ from .datetime_math import (
 )
 from .factory import dataset_factory
 from .open_stds import open_new_stds, open_old_stds
+from .ply import lex, yacc
 from .space_time_datasets import RasterDataset
 from .spatio_temporal_relationships import SpatioTemporalTopologyBuilder
 from .temporal_granularity import (
@@ -686,9 +682,7 @@ class TemporalAlgebraLexer:
 
     # Build the lexer
     def build(self, **kwargs):
-        self.lexer = lex.lex(
-            module=self, optimize=False, nowarn=True, debug=0, **kwargs
-        )
+        self.lexer = lex.lex(module=self, debug=0, **kwargs)
 
     # Just for testing
     def test(self, data):
@@ -972,7 +966,7 @@ class TemporalAlgebraParser:
         """
         self.lexer = TemporalAlgebraLexer()
         self.lexer.build()
-        self.parser = yacc.yacc(module=self, debug=self.debug, write_tables=False)
+        self.parser = yacc.yacc(module=self, debug=self.debug)
 
         self.overwrite = overwrite
         self.count = 0
