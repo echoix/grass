@@ -1246,9 +1246,8 @@ def c_library_server(lock, conn):
         # Avoid busy waiting
         conn.poll(None)
         data = conn.recv()
-        lock.acquire()
-        functions[data[0]](lock, conn, data)
-        lock.release()
+        with lock:
+            functions[data[0]](lock, conn, data)
 
 
 class CLibrariesInterface(RPCServerBase):
