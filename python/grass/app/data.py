@@ -32,20 +32,20 @@ def get_possible_database_path():
 
     Returns the path as a string or None if nothing was found.
     """
-    home = os.path.expanduser("~")
+    home = Path("~").expanduser()
 
     # try some common directories for grassdata
     candidates = [
         home,
-        os.path.join(home, "Documents"),
+        home / "Documents",
     ]
 
     # find possible database path
     for candidate in candidates:
-        if os.path.exists(candidate):
+        if candidate.exists():
             for subdir in next(os.walk(candidate))[1]:
                 if "grassdata" in subdir.lower():
-                    return os.path.join(candidate, subdir)
+                    return str(candidate / subdir)
     return None
 
 
@@ -56,18 +56,18 @@ def create_database_directory():
 
     Returns the new path as a string or None if nothing was found or created.
     """
-    home = os.path.expanduser("~")
+    home = Path("~").expanduser()
 
     # Determine the standard path according to the platform
     if sys.platform == "win32":
-        path = os.path.join(home, "Documents", "grassdata")
+        path = home / "Documents" / "grassdata"
     else:
-        path = os.path.join(home, "grassdata")
+        path = home / "grassdata"
 
     # Create "grassdata" directory
     try:
-        os.mkdir(path)
-        return path
+        path.mkdir()
+        return str(path)
     except OSError:
         pass
 
@@ -75,18 +75,18 @@ def create_database_directory():
     # in some special environment and the standard directories
     # cannot be created which might be the case in some "try out GRASS"
     # use cases.
-    path = os.path.join(tempfile.gettempdir(), "grassdata_{}".format(getpass.getuser()))
+    path = Path(tempfile.gettempdir(), "grassdata_{}".format(getpass.getuser()))
 
     # The created tmp is not cleaned by GRASS, so we are relying on
     # the system to do it at some point. The positive outcome is that
     # another GRASS instance will find the data created by the first
     # one which is desired in the "try out GRASS" use case we are
     # aiming towards."
-    if os.path.exists(path):
-        return path
+    if path.exists():
+        return str(path)
     try:
-        os.mkdir(path)
-        return path
+        path.mkdir()
+        return str(path)
     except OSError:
         pass
 
@@ -98,12 +98,12 @@ def _get_startup_location_in_distribution():
 
     Returns startup location if found or None if nothing was found.
     """
-    gisbase = os.getenv("GISBASE")
-    startup_location = os.path.join(gisbase, "demolocation")
+    gisbase = os.getenv("GISBASE", ".")
+    startup_location = Path(gisbase, "demolocation")
 
     # Find out if startup location exists
-    if os.path.exists(startup_location):
-        return startup_location
+    if startup_location.exists():
+        return str(startup_location)
     return None
 
 
@@ -140,7 +140,7 @@ def create_startup_location_in_grassdb(grassdatabase, startup_location_name) -> 
         return False
 
     # Copy the simple startup_location with some data to GRASS database
-    location_in_grassdb = os.path.join(grassdatabase, startup_location_name)
+    location_in_grassdb = Path(grassdatabase, startup_location_name)
     return bool(_copy_startup_location(startup_location, location_in_grassdb))
 
 
@@ -163,9 +163,9 @@ def ensure_default_data_hierarchy():
         # If not valid, copy startup loc
         create_startup_location_in_grassdb(gisdbase, location)
 
-    mapset_path = os.path.join(gisdbase, location, mapset)
+    mapset_path = Path(gisdbase, location, mapset)
 
-    return gisdbase, location, mapset, mapset_path
+    return gisdbase, location, mapset, str(mapset_path)
 
 
 class MapsetLockingException(Exception):
@@ -186,11 +186,12 @@ def lock_mapset(mapset_path, force_lock_removal, message_callback):
     Assumes that the runtime is set up (specifically that GISBASE is in
     the environment).
     """
-    if not os.path.exists(mapset_path):
+    mapset_path = Path(mapset_path)
+    if not mapset_path.exists():
         raise MapsetLockingException(_("Path '{}' doesn't exist").format(mapset_path))
     if not os.access(mapset_path, os.W_OK):
         error = _("Path '{}' not accessible.").format(mapset_path)
-        stat_info = Path(mapset_path).stat()
+        stat_info = mapset_path.stat()
         mapset_uid = stat_info.st_uid
         if mapset_uid != os.getuid():
             error = "{error}\n{detail}".format(
@@ -199,10 +200,10 @@ def lock_mapset(mapset_path, force_lock_removal, message_callback):
             )
         raise MapsetLockingException(error)
     # Check for concurrent use
-    lockfile = os.path.join(mapset_path, ".gislock")
-    locker_path = os.path.join(os.environ["GISBASE"], "etc", "lock")
+    lockfile = mapset_path / ".gislock"
+    locker_path = Path(os.environ["GISBASE"], "etc", "lock")
     ret = subprocess.run(
-        [locker_path, lockfile, "%d" % os.getpid()], check=False
+        [str(locker_path), str(lockfile), "%d" % os.getpid()], check=False
     ).returncode
     msg = None
     if ret == 2:
@@ -214,15 +215,15 @@ def lock_mapset(mapset_path, force_lock_removal, message_callback):
                 " (assuming your have sufficient access permissions)."
                 " Confirm in a process manager "
                 "that there is no other process using the mapset."
-            ).format(user=Path(lockfile).owner(), file=lockfile)
+            ).format(user=lockfile.owner(), file=lockfile)
         else:
             message_callback(
                 _(
                     "{user} is currently running GRASS in selected mapset"
                     " (file {file} found), but forcing to launch GRASS anyway..."
-                ).format(user=Path(lockfile).owner(), file=lockfile)
+                ).format(user=lockfile.owner(), file=lockfile)
             )
-            gs.try_remove(lockfile)
+            gs.try_remove(str(lockfile))
     elif ret != 0:
         msg = _(
             "Unable to properly access lock file '{name}'.\n"
