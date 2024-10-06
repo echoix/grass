@@ -13,8 +13,9 @@ on:
 jobs:
   ubuntu:
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.name }}-${{ matrix.os }}-${{ matrix.extra-include }}
+      group: >-
+        ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
+        '' }}${{ matrix.name }}-${{ matrix.os }}-${{ matrix.extra-include }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
@@ -41,6 +42,7 @@ jobs:
           # newlines with spaces, and strip newline at end.
           # See https://yaml-multiline.info/
           - temporal
+          - db
           - >-
             db display doc docker general gui
             imagery lib misc ps python raster raster3d scripts
@@ -74,14 +76,14 @@ jobs:
           echo "${delete[@]}"
           for target in "${delete[@]}"; do
             for i in "${!array[@]}"; do
-              if [[ ${array[i]} = $target ]]; then
+              if [[ ${array[i]} = "$target" ]]; then
                 unset 'array[i]'
               fi
             done
           done
           unset new_array
           for i in "${!array[@]}"; do
-              new_array+=( "${array[i]}" )
+            new_array+=( "${array[i]}" )
           done
           echo "Excluded folders:"
           echo "${new_array[@]}"
@@ -89,6 +91,26 @@ jobs:
           echo "Exclusion string to add to gunittest config"
           echo "${extra_exclude}"
           echo "extra-exclude=${extra_exclude}" >> "${GITHUB_OUTPUT}"
+          echo "Inclusion string for tags"
+          printf -v extra_include_tag ' %s' "${delete[@]}"
+          extra_include_tag="${extra_include_tag:1}" # trim extra first space
+          extra_include_tag=${extra_include_tag// /-} # replace spaces by hyphens
+          echo "${extra_include_tag}"
+          echo "extra-include-tag=${extra_include_tag}" >> "${GITHUB_OUTPUT}"
+          echo "Truncated string for codecov upload"
+          max_flag_len=45
+          max_flag_prefix_len=33 # gunittest-ubuntu-22.04_without_x-
+          max_flag_suffix_len=$((max_flag_len - max_flag_prefix_len))
+          extra_include_tag_len=${#extra_include_tag} # string's length
+          extra_include_tag_len_len=${#extra_include_tag_len} # length of string's length
+          if [[ "${extra_include_tag_len}" -gt "${max_flag_suffix_len}" ]]; then
+            # Extra include too long
+            extra_include_tag_trunc="${extra_include_tag:0:$max_flag_suffix_len-1-$extra_include_tag_len_len}.${extra_include_tag_len}"
+          else
+            extra_include_tag_trunc="${extra_include_tag}"
+          fi
+          echo "${extra_include_tag_trunc}"
+          echo "extra-include-tag-trunc=${extra_include_tag_trunc}" >> "${GITHUB_OUTPUT}"
         env:
           DELETE_ARRAY: ${{ matrix.extra-include }}
 
@@ -105,6 +127,9 @@ jobs:
           sudo apt-get install -y wget git gawk findutils
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
+      - name: Install python coverage tools
+        run: pip install coverage slipcover
+      - run: python -m slipcover --help
 
       - name: Create installation directory
         run: |
@@ -137,23 +162,116 @@ jobs:
         run: |
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
+      - name: Replace scripts with symbolic links to have files with .py extensions
+        if: ${{ false }}
+        run: |
+          cd "$(grass --config path)"
+          cp -R scripts/ scrips_orig/
+          # Output first lines of files
+          head $(grass --config path)/scripts/* -n1 -q
+          # Rename files to have .py extension
+          ls | xargs -I fileName mv fileName fileName.py
+          # Copy with symbolic link
+          for old in scripts/*.py
+            do new=`echo $old | sed -e's/.py//'`
+            cp --symbolic-link "$old" "$new"
+          done
+          ls -la
+
       - name: Print installed versions
-        if: always()
+        if: ${{ !cancelled() }}
         run: .github/workflows/print_versions.sh
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
-      - name: Run tests
-        run: .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+      # - name: Place a usercustomize.py file enabling subprocess code coverage
+      #   run: |
+      #     mkdir -p $(python -m site --user-site)
+      #     printf "import coverage\ncoverage.process_startup()" \
+      #      > "$(python -m site --user-site)/usercustomize.py"
 
+      # - name: Set COVERAGE_PROCESS_START env variable
+      #   run: |
+      #     echo "COVERAGE_PROCESS_START=${PWD}/.coveragerc" >> $GITHUB_ENV
+      #     echo "COVERAGE_RCFILE=${PWD}/.coveragerc" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: |
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          #export PYTHON="${PYTHON} --source ${INITIAL_PWD}/ --source ${INITIAL_GISBASE}/"
+          #export PYTHON="${PYTHON} --source ${INITIAL_GISBASE}/scripts"
+          echo "$PYTHON"
+          export PYTHON="${PYTHON} --source .,${INITIAL_PWD}/,${INITIAL_GISBASE}/,${INITIAL_GISBASE}/scripts"
+          echo "$PYTHON"
+          .github/workflows/test_thorough.sh --config .gunittest.extra.cfg
+        env:
+          PYTHON: >-
+            python -m slipcover
+            --json
+            --out slipcover.json
+          # --source .
+      - run: cat slipcover.json
+      - run: jq . slipcover.json
+      - name: Convert slipcover's output to coverage.py data file
+        run: python utils/slipcover_to_coverage.py slipcover.json .coverage.slipcover
+      - run: ls -la
+      - name: Fix non-standard installed script paths in coverage data
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage combine
+          python utils/coverage_mapper.py
+          coverage combine
+
+      - name: Show python coverage report summary
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage report
+        continue-on-error: true
+      - name: Generate HTML coverage report
+        run: |
+          export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
+          coverage html
+        continue-on-error: true
       - name: Make HTML test report available
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
-          name: testreport-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.extra-include }}
+          name: >-
+            testreport-${{ matrix.os }}-${{ matrix.config }}-${{
+            '' }}${{ steps.get-exclude.outputs.extra-include-tag }}
           path: testreport
           retention-days: 3
+      - name: Make python-only code coverage test report available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: >-
+            python-codecoverage-report-${{ matrix.os }}-${{ matrix.config }}-${{
+            '' }}${{ steps.get-exclude.outputs.extra-include-tag }}
+          path: coverage_html_report
+          retention-days: 1
+
+      - name: Upload coverage reports to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        with:
+          verbose: true
+          flags: >-
+            gunittest,gunittest-${{ matrix.config }},gunittest-${{ matrix.config }}-${{
+            '' }}${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
+          name: gunittest-${{ matrix.config }}-${{ steps.get-exclude.outputs.extra-include-tag-trunc }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build-and-test-success:
     name: Build & Test Result
