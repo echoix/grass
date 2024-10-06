@@ -16,6 +16,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   macos_build:
+    needs: macOS_grass_conda
     name: macOS build
     runs-on: macos-14
     env:
@@ -112,3 +113,29 @@ jobs:
           name: testreport-macOS
           path: testreport
           retention-days: 3
+  macOS_grass_conda:
+    name: macOS grass-conda
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          repository: 'nilason/grass-conda'
+          path: grass-conda
+      - name: Get macOS SDK path
+        id: sdk-path
+        run: |
+          MACOS_SDK_PATH=$(xcrun --show-sdk-path)
+          echo "MACOS_SDK_PATH=$MACOS_SDK_PATH" >> $GITHUB_OUTPUT
+          echo $MACOS_SDK_PATH
+      - run: mkdir dmg-out
+      - run: |
+          ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH"
+        env:
+          MACOS_SDK_PATH: ${{ steps.sdk-path.outputs.MACOS_SDK_PATH }}
+      - run: ./grass-conda/build-grass.sh --grassdir . --sdk "$MACOS_SDK_PATH" --dmg-out-dir ./dmg-out --repackage
+        env:
+          MACOS_SDK_PATH: ${{ steps.sdk-path.outputs.MACOS_SDK_PATH }}
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ./dmg-out
