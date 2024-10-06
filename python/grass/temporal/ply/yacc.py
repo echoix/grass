@@ -2189,7 +2189,7 @@ class ParserReflect:
         for module in self.modules:
             try:
                 lines, linen = inspect.getsourcelines(module)
-            except IOError:
+            except OSError:
                 continue
 
             counthash = {}
@@ -2474,7 +2474,7 @@ def yacc(
         if debug:
             try:
                 debuglog = PlyLogger(open(debugfile, "w"))
-            except IOError as e:
+            except OSError as e:
                 errorlog.warning("Couldn't open %r. %s" % (debugfile, e))
                 debuglog = NullLogger()
         else:

@@ -754,7 +754,7 @@ class LexerReflect:
     def validate_module(self, module):
         try:
             lines, linen = inspect.getsourcelines(module)
-        except IOError:
+        except OSError:
             return
 
         fre = re.compile(r"\s*def\s+(t_[a-zA-Z_0-9]*)\(")
