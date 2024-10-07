@@ -1155,12 +1155,11 @@ class Grammar:
     # -----------------------------------------------------------------------------
 
     def unused_precedence(self):
-        unused = []
-        for termname in self.Precedence:
-            if not (termname in self.Terminals or termname in self.UsedPrecedence):
-                unused.append((termname, self.Precedence[termname][0]))
-
-        return unused
+        return [
+            (termname, self.Precedence[termname][0])
+            for termname in self.Precedence
+            if not (termname in self.Terminals or termname in self.UsedPrecedence)
+        ]
 
     # -------------------------------------------------------------------------
     # _first()
@@ -2374,8 +2373,7 @@ class ParserReflect:
             else:
                 try:
                     parsed_g = parse_grammar(doc, file, line)
-                    for g in parsed_g:
-                        grammar.append((name, g))
+                    grammar = [(name, g) for g in parsed_g]
                 except SyntaxError as e:
                     self.log.error(str(e))  # noqa: TRY400
                     self.error = True
