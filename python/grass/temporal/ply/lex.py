@@ -376,7 +376,7 @@ def _form_master_re(relist, reflags, ldict, toknames):
 
         for f, i in lexre.groupindex.items():
             handle = ldict.get(f, None)
-            if type(handle) in (types.FunctionType, types.MethodType):
+            if type(handle) in (types.FunctionType, types.MethodType):  # noqa: PLR6201
                 lexindexfunc[i] = (handle, toknames[f])
                 lexindexnames[i] = f
             elif handle is not None:
