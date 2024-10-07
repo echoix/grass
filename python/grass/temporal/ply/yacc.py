@@ -1617,7 +1617,7 @@ class LRTable:
                         terms.append(a)
 
         # This extra bit is to handle the start state
-        if state == 0 and N == self.grammar.Productions[0].prod[0]:
+        if state == 0 and self.grammar.Productions[0].prod[0] == N:
             terms.append("$end")
 
         return terms
