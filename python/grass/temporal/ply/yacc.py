@@ -874,7 +874,7 @@ class Grammar:
     # -----------------------------------------------------------------------------
 
     def set_precedence(self, term, assoc, level) -> None:
-        if self.Productions == [None]:
+        if self.Productions != [None]:
             msg = "Must call set_precedence() before add_production()"
             raise ValueError(msg)
         if term in self.Precedence:
