@@ -552,24 +552,23 @@ class LRParser:
                             lookahead = tok
                             errtoken = None
                             continue
-                    else:
-                        if errtoken:
-                            if hasattr(errtoken, "lineno"):
-                                lineno = lookahead.lineno
-                            else:
-                                lineno = 0
-                            if lineno:
-                                sys.stderr.write(
-                                    "yacc: Syntax error at line %d, token=%s\n"
-                                    % (lineno, errtoken.type)
-                                )
-                            else:
-                                sys.stderr.write(
-                                    "yacc: Syntax error, token=%s" % errtoken.type
-                                )
+                    elif errtoken:
+                        if hasattr(errtoken, "lineno"):
+                            lineno = lookahead.lineno
                         else:
-                            sys.stderr.write("yacc: Parse error in input. EOF\n")
-                            return None
+                            lineno = 0
+                        if lineno:
+                            sys.stderr.write(
+                                "yacc: Syntax error at line %d, token=%s\n"
+                                % (lineno, errtoken.type)
+                            )
+                        else:
+                            sys.stderr.write(
+                                "yacc: Syntax error, token=%s" % errtoken.type
+                            )
+                    else:
+                        sys.stderr.write("yacc: Parse error in input. EOF\n")
+                        return None
 
                 else:
                     errorcount = error_count
@@ -1178,9 +1177,8 @@ class Grammar:
             for f in self.First[x]:
                 if f == "<empty>":
                     x_produces_empty = True
-                else:
-                    if f not in result:
-                        result.append(f)
+                elif f not in result:
+                    result.append(f)
 
             if x_produces_empty:
                 # We have to consider the next x in beta,
@@ -1903,14 +1901,13 @@ class LRTable:
                                         Productions[p.number].reduced += 1
                                     elif (slevel == rlevel) and (rprec == "nonassoc"):
                                         st_action[a] = None
-                                    else:
-                                        # Hmmm. Guess we'll keep the shift
-                                        if not rlevel:
-                                            log.info(
-                                                "  ! shift/reduce conflict for %s resolved as shift",
-                                                a,
-                                            )
-                                            self.sr_conflicts.append((st, a, "shift"))
+                                    # Hmmm. Guess we'll keep the shift
+                                    elif not rlevel:
+                                        log.info(
+                                            "  ! shift/reduce conflict for %s resolved as shift",
+                                            a,
+                                        )
+                                        self.sr_conflicts.append((st, a, "shift"))
                                 elif r < 0:
                                     # Reduce/reduce conflict.   In this case, we favor the rule
                                     # that was defined first in the grammar file
@@ -1983,14 +1980,13 @@ class LRTable:
                                             self.sr_conflicts.append((st, a, "shift"))
                                     elif (slevel == rlevel) and (rprec == "nonassoc"):
                                         st_action[a] = None
-                                    else:
-                                        # Hmmm. Guess we'll keep the reduce
-                                        if not slevel and not rlevel:
-                                            log.info(
-                                                "  ! shift/reduce conflict for %s resolved as reduce",
-                                                a,
-                                            )
-                                            self.sr_conflicts.append((st, a, "reduce"))
+                                    # Hmmm. Guess we'll keep the reduce
+                                    elif not slevel and not rlevel:
+                                        log.info(
+                                            "  ! shift/reduce conflict for %s resolved as reduce",
+                                            a,
+                                        )
+                                        self.sr_conflicts.append((st, a, "reduce"))
 
                                 else:
                                     raise LALRError("Unknown conflict in state %d" % st)
