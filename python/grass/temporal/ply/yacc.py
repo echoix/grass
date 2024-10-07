@@ -878,7 +878,8 @@ class Grammar:
             msg = "Must call set_precedence() before add_production()"
             raise ValueError(msg)
         if term in self.Precedence:
-            raise GrammarError(f"Precedence already specified for terminal {term!r}")
+            msg = f"Precedence already specified for terminal {term!r}"
+            raise GrammarError(msg)
         if assoc not in {"left", "right", "nonassoc"}:
             msg = "Associativity must be one of 'left','right', or 'nonassoc'"
             raise GrammarError(msg)
@@ -1007,7 +1008,8 @@ class Grammar:
         if not start:
             start = self.Productions[1].name
         if start not in self.Nonterminals:
-            raise GrammarError(f"start symbol {start} undefined")
+            msg = f"start symbol {start} undefined"
+            raise GrammarError(msg)
         self.Productions[0] = Production(0, "S'", [start])
         self.Nonterminals[start].append(0)
         self.Start = start
