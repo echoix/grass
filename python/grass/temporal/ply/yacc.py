@@ -1591,9 +1591,8 @@ class LRTable:
             for p in state:
                 if p.lr_index < p.len - 1:
                     t = (stateno, p.prod[p.lr_index + 1])
-                    if t[1] in self.grammar.Nonterminals:
-                        if t not in trans:
-                            trans.append(t)
+                    if t[1] in self.grammar.Nonterminals and t not in trans:
+                        trans.append(t)
         return trans
 
     # -----------------------------------------------------------------------------
@@ -2014,11 +2013,14 @@ class LRTable:
             # Print the actions that were not used. (debugging)
             not_used = 0
             for a, p, m in actlist:
-                if a in st_action and p is not st_actionp[a]:
-                    if (a, m) not in _actprint:
-                        log.debug("  ! %-15s [ %s ]", a, m)
-                        not_used = 1
-                        _actprint[a, m] = 1
+                if (
+                    a in st_action
+                    and p is not st_actionp[a]
+                    and (a, m) not in _actprint
+                ):
+                    log.debug("  ! %-15s [ %s ]", a, m)
+                    not_used = 1
+                    _actprint[a, m] = 1
             if not_used:
                 log.debug("")
 
@@ -2391,29 +2393,31 @@ class ParserReflect:
 
         for n, v in self.pdict.items():
             if n.startswith("p_") and isinstance(
-                v,
-                (types.FunctionType, types.MethodType),
+                v, (types.FunctionType, types.MethodType)
             ):
                 continue
             if n.startswith("t_"):
                 continue
             if n.startswith("p_") and n != "p_error":
                 self.log.warning("%r not defined as a function", n)
-            if (isinstance(v, types.FunctionType) and v.__code__.co_argcount == 1) or (
-                isinstance(v, types.MethodType) and v.__func__.__code__.co_argcount == 2
-            ):
-                if v.__doc__:
-                    try:
-                        doc = v.__doc__.split(" ")
-                        if doc[1] == ":":
-                            self.log.warning(
-                                "%s:%d: Possible grammar rule %r defined without p_ prefix",
-                                v.__code__.co_filename,
-                                v.__code__.co_firstlineno,
-                                n,
-                            )
-                    except IndexError:
-                        pass
+            if (
+                (isinstance(v, types.FunctionType) and v.__code__.co_argcount == 1)
+                or (
+                    isinstance(v, types.MethodType)
+                    and v.__func__.__code__.co_argcount == 2
+                )
+            ) and v.__doc__:
+                try:
+                    doc = v.__doc__.split(" ")
+                    if doc[1] == ":":
+                        self.log.warning(
+                            "%s:%d: Possible grammar rule %r defined without p_ prefix",
+                            v.__code__.co_filename,
+                            v.__code__.co_firstlineno,
+                            n,
+                        )
+                except IndexError:
+                    pass
 
         self.grammar = grammar
 
@@ -2451,9 +2455,12 @@ def yacc(
         # from the __module__ instead
         if "__file__" not in pdict:
             pdict["__file__"] = sys.modules[pdict["__module__"]].__file__
-        if "__package__" not in pdict and "__module__" in pdict:
-            if hasattr(sys.modules[pdict["__module__"]], "__package__"):
-                pdict["__package__"] = sys.modules[pdict["__module__"]].__package__
+        if (
+            "__package__" not in pdict
+            and "__module__" in pdict
+            and hasattr(sys.modules[pdict["__module__"]], "__package__")
+        ):
+            pdict["__package__"] = sys.modules[pdict["__module__"]].__package__
     else:
         pdict = get_caller_module_dict(2)
 
