@@ -1022,7 +1022,7 @@ class Grammar:
     def find_unreachable(self):
 
         # Mark all symbols that are reachable from a symbol s
-        def mark_reachable_from(s):
+        def mark_reachable_from(s) -> None:
             if s in reachable:
                 return
             reachable.add(s)
