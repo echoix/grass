@@ -1753,8 +1753,12 @@ class LRTable:
     # -----------------------------------------------------------------------------
 
     def compute_read_sets(self, C, ntrans, nullable):
-        FP = lambda x: self.dr_relation(C, x, nullable)
-        R = lambda x: self.reads_relation(C, x, nullable)
+        def FP(x):
+            return self.dr_relation(C, x, nullable)
+
+        def R(x):
+            return self.reads_relation(C, x, nullable)
+
         return digraph(ntrans, R, FP)
 
     # -----------------------------------------------------------------------------
@@ -1774,8 +1778,12 @@ class LRTable:
     # -----------------------------------------------------------------------------
 
     def compute_follow_sets(self, ntrans, readsets, inclsets):
-        FP = lambda x: readsets[x]
-        R = lambda x: inclsets.get(x, [])
+        def FP(x):
+            return readsets[x]
+
+        def R(x):
+            return inclsets.get(x, [])
+
         return digraph(ntrans, R, FP)
 
     # -----------------------------------------------------------------------------
