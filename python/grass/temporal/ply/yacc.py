@@ -465,44 +465,42 @@ class LRParser:
 
                         continue
 
-                    else:
+                    if tracking:
+                        sym.lineno = lexer.lineno
+                        sym.lexpos = lexer.lexpos
 
-                        if tracking:
-                            sym.lineno = lexer.lineno
-                            sym.lexpos = lexer.lexpos
+                    targ = [sym]
 
-                        targ = [sym]
+                    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    # The code enclosed in this section is duplicated
+                    # above as a performance optimization.  Make sure
+                    # changes get made in both locations.
 
-                        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        # The code enclosed in this section is duplicated
-                        # above as a performance optimization.  Make sure
-                        # changes get made in both locations.
+                    pslice.slice = targ
 
-                        pslice.slice = targ
+                    try:
+                        # Call the grammar rule with our special slice object
+                        self.state = state
+                        p.callable(pslice)
+                        if debug:
+                            debug.info("Result : %s", format_result(pslice[0]))
+                        symstack.append(sym)
+                        state = goto[statestack[-1]][pname]
+                        statestack.append(state)
+                    except SyntaxError:
+                        # If an error was set. Enter error recovery state
+                        lookaheadstack.append(
+                            lookahead
+                        )  # Save the current lookahead token
+                        statestack.pop()  # Pop back one state (before the reduce)
+                        state = statestack[-1]
+                        sym.type = "error"
+                        sym.value = "error"
+                        lookahead = sym
+                        errorcount = error_count
+                        self.errorok = False
 
-                        try:
-                            # Call the grammar rule with our special slice object
-                            self.state = state
-                            p.callable(pslice)
-                            if debug:
-                                debug.info("Result : %s", format_result(pslice[0]))
-                            symstack.append(sym)
-                            state = goto[statestack[-1]][pname]
-                            statestack.append(state)
-                        except SyntaxError:
-                            # If an error was set. Enter error recovery state
-                            lookaheadstack.append(
-                                lookahead
-                            )  # Save the current lookahead token
-                            statestack.pop()  # Pop back one state (before the reduce)
-                            state = statestack[-1]
-                            sym.type = "error"
-                            sym.value = "error"
-                            lookahead = sym
-                            errorcount = error_count
-                            self.errorok = False
-
-                        continue
+                    continue
 
                 if t == 0:
                     n = symstack[-1]
