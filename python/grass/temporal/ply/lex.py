@@ -49,14 +49,14 @@ _is_identifier = re.compile(r"^[a-zA-Z0-9_]+$")
 # Exception thrown when invalid token encountered and no default error
 # handler is defined.
 class LexError(Exception):
-    def __init__(self, message, s):
+    def __init__(self, message, s) -> None:
         self.args = (message,)
         self.text = s
 
 
 # Token class.  This class is used to represent the tokens produced.
 class LexToken:
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"LexToken({self.type},{self.value!r},{self.lineno},{self.lexpos})"
 
 
@@ -65,7 +65,7 @@ class LexToken:
 
 
 class PlyLogger:
-    def __init__(self, f):
+    def __init__(self, f) -> None:
         self.f = f
 
     def critical(self, msg, *args, **kwargs) -> None:
@@ -97,7 +97,7 @@ class PlyLogger:
 
 
 class Lexer:
-    def __init__(self):
+    def __init__(self) -> None:
         self.lexre = None  # Master regular expression. This is a list of
         # tuples (re, findex) where re is a compiled
         # regular expression and findex is a list
@@ -421,7 +421,7 @@ def _statetoken(s, names):
 # user's input file.
 # -----------------------------------------------------------------------------
 class LexerReflect:
-    def __init__(self, ldict, log=None, reflags=0):
+    def __init__(self, ldict, log=None, reflags=0) -> None:
         self.ldict = ldict
         self.error_func = None
         self.tokens = []
