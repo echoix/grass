@@ -1493,7 +1493,7 @@ class LRTable:
                 s["$end"] = g
             else:
                 s["$end"] = gs
-        self.lr_goto_cache[(id(I), x)] = g
+        self.lr_goto_cache[id(I), x] = g
         return g
 
     # Compute the LR(0) sets of item function
@@ -1733,7 +1733,7 @@ class LRTable:
                 if i not in includedict:
                     includedict[i] = []
                 includedict[i].append((state, N))
-            lookdict[(state, N)] = lookb
+            lookdict[state, N] = lookb
 
         return lookdict, includedict
 
@@ -2000,7 +2000,7 @@ class LRTable:
                 if a in st_action:
                     if p is st_actionp[a]:
                         log.info("    %-15s %s", a, m)
-                        _actprint[(a, m)] = 1
+                        _actprint[a, m] = 1
             log.info("")
             # Print the actions that were not used. (debugging)
             not_used = 0
@@ -2010,7 +2010,7 @@ class LRTable:
                         if (a, m) not in _actprint:
                             log.debug("  ! %-15s [ %s ]", a, m)
                             not_used = 1
-                            _actprint[(a, m)] = 1
+                            _actprint[a, m] = 1
             if not_used:
                 log.debug("")
 
