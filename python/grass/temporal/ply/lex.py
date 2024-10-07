@@ -814,9 +814,8 @@ def lex(
     if errorlog is None:
         errorlog = PlyLogger(sys.stderr)
 
-    if debug:
-        if debuglog is None:
-            debuglog = PlyLogger(sys.stderr)
+    if debug and debuglog is None:
+        debuglog = PlyLogger(sys.stderr)
 
     # Get the module dictionary used for the lexer
     if object:
