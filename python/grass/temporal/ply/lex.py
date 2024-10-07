@@ -561,7 +561,7 @@ class LexerReflect:
             states, tokname = _statetoken(f, self.stateinfo)
             self.toknames[f] = tokname
 
-            if hasattr(t, "__call__"):
+            if callable(t):
                 if tokname == "error":
                     for s in states:
                         self.errorf[s] = t
@@ -997,7 +997,7 @@ def runmain(lexer=None, data=None):
 
 def TOKEN(r):
     def set_regex(f):
-        if hasattr(r, "__call__"):
+        if callable(r):
             f.regex = _get_regex(r)
         else:
             f.regex = r
