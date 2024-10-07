@@ -582,7 +582,7 @@ class LRParser:
                     errtoken = None
                     state = 0
                     # Nuke the pushback stack
-                    del lookaheadstack[:]
+                    lookaheadstack.clear()
                     continue
 
                 # case 2: the statestack has a couple of entries on it, but we're
