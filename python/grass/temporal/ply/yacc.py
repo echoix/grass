@@ -65,6 +65,7 @@ import inspect
 import re
 import sys
 import types
+from typing import NoReturn
 
 # -----------------------------------------------------------------------------
 #                     === User configurable parameters ===
@@ -92,15 +93,15 @@ class PlyLogger:
     def __init__(self, f):
         self.f = f
 
-    def debug(self, msg, *args, **kwargs):
+    def debug(self, msg, *args, **kwargs) -> None:
         self.f.write((msg % args) + "\n")
 
     info = debug
 
-    def warning(self, msg, *args, **kwargs):
+    def warning(self, msg, *args, **kwargs) -> None:
         self.f.write("WARNING: " + (msg % args) + "\n")
 
-    def error(self, msg, *args, **kwargs):
+    def error(self, msg, *args, **kwargs) -> None:
         self.f.write("ERROR: " + (msg % args) + "\n")
 
     critical = debug
@@ -121,7 +122,7 @@ class YaccError(Exception):
 
 
 # Format the result message that the parser produces when running in debug mode.
-def format_result(r):
+def format_result(r) -> str:
     repr_str = repr(r)
     if "\n" in repr_str:
         repr_str = repr(repr_str)
@@ -202,7 +203,7 @@ class YaccProduction:
     def lineno(self, n):
         return getattr(self.slice[n], "lineno", 0)
 
-    def set_lineno(self, n, lineno):
+    def set_lineno(self, n, lineno) -> None:
         self.slice[n].lineno = lineno
 
     def linespan(self, n):
@@ -213,7 +214,7 @@ class YaccProduction:
     def lexpos(self, n):
         return getattr(self.slice[n], "lexpos", 0)
 
-    def set_lexpos(self, n, lexpos):
+    def set_lexpos(self, n, lexpos) -> None:
         self.slice[n].lexpos = lexpos
 
     def lexspan(self, n):
@@ -221,7 +222,7 @@ class YaccProduction:
         endpos = getattr(self.slice[n], "endlexpos", startpos)
         return startpos, endpos
 
-    def error(self):
+    def error(self) -> NoReturn:
         raise SyntaxError
 
 
@@ -241,10 +242,10 @@ class LRParser:
         self.set_defaulted_states()
         self.errorok = True
 
-    def errok(self):
+    def errok(self) -> None:
         self.errorok = True
 
-    def restart(self):
+    def restart(self) -> None:
         del self.statestack[:]
         del self.symstack[:]
         sym = YaccSymbol()
@@ -260,14 +261,14 @@ class LRParser:
     # each other or change states (i.e., manipulation of scope, lexer states, etc.).
     #
     # See:  http://www.gnu.org/software/bison/manual/html_node/Default-Reductions.html#Default-Reductions
-    def set_defaulted_states(self):
+    def set_defaulted_states(self) -> None:
         self.defaulted_states = {}
         for state, actions in self.action.items():
             rules = list(actions.values())
             if len(rules) == 1 and rules[0] < 0:
                 self.defaulted_states[state] = rules[0]
 
-    def disable_defaulted_states(self):
+    def disable_defaulted_states(self) -> None:
         self.defaulted_states = {}
 
     # parse().
@@ -736,7 +737,7 @@ class Production:
         return p
 
     # Bind the production function name to a callable
-    def bind(self, pdict):
+    def bind(self, pdict) -> None:
         if self.func:
             self.callable = pdict[self.func]
 
@@ -872,7 +873,7 @@ class Grammar:
     #
     # -----------------------------------------------------------------------------
 
-    def set_precedence(self, term, assoc, level):
+    def set_precedence(self, term, assoc, level) -> None:
         if self.Productions != [None]:
             msg = "Must call set_precedence() before add_production()"
             raise ValueError(msg)
@@ -900,7 +901,7 @@ class Grammar:
     # are valid and that %prec is used correctly.
     # -----------------------------------------------------------------------------
 
-    def add_production(self, prodname, syms, func=None, file="", line=0):
+    def add_production(self, prodname, syms, func=None, file="", line=0) -> None:
 
         if prodname in self.Terminals:
             raise GrammarError(
@@ -1002,7 +1003,7 @@ class Grammar:
     # rule 0 is S' -> start where start is the start symbol.
     # -----------------------------------------------------------------------------
 
-    def set_start(self, start=None):
+    def set_start(self, start=None) -> None:
         if not start:
             start = self.Productions[1].name
         if start not in self.Nonterminals:
@@ -1298,7 +1299,7 @@ class Grammar:
     #  [E -> . E PLUS E, E -> E . PLUS E, E -> E PLUS . E, E -> E PLUS E . ]
     # -----------------------------------------------------------------------------
 
-    def build_lritems(self):
+    def build_lritems(self) -> None:
         for p in self.Productions:
             lastlri = p
             i = 0
@@ -1364,7 +1365,7 @@ def digraph(X, R, FP):
     return F
 
 
-def traverse(x, N, stack, F, X, R, FP):
+def traverse(x, N, stack, F, X, R, FP) -> None:
     stack.append(x)
     d = len(stack)
     N[x] = d
@@ -1433,7 +1434,7 @@ class LRTable:
         self.lr_parse_table()
 
     # Bind all production function names to callable objects in pdict
-    def bind_callables(self, pdict):
+    def bind_callables(self, pdict) -> None:
         for p in self.lr_productions:
             p.bind(pdict)
 
@@ -1794,7 +1795,7 @@ class LRTable:
     # in the lookbacks set
     # -----------------------------------------------------------------------------
 
-    def add_lookaheads(self, lookbacks, followset):
+    def add_lookaheads(self, lookbacks, followset) -> None:
         for trans, lb in lookbacks.items():
             # Loop over productions in lookback
             for state, p in lb:
@@ -1812,7 +1813,7 @@ class LRTable:
     # with LALR parsing
     # -----------------------------------------------------------------------------
 
-    def add_lalr_lookaheads(self, C):
+    def add_lalr_lookaheads(self, C) -> None:
         # Determine all of the nullable nonterminals
         nullable = self.compute_nullable_nonterminals()
 
@@ -1836,7 +1837,7 @@ class LRTable:
     #
     # This function constructs the parse tables for SLR or LALR
     # -----------------------------------------------------------------------------
-    def lr_parse_table(self):
+    def lr_parse_table(self) -> None:
         Productions = self.grammar.Productions
         Precedence = self.grammar.Precedence
         goto = self.lr_goto  # Goto array
@@ -2131,7 +2132,7 @@ class ParserReflect:
             self.log = log
 
     # Get all of the basic information
-    def get_all(self):
+    def get_all(self) -> None:
         self.get_start()
         self.get_error_func()
         self.get_tokens()
@@ -2176,7 +2177,7 @@ class ParserReflect:
     # to try and detect duplicates.
     # -----------------------------------------------------------------------------
 
-    def validate_modules(self):
+    def validate_modules(self) -> None:
         # Match def p_funcname(
         fre = re.compile(r"\s*def\s+(p_[a-zA-Z_0-9]*)\(")
 
@@ -2206,20 +2207,20 @@ class ParserReflect:
                         )
 
     # Get the start symbol
-    def get_start(self):
+    def get_start(self) -> None:
         self.start = self.pdict.get("start")
 
     # Validate the start symbol
-    def validate_start(self):
+    def validate_start(self) -> None:
         if self.start is not None and not isinstance(self.start, str):
             self.log.error("'start' must be a string")
 
     # Look for error handler
-    def get_error_func(self):
+    def get_error_func(self) -> None:
         self.error_func = self.pdict.get("p_error")
 
     # Validate the error function
-    def validate_error_func(self):
+    def validate_error_func(self) -> None:
         if self.error_func:
             if isinstance(self.error_func, types.FunctionType):
                 ismethod = 0
@@ -2241,7 +2242,7 @@ class ParserReflect:
                 self.error = True
 
     # Get the tokens map
-    def get_tokens(self):
+    def get_tokens(self) -> None:
         tokens = self.pdict.get("tokens")
         if not tokens:
             self.log.error("No token list is defined")
@@ -2261,7 +2262,7 @@ class ParserReflect:
         self.tokens = sorted(tokens)
 
     # Validate the tokens
-    def validate_tokens(self):
+    def validate_tokens(self) -> None:
         # Validate the tokens.
         if "error" in self.tokens:
             self.log.error("Illegal token name 'error'. Is a reserved word")
@@ -2275,11 +2276,11 @@ class ParserReflect:
             terminals.add(n)
 
     # Get the precedence map (if any)
-    def get_precedence(self):
+    def get_precedence(self) -> None:
         self.prec = self.pdict.get("precedence")
 
     # Validate and parse the precedence map
-    def validate_precedence(self):
+    def validate_precedence(self) -> None:
         preclist = []
         if self.prec:
             if not isinstance(self.prec, (list, tuple)):
@@ -2313,7 +2314,7 @@ class ParserReflect:
         self.preclist = preclist
 
     # Get all p_functions from the grammar
-    def get_pfunctions(self):
+    def get_pfunctions(self) -> None:
         p_functions = []
         for name, item in self.pdict.items():
             if not name.startswith("p_") or name == "p_error":
@@ -2337,7 +2338,7 @@ class ParserReflect:
         self.pfuncs = p_functions
 
     # Validate all of the p_functions
-    def validate_pfunctions(self):
+    def validate_pfunctions(self) -> None:
         grammar = []
         # Check for non-empty symbols
         if len(self.pfuncs) == 0:

@@ -68,13 +68,13 @@ class PlyLogger:
     def __init__(self, f):
         self.f = f
 
-    def critical(self, msg, *args, **kwargs):
+    def critical(self, msg, *args, **kwargs) -> None:
         self.f.write((msg % args) + "\n")
 
-    def warning(self, msg, *args, **kwargs):
+    def warning(self, msg, *args, **kwargs) -> None:
         self.f.write("WARNING: " + (msg % args) + "\n")
 
-    def error(self, msg, *args, **kwargs):
+    def error(self, msg, *args, **kwargs) -> None:
         self.f.write("ERROR: " + (msg % args) + "\n")
 
     info = critical
@@ -154,7 +154,7 @@ class Lexer:
     # ------------------------------------------------------------
     # input() - Push a new string into the lexer
     # ------------------------------------------------------------
-    def input(self, s):
+    def input(self, s) -> None:
         self.lexdata = s
         self.lexpos = 0
         self.lexlen = len(s)
@@ -162,7 +162,7 @@ class Lexer:
     # ------------------------------------------------------------
     # begin() - Changes the lexing state
     # ------------------------------------------------------------
-    def begin(self, state):
+    def begin(self, state) -> None:
         if state not in self.lexstatere:
             msg = f"Undefined state {state!r}"
             raise ValueError(msg)
@@ -176,14 +176,14 @@ class Lexer:
     # ------------------------------------------------------------
     # push_state() - Changes the lexing state and saves old on stack
     # ------------------------------------------------------------
-    def push_state(self, state):
+    def push_state(self, state) -> None:
         self.lexstatestack.append(self.lexstate)
         self.begin(state)
 
     # ------------------------------------------------------------
     # pop_state() - Restores the previous state
     # ------------------------------------------------------------
-    def pop_state(self):
+    def pop_state(self) -> None:
         self.begin(self.lexstatestack.pop())
 
     # ------------------------------------------------------------
@@ -195,7 +195,7 @@ class Lexer:
     # ------------------------------------------------------------
     # skip() - Skip ahead n characters
     # ------------------------------------------------------------
-    def skip(self, n):
+    def skip(self, n) -> None:
         self.lexpos += n
 
     # ------------------------------------------------------------
@@ -432,7 +432,7 @@ class LexerReflect:
         self.log = PlyLogger(sys.stderr) if log is None else log
 
     # Get all of the basic information
-    def get_all(self):
+    def get_all(self) -> None:
         self.get_tokens()
         self.get_literals()
         self.get_states()
@@ -446,7 +446,7 @@ class LexerReflect:
         return self.error
 
     # Get the tokens map
-    def get_tokens(self):
+    def get_tokens(self) -> None:
         tokens = self.ldict.get("tokens", None)
         if not tokens:
             self.log.error("No token list is defined")
@@ -466,7 +466,7 @@ class LexerReflect:
         self.tokens = tokens
 
     # Validate the tokens
-    def validate_tokens(self):
+    def validate_tokens(self) -> None:
         terminals = {}
         for n in self.tokens:
             if not _is_identifier.match(n):
@@ -477,13 +477,13 @@ class LexerReflect:
             terminals[n] = 1
 
     # Get the literals specifier
-    def get_literals(self):
+    def get_literals(self) -> None:
         self.literals = self.ldict.get("literals", "")
         if not self.literals:
             self.literals = ""
 
     # Validate literals
-    def validate_literals(self):
+    def validate_literals(self) -> None:
         try:
             for c in self.literals:
                 if not isinstance(c, StringTypes) or len(c) > 1:
@@ -496,7 +496,7 @@ class LexerReflect:
             )
             self.error = True
 
-    def get_states(self):
+    def get_states(self) -> None:
         self.states = self.ldict.get("states", None)
         # Build statemap
         if self.states:
@@ -533,7 +533,7 @@ class LexerReflect:
     # Get all of the symbols with a t_ prefix and sort them into various
     # categories (functions, strings, error functions, and ignore characters)
 
-    def get_rules(self):
+    def get_rules(self) -> None:
         tsymbols = [f for f in self.ldict if f[:2] == "t_"]
 
         # Now build up a list of functions and a list of strings
@@ -604,7 +604,7 @@ class LexerReflect:
             s.sort(key=lambda x: len(x[1]), reverse=True)
 
     # Validate all of the t_rules collected
-    def validate_rules(self):
+    def validate_rules(self) -> None:
         for state in self.stateinfo:
             # Validate all rules defined by functions
 
@@ -756,7 +756,7 @@ class LexerReflect:
     # match on each line in the source code of the given module.
     # -----------------------------------------------------------------------------
 
-    def validate_module(self, module):
+    def validate_module(self, module) -> None:
         try:
             lines, linen = inspect.getsourcelines(module)
         except OSError:
@@ -962,7 +962,7 @@ def lex(
 # -----------------------------------------------------------------------------
 
 
-def runmain(lexer=None, data=None):
+def runmain(lexer=None, data=None) -> None:
     if not data:
         try:
             filename = sys.argv[1]
