@@ -571,7 +571,7 @@ class LRParser:
                                 )
                         else:
                             sys.stderr.write("yacc: Parse error in input. EOF\n")
-                            return
+                            return None
 
                 else:
                     errorcount = error_count
@@ -594,7 +594,7 @@ class LRParser:
                 # Start nuking entries on the stack
                 if lookahead.type == "$end":
                     # Whoa. We're really hosed here. Bail out
-                    return
+                    return None
 
                 if lookahead.type != "error":
                     sym = symstack[-1]
