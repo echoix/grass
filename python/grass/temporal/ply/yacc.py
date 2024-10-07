@@ -127,8 +127,7 @@ def format_result(r):
         repr_str = repr(repr_str)
     if len(repr_str) > resultlimit:
         repr_str = repr_str[:resultlimit] + " ..."
-    result = "<%s @ 0x%x> (%s)" % (type(r).__name__, id(r), repr_str)
-    return result
+    return "<%s @ 0x%x> (%s)" % (type(r).__name__, id(r), repr_str)
 
 
 # Format stack entries when the parser is running in debug mode
@@ -1760,8 +1759,7 @@ class LRTable:
     def compute_read_sets(self, C, ntrans, nullable):
         FP = lambda x: self.dr_relation(C, x, nullable)
         R = lambda x: self.reads_relation(C, x, nullable)
-        F = digraph(ntrans, R, FP)
-        return F
+        return digraph(ntrans, R, FP)
 
     # -----------------------------------------------------------------------------
     # compute_follow_sets()
@@ -1782,8 +1780,7 @@ class LRTable:
     def compute_follow_sets(self, ntrans, readsets, inclsets):
         FP = lambda x: readsets[x]
         R = lambda x: inclsets.get(x, [])
-        F = digraph(ntrans, R, FP)
-        return F
+        return digraph(ntrans, R, FP)
 
     # -----------------------------------------------------------------------------
     # add_lookaheads()
