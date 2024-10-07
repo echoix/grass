@@ -33,11 +33,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # -----------------------------------------------------------------------------
 
+import copy
+import inspect
 import re
 import sys
 import types
-import copy
-import inspect
 
 # This tuple contains acceptable string types
 StringTypes = (str, bytes)
