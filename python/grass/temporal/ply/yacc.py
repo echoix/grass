@@ -873,9 +873,9 @@ class Grammar:
     # -----------------------------------------------------------------------------
 
     def set_precedence(self, term, assoc, level):
-        assert self.Productions == [
-            None,
-        ], "Must call set_precedence() before add_production()"
+        if self.Productions == [None]:
+            msg = "Must call set_precedence() before add_production()"
+            raise ValueError(msg)
         if term in self.Precedence:
             raise GrammarError("Precedence already specified for terminal %r" % term)
         if assoc not in {"left", "right", "nonassoc"}:
