@@ -1502,10 +1502,8 @@ class LRTable:
     # Compute the LR(0) sets of item function
     def lr0_items(self):
         C = [self.lr0_closure([self.grammar.Productions[0].lr_next])]
-        i = 0
-        for I in C:
+        for i, I in enumerate(C):
             self.lr0_cidhash[id(I)] = i
-            i += 1
 
         # Loop over the items in C and each grammar symbols
         i = 0
@@ -1854,8 +1852,7 @@ class LRTable:
         self.add_lalr_lookaheads(C)
 
         # Build the parser table, state by state
-        st = 0
-        for I in C:
+        for st, I in enumerate(C):
             # Loop over each production in I
             actlist = []  # List of actions
             st_action = {}
@@ -2041,7 +2038,6 @@ class LRTable:
             action[st] = st_action
             actionp[st] = st_actionp
             goto[st] = st_goto
-            st += 1
 
 
 # -----------------------------------------------------------------------------
