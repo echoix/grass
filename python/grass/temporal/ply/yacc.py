@@ -2090,7 +2090,7 @@ def parse_grammar(doc, file, line):
                 lastp = prodname
                 syms = p[2:]
                 assign = p[1]
-                if assign != ":" and assign != "::=":
+                if assign not in (":", "::="):
                     raise SyntaxError(
                         "%s:%d: Syntax error. Expected ':'" % (file, dline)
                     )

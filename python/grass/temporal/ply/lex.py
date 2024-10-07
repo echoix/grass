@@ -522,7 +522,7 @@ class LexerReflect:
                         self.log.error("State name %r must be a string", name)
                         self.error = True
                         continue
-                    if not (statetype == "inclusive" or statetype == "exclusive"):
+                    if not (statetype in ("inclusive", "exclusive")):
                         self.log.error(
                             "State type for state %r must be 'inclusive' or 'exclusive'",
                             name,
