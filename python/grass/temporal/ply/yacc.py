@@ -90,7 +90,7 @@ MAXINT = sys.maxsize
 
 
 class PlyLogger:
-    def __init__(self, f):
+    def __init__(self, f) -> None:
         self.f = f
 
     def debug(self, msg, *args, **kwargs) -> None:
@@ -160,10 +160,10 @@ def format_stack_entry(r):
 
 
 class YaccSymbol:
-    def __str__(self):
+    def __str__(self) -> str:
         return self.type
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
 
@@ -178,7 +178,7 @@ class YaccSymbol:
 
 
 class YaccProduction:
-    def __init__(self, s, stack=None):
+    def __init__(self, s, stack=None) -> None:
         self.slice = s
         self.stack = stack
         self.lexer = None
@@ -191,13 +191,13 @@ class YaccProduction:
             return self.slice[n].value
         return self.stack[n].value
 
-    def __setitem__(self, n, v):
+    def __setitem__(self, n, v) -> None:
         self.slice[n].value = v
 
     def __getslice__(self, i, j):
         return [s.value for s in self.slice[i:j]]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.slice)
 
     def lineno(self, n):
@@ -234,7 +234,7 @@ class YaccProduction:
 
 
 class LRParser:
-    def __init__(self, lrtab, errorf):
+    def __init__(self, lrtab, errorf) -> None:
         self.productions = lrtab.lr_productions
         self.action = lrtab.lr_action
         self.goto = lrtab.lr_goto
@@ -675,7 +675,7 @@ class Production:
         func=None,
         file="",
         line=0,
-    ):
+    ) -> None:
         self.name = name
         self.prod = tuple(prod)
         self.number = number
@@ -705,13 +705,13 @@ class Production:
         else:
             self.str = "%s -> <empty>" % self.name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.str
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Production(" + str(self) + ")"
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.prod)
 
     def __nonzero__(self):
@@ -768,7 +768,7 @@ class Production:
 
 
 class LRItem:
-    def __init__(self, p, n):
+    def __init__(self, p, n) -> None:
         self.name = p.name
         self.prod = list(p.prod)
         self.number = p.number
@@ -779,14 +779,14 @@ class LRItem:
         self.len = len(self.prod)
         self.usyms = p.usyms
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.prod:
             s = "%s -> %s" % (self.name, " ".join(self.prod))
         else:
             s = "%s -> <empty>" % self.name
         return s
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "LRItem(" + str(self) + ")"
 
 
@@ -818,7 +818,7 @@ class GrammarError(YaccError):
 
 
 class Grammar:
-    def __init__(self, terminals):
+    def __init__(self, terminals) -> None:
         self.Productions = [None]  # A list of all of the productions.  The first
         # entry is always reserved for the purpose of
         # building an augmented grammar
@@ -859,7 +859,7 @@ class Grammar:
 
         self.Start = None  # Starting symbol for the grammar
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.Productions)
 
     def __getitem__(self, index):
@@ -1402,7 +1402,7 @@ class LALRError(YaccError):
 
 
 class LRTable:
-    def __init__(self, grammar, log=None):
+    def __init__(self, grammar, log=None) -> None:
         self.grammar = grammar
 
         # Set up the logger
@@ -2117,7 +2117,7 @@ def parse_grammar(doc, file, line):
 # etc.
 # -----------------------------------------------------------------------------
 class ParserReflect:
-    def __init__(self, pdict, log=None):
+    def __init__(self, pdict, log=None) -> None:
         self.pdict = pdict
         self.start = None
         self.error_func = None
