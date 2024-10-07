@@ -953,7 +953,7 @@ def runmain(lexer=None, data=None):
     if not data:
         try:
             filename = sys.argv[1]
-            with open(filename) as f:
+            with open(filename) as f:  # noqa: FURB101
                 data = f.read()
         except IndexError:
             sys.stdout.write("Reading from standard input (type EOF to end):\n")
