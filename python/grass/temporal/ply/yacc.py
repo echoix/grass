@@ -553,10 +553,7 @@ class LRParser:
                             errtoken = None
                             continue
                     elif errtoken:
-                        if hasattr(errtoken, "lineno"):
-                            lineno = lookahead.lineno
-                        else:
-                            lineno = 0
+                        lineno = lookahead.lineno if hasattr(errtoken, "lineno") else 0
                         if lineno:
                             sys.stderr.write(
                                 "yacc: Syntax error at line %d, token=%s\n"
@@ -2350,10 +2347,7 @@ class ParserReflect:
         for line, module, name, doc in self.pfuncs:
             file = inspect.getsourcefile(module)
             func = self.pdict[name]
-            if isinstance(func, types.MethodType):
-                reqargs = 2
-            else:
-                reqargs = 1
+            reqargs = 2 if isinstance(func, types.MethodType) else 1
             if func.__code__.co_argcount > reqargs:
                 self.log.error(
                     "%s:%d: Rule %r has too many arguments",

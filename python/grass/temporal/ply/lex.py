@@ -407,10 +407,7 @@ def _statetoken(s, names):
         if part not in names and part != "ANY":
             break
 
-    if i > 1:
-        states = tuple(parts[1:i])
-    else:
-        states = ("INITIAL",)
+    states = tuple(parts[1:i]) if i > 1 else ("INITIAL",)
 
     if "ANY" in states:
         states = tuple(names)
@@ -620,10 +617,7 @@ class LexerReflect:
                 self.modules.add(module)
 
                 tokname = self.toknames[fname]
-                if isinstance(f, types.MethodType):
-                    reqargs = 2
-                else:
-                    reqargs = 1
+                reqargs = 2 if isinstance(f, types.MethodType) else 1
                 nargs = f.__code__.co_argcount
                 if nargs > reqargs:
                     self.log.error(
@@ -733,10 +727,7 @@ class LexerReflect:
                 module = inspect.getmodule(f)
                 self.modules.add(module)
 
-                if isinstance(f, types.MethodType):
-                    reqargs = 2
-                else:
-                    reqargs = 1
+                reqargs = 2 if isinstance(f, types.MethodType) else 1
                 nargs = f.__code__.co_argcount
                 if nargs > reqargs:
                     self.log.error(
@@ -983,15 +974,9 @@ def runmain(lexer=None, data=None):
             sys.stdout.write("Reading from standard input (type EOF to end):\n")
             data = sys.stdin.read()
 
-    if lexer:
-        _input = lexer.input
-    else:
-        _input = input
+    _input = lexer.input if lexer else input
     _input(data)
-    if lexer:
-        _token = lexer.token
-    else:
-        _token = token
+    _token = lexer.token if lexer else token
 
     while True:
         tok = _token()
