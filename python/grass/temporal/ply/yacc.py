@@ -128,7 +128,7 @@ def format_result(r) -> str:
         repr_str = repr(repr_str)
     if len(repr_str) > resultlimit:
         repr_str = repr_str[:resultlimit] + " ..."
-    return "<{} @ 0x{:x}> ({})".format(type(r).__name__, id(r), repr_str)
+    return f"<{type(r).__name__} @ 0x{id(r):x}> ({repr_str})"
 
 
 # Format stack entries when the parser is running in debug mode
@@ -138,7 +138,7 @@ def format_stack_entry(r):
         repr_str = repr(repr_str)
     if len(repr_str) < 16:
         return repr_str
-    return "<{} @ 0x{:x}>".format(type(r).__name__, id(r))
+    return f"<{type(r).__name__} @ 0x{id(r):x}>"
 
 
 # -----------------------------------------------------------------------------
@@ -562,7 +562,7 @@ class LRParser:
                             )
                         else:
                             sys.stderr.write(
-                                "yacc: Syntax error, token={}".format(errtoken.type),
+                                f"yacc: Syntax error, token={errtoken.type}",
                             )
                     else:
                         sys.stderr.write("yacc: Parse error in input. EOF\n")
@@ -703,7 +703,7 @@ class Production:
         if self.prod:
             self.str = "{} -> {}".format(self.name, " ".join(self.prod))
         else:
-            self.str = "{} -> <empty>".format(self.name)
+            self.str = f"{self.name} -> <empty>"
 
     def __str__(self) -> str:
         return self.str
@@ -783,7 +783,7 @@ class LRItem:
         if self.prod:
             s = "{} -> {}".format(self.name, " ".join(self.prod))
         else:
-            s = "{} -> <empty>".format(self.name)
+            s = f"{self.name} -> <empty>"
         return s
 
     def __repr__(self) -> str:
@@ -878,9 +878,7 @@ class Grammar:
             msg = "Must call set_precedence() before add_production()"
             raise ValueError(msg)
         if term in self.Precedence:
-            raise GrammarError(
-                "Precedence already specified for terminal {!r}".format(term)
-            )
+            raise GrammarError(f"Precedence already specified for terminal {term!r}")
         if assoc not in {"left", "right", "nonassoc"}:
             msg = "Associativity must be one of 'left','right', or 'nonassoc'"
             raise GrammarError(msg)
@@ -965,7 +963,7 @@ class Grammar:
             prodprec = self.Precedence.get(precname, ("right", 0))
 
         # See if the rule is already in the rulemap
-        map = "{} -> {}".format(prodname, syms)
+        map = f"{prodname} -> {syms}"
         if map in self.Prodmap:
             m = self.Prodmap[map]
             raise GrammarError(
@@ -1009,7 +1007,7 @@ class Grammar:
         if not start:
             start = self.Productions[1].name
         if start not in self.Nonterminals:
-            raise GrammarError("start symbol {} undefined".format(start))
+            raise GrammarError(f"start symbol {start} undefined")
         self.Productions[0] = Production(0, "S'", [start])
         self.Nonterminals[start].append(0)
         self.Start = start
@@ -2480,7 +2478,7 @@ def yacc(
             try:
                 debuglog = PlyLogger(open(debugfile, "w", encoding="utf-8"))
             except OSError as e:
-                errorlog.warning("Couldn't open {!r}. {}".format(debugfile, e))
+                errorlog.warning(f"Couldn't open {debugfile!r}. {e}")
                 debuglog = NullLogger()
         else:
             debuglog = NullLogger()
