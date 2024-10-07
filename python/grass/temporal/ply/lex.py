@@ -496,7 +496,7 @@ class LexerReflect:
                     self.error = True
 
         except TypeError:
-            self.log.error(
+            self.log.error(  # noqa: TRY400
                 "Invalid literals specification. literals must be a sequence of characters"
             )
             self.error = True
@@ -660,7 +660,7 @@ class LexerReflect:
                         )
                         self.error = True
                 except re.error as e:
-                    self.log.error(
+                    self.log.error(  # noqa: TRY400
                         "%s:%d: Invalid regular expression for rule '%s'. %s",
                         file,
                         line,
@@ -668,7 +668,7 @@ class LexerReflect:
                         e,
                     )
                     if "#" in _get_regex(f):
-                        self.log.error(
+                        self.log.error(  # noqa: TRY400
                             "%s:%d. Make sure '#' in rule %r is escaped with '\\#'",
                             file,
                             line,
@@ -699,11 +699,11 @@ class LexerReflect:
                         )
                         self.error = True
                 except re.error as e:
-                    self.log.error(
+                    self.log.error(  # noqa: TRY400
                         "Invalid regular expression for rule %r. %s", name, e
                     )
                     if "#" in r:
-                        self.log.error(
+                        self.log.error(  # noqa: TRY400
                             "Make sure '#' in rule %r is escaped with '\\#'", name
                         )
                     self.error = True

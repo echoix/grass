@@ -2370,7 +2370,7 @@ class ParserReflect:
                     for g in parsed_g:
                         grammar.append((name, g))
                 except SyntaxError as e:
-                    self.log.error(str(e))
+                    self.log.error(str(e))  # noqa: TRY400
                     self.error = True
 
                 # Looks like a valid grammar rule
