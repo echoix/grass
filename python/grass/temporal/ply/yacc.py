@@ -1155,12 +1155,11 @@ class Grammar:
     # -----------------------------------------------------------------------------
 
     def unused_precedence(self):
-        unused = []
-        for termname in self.Precedence:
-            if not (termname in self.Terminals or termname in self.UsedPrecedence):
-                unused.append((termname, self.Precedence[termname][0]))
-
-        return unused
+        return [
+            (termname, self.Precedence[termname][0])
+            for termname in self.Precedence
+            if not (termname in self.Terminals or termname in self.UsedPrecedence)
+        ]
 
     # -------------------------------------------------------------------------
     # _first()
