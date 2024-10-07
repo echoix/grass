@@ -164,7 +164,8 @@ class Lexer:
     # ------------------------------------------------------------
     def begin(self, state):
         if state not in self.lexstatere:
-            raise ValueError(f"Undefined state {state!r}")
+            msg = f"Undefined state {state!r}"
+            raise ValueError(msg)
         self.lexre = self.lexstatere[state]
         self.lexretext = self.lexstateretext[state]
         self.lexignore = self.lexstateignore.get(state, "")
@@ -284,20 +285,16 @@ class Lexer:
                     newtok = self.lexerrorf(tok)
                     if lexpos == self.lexpos:
                         # Error method didn't change text position at all. This is an error.
-                        raise LexError(
-                            f"Scanning error. Illegal character {lexdata[lexpos]!r}",
-                            lexdata[lexpos:],
-                        )
+                        msg = f"Scanning error. Illegal character {lexdata[lexpos]!r}"
+                        raise LexError(msg, lexdata[lexpos:])
                     lexpos = self.lexpos
                     if not newtok:
                         continue
                     return newtok
 
                 self.lexpos = lexpos
-                raise LexError(
-                    f"Illegal character {lexdata[lexpos]!r} at index {lexpos}",
-                    lexdata[lexpos:],
-                )
+                msg = f"Illegal character {lexdata[lexpos]!r} at index {lexpos}"
+                raise LexError(msg, lexdata[lexpos:])
 
         if self.lexeoff:
             tok = LexToken()
