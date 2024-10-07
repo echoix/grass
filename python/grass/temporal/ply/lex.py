@@ -311,7 +311,8 @@ class Lexer:
 
         self.lexpos = lexpos + 1
         if self.lexdata is None:
-            raise RuntimeError("No input string given with input()")
+            msg = "No input string given with input()"
+            raise RuntimeError(msg)
         return None
 
     # Iterator interface
@@ -838,7 +839,8 @@ def lex(
     linfo = LexerReflect(ldict, log=errorlog, reflags=reflags)
     linfo.get_all()
     if linfo.validate_all():
-        raise SyntaxError("Can't build lexer")
+        msg = "Can't build lexer"
+        raise SyntaxError(msg)
 
     # Dump some basic debugging information
     if debug:
