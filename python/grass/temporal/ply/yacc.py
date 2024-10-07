@@ -1613,9 +1613,8 @@ class LRTable:
         for p in g:
             if p.lr_index < p.len - 1:
                 a = p.prod[p.lr_index + 1]
-                if a in self.grammar.Terminals:
-                    if a not in terms:
-                        terms.append(a)
+                if a in self.grammar.Terminals and a not in terms:
+                    terms.append(a)
 
         # This extra bit is to handle the start state
         if state == 0 and self.grammar.Productions[0].prod[0] == N:
@@ -2008,20 +2007,18 @@ class LRTable:
             # Print the actions associated with each terminal
             _actprint = {}
             for a, p, m in actlist:
-                if a in st_action:
-                    if p is st_actionp[a]:
-                        log.info("    %-15s %s", a, m)
-                        _actprint[a, m] = 1
+                if a in st_action and p is st_actionp[a]:
+                    log.info("    %-15s %s", a, m)
+                    _actprint[a, m] = 1
             log.info("")
             # Print the actions that were not used. (debugging)
             not_used = 0
             for a, p, m in actlist:
-                if a in st_action:
-                    if p is not st_actionp[a]:
-                        if (a, m) not in _actprint:
-                            log.debug("  ! %-15s [ %s ]", a, m)
-                            not_used = 1
-                            _actprint[a, m] = 1
+                if a in st_action and p is not st_actionp[a]:
+                    if (a, m) not in _actprint:
+                        log.debug("  ! %-15s [ %s ]", a, m)
+                        not_used = 1
+                        _actprint[a, m] = 1
             if not_used:
                 log.debug("")
 
@@ -2216,9 +2213,8 @@ class ParserReflect:
 
     # Validate the start symbol
     def validate_start(self):
-        if self.start is not None:
-            if not isinstance(self.start, str):
-                self.log.error("'start' must be a string")
+        if self.start is not None and not isinstance(self.start, str):
+            self.log.error("'start' must be a string")
 
     # Look for error handler
     def get_error_func(self):
