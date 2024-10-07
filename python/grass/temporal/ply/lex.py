@@ -497,7 +497,7 @@ class LexerReflect:
 
         except TypeError:
             self.log.error(  # noqa: TRY400
-                "Invalid literals specification. literals must be a sequence of characters"
+                "Invalid literals specification. literals must be a sequence of characters",
             )
             self.error = True
 
@@ -627,14 +627,20 @@ class LexerReflect:
                 nargs = f.__code__.co_argcount
                 if nargs > reqargs:
                     self.log.error(
-                        "%s:%d: Rule %r has too many arguments", file, line, f.__name__
+                        "%s:%d: Rule %r has too many arguments",
+                        file,
+                        line,
+                        f.__name__,
                     )
                     self.error = True
                     continue
 
                 if nargs < reqargs:
                     self.log.error(
-                        "%s:%d: Rule %r requires an argument", file, line, f.__name__
+                        "%s:%d: Rule %r requires an argument",
+                        file,
+                        line,
+                        f.__name__,
                     )
                     self.error = True
                     continue
@@ -686,7 +692,9 @@ class LexerReflect:
 
                 if tokname not in self.tokens and tokname.find("ignore_") < 0:
                     self.log.error(
-                        "Rule %r defined for an unspecified token %s", name, tokname
+                        "Rule %r defined for an unspecified token %s",
+                        name,
+                        tokname,
                     )
                     self.error = True
                     continue
@@ -695,16 +703,20 @@ class LexerReflect:
                     c = re.compile("(?P<%s>%s)" % (name, r), self.reflags)
                     if c.match(""):
                         self.log.error(
-                            "Regular expression for rule %r matches empty string", name
+                            "Regular expression for rule %r matches empty string",
+                            name,
                         )
                         self.error = True
                 except re.error as e:
                     self.log.error(  # noqa: TRY400
-                        "Invalid regular expression for rule %r. %s", name, e
+                        "Invalid regular expression for rule %r. %s",
+                        name,
+                        e,
                     )
                     if "#" in r:
                         self.log.error(  # noqa: TRY400
-                            "Make sure '#' in rule %r is escaped with '\\#'", name
+                            "Make sure '#' in rule %r is escaped with '\\#'",
+                            name,
                         )
                     self.error = True
 
@@ -728,13 +740,19 @@ class LexerReflect:
                 nargs = f.__code__.co_argcount
                 if nargs > reqargs:
                     self.log.error(
-                        "%s:%d: Rule %r has too many arguments", file, line, f.__name__
+                        "%s:%d: Rule %r has too many arguments",
+                        file,
+                        line,
+                        f.__name__,
                     )
                     self.error = True
 
                 if nargs < reqargs:
                     self.log.error(
-                        "%s:%d: Rule %r requires an argument", file, line, f.__name__
+                        "%s:%d: Rule %r requires an argument",
+                        file,
+                        line,
+                        f.__name__,
                     )
                     self.error = True
 
@@ -874,7 +892,10 @@ def lex(
             regex_list.append("(?P<%s>%s)" % (name, r))
             if debug:
                 debuglog.info(
-                    "lex: Adding rule %s -> '%s' (state '%s')", name, r, state
+                    "lex: Adding rule %s -> '%s' (state '%s')",
+                    name,
+                    r,
+                    state,
                 )
 
         regexs[state] = regex_list
@@ -886,7 +907,10 @@ def lex(
 
     for state in regexs:
         lexre, re_text, re_names = _form_master_re(
-            regexs[state], reflags, ldict, linfo.toknames
+            regexs[state],
+            reflags,
+            ldict,
+            linfo.toknames,
         )
         lexobj.lexstatere[state] = lexre
         lexobj.lexstateretext[state] = re_text

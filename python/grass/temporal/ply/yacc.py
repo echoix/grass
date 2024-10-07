@@ -402,7 +402,7 @@ class LRParser:
                                     [
                                         format_stack_entry(_v.value)
                                         for _v in symstack[-plen:]
-                                    ]
+                                    ],
                                 )
                                 + "]",
                                 goto[statestack[-1 - plen]][pname],
@@ -448,10 +448,10 @@ class LRParser:
                         except SyntaxError:
                             # If an error was set. Enter error recovery state
                             lookaheadstack.append(
-                                lookahead
+                                lookahead,
                             )  # Save the current lookahead token
                             symstack.extend(
-                                targ[1:-1]
+                                targ[1:-1],
                             )  # Put the production slice back on the stack
                             statestack.pop()  # Pop back one state (before the reduce)
                             state = statestack[-1]
@@ -488,7 +488,7 @@ class LRParser:
                     except SyntaxError:
                         # If an error was set. Enter error recovery state
                         lookaheadstack.append(
-                            lookahead
+                            lookahead,
                         )  # Save the current lookahead token
                         statestack.pop()  # Pop back one state (before the reduce)
                         state = statestack[-1]
@@ -560,11 +560,11 @@ class LRParser:
                         if lineno:
                             sys.stderr.write(
                                 "yacc: Syntax error at line %d, token=%s\n"
-                                % (lineno, errtoken.type)
+                                % (lineno, errtoken.type),
                             )
                         else:
                             sys.stderr.write(
-                                "yacc: Syntax error, token=%s" % errtoken.type
+                                "yacc: Syntax error, token=%s" % errtoken.type,
                             )
                     else:
                         sys.stderr.write("yacc: Parse error in input. EOF\n")
@@ -668,7 +668,14 @@ class Production:
     reduced = 0
 
     def __init__(
-        self, number, name, prod, precedence=("right", 0), func=None, file="", line=0
+        self,
+        number,
+        name,
+        prod,
+        precedence=("right", 0),
+        func=None,
+        file="",
+        line=0,
     ):
         self.name = name
         self.prod = tuple(prod)
@@ -869,13 +876,13 @@ class Grammar:
 
     def set_precedence(self, term, assoc, level):
         assert self.Productions == [
-            None
+            None,
         ], "Must call set_precedence() before add_production()"
         if term in self.Precedence:
             raise GrammarError("Precedence already specified for terminal %r" % term)
         if assoc not in ["left", "right", "nonassoc"]:
             raise GrammarError(
-                "Associativity must be one of 'left','right', or 'nonassoc'"
+                "Associativity must be one of 'left','right', or 'nonassoc'",
             )
         self.Precedence[term] = (assoc, level)
 
@@ -901,12 +908,12 @@ class Grammar:
         if prodname in self.Terminals:
             raise GrammarError(
                 "%s:%d: Illegal rule name %r. Already defined as a token"
-                % (file, line, prodname)
+                % (file, line, prodname),
             )
         if prodname == "error":
             raise GrammarError(
                 "%s:%d: Illegal rule name %r. error is a reserved word"
-                % (file, line, prodname)
+                % (file, line, prodname),
             )
         if not _is_identifier.match(prodname):
             raise GrammarError("%s:%d: Illegal rule name %r" % (file, line, prodname))
@@ -919,7 +926,7 @@ class Grammar:
                     if len(c) > 1:
                         raise GrammarError(
                             "%s:%d: Literal token %s in rule %r may only be a single character"
-                            % (file, line, s, prodname)
+                            % (file, line, s, prodname),
                         )
                     if c not in self.Terminals:
                         self.Terminals[c] = []
@@ -929,26 +936,26 @@ class Grammar:
                     pass
             if not _is_identifier.match(s) and s != "%prec":
                 raise GrammarError(
-                    "%s:%d: Illegal name %r in rule %r" % (file, line, s, prodname)
+                    "%s:%d: Illegal name %r in rule %r" % (file, line, s, prodname),
                 )
 
         # Determine the precedence level
         if "%prec" in syms:
             if syms[-1] == "%prec":
                 raise GrammarError(
-                    "%s:%d: Syntax error. Nothing follows %%prec" % (file, line)
+                    "%s:%d: Syntax error. Nothing follows %%prec" % (file, line),
                 )
             if syms[-2] != "%prec":
                 raise GrammarError(
                     "%s:%d: Syntax error. %%prec can only appear at the end of a grammar rule"
-                    % (file, line)
+                    % (file, line),
                 )
             precname = syms[-1]
             prodprec = self.Precedence.get(precname)
             if not prodprec:
                 raise GrammarError(
                     "%s:%d: Nothing known about the precedence of %r"
-                    % (file, line, precname)
+                    % (file, line, precname),
                 )
             self.UsedPrecedence.add(precname)
             del syms[-2:]  # Drop %prec from the rule
@@ -963,7 +970,7 @@ class Grammar:
             m = self.Prodmap[map]
             raise GrammarError(
                 "%s:%d: Duplicate rule %s. " % (file, line, m)
-                + "Previous definition at %s:%d" % (m.file, m.line)
+                + "Previous definition at %s:%d" % (m.file, m.line),
             )
 
         # From this point on, everything is valid.  Create a new Production instance
@@ -1870,7 +1877,7 @@ class LRTable:
                         laheads = p.lookaheads[st]
                         for a in laheads:
                             actlist.append(
-                                (a, p, "reduce using rule %d (%s)" % (p.number, p))
+                                (a, p, "reduce using rule %d (%s)" % (p.number, p)),
                             )
                             r = st_action.get(a)
                             if r is not None:
@@ -1949,7 +1956,7 @@ class LRTable:
                                 if r > 0:
                                     if r != j:
                                         raise LALRError(
-                                            "Shift/shift conflict in state %d" % st
+                                            "Shift/shift conflict in state %d" % st,
                                         )
                                 elif r < 0:
                                     # Do a precedence check.
@@ -2088,7 +2095,7 @@ def parse_grammar(doc, file, line):
                 assign = p[1]
                 if assign not in (":", "::="):
                     raise SyntaxError(
-                        "%s:%d: Syntax error. Expected ':'" % (file, dline)
+                        "%s:%d: Syntax error. Expected ':'" % (file, dline),
                     )
 
             grammar.append((file, dline, prodname, syms))
@@ -2096,7 +2103,7 @@ def parse_grammar(doc, file, line):
             raise
         except Exception:
             raise SyntaxError(
-                "%s:%d: Syntax error in rule %r" % (file, dline, ps.strip())
+                "%s:%d: Syntax error in rule %r" % (file, dline, ps.strip()),
             )
 
     return grammar
@@ -2327,7 +2334,7 @@ class ParserReflect:
                 str(p_function[1]),
                 p_function[2],
                 p_function[3],
-            )
+            ),
         )
         self.pfuncs = p_functions
 
@@ -2349,12 +2356,18 @@ class ParserReflect:
                 reqargs = 1
             if func.__code__.co_argcount > reqargs:
                 self.log.error(
-                    "%s:%d: Rule %r has too many arguments", file, line, func.__name__
+                    "%s:%d: Rule %r has too many arguments",
+                    file,
+                    line,
+                    func.__name__,
                 )
                 self.error = True
             elif func.__code__.co_argcount < reqargs:
                 self.log.error(
-                    "%s:%d: Rule %r requires an argument", file, line, func.__name__
+                    "%s:%d: Rule %r requires an argument",
+                    file,
+                    line,
+                    func.__name__,
                 )
                 self.error = True
             elif not func.__doc__:
@@ -2382,7 +2395,8 @@ class ParserReflect:
 
         for n, v in self.pdict.items():
             if n.startswith("p_") and isinstance(
-                v, (types.FunctionType, types.MethodType)
+                v,
+                (types.FunctionType, types.MethodType),
             ):
                 continue
             if n.startswith("t_"):
@@ -2543,7 +2557,10 @@ def yacc(
     unused_rules = grammar.unused_rules()
     for prod in unused_rules:
         errorlog.warning(
-            "%s:%d: Rule %r defined, but not used", prod.file, prod.line, prod.name
+            "%s:%d: Rule %r defined, but not used",
+            prod.file,
+            prod.line,
+            prod.name,
         )
 
     if len(unused_terminals) == 1:
@@ -2564,7 +2581,9 @@ def yacc(
         terms.sort()
         for term in terms:
             debuglog.info(
-                "%-20s : %s", term, " ".join([str(s) for s in grammar.Terminals[term]])
+                "%-20s : %s",
+                term,
+                " ".join([str(s) for s in grammar.Terminals[term]]),
             )
 
         debuglog.info("")
