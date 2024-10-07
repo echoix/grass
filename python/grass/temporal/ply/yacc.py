@@ -878,7 +878,7 @@ class Grammar:
         ], "Must call set_precedence() before add_production()"
         if term in self.Precedence:
             raise GrammarError("Precedence already specified for terminal %r" % term)
-        if assoc not in ["left", "right", "nonassoc"]:
+        if assoc not in {"left", "right", "nonassoc"}:
             msg = "Associativity must be one of 'left','right', or 'nonassoc'"
             raise GrammarError(msg)
         self.Precedence[term] = (assoc, level)
@@ -2090,7 +2090,7 @@ def parse_grammar(doc, file, line):
                 lastp = prodname
                 syms = p[2:]
                 assign = p[1]
-                if assign not in (":", "::="):
+                if assign not in {":", "::="}:
                     raise SyntaxError(
                         "%s:%d: Syntax error. Expected ':'" % (file, dline),
                     )
