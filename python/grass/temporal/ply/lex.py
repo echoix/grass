@@ -648,7 +648,9 @@ class LexerReflect:
                     continue
 
                 try:
-                    c = re.compile("(?P<%s>%s)" % (fname, _get_regex(f)), self.reflags)
+                    c = re.compile(
+                        "(?P<{}>{})".format(fname, _get_regex(f)), self.reflags
+                    )
                     if c.match(""):
                         self.log.error(
                             "%s:%d: Regular expression for rule %r matches empty string",
@@ -692,7 +694,7 @@ class LexerReflect:
                     continue
 
                 try:
-                    c = re.compile("(?P<%s>%s)" % (name, r), self.reflags)
+                    c = re.compile("(?P<{}>{})".format(name, r), self.reflags)
                     if c.match(""):
                         self.log.error(
                             "Regular expression for rule %r matches empty string",
@@ -867,7 +869,7 @@ def lex(
 
         # Add rules defined by functions first
         for fname, f in linfo.funcsym[state]:
-            regex_list.append("(?P<%s>%s)" % (fname, _get_regex(f)))
+            regex_list.append("(?P<{}>{})".format(fname, _get_regex(f)))
             if debug:
                 debuglog.info(
                     "lex: Adding rule %s -> '%s' (state '%s')",
@@ -878,7 +880,7 @@ def lex(
 
         # Now add all of the simple rules
         for name, r in linfo.strsym[state]:
-            regex_list.append("(?P<%s>%s)" % (name, r))
+            regex_list.append("(?P<{}>{})".format(name, r))
             if debug:
                 debuglog.info(
                     "lex: Adding rule %s -> '%s' (state '%s')",

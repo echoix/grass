@@ -128,7 +128,7 @@ def format_result(r) -> str:
         repr_str = repr(repr_str)
     if len(repr_str) > resultlimit:
         repr_str = repr_str[:resultlimit] + " ..."
-    return "<%s @ 0x%x> (%s)" % (type(r).__name__, id(r), repr_str)
+    return "<{} @ 0x{:x}> ({})".format(type(r).__name__, id(r), repr_str)
 
 
 # Format stack entries when the parser is running in debug mode
@@ -138,7 +138,7 @@ def format_stack_entry(r):
         repr_str = repr(repr_str)
     if len(repr_str) < 16:
         return repr_str
-    return "<%s @ 0x%x>" % (type(r).__name__, id(r))
+    return "<{} @ 0x{:x}>".format(type(r).__name__, id(r))
 
 
 # -----------------------------------------------------------------------------
@@ -360,8 +360,9 @@ class LRParser:
                 debug.debug(
                     "Stack  : %s",
                     (
-                        "%s . %s"
-                        % (" ".join([xx.type for xx in symstack][1:]), str(lookahead))
+                        "{} . {}".format(
+                            " ".join([xx.type for xx in symstack][1:]), str(lookahead)
+                        )
                     ).lstrip(),
                 )
 
@@ -517,8 +518,7 @@ class LRParser:
                     debug.error(
                         "Error  : %s",
                         (
-                            "%s . %s"
-                            % (
+                            "{} . {}".format(
                                 " ".join([xx.type for xx in symstack][1:]),
                                 str(lookahead),
                             )
@@ -562,7 +562,7 @@ class LRParser:
                             )
                         else:
                             sys.stderr.write(
-                                "yacc: Syntax error, token=%s" % errtoken.type,
+                                "yacc: Syntax error, token={}".format(errtoken.type),
                             )
                     else:
                         sys.stderr.write("yacc: Parse error in input. EOF\n")
@@ -701,9 +701,9 @@ class Production:
 
         # Create a string representation
         if self.prod:
-            self.str = "%s -> %s" % (self.name, " ".join(self.prod))
+            self.str = "{} -> {}".format(self.name, " ".join(self.prod))
         else:
-            self.str = "%s -> <empty>" % self.name
+            self.str = "{} -> <empty>".format(self.name)
 
     def __str__(self) -> str:
         return self.str
@@ -781,9 +781,9 @@ class LRItem:
 
     def __str__(self) -> str:
         if self.prod:
-            s = "%s -> %s" % (self.name, " ".join(self.prod))
+            s = "{} -> {}".format(self.name, " ".join(self.prod))
         else:
-            s = "%s -> <empty>" % self.name
+            s = "{} -> <empty>".format(self.name)
         return s
 
     def __repr__(self) -> str:
@@ -878,7 +878,9 @@ class Grammar:
             msg = "Must call set_precedence() before add_production()"
             raise ValueError(msg)
         if term in self.Precedence:
-            raise GrammarError("Precedence already specified for terminal %r" % term)
+            raise GrammarError(
+                "Precedence already specified for terminal {!r}".format(term)
+            )
         if assoc not in {"left", "right", "nonassoc"}:
             msg = "Associativity must be one of 'left','right', or 'nonassoc'"
             raise GrammarError(msg)
@@ -963,7 +965,7 @@ class Grammar:
             prodprec = self.Precedence.get(precname, ("right", 0))
 
         # See if the rule is already in the rulemap
-        map = "%s -> %s" % (prodname, syms)
+        map = "{} -> {}".format(prodname, syms)
         if map in self.Prodmap:
             m = self.Prodmap[map]
             raise GrammarError(
@@ -1007,7 +1009,7 @@ class Grammar:
         if not start:
             start = self.Productions[1].name
         if start not in self.Nonterminals:
-            raise GrammarError("start symbol %s undefined" % start)
+            raise GrammarError("start symbol {} undefined".format(start))
         self.Productions[0] = Production(0, "S'", [start])
         self.Nonterminals[start].append(0)
         self.Start = start
@@ -2479,7 +2481,7 @@ def yacc(
             try:
                 debuglog = PlyLogger(open(debugfile, "w", encoding="utf-8"))
             except OSError as e:
-                errorlog.warning("Couldn't open %r. %s" % (debugfile, e))
+                errorlog.warning("Couldn't open {!r}. {}".format(debugfile, e))
                 debuglog = NullLogger()
         else:
             debuglog = NullLogger()
