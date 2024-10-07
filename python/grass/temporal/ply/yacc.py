@@ -2470,7 +2470,7 @@ def yacc(
     if debuglog is None:
         if debug:
             try:
-                debuglog = PlyLogger(open(debugfile, "w"))
+                debuglog = PlyLogger(open(debugfile, "w", encoding="utf-8"))
             except OSError as e:
                 errorlog.warning("Couldn't open %r. %s" % (debugfile, e))
                 debuglog = NullLogger()
