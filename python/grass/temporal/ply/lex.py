@@ -308,8 +308,7 @@ class Lexer:
             tok.lexpos = lexpos
             tok.lexer = self
             self.lexpos = lexpos
-            newtok = self.lexeoff(tok)
-            return newtok
+            return self.lexeoff(tok)
 
         self.lexpos = lexpos + 1
         if self.lexdata is None:
