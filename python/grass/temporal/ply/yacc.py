@@ -623,7 +623,8 @@ class LRParser:
                 continue
 
             # If we'r here, something really bad happened
-            raise RuntimeError("yacc: internal parser error!!!\n")
+            msg = "yacc: internal parser error!!!\n"
+            raise RuntimeError(msg)
 
 
 # -----------------------------------------------------------------------------
@@ -878,9 +879,8 @@ class Grammar:
         if term in self.Precedence:
             raise GrammarError("Precedence already specified for terminal %r" % term)
         if assoc not in ["left", "right", "nonassoc"]:
-            raise GrammarError(
-                "Associativity must be one of 'left','right', or 'nonassoc'",
-            )
+            msg = "Associativity must be one of 'left','right', or 'nonassoc'"
+            raise GrammarError(msg)
         self.Precedence[term] = (assoc, level)
 
     # -----------------------------------------------------------------------------
@@ -2464,7 +2464,8 @@ def yacc(
     pinfo.get_all()
 
     if pinfo.error:
-        raise YaccError("Unable to build parser")
+        msg = "Unable to build parser"
+        raise YaccError(msg)
 
     if debuglog is None:
         if debug:
@@ -2482,7 +2483,8 @@ def yacc(
 
     # Validate the parser information
     if pinfo.validate_all():
-        raise YaccError("Unable to build parser")
+        msg = "Unable to build parser"
+        raise YaccError(msg)
 
     if not pinfo.error_func:
         errorlog.warning("no p_error() function is defined")
@@ -2517,7 +2519,8 @@ def yacc(
         errors = True
 
     if errors:
-        raise YaccError("Unable to build parser")
+        msg = "Unable to build parser"
+        raise YaccError(msg)
 
     # Verify the grammar structure
     undefined_symbols = grammar.undefined_symbols()
@@ -2609,7 +2612,8 @@ def yacc(
         errors = True
 
     if errors:
-        raise YaccError("Unable to build parser")
+        msg = "Unable to build parser"
+        raise YaccError(msg)
 
     # Run the LRTable on the grammar
     lr = LRTable(grammar, debuglog)
