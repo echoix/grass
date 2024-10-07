@@ -1692,7 +1692,7 @@ class LRTable:
                 lr_index = p.lr_index
                 j = state
                 while lr_index < p.len - 1:
-                    lr_index = lr_index + 1
+                    lr_index += 1
                     t = p.prod[lr_index]
 
                     # Check to see if this symbol and state are a non-terminal transition
@@ -1707,7 +1707,7 @@ class LRTable:
                                 break  # No forget it
                             if p.prod[li] not in nullable:
                                 break
-                            li = li + 1
+                            li += 1
                         else:
                             # Appears to be a relation between (j,t) and (state,N)
                             includes.append((j, t))
@@ -1726,7 +1726,7 @@ class LRTable:
                     while i < r.lr_index:
                         if r.prod[i] != p.prod[i + 1]:
                             break
-                        i = i + 1
+                        i += 1
                     else:
                         lookb.append((j, r))
             for i in includes:
