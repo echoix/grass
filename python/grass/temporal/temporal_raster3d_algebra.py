@@ -11,13 +11,9 @@ for details.
 
 """
 
-try:
-    from ply import yacc
-except ImportError:
-    pass
-
 import grass.pygrass.modules as pymod
 
+from .ply import yacc
 from .space_time_datasets import Raster3DDataset
 from .temporal_raster_base_algebra import (
     TemporalRasterAlgebraLexer,
@@ -68,7 +64,7 @@ class TemporalRaster3DAlgebraParser(TemporalRasterBaseAlgebraParser):
 
         self.lexer = TemporalRasterAlgebraLexer()
         self.lexer.build()
-        self.parser = yacc.yacc(module=self, debug=self.debug, write_tables=False)
+        self.parser = yacc.yacc(module=self, debug=self.debug)
 
         self.overwrite = overwrite
         self.count = 0
