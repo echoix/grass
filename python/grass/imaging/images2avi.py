@@ -38,10 +38,11 @@ http://linux.die.net/man/1/ffmpeg
 
 """
 
-import os
 import time
 import subprocess
 import shutil
+
+from pathlib import Path
 
 from grass.imaging import images2ims
 import grass.script as gs
@@ -99,8 +100,8 @@ def writeAvi(
         raise ValueError(_("Invalid duration parameter for writeAvi."))
 
     # Determine temp dir and create images
-    tempDir = os.path.join(os.path.expanduser("~"), ".tempIms")
-    images2ims.writeIms(os.path.join(tempDir, "im*.png"), images)
+    tempDir = Path("~", ".tempIms").expanduser()
+    images2ims.writeIms(tempDir / "im*.png", images)
 
     # Determine formatter
     N = len(images)
@@ -144,7 +145,7 @@ def writeAvi(
     else:
         try:
             # Copy avi
-            shutil.copy(os.path.join(tempDir, "output.avi"), filename)
+            shutil.copy(tempDir / "output.avi", filename)
         except Exception as err:
             # Clean up
             _cleanDir(tempDir)
@@ -168,16 +169,16 @@ def readAvi(filename, asNumpy=True):
     """
 
     # Check whether it exists
-    if not os.path.isfile(filename):
+    if not Path(filename).is_file():
         raise OSError("File not found: " + str(filename))
 
     # Determine temp dir, make sure it exists
-    tempDir = os.path.join(os.path.expanduser("~"), ".tempIms")
-    if not os.path.isdir(tempDir):
-        os.makedirs(tempDir)
+    tempDir = Path("~", ".tempIms").expanduser()
+    if not tempDir.is_dir():
+        tempDir.mkdir(parents=True)
 
     # Copy movie there
-    shutil.copy(filename, os.path.join(tempDir, "input.avi"))
+    shutil.copy(filename, tempDir / "input.avi")
 
     # Run ffmpeg
     command = "ffmpeg -i input.avi im%d.jpg"
@@ -197,7 +198,7 @@ def readAvi(filename, asNumpy=True):
         raise RuntimeError("Could not read avi.")
     else:
         # Read images
-        images = images2ims.readIms(os.path.join(tempDir, "im*.jpg"), asNumpy)
+        images = images2ims.readIms(tempDir / "im*.jpg", asNumpy)
         # Clean up
         _cleanDir(tempDir)
 

@@ -193,7 +193,6 @@ ignore = [
     "PTH107",  # os-remove
     "PTH108",  # os-unlink
     "PTH110",  # os-path-exists
-    "PTH111",  # os-path-expanduser
     "PTH112",  # os-path-isdir
     "PTH113",  # os-path-isfile
     "PTH117",  # os-path-isabs
