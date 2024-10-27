@@ -59,7 +59,7 @@ class ReplayMode:
     REPEAT = 3
 
 
-def validateTimeseriesName(timeseries, etype="strds"):
+def validateTimeseriesName(timeseries: str, etype="strds"):
     """Checks if space time dataset exists and completes missing mapset.
 
     Raises GException if dataset doesn't exist.
