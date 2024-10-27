@@ -1,4 +1,6 @@
+from __future__ import annotations
 from os.path import join, exists
+from typing import Literal, overload, TYPE_CHECKING
 import grass.lib.gis as libgis
 
 libgis.G_gisinit("")
@@ -16,6 +18,9 @@ from grass.pygrass.vector.geometry import read_line, read_next_line
 from grass.pygrass.vector.geometry import Area as _Area
 from grass.pygrass.vector.abstract import Info
 from grass.pygrass.vector.basic import Bbox, Cats, Ilist
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 _NUMOF = {
@@ -318,8 +323,23 @@ class VectorTopo(Vector):
             return self.read(key)
         raise ValueError("Invalid argument type: %r." % key)
 
+    @overload
     @must_be_open
-    def num_primitive_of(self, primitive):
+    def num_primitive_of(
+        self,
+        primitive: Literal[
+            "area", "boundary", "centroid", "face", "kernel", "line", "point", "volume"
+        ],
+    ) -> int:
+        pass
+
+    @overload
+    @must_be_open
+    def num_primitive_of(self, primitive: str) -> int:
+        pass
+
+    @must_be_open
+    def num_primitive_of(self, primitive) -> int:
         """Return the number of primitive
 
         :param primitive: the name of primitive to query; the supported values are:
@@ -354,13 +374,31 @@ class VectorTopo(Vector):
         return libvect.Vect_get_num_primitives(self.c_mapinfo, VTYPE[primitive])
 
     @must_be_open
-    def number_of(self, vtype):
+    def number_of(
+        self,
+        vtype: Literal[
+            "areas",
+            "boundaries",
+            "centroids",
+            "dblinks",
+            "faces",
+            "holes",
+            "islands",
+            "kernels",
+            "lines",
+            "nodes",
+            "points",
+            "updated_lines",
+            "updated_nodes",
+            "volumes",
+        ],
+    ) -> int:
         """Return the number of the chosen element type
 
         :param vtype: the name of type to query; the supported values are:
                       *areas*, *dblinks*, *faces*, *holes*, *islands*,
                       *kernels*, *points*, *lines*, *centroids*, *boundaries*,
-                      *nodes*, *line_points*, *update_lines*, *update_nodes*,
+                      *nodes*, *line_points*, *updated_lines*, *updated_nodes*,
                       *volumes*
         :type vtype: str
 
@@ -394,10 +432,55 @@ class VectorTopo(Vector):
         keys = "', '".join(sorted(_NUMOF.keys()))
         raise ValueError("vtype not supported, use one of: '%s'" % keys)
 
+    # @overload
+    # @must_be_open
+    # def num_primitives(self) -> Mapping[
+    #     Literal[
+    #         "area", "boundary", "centroid", "face", "kernel", "line", "point", "volume"
+    #     ],
+    #     int,
+    # ]:
+    #     pass
+
+    # @overload
+    # @must_be_open
+    # def num_primitives(self) -> Mapping[str, int]:
+    #     pass
+
     @must_be_open
-    def num_primitives(self):
+    def num_primitives(self) -> (
+        Mapping[
+            Literal[
+                "area",
+                "boundary",
+                "centroid",
+                "face",
+                "kernel",
+                "line",
+                "point",
+                "volume",
+            ],
+            int,
+        ]
+        | Mapping[str, int]
+    ):
         """Return dictionary with the number of all primitives"""
-        output = {}
+        # output: Mapping[
+        #     Literal[
+        #         "area",
+        #         "boundary",
+        #         "centroid",
+        #         "face",
+        #         "kernel",
+        #         "line",
+        #         "point",
+        #         "volume",
+        #     ],
+        #     int,
+        # ] = {}
+        # output = {}
+        output: dict[str, int] = {}
+        # typ e: Li teral["area", "boundary", "centroid", "face", "kernel", "line", "point", "volume"]
         for prim in VTYPE.keys():
             output[prim] = self.num_primitive_of(prim)
         return output

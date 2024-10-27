@@ -10,6 +10,7 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from typing import Literal
 import grass.script as gs
 
 from .core import get_available_temporal_mapsets, init_dbif
@@ -18,7 +19,9 @@ from .factory import dataset_factory
 ###############################################################################
 
 
-def tlist_grouped(type, group_type=False, dbif=None):
+def tlist_grouped(
+    type: Literal["strds", "str3ds", "stvds", "stds"], group_type=False, dbif=None
+):
     """List of temporal elements grouped by mapsets.
 
     Returns a dictionary where the keys are mapset
@@ -27,7 +30,7 @@ def tlist_grouped(type, group_type=False, dbif=None):
 
     .. code-block:: python
 
-        >>> import grass.temporalas tgis
+        >>> import grass.temporal as tgis
         >>> tgis.tlist_grouped('strds')['PERMANENT']
         ['precipitation', 'temperature']
 
@@ -42,9 +45,9 @@ def tlist_grouped(type, group_type=False, dbif=None):
 
     mapset = None
     types = ["strds", "str3ds", "stvds"] if _type == "stds" else [_type]
-    for _type in types:
+    for _type1 in types:
         try:
-            tlist_result = tlist(type=_type, dbif=dbif)
+            tlist_result = tlist(type=_type1, dbif=dbif)
         except gs.ScriptError as e:
             gs.warning(e)
             continue
@@ -63,10 +66,10 @@ def tlist_grouped(type, group_type=False, dbif=None):
                     result[mapset] = []
 
             if group_type:
-                if _type in result[mapset]:
-                    result[mapset][_type].append(name)
+                if _type1 in result[mapset]:
+                    result[mapset][_type1].append(name)
                 else:
-                    result[mapset][_type] = [
+                    result[mapset][_type1] = [
                         name,
                     ]
             else:

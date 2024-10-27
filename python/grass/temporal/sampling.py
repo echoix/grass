@@ -17,6 +17,7 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from typing import Literal
 from .core import (
     SQLDatabaseInterfaceConnection,
     get_current_mapset,
@@ -28,13 +29,13 @@ from .factory import dataset_factory
 
 def sample_stds_by_stds_topology(
     intype,
-    sampletype,
+    sampletype: Literal["strds", "str3ds", "stvds"],
     inputs,
-    sampler,
+    sampler: str,
     header,
     separator,
     method,
-    spatial=False,
+    spatial: bool = False,
     print_only=True,
 ):
     """Sample the input space time datasets with a sample
@@ -68,7 +69,7 @@ def sample_stds_by_stds_topology(
 
      :return: The map matrix or None if nothing found
     """
-    mapset = get_current_mapset()
+    mapset: str = get_current_mapset()
     msgr = get_tgis_message_interface()
 
     # Make a method list

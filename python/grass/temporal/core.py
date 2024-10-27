@@ -31,8 +31,10 @@ for details.
 """
 
 # import traceback
+from __future__ import annotations
 import os
 from pathlib import Path
+from typing import TYPE_CHECKING, Literal
 
 import grass.script as gs
 from grass.pygrass import messages
@@ -55,6 +57,9 @@ except:
 
 import atexit
 from datetime import datetime
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 ###############################################################################
 
@@ -84,7 +89,7 @@ def profile_function(func):
 # Global variable that defines the backend
 # of the temporal GIS
 # It can either be "sqlite" or "pg"
-tgis_backend = None
+tgis_backend: Literal["sqlite", "pg"] | None = None
 
 
 def get_tgis_backend():
@@ -94,6 +99,19 @@ def get_tgis_backend():
     """
     global tgis_backend
     return tgis_backend
+
+
+if TYPE_CHECKING:
+
+    def get_tgis_backend():
+        """Return the temporal GIS backend as string
+
+        :returns: either "sqlite" or "pg"
+        """
+        global tgis_backend
+        if tgis_backend is not None:
+            return tgis_backend
+        raise TypeError
 
 
 # Global variable that defines the database string
@@ -110,12 +128,12 @@ def get_tgis_database():
 # The version of the temporal framework
 # this value must be an integer larger than 0
 # Increase this value in case of backward incompatible changes in the TGIS API
-tgis_version = 2
+tgis_version: int = 2
 # The version of the temporal database since framework and database version
 # can differ this value must be an integer larger than 0
 # Increase this value in case of backward incompatible changes
 # temporal database SQL layout
-tgis_db_version = 3
+tgis_db_version: int = 3
 
 # We need to know the parameter style of the database backend
 tgis_dbmi_paramstyle = None
@@ -132,7 +150,7 @@ def get_tgis_dbmi_paramstyle():
 
 # We need to access the current mapset quite often in the framework, so we make
 # a global variable that will be initiated when init() is called
-current_mapset = None
+current_mapset: str | None = None
 current_location = None
 current_gisdbase = None
 
@@ -148,6 +166,21 @@ def get_current_mapset():
     """
     global current_mapset
     return current_mapset
+
+
+if TYPE_CHECKING:
+
+    def get_current_mapset():
+        """Return the current mapset
+
+        This is the fastest way to receive the current mapset.
+        The current mapset is set by init() and stored in a global variable.
+        This function provides access to this global variable.
+        """
+        global current_mapset
+        if current_mapset is not None:
+            return current_mapset
+        raise TypeError
 
 
 ###############################################################################
@@ -243,7 +276,7 @@ def get_enable_timestamp_write():
 
 # The global variable that stores the PyGRASS Messenger object that
 # provides a fast and exit safe interface to the C-library message functions
-message_interface = None
+message_interface: messages.Messenger | None = None
 
 
 def _init_tgis_message_interface(raise_on_error=False):
@@ -273,10 +306,11 @@ def get_tgis_message_interface():
 # The global variable that stores the C-library interface object that
 # provides a fast and exit safe interface to the C-library libgis,
 # libraster, libraster3d and libvector functions
-c_library_interface = None
+# c_library_interface: CLibrariesInterface = None
+c_library_interface: CLibrariesInterface | None = None
 
 
-def _init_tgis_c_library_interface():
+def _init_tgis_c_library_interface() -> CLibrariesInterface:
     """Set the global C-library interface variable that
     provides a fast and exit safe interface to the C-library libgis,
     libraster, libraster3d and libvector functions
@@ -284,6 +318,7 @@ def _init_tgis_c_library_interface():
     global c_library_interface
     if c_library_interface is None:
         c_library_interface = CLibrariesInterface()
+    return c_library_interface
 
 
 def get_tgis_c_library_interface():
@@ -302,7 +337,7 @@ def get_tgis_c_library_interface():
 raise_on_error = False
 
 
-def set_raise_on_error(raise_exp=True):
+def set_raise_on_error(raise_exp: bool = True) -> bool:
     """Define behavior on fatal error, invoked using the tgis messenger
     interface (msgr.fatal())
 
@@ -348,7 +383,7 @@ def set_raise_on_error(raise_exp=True):
     return tmp_raise
 
 
-def get_raise_on_error():
+def get_raise_on_error() -> bool:
     """Return True if a FatalError exception is raised instead of calling
     sys.exit(1) in case a fatal error was invoked with msgr.fatal()
     """
@@ -359,7 +394,7 @@ def get_raise_on_error():
 ###############################################################################
 
 
-def get_tgis_version():
+def get_tgis_version() -> int:
     """Get the supported version of the temporal framework
     :returns: The version number of the temporal framework as integer
     """
@@ -370,7 +405,7 @@ def get_tgis_version():
 ###############################################################################
 
 
-def get_tgis_db_version():
+def get_tgis_db_version() -> int:
     """Get the supported version of the temporal database
     :returns: The version number of the temporal database as integer
     """
@@ -378,7 +413,7 @@ def get_tgis_db_version():
     return tgis_db_version
 
 
-def get_tgis_db_version_from_metadata(metadata=None):
+def get_tgis_db_version_from_metadata(metadata=None) -> int:
     """Get the version number of the temporal database from metadata
 
     :param list metadata: list of metadata items or None
@@ -466,7 +501,7 @@ def stop_subprocesses():
 atexit.register(stop_subprocesses)
 
 
-def get_available_temporal_mapsets():
+def get_available_temporal_mapsets() -> Mapping[str, tuple[str, str]]:
     """Return a list of of mapset names with temporal database driver and names
     that are accessible from the current mapset.
 
@@ -474,10 +509,21 @@ def get_available_temporal_mapsets():
               database) are the values
     """
     global c_library_interface, message_interface
+    # if TYPE_CHECKING and c_library_interface is None:
+    #     raise TypeError
 
+    # if TYPE_CHECKING:
+    #     if c_library_interface is None:
+    #         raise TypeError
+    #     if message_interface is None:
+    #         raise TypeError
+    if TYPE_CHECKING:
+        if (c_library_interface is None) or (message_interface is None):
+            raise TypeError
     mapsets = c_library_interface.available_mapsets()
 
-    tgis_mapsets = {}
+    # tgis_mapsets: dict[str, tuple[str, str]] = {}
+    tgis_mapsets: dict[str, tuple[str, str]] = {}
 
     for mapset in mapsets:
         driver = c_library_interface.get_driver_name(mapset)
@@ -512,7 +558,7 @@ def get_available_temporal_mapsets():
 ###############################################################################
 
 
-def init(raise_fatal_error=False, skip_db_version_check=False):
+def init(raise_fatal_error: bool = False, skip_db_version_check: bool = False):
     """This function set the correct database backend from GRASS environmental
     variables and creates the grass temporal database structure for raster,
     vector and raster3d maps as well as for the space-time datasets strds,
@@ -594,12 +640,15 @@ def init(raise_fatal_error=False, skip_db_version_check=False):
     _init_tgis_message_interface(raise_on_error)
     # Start the C-library interface server
     _init_tgis_c_library_interface()
-    msgr = get_tgis_message_interface()
+    if TYPE_CHECKING:
+        global c_library_interface
+        c_library_interface = _init_tgis_c_library_interface()
+    msgr = get_tgis_message_interface()  # type: messages.Messenger
     msgr.debug(1, "Initiate the temporal database")
 
     msgr.debug(1, ("Raise on error id: %s" % str(raise_on_error)))
 
-    ciface = get_tgis_c_library_interface()
+    ciface: CLibrariesInterface = get_tgis_c_library_interface()
     driver_string = ciface.get_driver_name()
     database_string = ciface.get_database_name()
 
@@ -1027,7 +1076,7 @@ def _create_tgis_metadata_table(content, dbif=None):
 class SQLDatabaseInterfaceConnection:
     def __init__(self):
         self.tgis_mapsets = get_available_temporal_mapsets()
-        self.current_mapset = get_current_mapset()
+        self.current_mapset: str | None = get_current_mapset()
         self.connections = {}
         self.connected = False
 
@@ -1442,7 +1491,7 @@ class DBConnection:
 
             return statement
 
-    def check_table(self, table_name):
+    def check_table(self, table_name) -> bool:
         """Check if a table exists in the temporal database
 
         :param table_name: The name of the table to be checked for existence
