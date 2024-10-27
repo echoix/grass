@@ -10,6 +10,8 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
 
@@ -1220,7 +1222,7 @@ class AbstractMapDataset(AbstractDataset):
 
         return statement
 
-    def read_semantic_label_from_grass(self):
+    def read_semantic_label_from_grass(self) -> bool | None:
         """Read the band identifier of this map from the map metadata
         in the GRASS file system based spatial database and
         set the internal band identifier that should be insert/updated

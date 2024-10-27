@@ -350,7 +350,7 @@ class RasterDataset(AbstractMapDataset):
 
         return True
 
-    def read_semantic_label_from_grass(self):
+    def read_semantic_label_from_grass(self) -> bool:
         """Read the semantic label of this map from the map metadata
         in the GRASS file system based spatial database and
         set the internal semantic label that should be inserted/updated
