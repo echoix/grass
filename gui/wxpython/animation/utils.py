@@ -65,7 +65,7 @@ def validateTimeseriesName(timeseries, etype="strds"):
     Raises GException if dataset doesn't exist.
     """
     trastDict = tgis.tlist_grouped(etype)
-    if timeseries.find("@") >= 0:
+    if "@" in timeseries:
         nameShort, mapset = timeseries.split("@", 1)
         if nameShort in trastDict[mapset]:
             return timeseries
