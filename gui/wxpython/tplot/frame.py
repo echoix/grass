@@ -1209,11 +1209,11 @@ class TplotFrame(wx.Frame):
 
     def SetDatasets(
         self,
-        rasters,
-        vectors,
-        coors,
-        cats,
-        attr,
+        rasters: list[str],
+        vectors: list[str],
+        coors: list,
+        cats: list,
+        attr: str,
         title,
         xlabel,
         ylabel,
