@@ -16,6 +16,7 @@ This program is free software under the GNU General Public License
 @author Anna Kratochvilova <kratochanna gmail.com>
 """
 
+from collections.abc import Iterable
 from math import ceil
 from itertools import cycle
 import numpy as np
@@ -475,7 +476,7 @@ class TimelineFrame(wx.Frame):
                     self._draw2dFigure()
                 self.canvas.draw()
 
-    def _checkDatasets(self, datasets):
+    def _checkDatasets(self, datasets: Iterable) -> list:
         """Checks and validates datasets.
 
         Reports also type of dataset (e.g. 'strds').
