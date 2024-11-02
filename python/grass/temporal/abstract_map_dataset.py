@@ -10,6 +10,8 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
 
@@ -167,7 +169,9 @@ class AbstractMapDataset(AbstractDataset):
         return self.base.get_map_id()
 
     @staticmethod
-    def split_name(name, layer=None, mapset=None):
+    def split_name(
+        name: str, layer: str | None = None, mapset: str | None = None
+    ) -> tuple[str, str | None, str | None]:
         """Convenient method to split a map name into three potentially
         contained parts: map name, map layer and mapset. For the layer and
         mapset, default keyword arguments can be given if not present in
@@ -179,8 +183,11 @@ class AbstractMapDataset(AbstractDataset):
                       layer exists
         :param mapset: The mapset in which the map is located
 
-        :return: tuple of three elements name, layer, mapset e(:layer)@mapset" while
-                 layer is optional
+        :return: tuple of three elements: (name, layer, mapset).
+                 layer is None if not present in the name argument and not given as
+                 a keyword argument.
+                 mapset is None if not present in the name argument and not given as
+                 a keyword argument.
         """
 
         # Check if the name includes any mapset
