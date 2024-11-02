@@ -261,8 +261,8 @@ def modify_datetime_by_string(
             inclist.append(incpart.strip().split(" "))
 
         for inc in inclist:
-            msgr = get_tgis_message_interface()
             if len(inc) < 2:
+                msgr = get_tgis_message_interface()
                 msgr.error(_("Wrong increment format: %s") % (increment))
                 return None
             if "seconds" in inc[1] or "second" in inc[1]:
@@ -280,6 +280,7 @@ def modify_datetime_by_string(
             elif "years" in inc[1] or "year" in inc[1]:
                 years = _sign * mult * int(inc[0])
             else:
+                msgr = get_tgis_message_interface()
                 msgr.error(_("Wrong increment format: %s") % (increment))
                 return None
 
