@@ -1151,7 +1151,10 @@ class AbstractSTDSRegister(SQLDatabaseInterface):
     """
 
     def __init__(
-        self, table: str | None = None, ident: str | None = None, registered_stds=None
+        self,
+        table: str | None = None,
+        ident: str | None = None,
+        registered_stds: str | None = None,
     ) -> None:
         """Constructor
 
@@ -1179,7 +1182,7 @@ class AbstractSTDSRegister(SQLDatabaseInterface):
         self.ident = ident
         self.D["id"] = ident
 
-    def set_registered_stds(self, registered_stds):
+    def set_registered_stds(self, registered_stds: str | None) -> None:
         """Get the comma separated list of space time datasets ids
         in which this map is registered
 
@@ -1197,7 +1200,7 @@ class AbstractSTDSRegister(SQLDatabaseInterface):
             return self.D["id"]
         return None
 
-    def get_registered_stds(self):
+    def get_registered_stds(self) -> str | None:
         """Get the comma separated list of space time datasets ids
         in which this map is registered
 
@@ -1218,7 +1221,9 @@ class AbstractSTDSRegister(SQLDatabaseInterface):
 class RasterSTDSRegister(AbstractSTDSRegister):
     """Time stamped raster map base information class"""
 
-    def __init__(self, ident: str | None = None, registered_stds=None) -> None:
+    def __init__(
+        self, ident: str | None = None, registered_stds: str | None = None
+    ) -> None:
         AbstractSTDSRegister.__init__(
             self, "raster_stds_register", ident, registered_stds
         )
@@ -1227,7 +1232,9 @@ class RasterSTDSRegister(AbstractSTDSRegister):
 class Raster3DSTDSRegister(AbstractSTDSRegister):
     """Time stamped 3D raster map base information class"""
 
-    def __init__(self, ident: str | None = None, registered_stds=None) -> None:
+    def __init__(
+        self, ident: str | None = None, registered_stds: str | None = None
+    ) -> None:
         AbstractSTDSRegister.__init__(
             self, "raster3d_stds_register", ident, registered_stds
         )
@@ -1236,7 +1243,9 @@ class Raster3DSTDSRegister(AbstractSTDSRegister):
 class VectorSTDSRegister(AbstractSTDSRegister):
     """Time stamped vector map base information class"""
 
-    def __init__(self, ident: str | None = None, registered_stds=None) -> None:
+    def __init__(
+        self, ident: str | None = None, registered_stds: str | None = None
+    ) -> None:
         AbstractSTDSRegister.__init__(
             self, "vector_stds_register", ident, registered_stds
         )

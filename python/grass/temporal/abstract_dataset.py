@@ -13,6 +13,7 @@ for details.
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
+from typing import Literal
 
 from .core import get_current_mapset, get_tgis_message_interface, init_dbif
 from .spatial_topology_dataset_connector import SpatialTopologyDatasetConnector
@@ -145,14 +146,16 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def is_stds(self):
+    def is_stds(self) -> bool:
         """Return True if this class is a space time dataset
 
         :return: True if this class is a space time dataset, False otherwise
         """
 
     @abstractmethod
-    def get_type(self):
+    def get_type(
+        self,
+    ) -> Literal["vector", "raster", "raster3d", "stvds", "strds", "str3ds"]:
         """Return the type of this class as string
 
         The type can be "vector", "raster", "raster3d", "stvds", "strds" or "str3ds"
