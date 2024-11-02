@@ -681,7 +681,7 @@ def create_location(gisdbase, location, geostring):
     from grass.script import core as gcore  # pylint: disable=E0611
 
     try:
-        if geostring and geostring.upper().find("EPSG:") > -1:
+        if geostring and "EPSG:" in geostring.upper():
             # create location using EPSG code
             epsg = geostring.split(":", 1)[1]
             if ":" in epsg:
