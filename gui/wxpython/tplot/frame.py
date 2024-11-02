@@ -1158,7 +1158,6 @@ class TplotFrame(wx.Frame):
             )
 
         for dataset in datasets:
-            errorMsg = _("Space time dataset <%s> not found.") % dataset
             if "@" in dataset:
                 nameShort, mapset = dataset.split("@", 1)
                 indices = [
@@ -1174,6 +1173,7 @@ class TplotFrame(wx.Frame):
                 ]
 
             if len(indices) == 0:
+                errorMsg = _("Space time dataset <%s> not found.") % dataset
                 raise GException(errorMsg)
             if len(indices) >= 2:
                 dlg = wx.SingleChoiceDialog(
