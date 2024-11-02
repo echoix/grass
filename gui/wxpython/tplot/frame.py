@@ -1182,8 +1182,7 @@ class TplotFrame(wx.Frame):
                     caption=_("Ambiguous dataset name"),
                     choices=[
                         (
-                            "%(map)s@%(mapset)s:"
-                            " %(etype)s"
+                            "%(map)s@%(mapset)s: %(etype)s"
                             % {
                                 "map": allDatasets[i][0],
                                 "mapset": allDatasets[i][1],
