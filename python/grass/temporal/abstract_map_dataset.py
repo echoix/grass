@@ -1118,7 +1118,7 @@ class AbstractMapDataset(AbstractDataset):
         self.stds_register.select(dbif, mapset)
         datasets = self.stds_register.get_registered_stds()
 
-        if datasets is not None and datasets != "" and datasets.find("@") >= 0:
+        if datasets is not None and datasets != "" and "@" in datasets:
             datasets = datasets.split(",")
         else:
             datasets = None
