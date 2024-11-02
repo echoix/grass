@@ -479,7 +479,7 @@ class Instruction:
                 elif i in {"image", "northArrow"}:
                     commentFound = False
                     for line in text:
-                        if line.find("# north arrow") >= 0:
+                        if "# north arrow" in line:
                             commentFound = True
                     if (i == "image" and commentFound) or (
                         i == "northArrow" and not commentFound
