@@ -9,6 +9,8 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
 import copy
 from datetime import datetime, timedelta
 
@@ -28,10 +30,8 @@ SECOND_AS_DAY = 1.1574074074074073e-05
 ###############################################################################
 
 
-def relative_time_to_time_delta(value):
-    """Convert the double value representing days
-    into a timedelta object.
-    """
+def relative_time_to_time_delta(value: float) -> timedelta:
+    """Convert the double value representing days into a timedelta object."""
 
     days = int(value)
     seconds = value % 1
@@ -43,36 +43,26 @@ def relative_time_to_time_delta(value):
 ###############################################################################
 
 
-def time_delta_to_relative_time(delta):
-    """Convert the time delta into a
-    double value, representing days.
-    """
-
+def time_delta_to_relative_time(delta: timedelta) -> float:
+    """Convert the time delta into a double value, representing days."""
     return float(delta.days) + float(delta.seconds * SECOND_AS_DAY)
 
 
 ###############################################################################
 
 
-def relative_time_to_time_delta_seconds(value):
-    """Convert the double value representing seconds
-    into a timedelta object.
-    """
-
+def relative_time_to_time_delta_seconds(value: float) -> timedelta:
+    """Convert the double value representing seconds into a timedelta object."""
     days = value / 86400
     seconds = int(value % 86400)
-
     return timedelta(days, seconds)
 
 
 ###############################################################################
 
 
-def time_delta_to_relative_time_seconds(delta):
-    """Convert the time delta into a
-    double value, representing seconds.
-    """
-
+def time_delta_to_relative_time_seconds(delta: timedelta) -> float:
+    """Convert the time delta into a double value, representing seconds."""
     return float(delta.days * DAY_IN_SECONDS) + float(delta.seconds)
 
 
@@ -831,10 +821,10 @@ def check_datetime_string(time_string, use_dateutil=True):
 ###############################################################################
 
 
-def string_to_datetime(time_string):
+def string_to_datetime(time_string: str) -> datetime | None:
     """Convert a string into a datetime object
 
-    In case datutil is not installed the supported ISO string formats are:
+    In case dateutil is not installed the supported ISO string formats are:
 
     - YYYY-mm-dd
     - YYYY-mm-dd HH:MM:SS
@@ -867,7 +857,7 @@ def string_to_datetime(time_string):
 ###############################################################################
 
 
-def datetime_to_grass_datetime_string(dt):
+def datetime_to_grass_datetime_string(dt: datetime) -> str:
     """Convert a python datetime object into a GRASS datetime string
 
     .. code-block:: python
