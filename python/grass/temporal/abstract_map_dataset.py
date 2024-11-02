@@ -184,11 +184,11 @@ class AbstractMapDataset(AbstractDataset):
         """
 
         # Check if the name includes any mapset
-        if name.find("@") >= 0:
+        if "@" in name:
             name, mapset = name.split("@")[0:2]
 
         # Check for layer number in map name
-        if name.find(":") >= 0:
+        if ":" in name:
             name, layer = name.split(":")[0:2]
 
         return name, layer, mapset
