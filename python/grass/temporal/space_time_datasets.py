@@ -177,6 +177,8 @@ class RasterDataset(AbstractMapDataset):
 
     """
 
+    stds_register: RasterSTDSRegister
+
     def __init__(self, ident):
         AbstractMapDataset.__init__(self)
         self.reset(ident)
@@ -606,6 +608,8 @@ class Raster3DDataset(AbstractMapDataset):
 
     """
 
+    stds_register: Raster3DSTDSRegister
+
     def __init__(self, ident):
         AbstractMapDataset.__init__(self)
         self.reset(ident)
@@ -973,6 +977,8 @@ class VectorDataset(AbstractMapDataset):
         >>> gs.del_temp_region()
 
     """
+
+    stds_register: VectorSTDSRegister
 
     def __init__(self, ident):
         AbstractMapDataset.__init__(self)
