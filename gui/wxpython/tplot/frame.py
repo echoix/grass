@@ -1131,7 +1131,7 @@ class TplotFrame(wx.Frame):
             self.axes2d = self.fig.add_subplot(1, 1, 1)
         self._drawFigure()
 
-    def _checkDatasets(self, datasets, typ):
+    def _checkDatasets(self, datasets: list[str], typ) -> list:
         """Checks and validates datasets.
 
         Reports also type of dataset (e.g. 'strds').
@@ -1159,7 +1159,7 @@ class TplotFrame(wx.Frame):
 
         for dataset in datasets:
             errorMsg = _("Space time dataset <%s> not found.") % dataset
-            if dataset.find("@") >= 0:
+            if "@" in dataset:
                 nameShort, mapset = dataset.split("@", 1)
                 indices = [
                     n
