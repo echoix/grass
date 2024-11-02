@@ -589,7 +589,7 @@ class SQLBuilderSelect(SQLBuilder):
                 newsqlstr += sqlstr[idx2:]
             else:  # -> where
                 newsqlstr = ""
-                if sqlstr.lower().find("where") < 0:
+                if "where" not in sqlstr.lower():
                     newsqlstr += " WHERE"
                 newsqlstr += " " + value
                 curspos = self.text_sql.GetLastPosition() + len(newsqlstr)
@@ -842,7 +842,7 @@ class SQLBuilderUpdate(SQLBuilder):
 
             elif self.mode.GetSelection() == 1:  # -> where
                 newsqlstr = ""
-                if sqlstr.lower().find("where") < 0:
+                if "where" not in sqlstr.lower():
                     newsqlstr += " WHERE"
                 newsqlstr += " " + value
                 curspos = self.text_sql.GetLastPosition() + len(newsqlstr)
