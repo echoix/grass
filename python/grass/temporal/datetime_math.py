@@ -295,8 +295,8 @@ def modify_datetime_by_string(
 
 
 def modify_datetime(
-    mydate, years=0, months=0, weeks=0, days=0, hours=0, minutes=0, seconds=0
-):
+    mydate: datetime, years=0, months=0, weeks=0, days=0, hours=0, minutes=0, seconds=0
+) -> datetime:
     """Return a new datetime object incremented with the provided
     relative dates and times"""
 
@@ -732,10 +732,10 @@ def compute_datetime_delta(start, end):
 ###############################################################################
 
 
-def check_datetime_string(time_string, use_dateutil=True):
+def check_datetime_string(time_string: str, use_dateutil: bool = True):
     """Check if  a string can be converted into a datetime object and return the object
 
-    In case datutil is not installed the supported ISO string formats are:
+    In case dateutil is not installed the supported ISO string formats are:
 
     - YYYY-mm-dd
     - YYYY-mm-dd HH:MM:SS
@@ -769,7 +769,7 @@ def check_datetime_string(time_string, use_dateutil=True):
     >>> check_datetime_string(s)
     datetime.datetime(2000, 1, 1, 10, 0, 0, 1)
 
-    # using native implementation, ignoring dateutil
+    >>> # using native implementation, ignoring dateutil
     >>> s = "2000-01-01"
     >>> check_datetime_string(s, False)
     datetime.datetime(2000, 1, 1, 0, 0)
@@ -959,21 +959,21 @@ suffix_units = {
 }
 
 
-def create_suffix_from_datetime(start_time, granularity):
+def create_suffix_from_datetime(start_time: datetime, granularity: str) -> str:
     """Create a datetime string based on a datetime object and a provided
     granularity that can be used as suffix for map names.
 
     dateteime=2001-01-01 00:00:00, granularity="1 month" returns "2001_01"
 
     :param start_time: The datetime object
-    :param granularity: The granularity for example "1 month" or "100 seconds"
+    :param granularity: The granularity string, for example "1 month" or "100 seconds"
     :return: A string
     """
     global suffix_units
     return start_time.strftime(suffix_units[granularity.split(" ")[1]])
 
 
-def create_time_suffix(mapp, end=False):
+def create_time_suffix(mapp, end: bool = False):
     """Create a datetime string based on a map datetime object
 
     :param mapp: a temporal map dataset
@@ -988,7 +988,7 @@ def create_time_suffix(mapp, end=False):
     return sstring
 
 
-def create_numeric_suffix(base, count, zeros):
+def create_numeric_suffix(base, count: int, zeros: str) -> str:
     """Create a string based on count and number of zeros decided by zeros
 
     :param base: the basename for new map
