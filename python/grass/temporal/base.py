@@ -256,7 +256,7 @@ class SQLDatabaseInterface(DictSQLSerializer):
         self.ident = ident
         self.msgr = get_tgis_message_interface()
 
-        if self.ident and self.ident.find("@") >= 0:
+        if self.ident and "@" in self.ident:
             self.mapset = self.ident.split("@")[1]
         else:
             self.mapset = None
@@ -655,9 +655,9 @@ class DatasetBase(SQLDatabaseInterface):
 
         self.set_id(ident)
         if ident is not None and name is None and mapset is None:
-            if ident.find("@") >= 0:
+            if "@" in ident:
                 name, mapset = ident.split("@")
-            if name.find(":") >= 0:
+            if name is not None and ":" in name:
                 name, layer = ident.split(":")
         self.set_name(name)
         self.set_mapset(mapset)
@@ -677,13 +677,13 @@ class DatasetBase(SQLDatabaseInterface):
         name = ""
 
         if ident is not None:
-            if ident.find("@") >= 0:
+            if "@" in ident:
                 name, mapset = ident.split("@")
                 self.set_mapset(mapset)
                 self.set_name(name)
             else:
                 self.msgr.fatal(_("Wrong identifier, the mapset is missing"))
-            if name.find(":") >= 0:
+            if ":" in name:
                 name, layer = ident.split(":")
                 self.set_layer(layer)
             self.set_name(name)
@@ -757,7 +757,7 @@ class DatasetBase(SQLDatabaseInterface):
                or None in case the id was not set
         """
         if self.id:
-            if self.id.find(":") >= 0:
+            if ":" in self.id:
                 # Remove the layer identifier from the id
                 return self.id.split("@")[0].split(":")[0] + "@" + self.id.split("@")[1]
             return self.id
@@ -922,10 +922,10 @@ class VectorBase(DatasetBase):
 
         self.set_id(ident)
         if ident is not None and name is None and mapset is None:
-            if ident.find("@") >= 0:
+            if "@" in ident:
                 name, mapset = ident.split("@")
             if layer is None:
-                if name.find(":") >= 0:
+                if name is not None and ":" in name:
                     name, layer = name.split(":")
         self.set_name(name)
         self.set_mapset(mapset)
