@@ -317,7 +317,7 @@ def modify_datetime(
         years_to_add = int(all_months / 12.001)
         residual_months = all_months - (years_to_add * 12)
 
-        # Make a deep copy of the datetime object
+        # Make a deep copy of the datetime object (Note: copy.copy is a shallow copy)
         dt1 = copy.copy(mydate)
 
         # Make sure the month starts with a 1
@@ -341,7 +341,7 @@ def modify_datetime(
         else:
             residual_months = all_months
 
-        # Make a deep copy of the datetime object
+        # Make a deep copy of the datetime object (Note: copy.copy is a shallow copy)
         dt1 = copy.copy(mydate)
 
         # Correct the months
@@ -353,7 +353,7 @@ def modify_datetime(
         tdelta_months = dt1 - mydate
 
     if years != 0:
-        # Make a deep copy of the datetime object
+        # Make a deep copy of the datetime object (Note: copy.copy is a shallow copy)
         dt1 = copy.copy(mydate)
         # Compute the number of days
         dt1 = dt1.replace(year=mydate.year + int(years))
