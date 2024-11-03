@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Generic
 import grass.script as gs
 from grass.exceptions import ImplementationError
 
-from ._typing import TT
+from ._typing import TT, SpaceTimeT
 from .abstract_dataset import AbstractDataset
 from .core import (
     get_current_mapset,
@@ -40,6 +40,7 @@ from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
 
 if TYPE_CHECKING:
     from .abstract_space_time_dataset import AbstractSpaceTimeDataset
+    from .base import AbstractSTDSRegister
     from .metadata import MetadataBase
     from .spatial_extent import SpatialExtent
 
@@ -89,6 +90,7 @@ class AbstractMapDataset(AbstractDataset, Generic[TT]):
     relative_time: RelativeTemporalExtent[TT]
     spatial_extent: SpatialExtent[TT]
     metadata: MetadataBase[TT]
+    stds_register: AbstractSTDSRegister[SpaceTimeT[TT]]
 
     # self.base = RasterBase(ident=ident)
     # self.absolute_time = RasterAbsoluteTime(ident=ident)

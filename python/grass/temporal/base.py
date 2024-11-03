@@ -28,7 +28,9 @@ for details.
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Generic
 
+from ._typing import STT, AnyTTST, Raster3DT, RasterT, SpaceTimeT, VectorT
 from .core import (
     SQLDatabaseInterfaceConnection,
     get_current_mapset,
@@ -582,7 +584,7 @@ class SQLDatabaseInterface(DictSQLSerializer):
 ###############################################################################
 
 
-class DatasetBase(SQLDatabaseInterface):
+class DatasetBase(SQLDatabaseInterface, Generic[AnyTTST]):
     """This is the base class for all maps and spacetime datasets storing
     basic identification information
 
@@ -853,7 +855,7 @@ class DatasetBase(SQLDatabaseInterface):
 ###############################################################################
 
 
-class RasterBase(DatasetBase):
+class RasterBase(DatasetBase[RasterT]):
     """Time stamped raster map base information class"""
 
     def __init__(
@@ -877,7 +879,7 @@ class RasterBase(DatasetBase):
         )
 
 
-class Raster3DBase(DatasetBase):
+class Raster3DBase(DatasetBase[Raster3DT]):
     """Time stamped 3D raster map base information class"""
 
     def __init__(
@@ -901,7 +903,7 @@ class Raster3DBase(DatasetBase):
         )
 
 
-class VectorBase(DatasetBase):
+class VectorBase(DatasetBase[VectorT]):
     """Time stamped vector map base information class"""
 
     def __init__(
@@ -941,7 +943,7 @@ class VectorBase(DatasetBase):
 ###############################################################################
 
 
-class STDSBase(DatasetBase):
+class STDSBase(DatasetBase[STT], Generic[STT]):
     """Base class for space time datasets
 
        This class adds the semantic type member variable to the dataset
@@ -1052,7 +1054,8 @@ class STDSBase(DatasetBase):
 ###############################################################################
 
 
-class STRDSBase(STDSBase):
+# class STRDSBase(STDSBase[RasterT]):
+class STRDSBase(STDSBase[SpaceTimeT[RasterT]]):
     """Space time raster dataset base information class"""
 
     def __init__(
@@ -1078,7 +1081,7 @@ class STRDSBase(STDSBase):
         )
 
 
-class STR3DSBase(STDSBase):
+class STR3DSBase(STDSBase[SpaceTimeT[Raster3DT]]):
     """Space time 3D raster dataset base information class"""
 
     def __init__(
@@ -1104,7 +1107,7 @@ class STR3DSBase(STDSBase):
         )
 
 
-class STVDSBase(STDSBase):
+class STVDSBase(STDSBase[SpaceTimeT[VectorT]]):
     """Space time vector dataset base information class"""
 
     def __init__(
@@ -1133,7 +1136,7 @@ class STVDSBase(STDSBase):
 ###############################################################################
 
 
-class AbstractSTDSRegister(SQLDatabaseInterface):
+class AbstractSTDSRegister(SQLDatabaseInterface, Generic[STT]):
     """This is the base class for all maps to store the space time datasets
     as comma separated string in which they are registered
 
@@ -1218,7 +1221,7 @@ class AbstractSTDSRegister(SQLDatabaseInterface):
 ###############################################################################
 
 
-class RasterSTDSRegister(AbstractSTDSRegister):
+class RasterSTDSRegister(AbstractSTDSRegister[SpaceTimeT[RasterT]]):
     """Time stamped raster map base information class"""
 
     def __init__(
@@ -1229,7 +1232,7 @@ class RasterSTDSRegister(AbstractSTDSRegister):
         )
 
 
-class Raster3DSTDSRegister(AbstractSTDSRegister):
+class Raster3DSTDSRegister(AbstractSTDSRegister[SpaceTimeT[Raster3DT]]):
     """Time stamped 3D raster map base information class"""
 
     def __init__(
@@ -1240,7 +1243,7 @@ class Raster3DSTDSRegister(AbstractSTDSRegister):
         )
 
 
-class VectorSTDSRegister(AbstractSTDSRegister):
+class VectorSTDSRegister(AbstractSTDSRegister[SpaceTimeT[VectorT]]):
     """Time stamped vector map base information class"""
 
     def __init__(
