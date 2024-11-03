@@ -13,17 +13,21 @@ for details.
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from typing import Literal
+from typing import TYPE_CHECKING, Generic, Literal
 
+from ._typing import TT, AnyTTST, SpaceTimeT
 from .core import get_current_mapset, get_tgis_message_interface, init_dbif
 from .spatial_topology_dataset_connector import SpatialTopologyDatasetConnector
 from .temporal_topology_dataset_connector import TemporalTopologyDatasetConnector
+
+if TYPE_CHECKING:
+    from .spatial_extent import SpatialExtent
 
 ###############################################################################
 
 
 class AbstractDataset(
-    SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector
+    SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector, Generic[AnyTTST]
 ):
     """This is the base class for all datasets
     (raster, vector, raster3d, strds, stvds, str3ds)"""
@@ -164,7 +168,7 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def get_new_instance(self, ident):
+    def get_new_instance(self, ident) -> AbstractDataset[AnyTTST]:
         """Return a new instance with the type of this class
 
         :param ident: The identifier of the new dataset instance
@@ -172,7 +176,7 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def spatial_overlapping(self, dataset):
+    def spatial_overlapping(self, dataset) -> bool:
         """Return True if the spatial extents overlap
 
         :param dataset: The abstract dataset to check spatial overlapping
@@ -180,7 +184,7 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def spatial_intersection(self, dataset):
+    def spatial_intersection(self, dataset) -> SpatialExtent | None:
         """Return the spatial intersection as spatial_extent
         object or None in case no intersection was found.
 
@@ -189,7 +193,7 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def spatial_union(self, dataset):
+    def spatial_union(self, dataset) -> SpatialExtent | None:
         """Return the spatial union as spatial_extent
         object or None in case the extents does not overlap or meet.
 
@@ -198,7 +202,7 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def spatial_disjoint_union(self, dataset):
+    def spatial_disjoint_union(self, dataset) -> SpatialExtent:
         """Return the spatial union as spatial_extent object.
 
         :param dataset: The abstract dataset to create a union with
@@ -206,7 +210,17 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def spatial_relation(self, dataset):
+    def spatial_relation(self, dataset) -> Literal[
+        "equivalent",
+        "contain",
+        "in",
+        "cover",
+        "covered",
+        "overlap",
+        "meet",
+        "disjoint",
+        "unknown",
+    ]:
         """Return the spatial relationship between self and dataset
 
         :param dataset: The abstract dataset to compute the spatial
@@ -282,7 +296,7 @@ class AbstractDataset(
 
         return (start, end)
 
-    def get_relative_time(self):
+    def get_relative_time(self) -> tuple:
         """Returns the start time, the end
         time and the temporal unit of the dataset as tuple
 

@@ -10,6 +10,8 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
 import copy
 import os
 import sys
@@ -17,7 +19,9 @@ import uuid
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
 from pathlib import Path
+from typing import Generic
 
+from ._typing import STT, TT, SpaceTimeT
 from .abstract_dataset import AbstractDataset, AbstractDatasetComparisonKeyStartTime
 from .core import (
     get_current_mapset,
@@ -42,7 +46,10 @@ from .temporal_granularity import (
 ###############################################################################
 
 
-class AbstractSpaceTimeDataset(AbstractDataset):
+# class AbstractSpaceTimeDataset(AbstractDataset[SpaceTimeT[TT]], Generic[TT, STT]):
+# class AbstractSpaceTimeDataset(AbstractDataset[SpaceTimeT[TT]], Generic[TT]):
+# class AbstractSpaceTimeDataset(AbstractDataset[STT], Generic[TT, STT]):
+class AbstractSpaceTimeDataset(AbstractDataset[SpaceTimeT[TT]], Generic[TT]):
     """Abstract space time dataset class
 
     Base class for all space time datasets.
@@ -101,8 +108,15 @@ class AbstractSpaceTimeDataset(AbstractDataset):
 
         return self.get_new_map_instance(None).get_type() + "_map_register_" + uuid_rand
 
+    # @abstractmethod
+    # def get_new_instance(self, ident) -> AbstractDataset[SpaceTimeT[TT]]:
+    #     """Return a new instance with the type of this class"""
     @abstractmethod
-    def get_new_map_instance(self, ident=None):
+    def get_new_instance(self, ident) -> AbstractSpaceTimeDataset[TT]:
+        """Return a new instance with the type of this class"""
+
+    @abstractmethod
+    def get_new_map_instance(self, ident=None) -> AbstractDataset[TT]:
         """Return a new instance of a map which is associated
         with the type of this object
 
