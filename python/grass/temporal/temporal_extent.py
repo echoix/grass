@@ -26,7 +26,6 @@ from typing import TYPE_CHECKING, Generic, TypeVar
 
 from ._typing import TT, Raster3DT, RasterT, VectorT
 from .base import SQLDatabaseInterface
-from .space_time_datasets import Raster3DDataset, RasterDataset, VectorDataset
 
 if TYPE_CHECKING:
     from datetime import datetime

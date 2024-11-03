@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
-from typing import TYPE_CHECKING, Generic, TypeVar
+from typing import TYPE_CHECKING, Generic
 
 import grass.script as gs
 from grass.exceptions import ImplementationError
@@ -33,7 +33,6 @@ from .datetime_math import (
     decrement_datetime_by_string,
     increment_datetime_by_string,
 )
-from .space_time_datasets import MapDatasetType
 from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
 
 # from python.grass.temporal.space_time_datasets import MapDatasetType
@@ -44,12 +43,12 @@ if TYPE_CHECKING:
     from .metadata import MetadataBase
     from .spatial_extent import SpatialExtent
 
-AbsoluteTemporalExtentType = TypeVar(
-    "AbsoluteTemporalExtentType", bound=AbsoluteTemporalExtent
-)
-RelativeTemporalExtentType = TypeVar(
-    "RelativeTemporalExtentType", bound=RelativeTemporalExtent
-)
+# AbsoluteTemporalExtentType = TypeVar(
+#     "AbsoluteTemporalExtentType", bound=AbsoluteTemporalExtent
+# )
+# RelativeTemporalExtentType = TypeVar(
+#     "RelativeTemporalExtentType", bound=RelativeTemporalExtent
+# )
 # RelativeTemporalExtentType = TypeVar(
 #     "RelativeTemporalExtentType", bound="RelativeTemporalExtent"
 # )

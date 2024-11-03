@@ -13,11 +13,11 @@ from __future__ import annotations
 
 import getpass
 from datetime import datetime
-from typing import Generic, Literal, TypeVar
+from typing import Literal
 
 import grass.script.array as garray
 
-from ._typing import Raster3DT, RasterT, SpaceTimeT, VectorT
+from ._typing import Raster3DT, RasterT, VectorT
 from .abstract_map_dataset import AbstractMapDataset
 from .abstract_space_time_dataset import AbstractSpaceTimeDataset
 from .base import (
@@ -53,7 +53,6 @@ from .temporal_extent import (
     Raster3DRelativeTime,
     RasterAbsoluteTime,
     RasterRelativeTime,
-    RelativeTemporalExtent,
     STR3DSAbsoluteTime,
     STR3DSRelativeTime,
     STRDSAbsoluteTime,
@@ -70,10 +69,10 @@ GRASS_TIMESTAMP_FMT = "%a %b  %d %H:%M:%S %Y"
 
 # MapDatasetType = TypeVar("MapDatasetType")
 # MapDatasetType = TypeVar("MapDatasetType", covariant=True)
-MapDatasetType = TypeVar("MapDatasetType", bound=AbstractMapDataset, contravariant=True)
+# MapDatasetType = TypeVar("MapDatasetType", bound=AbstractMapDataset, contravariant=True)
 # MapDatasetType = TypeVar("MapDatasetType", bound=AbstractMapDataset, covariant=True)
-RelT = TypeVar("RelT")
-AbsT = TypeVar("AbsT")
+# RelT = TypeVar("RelT")
+# AbsT = TypeVar("AbsT")
 
 
 # Generic[RelT]
