@@ -56,6 +56,7 @@ class SpaceTimeT(Generic[TT]):
 class AnySpaceTimeT(SpaceTimeT[TT], Generic[TT]):
     pass
 
+
 # class AnySpaceTimeT(SpaceTimeT[TT]):
 #     pass
 
