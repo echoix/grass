@@ -38,7 +38,7 @@ class MetadataBase(SQLDatabaseInterface, Generic[AnyTTST]):
         self,
         table=None,
         ident=None,
-    ):
+    ) -> None:
         SQLDatabaseInterface.__init__(self, table, ident)
 
 
@@ -111,7 +111,7 @@ class RasterMetadataBase(MetadataBase[RTT], Generic[RTT]):
         ewres=None,
         min=None,
         max=None,
-    ):
+    ) -> None:
         super().__init__(table, ident)
         # SQLDatabaseInterface.__init__(self, table, ident)
 
@@ -960,7 +960,7 @@ class STDSMetadataBase(MetadataBase[STT], Generic[STT]):
 
     def __init__(
         self, table=None, ident=None, title=None, description=None, command=None
-    ):
+    ) -> None:
         super().__init__(table, ident)
         # SQLDatabaseInterface.__init__(self, table, ident)
 
