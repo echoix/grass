@@ -332,7 +332,7 @@ class RasterDataset(AbstractMapDataset[RasterT]):
 
         return True
 
-    def write_timestamp_to_grass(self):
+    def write_timestamp_to_grass(self) -> bool:
         """Write the timestamp of this map into the map metadata in
         the grass file system based spatial database.
 

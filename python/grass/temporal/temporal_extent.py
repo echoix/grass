@@ -27,7 +27,6 @@ from typing import Generic, TypeVar, reveal_type
 from ._typing import (
     STT,
     STT3,
-    AnyTTST,
     AnyTTST4,
     Raster3DT,
     RasterT,
@@ -1140,7 +1139,8 @@ class VectorAbsoluteTime(AbsoluteTemporalExtent[VectorT]):
 # class STDSAbsoluteTime(AbsoluteTemporalExtent[SpaceTimeT[TT]], Generic[TT]):
 # class STDSAbsoluteTime(AbsoluteTemporalExtent[STT], Generic[STT]):
 # class STDSAbsoluteTime(AbsoluteTemporalExtent[STT2], Generic[STT2]):
-class STDSAbsoluteTime(AbsoluteTemporalExtent[STT3], Generic[STT3]):
+# class STDSAbsoluteTime(AbsoluteTemporalExtent[STT3], Generic[STT3]):
+class STDSAbsoluteTime(AbsoluteTemporalExtent[STT], Generic[STT]):
     """This class implements the absolute time extent for space time dataset
 
     In addition to the existing functionality the granularity and the
@@ -1311,7 +1311,7 @@ class STVDSAbsoluteTime(STDSAbsoluteTime[SpaceTimeT[VectorT]]):
 # class RelativeTemporalExtent(TemporalExtent, Generic[MapDatasetType]):
 # class RelativeTemporalExtent(TemporalExtent[TT], Generic[TT]):
 # class RelativeTemporalExtent(TemporalExtent[AnyTTST], Generic[AnyTTST]):
-class RelativeTemporalExtent(TemporalExtent[int], Generic[AnyTTST]):
+class RelativeTemporalExtent(TemporalExtent[int], Generic[AnyTTST4]):
     """This is the relative time class for all maps and space time datasets
 
     start_time and end_time must be of type integer

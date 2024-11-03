@@ -83,8 +83,8 @@ class AbstractMapDataset(AbstractDataset, Generic[TT]):
     # relative_time: RelativeTemporalExtentType | None
     # relative_time: RelativeTemporalExtent[TT] | None = None
     # base: DatasetBase[TT]
-    # absolute_time: AbsoluteTemporalExtent[TT]
-    # relative_time: RelativeTemporalExtent[TT]
+    absolute_time: AbsoluteTemporalExtent[TT]
+    relative_time: RelativeTemporalExtent[TT]
     # spatial_extent: SpatialExtent[TT]
     # metadata: MetadataBase[TT]
     # stds_register: AbstractSTDSRegister[SpaceTimeT[TT]]
@@ -133,7 +133,7 @@ class AbstractMapDataset(AbstractDataset, Generic[TT]):
         """
 
     @abstractmethod
-    def write_timestamp_to_grass(self):
+    def write_timestamp_to_grass(self) -> bool:
         """Write the timestamp of this map into the map metadata
         in the grass file system based spatial database.
         """

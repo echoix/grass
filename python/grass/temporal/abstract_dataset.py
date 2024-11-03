@@ -15,22 +15,25 @@ from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 from typing import TYPE_CHECKING, Generic, Literal
 
-from ._typing import AnyTTST, AnyTTST4
+from ._typing import AnyTTST4
 from .core import get_current_mapset, get_tgis_message_interface, init_dbif
 from .spatial_topology_dataset_connector import SpatialTopologyDatasetConnector
 from .temporal_topology_dataset_connector import TemporalTopologyDatasetConnector
 
 if TYPE_CHECKING:
     from .spatial_extent import SpatialExtent
-    from .base import DatasetBase
+    from .base import DatasetBase, AbstractSTDSRegister
     from .metadata import MetadataBase
-    from .temporal_extent import AbsoluteTemporalExtent
+    from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
 
 ###############################################################################
 
 
 # class AbstractDataset(
 #    SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector, Generic[AnyTTST]
+# ):
+# class AbstractDataset(
+#     SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector, Generic[AnyTTST4]
 # ):
 class AbstractDataset(
     SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector, Generic[AnyTTST4]
@@ -40,11 +43,14 @@ class AbstractDataset(
 
     __metaclass__ = ABCMeta
     base: DatasetBase[AnyTTST4]
+    # absolute_time: AbsoluteTemporalExtent
     absolute_time: AbsoluteTemporalExtent[AnyTTST4]
-    # relative_time: RelativeTemporalExtent[AnyTTST4]
+    relative_time: RelativeTemporalExtent[AnyTTST4]
+    # relative_time: RelativeTemporalExtent
     spatial_extent: SpatialExtent[AnyTTST4]
     metadata: MetadataBase[AnyTTST4]
     # stds_register: AbstractSTDSRegister[SpaceTimeT[TT]]
+    stds_register: AbstractSTDSRegister
     # base: DatasetBase[AnyTTST]
     # absolute_time: AbsoluteTemporalExtent[AnyTTST]
     # relative_time: RelativeTemporalExtent[AnyTTST]
@@ -186,12 +192,20 @@ class AbstractDataset(
         """
 
     @abstractmethod
-    def get_new_instance(self, ident) -> AbstractDataset[AnyTTST]:
+    def get_new_instance(self, ident) -> AbstractDataset[AnyTTST4]:
         """Return a new instance with the type of this class
 
         :param ident: The identifier of the new dataset instance
         :return: A new instance with the type of this object
         """
+
+    # @abstractmethod
+    # def get_new_instance(self, ident) -> AbstractDataset[AnyTTST]:
+    #     """Return a new instance with the type of this class
+
+    #     :param ident: The identifier of the new dataset instance
+    #     :return: A new instance with the type of this object
+    #     """
 
     @abstractmethod
     def spatial_overlapping(self, dataset) -> bool:

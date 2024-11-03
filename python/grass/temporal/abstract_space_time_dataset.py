@@ -23,6 +23,7 @@ from typing import Generic
 
 from ._typing import TT, SpaceTimeT
 from .abstract_dataset import AbstractDataset, AbstractDatasetComparisonKeyStartTime
+from .abstract_map_dataset import AbstractMapDataset
 from .core import (
     get_current_mapset,
     get_sql_template_path,
@@ -116,7 +117,7 @@ class AbstractSpaceTimeDataset(AbstractDataset[SpaceTimeT[TT]], Generic[TT]):
         """Return a new instance with the type of this class"""
 
     @abstractmethod
-    def get_new_map_instance(self, ident=None) -> AbstractDataset[TT]:
+    def get_new_map_instance(self, ident=None) -> AbstractMapDataset[TT]:
         """Return a new instance of a map which is associated
         with the type of this object
 
