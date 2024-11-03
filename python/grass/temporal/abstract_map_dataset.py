@@ -14,10 +14,12 @@ from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
+from typing import TYPE_CHECKING, Generic, TypeVar
 
 import grass.script as gs
 from grass.exceptions import ImplementationError
 
+from ._typing import TT
 from .abstract_dataset import AbstractDataset
 from .core import (
     get_current_mapset,
@@ -31,10 +33,32 @@ from .datetime_math import (
     decrement_datetime_by_string,
     increment_datetime_by_string,
 )
+from .space_time_datasets import MapDatasetType
 from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
 
+# from python.grass.temporal.space_time_datasets import MapDatasetType
 
-class AbstractMapDataset(AbstractDataset):
+
+if TYPE_CHECKING:
+    from .abstract_space_time_dataset import AbstractSpaceTimeDataset
+    from .metadata import MetadataBase
+    from .spatial_extent import SpatialExtent
+
+AbsoluteTemporalExtentType = TypeVar(
+    "AbsoluteTemporalExtentType", bound=AbsoluteTemporalExtent
+)
+RelativeTemporalExtentType = TypeVar(
+    "RelativeTemporalExtentType", bound=RelativeTemporalExtent
+)
+# RelativeTemporalExtentType = TypeVar(
+#     "RelativeTemporalExtentType", bound="RelativeTemporalExtent"
+# )
+# MapDatasetType = TypeVar("MapDatasetType")
+
+
+# class AbstractMapDataset(AbstractDataset):
+# class AbstractMapDataset(AbstractDataset, Generic[MapDatasetType]):
+class AbstractMapDataset(AbstractDataset, Generic[TT]):
     """This is the base class for all maps (raster, vector, raster3d).
 
     The temporal extent, the spatial extent and the metadata of maps
@@ -58,13 +82,42 @@ class AbstractMapDataset(AbstractDataset):
     """
 
     __metaclass__ = ABCMeta
+    # absolute_time: AbsoluteTemporalExtent
+    # absolute_time: type[AbsoluteTemporalExtentType]
+    # relative_time: RelativeTemporalExtentType | None
+    # relative_time: RelativeTemporalExtent[TT] | None = None
+    absolute_time: AbsoluteTemporalExtent[TT]
+    relative_time: RelativeTemporalExtent[TT]
+    spatial_extent: SpatialExtent[TT]
+    metadata: MetadataBase[TT]
 
-    def __init__(self):
+    # self.base = RasterBase(ident=ident)
+    # self.absolute_time = RasterAbsoluteTime(ident=ident)
+    # self.relative_time = RasterRelativeTime(ident=ident)
+    # self.spatial_extent = RasterSpatialExtent(ident=ident)
+    # self.metadata = RasterMetadata(ident=ident)
+    # self.stds_register = RasterSTDSRegister(ident=ident)
+
+    # def __init__[RelT: RelativeTemporalExtentType](self) -> None:
+    #     AbstractDataset.__init__(self)
+    #     self.relative_time: RelT
+    #     self.ciface = get_tgis_c_library_interface()
+    def __init__(self) -> None:
         AbstractDataset.__init__(self)
+        # self.relative_time: type[RelativeTemporalExtentType] | None = None
+        # self.absolute_time: AbsoluteTemporalExtent[TT] | None = None
+        # self.relative_time: RelativeTemporalExtent[TT] | None = None
+        # self.absolute_time: AbsoluteTemporalExtent[MapDatasetType] | None = None
+        # self.relative_time: RelativeTemporalExtent[MapDatasetType] | None = None
         self.ciface = get_tgis_c_library_interface()
 
+    # @property
+    # @abstractmethod
+    # def relative_time(self) -> RelativeTemporalExtent:
+    #     pass
+
     @abstractmethod
-    def get_new_stds_instance(self, ident):
+    def get_new_stds_instance(self, ident) -> AbstractSpaceTimeDataset[TT]:
         """Return a new space time dataset instance that store maps with the
         type of this map object (raster, raster_3d or vector)
 
@@ -89,11 +142,10 @@ class AbstractMapDataset(AbstractDataset):
         raise ImplementationError("This method must be implemented in the subclasses")
 
     @abstractmethod
-    def has_grass_timestamp(self):
+    def has_grass_timestamp(self) -> bool:
         """Check if a grass file based time stamp exists for this map.
 
         :return: True is the grass file based time stamped exists for this map
-
         """
 
     @abstractmethod
@@ -111,22 +163,19 @@ class AbstractMapDataset(AbstractDataset):
         """
 
     @abstractmethod
-    def remove_timestamp_from_grass(self):
-        """Remove the timestamp from the grass file
-        system based spatial database
-        """
+    def remove_timestamp_from_grass(self) -> bool:
+        """Remove the timestamp from the grass file system based spatial database"""
 
     @abstractmethod
-    def map_exists(self):
+    def map_exists(self) -> bool:
         """Return True in case the map exists in the grass spatial database
 
         :return: True if map exists, False otherwise
         """
 
     @abstractmethod
-    def load(self):
-        """Load the content of this object from the grass
-        file system based database"""
+    def load(self) -> bool:
+        """Load the content of this object from the grass file system based database"""
 
     def _convert_timestamp(self):
         """Convert the valid time into a grass datetime library
@@ -203,7 +252,7 @@ class AbstractMapDataset(AbstractDataset):
     @staticmethod
     def build_id_from_search_path(name, element):
         """Convenient method to build the unique identifier while
-        checking the current seach path for the correct mapset.
+        checking the current search path for the correct mapset.
 
         Existing mapset definitions in the name string will be reused.
 
@@ -245,16 +294,13 @@ class AbstractMapDataset(AbstractDataset):
     def build_id(name, mapset, layer=None):
         """Convenient method to build the unique identifier
 
-        Existing layer and mapset definitions in the name
-        string will be reused
+        Existing layer and mapset definitions in the name string will be reused
 
         :param name: The name of the map
         :param mapset: The mapset in which the map is located
-        :param layer: The layer of the vector map, use None in case no
-                      layer exists
+        :param layer: The layer of the vector map, use None in case no layer exists
 
-        :return: the id of the map as "name(:layer)@mapset" where layer is
-                 optional
+        :return: the id of the map as "name(:layer)@mapset" where layer is optional
         """
 
         # Split given name into relevant parts

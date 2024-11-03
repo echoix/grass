@@ -70,10 +70,15 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
+from typing import Generic
+
+from ._typing import TT, AnyTTST, Raster3DT, RasterT, SpaceTimeT, VectorT
 from .base import SQLDatabaseInterface
 
 
-class SpatialExtent(SQLDatabaseInterface):
+class SpatialExtent(SQLDatabaseInterface, Generic[AnyTTST]):
     """This is the spatial extent base class for all maps and space time datasets
 
     This class implements a three dimensional axis aligned bounding box
@@ -235,7 +240,7 @@ class SpatialExtent(SQLDatabaseInterface):
 
         return not (self.get_top() <= B or self.get_bottom() >= T)
 
-    def intersect_2d(self, extent):
+    def intersect_2d(self, extent) -> SpatialExtent | None:
         """Return the two dimensional intersection as spatial_extent
            object or None in case no intersection was found.
 
@@ -291,7 +296,7 @@ class SpatialExtent(SQLDatabaseInterface):
             proj=self.get_projection(),
         )
 
-    def intersect(self, extent):
+    def intersect(self, extent) -> SpatialExtent | None:
         """Return the three dimensional intersection as spatial_extent
         object or None in case no intersection was found.
 
@@ -1910,7 +1915,7 @@ class SpatialExtent(SQLDatabaseInterface):
 ###############################################################################
 
 
-class RasterSpatialExtent(SpatialExtent):
+class RasterSpatialExtent(SpatialExtent[RasterT]):
     def __init__(
         self,
         ident=None,
@@ -1926,7 +1931,7 @@ class RasterSpatialExtent(SpatialExtent):
         )
 
 
-class Raster3DSpatialExtent(SpatialExtent):
+class Raster3DSpatialExtent(SpatialExtent[Raster3DT]):
     def __init__(
         self,
         ident=None,
@@ -1950,7 +1955,7 @@ class Raster3DSpatialExtent(SpatialExtent):
         )
 
 
-class VectorSpatialExtent(SpatialExtent):
+class VectorSpatialExtent(SpatialExtent[VectorT]):
     def __init__(
         self,
         ident=None,
@@ -1966,7 +1971,7 @@ class VectorSpatialExtent(SpatialExtent):
         )
 
 
-class STRDSSpatialExtent(SpatialExtent):
+class STRDSSpatialExtent(SpatialExtent[SpaceTimeT[RasterT]]):
     def __init__(
         self,
         ident=None,
@@ -1982,7 +1987,7 @@ class STRDSSpatialExtent(SpatialExtent):
         )
 
 
-class STR3DSSpatialExtent(SpatialExtent):
+class STR3DSSpatialExtent(SpatialExtent[SpaceTimeT[Raster3DT]]):
     def __init__(
         self,
         ident=None,
@@ -1998,7 +2003,7 @@ class STR3DSSpatialExtent(SpatialExtent):
         )
 
 
-class STVDSSpatialExtent(SpatialExtent):
+class STVDSSpatialExtent(SpatialExtent[SpaceTimeT[VectorT]]):
     def __init__(
         self,
         ident=None,
