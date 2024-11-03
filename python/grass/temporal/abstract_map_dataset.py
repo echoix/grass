@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Generic
 import grass.script as gs
 from grass.exceptions import ImplementationError
 
-from ._typing import TT, SpaceTimeT
+from ._typing import TT
 from .abstract_dataset import AbstractDataset
 from .core import (
     get_current_mapset,
@@ -37,11 +37,7 @@ from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
 
 
 if TYPE_CHECKING:
-    from .base import DatasetBase
     from .abstract_space_time_dataset import AbstractSpaceTimeDataset
-    from .base import AbstractSTDSRegister
-    from .metadata import MetadataBase
-    from .spatial_extent import SpatialExtent
 # from python.grass.temporal.space_time_datasets import MapDatasetType
 
 # AbsoluteTemporalExtentType = TypeVar(

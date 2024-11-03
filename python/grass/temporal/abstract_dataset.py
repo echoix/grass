@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from .spatial_extent import SpatialExtent
     from .base import DatasetBase
     from .metadata import MetadataBase
-    from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
+    from .temporal_extent import AbsoluteTemporalExtent
 
 ###############################################################################
 
