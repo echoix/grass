@@ -22,16 +22,12 @@ for details.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generic, TypeVar, get_type_hints, reveal_type
+from typing import Generic, TypeVar, reveal_type
 
 from ._typing import (
     STT,
-    STT2,
     STT3,
-    TT,
-    RTT,
     AnyTTST,
-    AnyTTST3,
     AnyTTST4,
     Raster3DT,
     RasterT,
@@ -41,8 +37,6 @@ from ._typing import (
 from .base import SQLDatabaseInterface
 from datetime import datetime
 
-if TYPE_CHECKING:
-    pass
 # from python.grass.temporal._typing import TT
 # from .space_time_datasets import MapDatasetType
 
