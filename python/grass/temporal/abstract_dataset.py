@@ -15,24 +15,42 @@ from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 from typing import TYPE_CHECKING, Generic, Literal
 
-from ._typing import AnyTTST
+from ._typing import AnyTTST, AnyTTST4
 from .core import get_current_mapset, get_tgis_message_interface, init_dbif
 from .spatial_topology_dataset_connector import SpatialTopologyDatasetConnector
 from .temporal_topology_dataset_connector import TemporalTopologyDatasetConnector
 
 if TYPE_CHECKING:
     from .spatial_extent import SpatialExtent
+    from .base import DatasetBase
+    from .metadata import MetadataBase
+    from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
 
 ###############################################################################
 
 
+# class AbstractDataset(
+#    SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector, Generic[AnyTTST]
+# ):
 class AbstractDataset(
-    SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector, Generic[AnyTTST]
+    SpatialTopologyDatasetConnector, TemporalTopologyDatasetConnector, Generic[AnyTTST4]
 ):
     """This is the base class for all datasets
     (raster, vector, raster3d, strds, stvds, str3ds)"""
 
     __metaclass__ = ABCMeta
+    base: DatasetBase[AnyTTST4]
+    absolute_time: AbsoluteTemporalExtent[AnyTTST4]
+    # relative_time: RelativeTemporalExtent[AnyTTST4]
+    spatial_extent: SpatialExtent[AnyTTST4]
+    metadata: MetadataBase[AnyTTST4]
+    # stds_register: AbstractSTDSRegister[SpaceTimeT[TT]]
+    # base: DatasetBase[AnyTTST]
+    # absolute_time: AbsoluteTemporalExtent[AnyTTST]
+    # relative_time: RelativeTemporalExtent[AnyTTST]
+    # spatial_extent: SpatialExtent[AnyTTST]
+    # metadata: MetadataBase[AnyTTST]
+    # # stds_register: AbstractSTDSRegister[SpaceTimeT[TT]]
 
     def __init__(self):
         SpatialTopologyDatasetConnector.__init__(self)
@@ -103,13 +121,13 @@ class AbstractDataset(
         self.set_spatial_topology_build_false()
         self.set_temporal_topology_build_false()
 
-    def is_topology_build(self):
+    def is_topology_build(self) -> dict[Literal["spatial", "temporal"], bool]:
         """Check if the spatial and temporal topology was build
 
         :return: A dictionary with "spatial" and "temporal" as keys that
                  have boolean values
         """
-        d = {}
+        d: dict[Literal["spatial", "temporal"], bool] = {}
         d["spatial"] = self.is_spatial_topology_build()
         d["temporal"] = self.is_temporal_topology_build()
 

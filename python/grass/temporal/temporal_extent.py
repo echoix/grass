@@ -22,26 +22,45 @@ for details.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generic, TypeVar
+from typing import TYPE_CHECKING, Generic, TypeVar, get_type_hints, reveal_type
 
-from ._typing import TT, Raster3DT, RasterT, VectorT
+from ._typing import (
+    STT,
+    STT2,
+    STT3,
+    TT,
+    RTT,
+    AnyTTST,
+    AnyTTST3,
+    AnyTTST4,
+    Raster3DT,
+    RasterT,
+    SpaceTimeT,
+    VectorT,
+)
 from .base import SQLDatabaseInterface
+from datetime import datetime
 
 if TYPE_CHECKING:
-    from datetime import datetime
+    pass
 # from python.grass.temporal._typing import TT
 # from .space_time_datasets import MapDatasetType
 
 # from python.grass.temporal.space_time_datasets import MapDatasetType
 ###############################################################################
-RelT = TypeVar("RelT")
-AbsT = TypeVar("AbsT")
+# RelT = TypeVar("RelT")
+# AbsT = TypeVar("AbsT")
 
 
 # Generic[RelT]
 
+TimeT_co = TypeVar("TimeT_co", datetime, int, covariant=True)
 
-class TemporalExtent(SQLDatabaseInterface):
+
+# class TemporalExtent(SQLDatabaseInterface, Generic[AnyTTST]):
+# class TemporalExtent(SQLDatabaseInterface, Generic[AnyTTST]):
+# class TemporalExtent(SQLDatabaseInterface):
+class TemporalExtent(SQLDatabaseInterface, Generic[TimeT_co]):
     """This is the abstract time base class for relative and absolute time
     objects.
 
@@ -97,7 +116,13 @@ class TemporalExtent(SQLDatabaseInterface):
 
     """
 
-    def __init__(self, table=None, ident=None, start_time=None, end_time=None):
+    def __init__(
+        self,
+        table=None,
+        ident=None,
+        start_time: TimeT_co | None = None,
+        end_time: TimeT_co | None = None,
+    ):
         SQLDatabaseInterface.__init__(self, table, ident)
 
         self.set_id(ident)
@@ -988,11 +1013,11 @@ class TemporalExtent(SQLDatabaseInterface):
         self.ident = ident
         self.D["id"] = ident
 
-    def set_start_time(self, start_time: datetime | int | None):
+    def set_start_time(self, start_time: TimeT_co | None):
         """Set the valid start time of the extent"""
         self.D["start_time"] = start_time
 
-    def set_end_time(self, end_time: datetime | int | None):
+    def set_end_time(self, end_time: TimeT_co | None):
         """Set the valid end time of the extent"""
         self.D["end_time"] = end_time
 
@@ -1004,14 +1029,14 @@ class TemporalExtent(SQLDatabaseInterface):
             return self.D["id"]
         return None
 
-    def get_start_time(self) -> datetime | int | None:
+    def get_start_time(self) -> TimeT_co | None:
         """Get the valid start time of the extent
         :return: None if not found"""
         if "start_time" in self.D:
             return self.D["start_time"]
         return None
 
-    def get_end_time(self) -> datetime | int | None:
+    def get_end_time(self) -> TimeT_co | None:
         """Get the valid end time of the extent
         :return: None if not found"""
         if "end_time" in self.D:
@@ -1039,7 +1064,10 @@ class TemporalExtent(SQLDatabaseInterface):
 
 
 # class AbsoluteTemporalExtent(TemporalExtent, Generic[MapDatasetType]):
-class AbsoluteTemporalExtent(TemporalExtent, Generic[TT]):
+# class AbsoluteTemporalExtent(TemporalExtent[AnyTTST], Generic[AnyTTST]):
+# class AbsoluteTemporalExtent(TemporalExtent[datetime], Generic[AnyTTST]):
+# class AbsoluteTemporalExtent(TemporalExtent[datetime], Generic[AnyTTST3]):
+class AbsoluteTemporalExtent(TemporalExtent[datetime], Generic[AnyTTST4]):
     """This is the absolute time class for all maps and spacetime datasets
 
     start_time and end_time must be of type datetime
@@ -1052,6 +1080,7 @@ class AbsoluteTemporalExtent(TemporalExtent, Generic[TT]):
         start_time: datetime | None = None,
         end_time: datetime | None = None,
     ):
+        # super().__init__(table, ident, start_time, end_time)
         TemporalExtent.__init__(self, table, ident, start_time, end_time)
 
     def print_info(self):
@@ -1095,7 +1124,7 @@ class Raster3DAbsoluteTime(AbsoluteTemporalExtent[Raster3DT]):
         )
 
 
-class VectorAbsoluteTime(AbsoluteTemporalExtent):
+class VectorAbsoluteTime(AbsoluteTemporalExtent[VectorT]):
     def __init__(
         self,
         ident=None,
@@ -1106,11 +1135,18 @@ class VectorAbsoluteTime(AbsoluteTemporalExtent):
             self, "vector_absolute_time", ident, start_time, end_time
         )
 
+    ###############################################################################
 
-###############################################################################
+    # class STDSAbsoluteTime(AbsoluteTemporalExtent[STT]):
 
 
-class STDSAbsoluteTime(AbsoluteTemporalExtent):
+# class STDSAbsoluteTime(AbsoluteTemporalExtent[SpaceTimeT[TT]], Generic[TT]):
+# class STDSAbsoluteTime(AbsoluteTemporalExtent[STT2], Generic[STT2]):
+# class STDSAbsoluteTime(AbsoluteTemporalExtent[STT], Generic[STT]):
+# class STDSAbsoluteTime(AbsoluteTemporalExtent[SpaceTimeT[TT]], Generic[TT]):
+# class STDSAbsoluteTime(AbsoluteTemporalExtent[STT], Generic[STT]):
+# class STDSAbsoluteTime(AbsoluteTemporalExtent[STT2], Generic[STT2]):
+class STDSAbsoluteTime(AbsoluteTemporalExtent[STT3], Generic[STT3]):
     """This class implements the absolute time extent for space time dataset
 
     In addition to the existing functionality the granularity and the
@@ -1162,7 +1198,12 @@ class STDSAbsoluteTime(AbsoluteTemporalExtent):
         granularity=None,
         map_time=None,
     ):
-        AbsoluteTemporalExtent.__init__(self, table, ident, start_time, end_time)
+        # reveal_type(self)
+        reveal_type(STT3)
+        # get_type_hints(self)
+        # get_type_hints(STDSAbsoluteTime)
+        super().__init__(table, ident, start_time, end_time)
+        # AbsoluteTemporalExtent.__init__(self, table, ident, start_time, end_time)
 
         self.set_granularity(granularity)
         self.set_map_time(map_time)
@@ -1227,7 +1268,8 @@ class STDSAbsoluteTime(AbsoluteTemporalExtent):
 ###############################################################################
 
 
-class STRDSAbsoluteTime(STDSAbsoluteTime):
+# class STRDSAbsoluteTime(STDSAbsoluteTime[RasterT]):
+class STRDSAbsoluteTime(STDSAbsoluteTime[SpaceTimeT[RasterT]]):
     def __init__(
         self,
         ident=None,
@@ -1240,7 +1282,8 @@ class STRDSAbsoluteTime(STDSAbsoluteTime):
         )
 
 
-class STR3DSAbsoluteTime(STDSAbsoluteTime):
+class STR3DSAbsoluteTime(STDSAbsoluteTime[SpaceTimeT[Raster3DT]]):
+    # class STR3DSAbsoluteTime(STDSAbsoluteTime[Raster3DT]):
     def __init__(
         self,
         ident=None,
@@ -1253,7 +1296,8 @@ class STR3DSAbsoluteTime(STDSAbsoluteTime):
         )
 
 
-class STVDSAbsoluteTime(STDSAbsoluteTime):
+class STVDSAbsoluteTime(STDSAbsoluteTime[SpaceTimeT[VectorT]]):
+    # class STVDSAbsoluteTime(STDSAbsoluteTime[VectorT]):
     def __init__(
         self,
         ident=None,
@@ -1271,7 +1315,9 @@ class STVDSAbsoluteTime(STDSAbsoluteTime):
 
 # class RelativeTemporalExtent(TemporalExtent, Generic[RelT]):
 # class RelativeTemporalExtent(TemporalExtent, Generic[MapDatasetType]):
-class RelativeTemporalExtent(TemporalExtent, Generic[TT]):
+# class RelativeTemporalExtent(TemporalExtent[TT], Generic[TT]):
+# class RelativeTemporalExtent(TemporalExtent[AnyTTST], Generic[AnyTTST]):
+class RelativeTemporalExtent(TemporalExtent[int], Generic[AnyTTST]):
     """This is the relative time class for all maps and space time datasets
 
     start_time and end_time must be of type integer
@@ -1316,10 +1362,11 @@ class RelativeTemporalExtent(TemporalExtent, Generic[TT]):
         end_time: int | None = None,
         unit=None,
     ):
-        TemporalExtent.__init__(self, table, ident, start_time, end_time)
+        super().__init__(table, ident, start_time, end_time)
+        # TemporalExtent.__init__(self, table, ident, start_time, end_time)
         self.set_unit(unit)
 
-    def set_unit(self, unit):
+    def set_unit(self, unit) -> None:
         """Set the unit of the relative time. Valid units are:
 
         - years
@@ -1424,7 +1471,11 @@ class VectorRelativeTime(RelativeTemporalExtent[VectorT]):
 ###############################################################################
 
 
-class STDSRelativeTime(RelativeTemporalExtent):
+# class STDSRelativeTime(RelativeTemporalExtent[STT], Generic[STT]):
+# class STDSRelativeTime(RelativeTemporalExtent[SpaceTimeT[TT]], Generic[TT]):
+# class STDSRelativeTime(RelativeTemporalExtent[STT], Generic[STT]):
+# class STDSRelativeTime(RelativeTemporalExtent[STT2], Generic[STT2]):
+class STDSRelativeTime(RelativeTemporalExtent[STT], Generic[STT]):
     """This is the relative time class for all maps and space time datasets
 
     start_time and end_time must be of type integer
@@ -1481,7 +1532,8 @@ class STDSRelativeTime(RelativeTemporalExtent):
         granularity=None,
         map_time=None,
     ):
-        RelativeTemporalExtent.__init__(self, table, ident, start_time, end_time, unit)
+        super().__init__(table, ident, start_time, end_time, unit)
+        # RelativeTemporalExtent.__init__(self, table, ident, start_time, end_time,unit)
 
         self.set_granularity(granularity)
         self.set_map_time(map_time)
@@ -1546,7 +1598,9 @@ class STDSRelativeTime(RelativeTemporalExtent):
 ###############################################################################
 
 
-class STRDSRelativeTime(STDSRelativeTime):
+# class STRDSRelativeTime(STDSRelativeTime[SpaceTimeT[RasterT]]):
+# class STRDSRelativeTime(STDSRelativeTime[RasterT]):
+class STRDSRelativeTime(STDSRelativeTime[SpaceTimeT[RasterT]]):
     def __init__(
         self,
         ident=None,
@@ -1566,9 +1620,20 @@ class STRDSRelativeTime(STDSRelativeTime):
             granularity,
             map_time,
         )
+        # STDSRelativeTime.__init__(
+        #     self,
+        #     "strds_relative_time",
+        #     ident,
+        #     start_time,
+        #     end_time,
+        #     unit,
+        #     granularity,
+        #     map_time,
+        # )
 
 
-class STR3DSRelativeTime(STDSRelativeTime):
+# class STR3DSRelativeTime(STDSRelativeTime[Raster3DT]):
+class STR3DSRelativeTime(STDSRelativeTime[SpaceTimeT[Raster3DT]]):
     def __init__(
         self,
         ident=None,
@@ -1578,8 +1643,7 @@ class STR3DSRelativeTime(STDSRelativeTime):
         granularity=None,
         map_time=None,
     ):
-        STDSRelativeTime.__init__(
-            self,
+        super().__init__(
             "str3ds_relative_time",
             ident,
             start_time,
@@ -1588,9 +1652,20 @@ class STR3DSRelativeTime(STDSRelativeTime):
             granularity,
             map_time,
         )
+        # STDSRelativeTime.__init__(
+        #     self,
+        #     "str3ds_relative_time",
+        #     ident,
+        #     start_time,
+        #     end_time,
+        #     unit,
+        #     granularity,
+        #     map_time,
+        # )
 
 
-class STVDSRelativeTime(STDSRelativeTime):
+# class STVDSRelativeTime(STDSRelativeTime[VectorT]):
+class STVDSRelativeTime(STDSRelativeTime[SpaceTimeT[VectorT]]):
     def __init__(
         self,
         ident=None,
@@ -1600,8 +1675,7 @@ class STVDSRelativeTime(STDSRelativeTime):
         granularity=None,
         map_time=None,
     ):
-        STDSRelativeTime.__init__(
-            self,
+        super().__init__(
             "stvds_relative_time",
             ident,
             start_time,
@@ -1610,6 +1684,16 @@ class STVDSRelativeTime(STDSRelativeTime):
             granularity,
             map_time,
         )
+        # STDSRelativeTime.__init__(
+        #     self,
+        #     "stvds_relative_time",
+        #     ident,
+        #     start_time,
+        #     end_time,
+        #     unit,
+        #     granularity,
+        #     map_time,
+        # )
 
 
 ###############################################################################

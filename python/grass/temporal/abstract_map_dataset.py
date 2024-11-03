@@ -35,14 +35,14 @@ from .datetime_math import (
 )
 from .temporal_extent import AbsoluteTemporalExtent, RelativeTemporalExtent
 
-# from python.grass.temporal.space_time_datasets import MapDatasetType
-
 
 if TYPE_CHECKING:
+    from .base import DatasetBase
     from .abstract_space_time_dataset import AbstractSpaceTimeDataset
     from .base import AbstractSTDSRegister
     from .metadata import MetadataBase
     from .spatial_extent import SpatialExtent
+# from python.grass.temporal.space_time_datasets import MapDatasetType
 
 # AbsoluteTemporalExtentType = TypeVar(
 #     "AbsoluteTemporalExtentType", bound=AbsoluteTemporalExtent
@@ -86,11 +86,12 @@ class AbstractMapDataset(AbstractDataset, Generic[TT]):
     # absolute_time: type[AbsoluteTemporalExtentType]
     # relative_time: RelativeTemporalExtentType | None
     # relative_time: RelativeTemporalExtent[TT] | None = None
-    absolute_time: AbsoluteTemporalExtent[TT]
-    relative_time: RelativeTemporalExtent[TT]
-    spatial_extent: SpatialExtent[TT]
-    metadata: MetadataBase[TT]
-    stds_register: AbstractSTDSRegister[SpaceTimeT[TT]]
+    # base: DatasetBase[TT]
+    # absolute_time: AbsoluteTemporalExtent[TT]
+    # relative_time: RelativeTemporalExtent[TT]
+    # spatial_extent: SpatialExtent[TT]
+    # metadata: MetadataBase[TT]
+    # stds_register: AbstractSTDSRegister[SpaceTimeT[TT]]
 
     # self.base = RasterBase(ident=ident)
     # self.absolute_time = RasterAbsoluteTime(ident=ident)
@@ -99,23 +100,9 @@ class AbstractMapDataset(AbstractDataset, Generic[TT]):
     # self.metadata = RasterMetadata(ident=ident)
     # self.stds_register = RasterSTDSRegister(ident=ident)
 
-    # def __init__[RelT: RelativeTemporalExtentType](self) -> None:
-    #     AbstractDataset.__init__(self)
-    #     self.relative_time: RelT
-    #     self.ciface = get_tgis_c_library_interface()
     def __init__(self) -> None:
         AbstractDataset.__init__(self)
-        # self.relative_time: type[RelativeTemporalExtentType] | None = None
-        # self.absolute_time: AbsoluteTemporalExtent[TT] | None = None
-        # self.relative_time: RelativeTemporalExtent[TT] | None = None
-        # self.absolute_time: AbsoluteTemporalExtent[MapDatasetType] | None = None
-        # self.relative_time: RelativeTemporalExtent[MapDatasetType] | None = None
         self.ciface = get_tgis_c_library_interface()
-
-    # @property
-    # @abstractmethod
-    # def relative_time(self) -> RelativeTemporalExtent:
-    #     pass
 
     @abstractmethod
     def get_new_stds_instance(self, ident) -> AbstractSpaceTimeDataset[TT]:
