@@ -61,7 +61,7 @@ AnyTTST2 = TypeVar(
 )
 # AnyTTST = TypeVar("AnyTTST", RasterT, Raster3DT, VectorT, SpaceTimeT)
 AnyTTST = TypeVar("AnyTTST", RasterT, Raster3DT, VectorT, SpaceTimeT)
-# AnyTTST = TypeVar("AnyTTST",  RasterT, Raster3DT, VectorT, SpaceTimeT, contravariant=True)
+# AnyTTST = TypeVar("AnyTTST",RasterT,Raster3DT,VectorT,SpaceTimeT, contravariant=True)
 # AnyTTST = TypeVar("AnyTTST", AnyRasterT, VectorT, SpaceTimeT, contravariant=True)
 # AnyTTST = TypeVar("AnyTTST", AnyRasterT, VectorT, SpaceTimeT, covariant=True)
 # AnyTTST = TypeVar("AnyTTST", AnyRasterT, VectorT, SpaceTimeT)
