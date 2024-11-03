@@ -74,7 +74,7 @@ from __future__ import annotations
 
 from typing import Generic
 
-from ._typing import TT, AnyTTST, Raster3DT, RasterT, SpaceTimeT, VectorT
+from ._typing import AnyTTST, Raster3DT, RasterT, SpaceTimeT, VectorT
 from .base import SQLDatabaseInterface
 
 

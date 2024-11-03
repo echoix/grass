@@ -24,14 +24,11 @@ for details.
 
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import Generic
 
 from ._typing import (
     RTT,
     STT,
-    TT,
-    AnyRasterT,
     AnyTTST,
     Raster3DT,
     RasterT,

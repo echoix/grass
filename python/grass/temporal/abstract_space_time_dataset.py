@@ -21,7 +21,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Generic
 
-from ._typing import STT, TT, SpaceTimeT
+from ._typing import TT, SpaceTimeT
 from .abstract_dataset import AbstractDataset, AbstractDatasetComparisonKeyStartTime
 from .core import (
     get_current_mapset,

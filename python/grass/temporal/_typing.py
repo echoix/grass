@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Generic, Literal, TypeVar, Union
+from typing import Generic, TypeVar, Union
 
 
 class RasterT:

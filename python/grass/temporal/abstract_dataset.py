@@ -15,7 +15,7 @@ from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 from typing import TYPE_CHECKING, Generic, Literal
 
-from ._typing import TT, AnyTTST, SpaceTimeT
+from ._typing import AnyTTST
 from .core import get_current_mapset, get_tgis_message_interface, init_dbif
 from .spatial_topology_dataset_connector import SpatialTopologyDatasetConnector
 from .temporal_topology_dataset_connector import TemporalTopologyDatasetConnector
