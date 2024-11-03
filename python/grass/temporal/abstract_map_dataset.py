@@ -154,7 +154,7 @@ class AbstractMapDataset(AbstractDataset, Generic[TT]):
         """
 
     @abstractmethod
-    def read_timestamp_from_grass(self):
+    def read_timestamp_from_grass(self) -> bool:
         """Read the timestamp of this map from the map metadata
         in the grass file system based spatial database and
         set the internal time stamp that should be insert/updated

@@ -210,7 +210,9 @@ class RasterDataset(AbstractMapDataset[RasterT]):
         # )
         self.relative_time = RasterRelativeTime(ident=ident)
         self.spatial_extent = RasterSpatialExtent(ident=ident)
+        # self.metadata = Raster3DMetadata(ident=ident)
         self.metadata = RasterMetadata(ident=ident)
+        # self.metadata = VectorMetadata(ident=ident)
         self.stds_register = RasterSTDSRegister(ident=ident)
         self.reset(ident)
 
@@ -754,7 +756,7 @@ class Raster3DDataset(AbstractMapDataset[Raster3DT]):
         """
         return self.ciface.has_raster3d_timestamp(self.get_name(), self.get_mapset())
 
-    def read_timestamp_from_grass(self):
+    def read_timestamp_from_grass(self) -> bool:
         """Read the timestamp of this map from the map metadata
         in the grass file system based spatial database and
         set the internal time stamp that should be inserted/updated

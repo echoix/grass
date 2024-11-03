@@ -26,15 +26,7 @@ from __future__ import annotations
 
 from typing import Generic
 
-from ._typing import (
-    RTT,
-    STT,
-    AnyTTST,
-    Raster3DT,
-    RasterT,
-    SpaceTimeT,
-    VectorT,
-)
+from ._typing import RTT, STT, AnyTTST, Raster3DT, RasterT, SpaceTimeT, VectorT
 from .base import SQLDatabaseInterface
 from .core import SQLDatabaseInterfaceConnection, get_tgis_db_version_from_metadata
 
