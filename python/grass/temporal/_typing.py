@@ -1,14 +1,26 @@
 from __future__ import annotations
 
-from typing import Generic, TypeVar, Union
+from typing import Generic, TypeVar
 
 
-class RasterT:
+class AnyRasterT:
     pass
 
 
-class Raster3DT:
+class RasterT(AnyRasterT):
     pass
+
+
+class Raster3DT(AnyRasterT):
+    pass
+
+
+# class RasterT:
+#     pass
+
+
+# class Raster3DT:
+#     pass
 
 
 class VectorT:
@@ -16,14 +28,18 @@ class VectorT:
 
 
 # AnyRasterT = RasterT | Raster3DT
-AnyRasterT = Union[RasterT, Raster3DT]
+# AnyRasterT = Union[RasterT, Raster3DT]
 # RTT = TypeVar("RTT", AnyRasterT)
-RTT = TypeVar("RTT", RasterT, Raster3DT)
+RTT = TypeVar("RTT", bound=AnyRasterT)
+# RTT = TypeVar("RTT", RasterT, Raster3DT)
 # RTT = TypeVar("RTT", bound=AnyRasterT)
 # TT = TypeVar("TT", RasterT, Raster3DT, VectorT)
 # TT = TypeVar("TT", bound=AnyRasterT | VectorT)
 # TT = TypeVar("TT", RTT, VectorT)
-TT = TypeVar("TT", AnyRasterT, VectorT)
+TT = TypeVar("TT", RasterT, Raster3DT, VectorT)
+# TT = TypeVar("TT", AnyRasterT, VectorT)
+# TT = TypeVar("TT", AnyRasterT, VectorT, contravariant=True)
+# TT = TypeVar("TT", AnyRasterT, VectorT, covariant=True)
 
 
 class SpaceTimeT(Generic[TT]):
@@ -44,4 +60,8 @@ AnyTTST2 = TypeVar(
     SpaceTimeT[VectorT],
 )
 # AnyTTST = TypeVar("AnyTTST", RasterT, Raster3DT, VectorT, SpaceTimeT)
-AnyTTST = TypeVar("AnyTTST", AnyRasterT, VectorT, SpaceTimeT)
+AnyTTST = TypeVar("AnyTTST", RasterT, Raster3DT, VectorT, SpaceTimeT)
+# AnyTTST = TypeVar("AnyTTST",  RasterT, Raster3DT, VectorT, SpaceTimeT, contravariant=True)
+# AnyTTST = TypeVar("AnyTTST", AnyRasterT, VectorT, SpaceTimeT, contravariant=True)
+# AnyTTST = TypeVar("AnyTTST", AnyRasterT, VectorT, SpaceTimeT, covariant=True)
+# AnyTTST = TypeVar("AnyTTST", AnyRasterT, VectorT, SpaceTimeT)
