@@ -69,7 +69,7 @@ GRASS_TIMESTAMP_FMT = "%a %b  %d %H:%M:%S %Y"
 
 # MapDatasetType = TypeVar("MapDatasetType")
 # MapDatasetType = TypeVar("MapDatasetType", covariant=True)
-# MapDatasetType = TypeVar("MapDatasetType", bound=AbstractMapDataset, contravariant=True)
+# MapDatasetType = TypeVar("MapDatasetType",bound=AbstractMapDataset,contravariant=True)
 # MapDatasetType = TypeVar("MapDatasetType", bound=AbstractMapDataset, covariant=True)
 # RelT = TypeVar("RelT")
 # AbsT = TypeVar("AbsT")
@@ -205,9 +205,6 @@ class RasterDataset(AbstractMapDataset[RasterT]):
         AbstractMapDataset.__init__(self)
         self.base = RasterBase(ident=ident)
         self.absolute_time = RasterAbsoluteTime(ident=ident)
-        # self.absolute_time: AbsoluteTemporalExtent[MapDatasetType] = RasterAbsoluteTime(
-        #     ident=ident
-        # )
         self.relative_time = RasterRelativeTime(ident=ident)
         self.spatial_extent = RasterSpatialExtent(ident=ident)
         # self.metadata = Raster3DMetadata(ident=ident)
@@ -641,7 +638,7 @@ class Raster3DDataset(AbstractMapDataset[Raster3DT]):
 
     """
 
-    stds_register: Raster3DSTDSRegister
+    # stds_register: Raster3DSTDSRegister
 
     def __init__(self, ident):
         AbstractMapDataset.__init__(self)
@@ -1023,7 +1020,7 @@ class VectorDataset(AbstractMapDataset[VectorT]):
     """
 
     # relative_time: VectorRelativeTime
-    stds_register: VectorSTDSRegister
+    # stds_register: VectorSTDSRegister
 
     def __init__(self, ident):
         AbstractMapDataset.__init__(self)
