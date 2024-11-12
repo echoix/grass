@@ -116,7 +116,6 @@ DLLS="
 	/mingw64/bin/libiconv-2.dll
 	/mingw64/bin/libintl-8.dll
 	/mingw64/bin/liblapack.dll
-	/mingw64/bin/libomp.dll
 	/mingw64/bin/libquadmath-0.dll
 	/mingw64/bin/libreadline8.dll
 	/mingw64/bin/libstdc++-6.dll
