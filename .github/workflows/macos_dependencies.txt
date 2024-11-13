@@ -36,7 +36,6 @@ pandoc
 pdal
 pillow
 pkg-config
-ply
 postgresql
 proj
 pytest
