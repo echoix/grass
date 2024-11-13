@@ -9,8 +9,11 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
 import copy
 from datetime import datetime, timedelta
+from typing import Literal
 
 from .core import get_tgis_message_interface
 
@@ -28,10 +31,8 @@ SECOND_AS_DAY = 1.1574074074074073e-05
 ###############################################################################
 
 
-def relative_time_to_time_delta(value):
-    """Convert the double value representing days
-    into a timedelta object.
-    """
+def relative_time_to_time_delta(value: float) -> timedelta:
+    """Convert the double value representing days into a timedelta object."""
 
     days = int(value)
     seconds = value % 1
@@ -43,43 +44,35 @@ def relative_time_to_time_delta(value):
 ###############################################################################
 
 
-def time_delta_to_relative_time(delta):
-    """Convert the time delta into a
-    double value, representing days.
-    """
-
+def time_delta_to_relative_time(delta: timedelta) -> float:
+    """Convert the time delta into a double value, representing days."""
     return float(delta.days) + float(delta.seconds * SECOND_AS_DAY)
 
 
 ###############################################################################
 
 
-def relative_time_to_time_delta_seconds(value):
-    """Convert the double value representing seconds
-    into a timedelta object.
-    """
-
+def relative_time_to_time_delta_seconds(value: float) -> timedelta:
+    """Convert the double value representing seconds into a timedelta object."""
     days = value / 86400
     seconds = int(value % 86400)
-
     return timedelta(days, seconds)
 
 
 ###############################################################################
 
 
-def time_delta_to_relative_time_seconds(delta):
-    """Convert the time delta into a
-    double value, representing seconds.
-    """
-
+def time_delta_to_relative_time_seconds(delta: timedelta) -> float:
+    """Convert the time delta into a double value, representing seconds."""
     return float(delta.days * DAY_IN_SECONDS) + float(delta.seconds)
 
 
 ###############################################################################
 
 
-def decrement_datetime_by_string(mydate, increment, mult=1):
+def decrement_datetime_by_string(
+    mydate: datetime, increment: str, mult=1
+) -> datetime | None:
     """Return a new datetime object decremented with the provided
     relative dates specified as string.
     Additional a multiplier can be specified to multiply the increment
@@ -139,7 +132,8 @@ def decrement_datetime_by_string(mydate, increment, mult=1):
                       1 weeks, 5 months, 1 years" will result in the
                       datetime 2003-02-18 12:05:00
     :param mult: A multiplier, default is 1
-    :return: The new datetime object or none in case of an error
+    :return: The new datetime object, the unmodified mydate object if increment string
+             is not given, or None in case of an error.
     """
     return modify_datetime_by_string(mydate, increment, mult, sign=-1)
 
@@ -147,7 +141,9 @@ def decrement_datetime_by_string(mydate, increment, mult=1):
 ###############################################################################
 
 
-def increment_datetime_by_string(mydate, increment, mult=1):
+def increment_datetime_by_string(
+    mydate: datetime, increment: str, mult=1
+) -> datetime | None:
     """Return a new datetime object incremented with the provided
     relative dates specified as string.
     Additional a multiplier can be specified to multiply the increment
@@ -214,7 +210,8 @@ def increment_datetime_by_string(mydate, increment, mult=1):
                       1 weeks, 5 months, 1 years" will result in the
                       datetime 2003-02-18 12:05:00
     :param mult: A multiplier, default is 1
-    :return: The new datetime object or none in case of an error
+    :return: The new datetime object, the unmodified mydate object if increment string
+             is not given, or None in case of an error.
     """
     return modify_datetime_by_string(mydate, increment, mult, sign=1)
 
@@ -222,7 +219,9 @@ def increment_datetime_by_string(mydate, increment, mult=1):
 ###############################################################################
 
 
-def modify_datetime_by_string(mydate, increment, mult=1, sign=1):
+def modify_datetime_by_string(
+    mydate: datetime, increment: str, mult=1, sign: Literal[1, -1] = 1
+) -> datetime | None:
     """Return a new datetime object incremented with the provided
     relative dates specified as string.
     Additional a multiplier can be specified to multiply the increment
@@ -239,10 +238,11 @@ def modify_datetime_by_string(mydate, increment, mult=1, sign=1):
     :param mult: A multiplier, default is 1
     :param sign: Choose 1 for positive sign (incrementing) or -1 for
                  negative sign (decrementing).
-    :return: The new datetime object or none in case of an error
+    :return: The new datetime object, the unmodified mydate object if increment string
+             is not given, or None in case of an error.
     """
-    sign = int(sign)
-    if sign not in {1, -1}:
+    _sign = int(sign)
+    if _sign not in {1, -1}:
         return None
 
     if increment:
@@ -254,32 +254,33 @@ def modify_datetime_by_string(mydate, increment, mult=1, sign=1):
         months = 0
         years = 0
 
-        inclist = []
+        inclist: list[list[str]] = []
         # Split the increment string
         incparts = increment.split(",")
         for incpart in incparts:
             inclist.append(incpart.strip().split(" "))
 
         for inc in inclist:
-            msgr = get_tgis_message_interface()
             if len(inc) < 2:
+                msgr = get_tgis_message_interface()
                 msgr.error(_("Wrong increment format: %s") % (increment))
                 return None
-            if inc[1].find("seconds") >= 0 or inc[1].find("second") >= 0:
-                seconds = sign * mult * int(inc[0])
-            elif inc[1].find("minutes") >= 0 or inc[1].find("minute") >= 0:
-                minutes = sign * mult * int(inc[0])
-            elif inc[1].find("hours") >= 0 or inc[1].find("hour") >= 0:
-                hours = sign * mult * int(inc[0])
-            elif inc[1].find("days") >= 0 or inc[1].find("day") >= 0:
-                days = sign * mult * int(inc[0])
-            elif inc[1].find("weeks") >= 0 or inc[1].find("week") >= 0:
-                weeks = sign * mult * int(inc[0])
-            elif inc[1].find("months") >= 0 or inc[1].find("month") >= 0:
-                months = sign * mult * int(inc[0])
-            elif inc[1].find("years") >= 0 or inc[1].find("year") >= 0:
-                years = sign * mult * int(inc[0])
+            if "seconds" in inc[1] or "second" in inc[1]:
+                seconds = _sign * mult * int(inc[0])
+            elif "minutes" in inc[1] or "minute" in inc[1]:
+                minutes = _sign * mult * int(inc[0])
+            elif "hours" in inc[1] or "hour" in inc[1]:
+                hours = _sign * mult * int(inc[0])
+            elif "days" in inc[1] or "day" in inc[1]:
+                days = _sign * mult * int(inc[0])
+            elif "weeks" in inc[1] or "week" in inc[1]:
+                weeks = _sign * mult * int(inc[0])
+            elif "months" in inc[1] or "month" in inc[1]:
+                months = _sign * mult * int(inc[0])
+            elif "years" in inc[1] or "year" in inc[1]:
+                years = _sign * mult * int(inc[0])
             else:
+                msgr = get_tgis_message_interface()
                 msgr.error(_("Wrong increment format: %s") % (increment))
                 return None
 
@@ -294,8 +295,8 @@ def modify_datetime_by_string(mydate, increment, mult=1, sign=1):
 
 
 def modify_datetime(
-    mydate, years=0, months=0, weeks=0, days=0, hours=0, minutes=0, seconds=0
-):
+    mydate: datetime, years=0, months=0, weeks=0, days=0, hours=0, minutes=0, seconds=0
+) -> datetime:
     """Return a new datetime object incremented with the provided
     relative dates and times"""
 
@@ -316,7 +317,7 @@ def modify_datetime(
         years_to_add = int(all_months / 12.001)
         residual_months = all_months - (years_to_add * 12)
 
-        # Make a deep copy of the datetime object
+        # Make a deep copy of the datetime object (Note: copy.copy is a shallow copy)
         dt1 = copy.copy(mydate)
 
         # Make sure the month starts with a 1
@@ -340,7 +341,7 @@ def modify_datetime(
         else:
             residual_months = all_months
 
-        # Make a deep copy of the datetime object
+        # Make a deep copy of the datetime object (Note: copy.copy is a shallow copy)
         dt1 = copy.copy(mydate)
 
         # Correct the months
@@ -352,7 +353,7 @@ def modify_datetime(
         tdelta_months = dt1 - mydate
 
     if years != 0:
-        # Make a deep copy of the datetime object
+        # Make a deep copy of the datetime object (Note: copy.copy is a shallow copy)
         dt1 = copy.copy(mydate)
         # Compute the number of days
         dt1 = dt1.replace(year=mydate.year + int(years))
@@ -373,7 +374,9 @@ def modify_datetime(
 ###############################################################################
 
 
-def adjust_datetime_to_granularity(mydate, granularity):
+def adjust_datetime_to_granularity(
+    mydate: datetime, granularity: str
+) -> datetime | None:
     """Modify the datetime object to fit the given granularity
 
     - Years will start at the first of January
@@ -422,6 +425,9 @@ def adjust_datetime_to_granularity(mydate, granularity):
         >>> adjust_datetime_to_granularity(dt, "3 weeks, 5 days")
         datetime.datetime(2001, 8, 8, 0, 0)
 
+    :param mydate: A datetime object to adjust
+    :param granularity: The granularity string, for example "1 month" or "100 seconds"
+    :return: The modified datetime object, or None in case of an error.
     """
 
     if granularity:
@@ -441,26 +447,26 @@ def adjust_datetime_to_granularity(mydate, granularity):
         months = mydate.month
         years = mydate.year
 
-        granlist = []
+        granlist: list[list[str]] = []
         # Split the increment string
         granparts = granularity.split(",")
         for granpart in granparts:
             granlist.append(granpart.strip().split(" "))
 
         for inc in granlist:
-            if inc[1].find("seconds") >= 0 or inc[1].find("second") >= 0:
+            if "seconds" in inc[1] or "second" in inc[1]:
                 has_seconds = True
-            elif inc[1].find("minutes") >= 0 or inc[1].find("minute") >= 0:
+            elif "minutes" in inc[1] or "minute" in inc[1]:
                 has_minutes = True
-            elif inc[1].find("hours") >= 0 or inc[1].find("hour") >= 0:
+            elif "hours" in inc[1] or "hour" in inc[1]:
                 has_hours = True
-            elif inc[1].find("days") >= 0 or inc[1].find("day") >= 0:
+            elif "days" in inc[1] or "day" in inc[1]:
                 has_days = True
-            elif inc[1].find("weeks") >= 0 or inc[1].find("week") >= 0:
+            elif "weeks" in inc[1] or "week" in inc[1]:
                 has_weeks = True
-            elif inc[1].find("months") >= 0 or inc[1].find("month") >= 0:
+            elif "months" in inc[1] or "month" in inc[1]:
                 has_months = True
-            elif inc[1].find("years") >= 0 or inc[1].find("year") >= 0:
+            elif "years" in inc[1] or "year" in inc[1]:
                 has_years = True
             else:
                 msgr = get_tgis_message_interface()
@@ -507,6 +513,7 @@ def adjust_datetime_to_granularity(mydate, granularity):
             minute=minutes,
             second=seconds,
         )
+    return None
 
 
 ###############################################################################
@@ -725,10 +732,10 @@ def compute_datetime_delta(start, end):
 ###############################################################################
 
 
-def check_datetime_string(time_string, use_dateutil=True):
+def check_datetime_string(time_string: str, use_dateutil: bool = True):
     """Check if  a string can be converted into a datetime object and return the object
 
-    In case datutil is not installed the supported ISO string formats are:
+    In case dateutil is not installed the supported ISO string formats are:
 
     - YYYY-mm-dd
     - YYYY-mm-dd HH:MM:SS
@@ -762,7 +769,7 @@ def check_datetime_string(time_string, use_dateutil=True):
     >>> check_datetime_string(s)
     datetime.datetime(2000, 1, 1, 10, 0, 0, 1)
 
-    # using native implementation, ignoring dateutil
+    >>> # using native implementation, ignoring dateutil
     >>> s = "2000-01-01"
     >>> check_datetime_string(s, False)
     datetime.datetime(2000, 1, 1, 0, 0)
@@ -831,10 +838,10 @@ def check_datetime_string(time_string, use_dateutil=True):
 ###############################################################################
 
 
-def string_to_datetime(time_string):
+def string_to_datetime(time_string: str) -> datetime | None:
     """Convert a string into a datetime object
 
-    In case datutil is not installed the supported ISO string formats are:
+    In case dateutil is not installed the supported ISO string formats are:
 
     - YYYY-mm-dd
     - YYYY-mm-dd HH:MM:SS
@@ -867,7 +874,7 @@ def string_to_datetime(time_string):
 ###############################################################################
 
 
-def datetime_to_grass_datetime_string(dt):
+def datetime_to_grass_datetime_string(dt: datetime) -> str:
     """Convert a python datetime object into a GRASS datetime string
 
     .. code-block:: python
@@ -952,21 +959,21 @@ suffix_units = {
 }
 
 
-def create_suffix_from_datetime(start_time, granularity):
+def create_suffix_from_datetime(start_time: datetime, granularity: str) -> str:
     """Create a datetime string based on a datetime object and a provided
     granularity that can be used as suffix for map names.
 
     dateteime=2001-01-01 00:00:00, granularity="1 month" returns "2001_01"
 
     :param start_time: The datetime object
-    :param granularity: The granularity for example "1 month" or "100 seconds"
+    :param granularity: The granularity string, for example "1 month" or "100 seconds"
     :return: A string
     """
     global suffix_units
     return start_time.strftime(suffix_units[granularity.split(" ")[1]])
 
 
-def create_time_suffix(mapp, end=False):
+def create_time_suffix(mapp, end: bool = False):
     """Create a datetime string based on a map datetime object
 
     :param mapp: a temporal map dataset
@@ -981,7 +988,7 @@ def create_time_suffix(mapp, end=False):
     return sstring
 
 
-def create_numeric_suffix(base, count, zeros):
+def create_numeric_suffix(base, count: int, zeros: str) -> str:
     """Create a string based on count and number of zeros decided by zeros
 
     :param base: the basename for new map

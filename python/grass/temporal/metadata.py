@@ -22,13 +22,27 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
+from typing import Generic
+
+from ._typing import RTT, STT, AnyTTST, Raster3DT, RasterT, SpaceTimeT, VectorT
 from .base import SQLDatabaseInterface
 from .core import SQLDatabaseInterfaceConnection, get_tgis_db_version_from_metadata
 
 ###############################################################################
 
 
-class RasterMetadataBase(SQLDatabaseInterface):
+class MetadataBase(SQLDatabaseInterface, Generic[AnyTTST]):
+    def __init__(
+        self,
+        table=None,
+        ident=None,
+    ) -> None:
+        SQLDatabaseInterface.__init__(self, table, ident)
+
+
+class RasterMetadataBase(MetadataBase[RTT], Generic[RTT]):
     """This is the metadata base class for time stamped raster and raster3d maps
 
     Usage:
@@ -97,8 +111,9 @@ class RasterMetadataBase(SQLDatabaseInterface):
         ewres=None,
         min=None,
         max=None,
-    ):
-        SQLDatabaseInterface.__init__(self, table, ident)
+    ) -> None:
+        super().__init__(table, ident)
+        # SQLDatabaseInterface.__init__(self, table, ident)
 
         self.set_id(ident)
         self.set_datatype(datatype)
@@ -290,7 +305,7 @@ class RasterMetadataBase(SQLDatabaseInterface):
 ###############################################################################
 
 
-class RasterMetadata(RasterMetadataBase):
+class RasterMetadata(RasterMetadataBase[RasterT]):
     """This is the raster metadata class
 
     This class is the interface to the raster_metadata table in the
@@ -414,7 +429,7 @@ class RasterMetadata(RasterMetadataBase):
 ###############################################################################
 
 
-class Raster3DMetadata(RasterMetadataBase):
+class Raster3DMetadata(RasterMetadataBase[Raster3DT]):
     """This is the raster3d metadata class
 
     This class is the interface to the raster3d_metadata table in the
@@ -569,7 +584,7 @@ class Raster3DMetadata(RasterMetadataBase):
 ###############################################################################
 
 
-class VectorMetadata(SQLDatabaseInterface):
+class VectorMetadata(MetadataBase[VectorT]):
     """This is the vector metadata class
 
     This class is the interface to the vector_metadata table in the
@@ -660,7 +675,7 @@ class VectorMetadata(SQLDatabaseInterface):
     def __init__(
         self,
         ident=None,
-        is_3d=False,
+        is_3d: bool = False,
         number_of_points=None,
         number_of_lines=None,
         number_of_boundaries=None,
@@ -674,7 +689,8 @@ class VectorMetadata(SQLDatabaseInterface):
         number_of_holes=None,
         number_of_volumes=None,
     ):
-        SQLDatabaseInterface.__init__(self, "vector_metadata", ident)
+        super().__init__("vector_metadata", ident)
+        # SQLDatabaseInterface.__init__(self, "vector_metadata", ident)
 
         self.set_id(ident)
         self.set_3d_info(is_3d)
@@ -908,7 +924,8 @@ class VectorMetadata(SQLDatabaseInterface):
 ###############################################################################
 
 
-class STDSMetadataBase(SQLDatabaseInterface):
+# class STDSMetadataBase(MetadataBase[SpaceTimeT[TT]], Generic[TT]):
+class STDSMetadataBase(MetadataBase[STT], Generic[STT]):
     """This is the space time dataset metadata base class for
     strds, stvds and str3ds datasets
     setting/getting the id, the title and the description
@@ -943,8 +960,9 @@ class STDSMetadataBase(SQLDatabaseInterface):
 
     def __init__(
         self, table=None, ident=None, title=None, description=None, command=None
-    ):
-        SQLDatabaseInterface.__init__(self, table, ident)
+    ) -> None:
+        super().__init__(table, ident)
+        # SQLDatabaseInterface.__init__(self, table, ident)
 
         self.set_id(ident)
         self.set_title(title)
@@ -1096,7 +1114,7 @@ class STDSMetadataBase(SQLDatabaseInterface):
 ###############################################################################
 
 
-class STDSRasterMetadataBase(STDSMetadataBase):
+class STDSRasterMetadataBase(STDSMetadataBase[SpaceTimeT[RTT]], Generic[RTT]):
     """This is the space time dataset metadata base
     class for strds and str3ds datasets
 
@@ -1303,7 +1321,7 @@ class STDSRasterMetadataBase(STDSMetadataBase):
 ###############################################################################
 
 
-class STRDSMetadata(STDSRasterMetadataBase):
+class STRDSMetadata(STDSRasterMetadataBase[RasterT]):
     """This is the raster metadata class
 
     This class is the interface to the strds_metadata table in the
@@ -1484,7 +1502,7 @@ class STRDSMetadata(STDSRasterMetadataBase):
 ###############################################################################
 
 
-class STR3DSMetadata(STDSRasterMetadataBase):
+class STR3DSMetadata(STDSRasterMetadataBase[Raster3DT]):
     """This is the space time 3D raster metadata class
 
     This class is the interface to the str3ds_metadata table in the
@@ -1634,7 +1652,7 @@ class STR3DSMetadata(STDSRasterMetadataBase):
 ###############################################################################
 
 
-class STVDSMetadata(STDSMetadataBase):
+class STVDSMetadata(STDSMetadataBase[SpaceTimeT[VectorT]]):
     """This is the space time vector dataset metadata class
 
     This class is the interface to the stvds_metadata table in the

@@ -4,6 +4,8 @@ Created on Wed Jul 18 10:46:25 2012
 @author: pietro
 """
 
+from __future__ import annotations
+
 import ctypes
 import re
 from collections import namedtuple
@@ -450,13 +452,13 @@ class Point(Geo):
     # geometry type
     gtype = libvect.GV_POINT
 
-    def __init__(self, x=0, y=0, z=None, **kargs):
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float | None = None, **kargs):
         super().__init__(**kargs)
         if self.id and self.c_mapinfo:
             self.read()
         else:
             self.is2D = z is None
-            z = z if z is not None else 0
+            z = z if z is not None else 0.0
             libvect.Vect_append_point(self.c_points, x, y, z)
 
     def _get_x(self):

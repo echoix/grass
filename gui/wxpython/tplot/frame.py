@@ -1131,7 +1131,7 @@ class TplotFrame(wx.Frame):
             self.axes2d = self.fig.add_subplot(1, 1, 1)
         self._drawFigure()
 
-    def _checkDatasets(self, datasets, typ):
+    def _checkDatasets(self, datasets: list[str], typ) -> list:
         """Checks and validates datasets.
 
         Reports also type of dataset (e.g. 'strds').
@@ -1158,8 +1158,7 @@ class TplotFrame(wx.Frame):
             )
 
         for dataset in datasets:
-            errorMsg = _("Space time dataset <%s> not found.") % dataset
-            if dataset.find("@") >= 0:
+            if "@" in dataset:
                 nameShort, mapset = dataset.split("@", 1)
                 indices = [
                     n
@@ -1174,6 +1173,7 @@ class TplotFrame(wx.Frame):
                 ]
 
             if len(indices) == 0:
+                errorMsg = _("Space time dataset <%s> not found.") % dataset
                 raise GException(errorMsg)
             if len(indices) >= 2:
                 dlg = wx.SingleChoiceDialog(
@@ -1182,8 +1182,7 @@ class TplotFrame(wx.Frame):
                     caption=_("Ambiguous dataset name"),
                     choices=[
                         (
-                            "%(map)s@%(mapset)s:"
-                            " %(etype)s"
+                            "%(map)s@%(mapset)s: %(etype)s"
                             % {
                                 "map": allDatasets[i][0],
                                 "mapset": allDatasets[i][1],
@@ -1210,11 +1209,11 @@ class TplotFrame(wx.Frame):
 
     def SetDatasets(
         self,
-        rasters,
-        vectors,
-        coors,
-        cats,
-        attr,
+        rasters: list[str],
+        vectors: list[str],
+        coors: list,
+        cats: list,
+        attr: str,
         title,
         xlabel,
         ylabel,
@@ -1227,7 +1226,7 @@ class TplotFrame(wx.Frame):
         :param list vectors: a list of temporal vector dataset's name
         :param list coors: a list with x/y coordinates
         :param list cats: a list with incld. categories of vector
-        :param str attr:  name of attribute of vectror data
+        :param str attr: name of attribute of vector data
         """
         if not (rasters or vectors) or not (coors or cats):
             return

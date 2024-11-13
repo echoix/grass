@@ -1920,7 +1920,7 @@ class IAUPage(TitledPage):
             # splitting on space alone would break for grid files with
             # space in pathname
             for projterm in projlabel.split(" +"):
-                if projterm.find("towgs84=") != -1 or projterm.find("nadgrids=") != -1:
+                if "towgs84=" in projterm or "nadgrids=" in projterm:
                     self.custom_dtrans_string = " +%s" % projterm
                     break
 
@@ -2081,7 +2081,7 @@ class CustomPage(TitledPage):
         if event.GetDirection():
             self.custom_dtrans_string = ""
 
-            if self.customstring.find("+datum=") < 0:
+            if "+datum=" not in self.customstring:
                 self.GetNext().SetPrev(self)
                 return
 
@@ -2136,10 +2136,7 @@ class CustomPage(TitledPage):
                 # splitting on space alone would break for grid files with
                 # space in pathname
                 for projterm in projlabel.split(" +"):
-                    if (
-                        projterm.find("towgs84=") != -1
-                        or projterm.find("nadgrids=") != -1
-                    ):
+                    if "towgs84=" in projterm or "nadgrids=" in projterm:
                         self.custom_dtrans_string = " +%s" % projterm
                         break
 

@@ -59,13 +59,13 @@ class ReplayMode:
     REPEAT = 3
 
 
-def validateTimeseriesName(timeseries, etype="strds"):
+def validateTimeseriesName(timeseries: str, etype="strds"):
     """Checks if space time dataset exists and completes missing mapset.
 
     Raises GException if dataset doesn't exist.
     """
     trastDict = tgis.tlist_grouped(etype)
-    if timeseries.find("@") >= 0:
+    if "@" in timeseries:
         nameShort, mapset = timeseries.split("@", 1)
         if nameShort in trastDict[mapset]:
             return timeseries
@@ -80,7 +80,7 @@ def validateTimeseriesName(timeseries, etype="strds"):
     raise GException(_("Space time dataset <%s> not found.") % timeseries)
 
 
-def validateMapNames(names, etype):
+def validateMapNames(names: list[str], etype) -> list[str]:
     """Checks if maps exist and completes missing mapset.
 
     Input is list of map names.
@@ -88,10 +88,10 @@ def validateMapNames(names, etype):
     """
     mapDict = gs.list_grouped(etype)
 
-    newNames = []
+    newNames: list[str] = []
     for name in names:
-        if name.find("@") >= 0:
-            nameShort, mapset = name.split("@", 1)
+        if "@" in name:
+            nameShort, mapset = name.split("@", maxsplit=1)
             if nameShort in mapDict[mapset]:
                 newNames.append(name)
             else:
