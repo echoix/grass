@@ -297,7 +297,7 @@ class AbstractDataset(
 
         return (start, end, unit)
 
-    def get_relative_time_unit(self):
+    def get_relative_time_unit(self) -> str | None:
         """Returns the relative time unit
         :return: The relative time unit as string, None if not present
         """
