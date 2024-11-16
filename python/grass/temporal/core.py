@@ -36,12 +36,16 @@ import atexit
 import os
 from datetime import datetime
 from pathlib import Path
+from typing import Literal, TYPE_CHECKING
 
 import grass.script as gs
 from grass.pygrass import messages
 from grass.script.utils import decode
 
 from .c_libraries_interface import CLibrariesInterface
+
+if TYPE_CHECKING:
+    from pstats import Stats
 
 # Import all supported database backends
 # Ignore import errors since they are checked later
@@ -75,7 +79,7 @@ def profile_function(func) -> None:
         pr.disable()
         s = io.StringIO()
         sortby = "cumulative"
-        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps: Stats = pstats.Stats(pr, stream=s).sort_stats(sortby)
         ps.print_stats()
         print(s.getvalue())
     else:
@@ -85,10 +89,10 @@ def profile_function(func) -> None:
 # Global variable that defines the backend
 # of the temporal GIS
 # It can either be "sqlite" or "pg"
-tgis_backend = None
+tgis_backend: Literal["sqlite", "pg"] | None = None
 
 
-def get_tgis_backend():
+def get_tgis_backend() -> Literal["sqlite", "pg"] | None:
     """Return the temporal GIS backend as string
 
     :returns: either "sqlite" or "pg"
@@ -99,10 +103,10 @@ def get_tgis_backend():
 
 # Global variable that defines the database string
 # of the temporal GIS
-tgis_database = None
+tgis_database: str | None = None
 
 
-def get_tgis_database():
+def get_tgis_database() -> str | None:
     """Return the temporal database string specified with t.connect"""
     global tgis_database
     return tgis_database
@@ -111,12 +115,12 @@ def get_tgis_database():
 # The version of the temporal framework
 # this value must be an integer larger than 0
 # Increase this value in case of backward incompatible changes in the TGIS API
-tgis_version = 2
+tgis_version: int = 2
 # The version of the temporal database since framework and database version
 # can differ this value must be an integer larger than 0
 # Increase this value in case of backward incompatible changes
 # temporal database SQL layout
-tgis_db_version = 3
+tgis_db_version: int = 3
 
 # We need to know the parameter style of the database backend
 tgis_dbmi_paramstyle = None
@@ -188,7 +192,7 @@ def get_current_gisdbase():
 # ATTENTION: Be aware to face corrupted temporal database in case this global
 #            variable is set to False. This feature is highly
 #            experimental and violates the grass permission guidance.
-enable_mapset_check = True
+enable_mapset_check: bool = True
 # If this global variable is set True, the timestamps of maps will be written
 # as textfiles for each map that will be inserted or updated in the temporal
 # database using the C-library timestamp interface.
@@ -196,10 +200,10 @@ enable_mapset_check = True
 # ATTENTION: Be aware to face corrupted temporal database in case this global
 #            variable is set to False. This feature is highly
 #            experimental and violates the grass permission guidance.
-enable_timestamp_write = True
+enable_timestamp_write: bool = True
 
 
-def get_enable_mapset_check():
+def get_enable_mapset_check() -> bool:
     """Return True if the mapsets should be checked while insert, update,
     delete requests and space time dataset registration.
 
@@ -220,7 +224,7 @@ def get_enable_mapset_check():
     return enable_mapset_check
 
 
-def get_enable_timestamp_write():
+def get_enable_timestamp_write() -> bool:
     """Return True if the map timestamps should be written to the spatial
     database metadata as well.
 
@@ -244,7 +248,7 @@ def get_enable_timestamp_write():
 
 # The global variable that stores the PyGRASS Messenger object that
 # provides a fast and exit safe interface to the C-library message functions
-message_interface = None
+message_interface: messages.Messenger | None = None
 
 
 def _init_tgis_message_interface(raise_on_error: bool = False) -> None:
@@ -258,7 +262,7 @@ def _init_tgis_message_interface(raise_on_error: bool = False) -> None:
         message_interface = messages.get_msgr(raise_on_error=raise_on_error)
 
 
-def get_tgis_message_interface():
+def get_tgis_message_interface() -> messages.Messenger | None:
     """Return the temporal GIS message interface which is of type
     grass.pygrass.message.Messenger()
 
@@ -426,10 +430,10 @@ def get_tgis_metadata(dbif=None):
 
 # The temporal database string set with t.connect
 # with substituted GRASS variables gisdbase, location and mapset
-tgis_database_string = None
+tgis_database_string: str | None = None
 
 
-def get_tgis_database_string():
+def get_tgis_database_string() -> str | None:
     """Return the preprocessed temporal database string
 
     This string is the temporal database string set with t.connect
@@ -703,13 +707,13 @@ def init(raise_fatal_error: bool = False, skip_db_version_check: bool = False):
             db_exists = True
 
     if tgis_db_version > 2:
-        backup_howto = _(
+        backup_howto: str = _(
             "Run t.upgrade command to upgrade your temporal database.\n"
             "Consider creating a backup of your temporal database to avoid "
             "loosing data in case something goes wrong.\n"
         )
     else:
-        backup_howto = _(
+        backup_howto: str = _(
             "You need to export it by "
             "restoring the GRASS GIS version used for creating this DB."
             "Notes: Use t.rast.export and t.vect.export "
@@ -797,7 +801,7 @@ def init(raise_fatal_error: bool = False, skip_db_version_check: bool = False):
 ###############################################################################
 
 
-def get_database_info_string():
+def get_database_info_string() -> str:
     dbif = SQLDatabaseInterfaceConnection()
 
     info = "\nDBMI interface:..... " + str(dbif.get_dbmi().__name__)
@@ -843,25 +847,31 @@ def create_temporal_database(dbif) -> None:
     msgr = get_tgis_message_interface()
 
     # Read all SQL scripts and templates
-    map_tables_template_sql = (template_path / "map_tables_template.sql").read_text()
-    raster_metadata_sql = (template_path / "raster_metadata_table.sql").read_text()
-    raster3d_metadata_sql = (template_path / "raster3d_metadata_table.sql").read_text()
-    vector_metadata_sql = (template_path / "vector_metadata_table.sql").read_text()
-    stds_tables_template_sql = (template_path / "stds_tables_template.sql").read_text()
-    strds_metadata_sql = (template_path / "strds_metadata_table.sql").read_text()
-    str3ds_metadata_sql = (template_path / "str3ds_metadata_table.sql").read_text()
-    stvds_metadata_sql = (template_path / "stvds_metadata_table.sql").read_text()
+    map_tables_template_sql: str = (
+        template_path / "map_tables_template.sql"
+    ).read_text()
+    raster_metadata_sql: str = (template_path / "raster_metadata_table.sql").read_text()
+    raster3d_metadata_sql: str = (
+        template_path / "raster3d_metadata_table.sql"
+    ).read_text()
+    vector_metadata_sql: str = (template_path / "vector_metadata_table.sql").read_text()
+    stds_tables_template_sql: str = (
+        template_path / "stds_tables_template.sql"
+    ).read_text()
+    strds_metadata_sql: str = (template_path / "strds_metadata_table.sql").read_text()
+    str3ds_metadata_sql: str = (template_path / "str3ds_metadata_table.sql").read_text()
+    stvds_metadata_sql: str = (template_path / "stvds_metadata_table.sql").read_text()
 
     # Create the raster, raster3d and vector tables SQL statements
-    raster_tables_sql = map_tables_template_sql.replace("GRASS_MAP", "raster")
-    vector_tables_sql = map_tables_template_sql.replace("GRASS_MAP", "vector")
-    raster3d_tables_sql = map_tables_template_sql.replace("GRASS_MAP", "raster3d")
+    raster_tables_sql: str = map_tables_template_sql.replace("GRASS_MAP", "raster")
+    vector_tables_sql: str = map_tables_template_sql.replace("GRASS_MAP", "vector")
+    raster3d_tables_sql: str = map_tables_template_sql.replace("GRASS_MAP", "raster3d")
 
     # Create the space-time raster, raster3d and vector dataset tables
     # SQL statements
-    strds_tables_sql = stds_tables_template_sql.replace("STDS", "strds")
-    stvds_tables_sql = stds_tables_template_sql.replace("STDS", "stvds")
-    str3ds_tables_sql = stds_tables_template_sql.replace("STDS", "str3ds")
+    strds_tables_sql: str = stds_tables_template_sql.replace("STDS", "strds")
+    stvds_tables_sql: str = stds_tables_template_sql.replace("STDS", "stvds")
+    str3ds_tables_sql: str = stds_tables_template_sql.replace("STDS", "str3ds")
 
     msgr.message(_("Creating temporal database: %s") % (str(tgis_database_string)))
 
@@ -1235,7 +1245,7 @@ class DBConnection:
         param backend:The database backend sqlite or pg
         param dbstring: The database connection string
         """
-        self.connected = False
+        self.connected: bool = False
         if backend is None:
             global tgis_backend
             if decode(tgis_backend) == "sqlite":
@@ -1266,7 +1276,7 @@ class DBConnection:
         if self.connected is True:
             self.close()
 
-    def is_connected(self):
+    def is_connected(self) -> bool:
         return self.connected
 
     def rollback(self) -> None:
@@ -1443,7 +1453,7 @@ class DBConnection:
 
             return statement
 
-    def check_table(self, table_name: str):
+    def check_table(self, table_name: str) -> bool:
         """Check if a table exists in the temporal database
 
         :param table_name: The name of the table to be checked for existence
@@ -1558,7 +1568,9 @@ class DBConnection:
 ###############################################################################
 
 
-def init_dbif(dbif):
+def init_dbif(
+    dbif: SQLDatabaseInterfaceConnection | None,
+) -> tuple[SQLDatabaseInterfaceConnection, bool]:
     """This method checks if the database interface connection exists,
     if not a new one will be created, connected and True will be returned.
     If the database interface exists but is not connected, the connection
