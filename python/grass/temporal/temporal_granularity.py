@@ -18,12 +18,14 @@ for details.
 :authors: Soeren Gebbert
 """
 
+from __future__ import annotations
+
 import ast
 from collections import OrderedDict
 from functools import reduce
 
 from .abstract_map_dataset import AbstractMapDataset
-from .datetime_math import compute_datetime_delta
+from .datetime_math import compute_datetime_delta, datetime_delta
 
 SINGULAR_GRAN = ["second", "minute", "hour", "day", "week", "month", "year"]
 PLURAL_GRAN = ["seconds", "minutes", "hours", "days", "weeks", "months", "years"]
@@ -464,7 +466,7 @@ def compute_absolute_time_granularity(maps):
         start, end = get_time_tuple(stds_map)
         # start time is required in TGIS and expected to be present
         if end:
-            map_datetime_delta = compute_datetime_delta(start, end)
+            map_datetime_delta: datetime_delta = compute_datetime_delta(start, end)
             for time_unit in granularity_units.keys():  # noqa: PLC0206
                 if (
                     time_unit in map_datetime_delta
@@ -478,6 +480,7 @@ def compute_absolute_time_granularity(maps):
             # Gaps are between intervals, intervals and
             # points, points and points
             # start time is required in TGIS and expected to be present
+            gap_datetime_delta: datetime_delta
             if previous_end:
                 gap_datetime_delta = compute_datetime_delta(previous_end, start)
             else:
