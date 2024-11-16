@@ -32,8 +32,9 @@ for details.
 
 from __future__ import annotations
 
-# import traceback
+import atexit
 import os
+from datetime import datetime
 from pathlib import Path
 
 import grass.script as gs
@@ -55,8 +56,6 @@ try:
 except:
     pass
 
-import atexit
-from datetime import datetime
 
 ###############################################################################
 
