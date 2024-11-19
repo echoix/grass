@@ -34,7 +34,7 @@ export ARCH=x86_64-w64-mingw32
     --with-cairo \
     --with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
     --with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
-    --with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
+    --with-cairo-libs=${OSGEO4W_ROOT_MSYS}/lib \
     --with-cxx \
     --with-fftw \
     --with-freetype \
@@ -44,6 +44,7 @@ export ARCH=x86_64-w64-mingw32
     --with-includes=${OSGEO4W_ROOT_MSYS}/include \
     --with-lapack \
     --with-liblas=${SRC}/mswindows/osgeo4w/liblas-config \
+    --with-libpng=$PWD/mswindows/osgeo4w/libpng-config \
     --with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
     --with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
     --with-nls \

@@ -108,26 +108,16 @@ exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
 
 DLLS="
 	/mingw64/bin/libblas.dll
-	/mingw64/bin/libbrotlicommon.dll
-	/mingw64/bin/libbrotlidec.dll
 	/mingw64/bin/libbz2-1.dll
-	/mingw64/bin/libcairo-2.dll
 	/mingw64/bin/libfftw3-3.dll
-	/mingw64/bin/libfontconfig-1.dll
-	/mingw64/bin/libfreetype-6.dll
 	/mingw64/bin/libgcc_s_seh-1.dll
 	/mingw64/bin/libgfortran-5.dll
-	/mingw64/bin/libglib-2.0-0.dll
 	/mingw64/bin/libgomp-1.dll
-	/mingw64/bin/libgraphite2.dll
-	/mingw64/bin/libharfbuzz-0.dll
 	/mingw64/bin/libiconv-2.dll
 	/mingw64/bin/libintl-8.dll
 	/mingw64/bin/liblapack.dll
-	/mingw64/bin/libpcre-1.dll
-	/mingw64/bin/libpixman-1-0.dll
-	/mingw64/bin/libpng16-16.dll
 	/mingw64/bin/libquadmath-0.dll
+	/mingw64/bin/libreadline8.dll
 	/mingw64/bin/libstdc++-6.dll
 	/mingw64/bin/libsystre-0.dll
 	/mingw64/bin/libtre-5.dll
@@ -148,45 +138,46 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
 
 	mkdir -p mswindows/osgeo4w/lib
-	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
 	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
+
 
 	log configure
 	./configure \
-		--bindir=$OSGEO4W_ROOT_MSYS/bin \
+		--bindir=${OSGEO4W_ROOT_MSYS}/bin \
 		--enable-largefile \
 		--enable-shared \
 		--host=x86_64-w64-mingw32 \
-		--includedir=$OSGEO4W_ROOT_MSYS/include \
-		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
-		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
+		--includedir=${OSGEO4W_ROOT_MSYS}/include \
+		--libexecdir=${OSGEO4W_ROOT_MSYS}/bin \
+		--prefix=${OSGEO4W_ROOT_MSYS}/apps/grass \
 		--with-blas \
 		--with-bzlib \
 		--with-cairo \
-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
+		--with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
+		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo" \
 		--with-cxx \
 		--with-fftw \
 		--with-freetype \
-		--with-freetype-includes=/mingw64/include/freetype2 \
+		--with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
 		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
 		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
-		--with-includes=$OSGEO4W_ROOT_MSYS/include \
+		--with-includes=${OSGEO4W_ROOT_MSYS}/include \
 		--with-lapack \
 		--with-lapack-includes=/mingw64/include \
 		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
-		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
+		--with-libpng=$PWD/mswindows/osgeo4w/libpng-config \
+		--with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
 		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
 		--with-nls \
 		--with-odbc \
 		--with-opengl=windows \
 		--with-openmp \
 		--with-postgres \
-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
-		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
-		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
-		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
+		--with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
+		--with-postgres-libs=${OSGEO4W_ROOT_MSYS}/lib \
+		--with-proj-includes=${OSGEO4W_ROOT_MSYS}/include \
+		--with-proj-libs=${OSGEO4W_ROOT_MSYS}/lib \
+		--with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
 		--with-regex \
 		--with-sqlite \
 		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
@@ -248,7 +239,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
 
     # copy dependencies (TODO: to be reduced)
     cp -uv $DLLS apps/grass/grass$POSTFIX/bin
-    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
+
+    # copy R batch files
+    cp -uv $SRC/mswindows/external/rbatch/* apps/grass/grass$POSTFIX/bin
 
     # creating grass package
     /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
