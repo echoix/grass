@@ -480,9 +480,19 @@ jobs = 0
 
 # List of plugins (as comma separated values of python module names) to load,
 # usually to register additional checkers.
+# load-plugins = [
+#     # "pylint_per_file_ignores"
+#     # ,
+#     # "pylint.extensions.redefined_variable_type", # *GRASS TODO: Enable later*
+#     # "pylint.extensions.bad_builtin", # *GRASS TODO: Enable later*
+# ]
+# load-plugins = ["pylint_per_file_ignores"]
 load-plugins = [
+    # "pylint_per_file_ignores",
     # "pylint.extensions.redefined_variable_type", # *GRASS TODO: Enable later*
     # "pylint.extensions.bad_builtin", # *GRASS TODO: Enable later*
+    # "no_self_use",
+    "pylint.extensions.no_self_use"
 ]
 
 # # Pickle collected data for later comparisons.
@@ -501,11 +511,17 @@ py-version = "3.9"
 # # Discover python modules and packages in the file system subtree.
 # # recursive =
 
-# # Add paths to the list of the source roots. Supports globbing patterns. The
-# # source root is an absolute path or a path relative to the current working
-# # directory used to determine a package namespace for modules located under the
-# # source root.
-# # source-roots =
+# Add paths to the list of the source roots. Supports globbing patterns. The
+# source root is an absolute path or a path relative to the current working
+# directory used to determine a package namespace for modules located under the
+# source root.
+# source-roots = ["./python/", "gui/"]
+# source-roots = ["./python/*", "gui"]
+# source-roots = ["python", "gui"]
+# source-roots = "python"
+# source-roots ="python/"
+# source-roots = ["./python/grass/*", "./gui/wxpython/*"]
+# source-roots = ["./python/grass", "./gui/wxpython/*"]
 
 # # When enabled, pylint would attempt to guess common misconfiguration and emit
 # # user-friendly hints instead of false-positive error messages.
@@ -668,6 +684,17 @@ py-version = "3.9"
 
 # # List of valid names for the first argument in a metaclass class method.
 # valid-metaclass-classmethod-first-arg = ["mcs"]
+# [tool.pylint.MASTER]
+# load-plugins=[
+#     "pylint_per_file_ignores",
+
+# ]
+
+# [tool.pylint.messages_control]
+# per-file-ignores = [
+#     "scripts/modal/:import-error", # Modal Image imports are a false positive
+#     "scripts/db.py:not-callable",  # not-callable is a false positive, SEE: https://github.com/pylint-dev/pylint/issues/8138
+# ]
 
 [tool.pylint.design]
 # List of regular expressions of class ancestor names to ignore when counting
@@ -800,7 +827,7 @@ max-module-lines = 2000
 # # function parameter format.
 # logging-modules = ["logging"]
 
-# [tool.pylint."messages control"]
+[tool.pylint."messages control"]
 # # Only show warnings with the listed confidence levels. Leave empty to show all.
 # # Valid levels: HIGH, CONTROL_FLOW, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
 # confidence = [
@@ -906,6 +933,42 @@ disable = [
 # # should appear only once). See also the "--disable" option for examples.
 # # enable =
 
+# [tool.pylint.'MESSAGES CONTROL']
+# per-file-ignores = [
+#     "/folder_1/:missing-function-docstring,W0621,W0240,C0115",
+#     "file.py:C0116,E0001"
+# ]
+
+# [tool.pylint-per-file-ignores]
+# "/folder_1/"="missing-function-docstring,W0621,W0240,C0115"
+# "file.py"="C0116,E0001"
+
+# [tool.pylint.messages_control]
+# Modal Image imports are a false positive
+# not-callable is a false positive, SEE: https://github.com/pylint-dev/pylint/issues/8138
+# per-file-ignores = """
+#     python/grass/jupyter/.*:R0917,too-many-positional-arguments,
+#     python/grass/script/core.py:C0302,R0917
+# """
+# per-file-ignores = """
+#     python/grass/jupyter:R0917,too-many-positional-arguments,
+#     python/grass/jupyter/*.py:R0917,too-many-positional-arguments,
+#     python/grass/script/core.py:C0302,R0917
+# """
+# per-file-ignores = """
+#     scripts/modal/:import-error,
+#     scripts/db.py:not-callable,
+#     python/grass/jupyter/*:R0917,
+#     python/grass/script/core.py:C0302,R0917
+# """
+# per-file-ignores = """
+#     scripts/modal/:import-error
+#     scripts/db.py:not-callable
+#     python/grass/jupyter/*.py:R0917,
+#     python/grass/jupyter/interactivemap.py:too-many-positional-arguments
+# """
+# per-file-ignores="""
+# """
 # [tool.pylint.method_args]
 # # List of qualified names (i.e., library.method) which require a timeout
 # # parameter e.g. 'requests.api.get,requests.api.post'
@@ -1104,8 +1167,20 @@ additional-builtins = ["_"]
 #     "builtins",
 #     "io",
 # ]
-
-
+[tool.pylint-per-file-ignores]
+# "/folder_1/"="missing-function-docstring,W0621,W0240,C0115"
+# "file.py"="C0116,E0001"
+"grass/jupyter/map3d.py"="R0917"
+"./python/grass/jupyter/region.py"="R0917,too-many-positional-arguments"
+# "grass/jupyter/region.py"="too-many-positional-arguments"
+# "python/grass/jupyter/.*" = "R0917"
+"python/grass/script/core.py" = "C0302,R0917"
+# per-file-ignores = """
+#     scripts/modal/:import-error,
+#     scripts/db.py:not-callable,
+#     python/grass/jupyter/*:R0917,
+#     python/grass/script/core.py:C0302,R0917
+# """
 [tool.pyright]
 include = ["python"]
 exclude = ["**/__pycache__", "**/OBJ.*", "bin.*/**", "dist.*/**"]
