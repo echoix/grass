@@ -36,12 +36,12 @@ jobs:
       - uses: samypr100/setup-dev-drive@v3
         with:
           workspace-copy: true
-          drive-size: 5GB
+          drive-size: 10GB
       - uses: msys2/setup-msys2@c52d1fa9c7492275e60fe763540fb601f5f232a1 # v2.25.0
         id: msys2
         with:
           path-type: inherit
-          location: ${{ env.DEV_DRIVE_WORKSPACE }}
+          location: ${{ env.DEV_DRIVE }}
           update: true
           msystem: MINGW64
           install: >-
@@ -56,8 +56,8 @@ jobs:
         uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
         with:
-          package-dir: "${{ env.DEV_DRIVE_WORKSPACE }}/OSGeo4W_pkg"
-          root: ${{ env.DEV_DRIVE_WORKSPACE }}/OSGeo4W
+          package-dir: "${{ env.DEV_DRIVE }}/OSGeo4W_pkg"
+          root: ${{ env.DEV_DRIVE }}/OSGeo4W
           packages: |
             cairo-devel
             freetype-devel
