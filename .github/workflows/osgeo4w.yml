@@ -47,7 +47,8 @@ jobs:
             mingw-w64-x86_64-pcre mingw-w64-x86_64-omp mingw-w64-x86_64-lapack
 
       - name: Setup OSGeo4W environment
-        uses: echoix/setup-OSGeo4W@17deecd39e077a80bf1081443998ea8edd6f15bf  # v0.1.0
+        uses: echoix/setup-OSGeo4W@5b90433c1c502945f914cef45735fa9e15563840 # v0.2.0
+        id: osgeo4w
         with:
           package-dir: "D:/OSGeo4W_pkg"
           packages: |
@@ -111,7 +112,7 @@ jobs:
           ccache --show-stats --verbose --verbose
         env:
           PACKAGE_POSTFIX: "-dev"
-          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          OSGEO4W_ROOT: ${{ steps.osgeo4w.outputs.root }}
           OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
           PACKAGE_PATCH: ${{ github.sha }}-1
       - name: Upload OSGeo4W grass package artifact
@@ -125,13 +126,12 @@ jobs:
 
       - name: Add msys to paths loaded by OSGeo4W
         run: |
-          # $msys_path=";C:/msys64/usr/bin;C:/msys64/mingw64/bin"
           $msys_path=";$env:MSYS2_ROOT/usr/bin;$env:MSYS2_ROOT/mingw64/bin"
           $line="set PATH=%OSGEO4W_ROOT%\bin${msys_path};%PATH%"
           $line | Out-File -FilePath $env:OSGEO4W_ROOT/etc/ini/z_msys.bat
         env:
           MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
-          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          OSGEO4W_ROOT: ${{ steps.osgeo4w.outputs.root }}
           continue-on-error: true
       - name: Print installed versions
         if: always()
@@ -162,7 +162,7 @@ jobs:
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
       - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\bin\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        run: .github/workflows/test_thorough.bat '${{ steps.osgeo4w.outputs.root }}\bin\grass85.bat' '${{ steps.osgeo4w.outputs.root }}\bin\python3'
 
       - name: Make HTML test report available
         if: ${{ always() }}
