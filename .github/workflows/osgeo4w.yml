@@ -79,12 +79,12 @@ jobs:
             zstd-devel
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
-        shell: cmake -P {0} 
+        shell: cmake -P {0}
         run: |
           string(TIMESTAMP current_date "%Y-%m-%d-%H-%M-%S" UTC)
           file(APPEND "$ENV{GITHUB_OUTPUT}" "timestamp=${current_date}")
       - name: ccache cache files
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
+        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
         with:
           path: .ccache
           key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
