@@ -83,14 +83,14 @@ jobs:
         run: |
           string(TIMESTAMP current_date "%Y-%m-%d-%H-%M-%S" UTC)
           file(APPEND "$ENV{GITHUB_OUTPUT}" "timestamp=${current_date}")
-      - name: ccache cache files
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+      - name: Restore ccache cache files
+        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+        id: restore-cache
         with:
           path: .ccache
           key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
           restore-keys: |
             ${{ matrix.os }}-ccache-
-          save-always: true
       - name: Configure ccache
         run: |
           echo "CCACHE_BASEDIR=${GITHUB_WORKSPACE}" >> "${GITHUB_ENV}"
@@ -125,7 +125,11 @@ jobs:
           path: mswindows/osgeo4w/package
           include-hidden-files: true
           retention-days: 3
-
+      - name: Save ccache early
+        uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+        with:
+          path: .ccache
+          key: ${{ steps.restore-cache.outputs.cache-primary-key }}
       - name: Add msys to paths loaded by OSGeo4W
         run: |
           $msys_path=";$env:MSYS2_ROOT/usr/bin;$env:MSYS2_ROOT/mingw64/bin"
