@@ -99,12 +99,29 @@ jobs:
           }}:g' .gunittest.cfg > .gunittest.extra.cfg
           cat .gunittest.extra.cfg
 
+      - name: Set up Python
+        if: ${{ matrix.config == 'ubuntu-22.04' }}
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: 3.14
+          cache: pip
+          allow-prereleases: true
+
       - name: Get dependencies
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget git gawk findutils
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
+
+      - name: Install Python dependencies
+        if: ${{ matrix.config == 'ubuntu-22.04' }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/workflows/python_requirements.txt
+          pip install -r .github/workflows/optional_requirements.txt
+        env:
+          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
 
       - name: Create installation directory
         run: |
