@@ -43,6 +43,7 @@ jobs:
         continue-on-error: true
       - run: vswhere -?
         continue-on-error: true
+      - run: vswhere -latest -find **\dumpbin.exe
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
