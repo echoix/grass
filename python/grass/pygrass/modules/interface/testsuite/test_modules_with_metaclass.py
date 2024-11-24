@@ -17,23 +17,6 @@ from grass.pygrass.modules.interface import Module
 
 
 SKIP: list[str] = [
-    "#Rscript2",
-    "ANNOUNCE",
-    "COPYING",
-    "LICENSE",
-    "NEWS",
-    "R",
-    "README",
-    "RESOURCES",
-    "Rpathset",
-    "THANKS",
-    "batchfiles",
-    "clip2r",
-    "copydir",
-    "el",
-    "find-miktex",
-    "make-batchfiles-pdf",
-    "movedir",
     "g.parser",
 ]
 
@@ -54,7 +37,7 @@ class ModulesMeta(type):
             for c in sorted(list(get_commands()[0]))
             if c not in SKIP and not fnmatch(c, "g.gui.*") and not fnmatch(c, "*.dll")
         ]
-        for cmd in islice(cmds, 1):
+        for cmd in islice(cmds, 100):
             test_name = "test__%s" % cmd.replace(".", "_")
             warning("cmd is: %s, test_name: %s", cmd, test_name)
             print(f"cmd is: {cmd}, test_name: {test_name}")
