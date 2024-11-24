@@ -43,6 +43,7 @@ jobs:
         continue-on-error: true
       - run: vswhere -?
         continue-on-error: true
+      - run: vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
       - run: vswhere -latest -find **\dumpbin.exe
       - name: Set git to use LF
         run: |
