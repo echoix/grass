@@ -52,7 +52,7 @@ class ModulesMeta(type):
         cmds = [
             c
             for c in sorted(list(get_commands()[0]))
-            if c not in SKIP and not fnmatch(c, "g.gui.*")
+            if c not in SKIP and not fnmatch(c, "g.gui.*") and not fnmatch(c, "*.dll")
         ]
         for cmd in islice(cmds, 1):
             test_name = "test__%s" % cmd.replace(".", "_")
