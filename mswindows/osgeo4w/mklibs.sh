@@ -7,9 +7,9 @@ if [ "$CI" ] ; then
 	Arch="x64"
 	vctoolsBinPath='C:/Program Files (x86)\Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/'
 	echo "Calling vswhere"
-	"${ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -? || true
+	"$(printenv "ProgramFiles(x86)")/Microsoft Visual Studio/Installer/vswhere.exe" -? || true
 	# Adapted the usage examples of vswhere for bash, and our specific needs: https://github.com/microsoft/vswhere/wiki/Find-VC
-	installDir="$("${ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products "*" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)"
+	installDir="$("$(printenv "ProgramFiles(x86)")/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products "*" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)"
 	echo "installDir is: $installDir"
 	if [ -d "$installDir" ]; then
 		versionFilePath="${installDir}/VC/Auxiliary/Build/Microsoft.VCToolsVersion.default.txt"
