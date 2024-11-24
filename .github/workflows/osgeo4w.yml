@@ -53,6 +53,10 @@ jobs:
           progfiles86="$(printenv "ProgramFiles(x86)")"
           echo "$progfiles86"
         shell: msys2 {0}
+      - run: |
+          echo "Calling vswhere"
+          "$(printenv "ProgramFiles(x86)")/Microsoft Visual Studio/Installer/vswhere.exe" -? || true
+        shell: msys2 {0}
       - name: Setup OSGeo4W environment
         uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
