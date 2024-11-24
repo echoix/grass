@@ -49,6 +49,10 @@ jobs:
             mingw-w64-x86_64-pcre mingw-w64-x86_64-omp mingw-w64-x86_64-lapack
       - run: printenv | sort
         shell: msys2 {0}
+      - run: |
+          progfiles86="$(printenv "ProgramFiles(x86)")"
+          echo "$progfiles86"
+        shell: msys2 {0}
       - name: Setup OSGeo4W environment
         uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
