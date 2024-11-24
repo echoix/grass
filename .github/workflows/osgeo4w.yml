@@ -138,8 +138,15 @@ jobs:
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
-        run: .github/workflows/print_versions.sh
-        # TODO: find the step that adds back msys2 env into a file loaded by osgeo4w shell
+        run: |
+          export ARCH=x86_64-w64-mingw32
+          PWD="$(pwd)"
+          SRC="${PWD}"
+          export PATH="${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin:${SRC}/dist.${ARCH}/bin:${OSGEO4W_ROOT_MSYS}/apps/grass/grass85/etc:${PATH}"
+          export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
+          .github/workflows/print_versions.sh
+        env:
+          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
         continue-on-error: true
 
       - name: Test executing of the grass command
