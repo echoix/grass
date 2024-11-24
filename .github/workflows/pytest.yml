@@ -57,6 +57,8 @@ jobs:
           pip install -r .github/workflows/python_requirements.txt
           pip install -r .github/workflows/optional_requirements.txt
           pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist pytest-cov
+        env:
+          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
 
       - name: Create installation directory
         run: |
