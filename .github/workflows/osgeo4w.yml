@@ -79,7 +79,6 @@ jobs:
           Find-VCTools -HostArch 'x64'
       - run: |
           Get-ChildItem env:
-      - run: vswhere -latest -find **\dumpbin.exe
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
