@@ -13,7 +13,8 @@ jobs:
     name: ${{ matrix.os }} build and tests
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
+      group: >-
+        ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
         matrix.os }}
       cancel-in-progress: true
 
@@ -39,7 +40,8 @@ jobs:
           location: D:\
           update: true
           msystem: MINGW64
-          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
+          install: >-
+            tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-fftw mingw-w64-x86_64-openblas mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
