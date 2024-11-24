@@ -33,6 +33,7 @@ jobs:
           git config --global core.eol lf
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: msys2/setup-msys2@c52d1fa9c7492275e60fe763540fb601f5f232a1 # v2.25.0
+        id: msys2
         with:
           path-type: inherit
           location: D:\
@@ -122,6 +123,16 @@ jobs:
           include-hidden-files: true
           retention-days: 3
 
+      - name: Add msys to paths loaded by OSGeo4W
+        run: |
+          # $msys_path=";C:/msys64/usr/bin;C:/msys64/mingw64/bin"
+          $msys_path=";$env:MSYS2_ROOT/usr/bin;$env:MSYS2_ROOT/mingw64/bin"
+          $line="set PATH=%OSGEO4W_ROOT%\bin${msys_path};%PATH%"
+          $line | Out-File -FilePath $env:OSGEO4W_ROOT/etc/ini/z_msys.bat
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+          OSGEO4W_ROOT: "C:\\OSGeo4W"
+          continue-on-error: true
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
