@@ -49,7 +49,7 @@ jobs:
             mingw-w64-x86_64-pcre mingw-w64-x86_64-omp mingw-w64-x86_64-lapack
 
       - name: Setup OSGeo4W environment
-        uses: echoix/setup-OSGeo4W@5b90433c1c502945f914cef45735fa9e15563840 # v0.2.0
+        uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
         with:
           package-dir: "D:/OSGeo4W_pkg"
