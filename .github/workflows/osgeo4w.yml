@@ -33,11 +33,15 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: samypr100/setup-dev-drive@v3
+        with:
+          workspace-copy: true
+          drive-size: 5GB
       - uses: msys2/setup-msys2@c52d1fa9c7492275e60fe763540fb601f5f232a1 # v2.25.0
         id: msys2
         with:
           path-type: inherit
-          location: D:\
+          location: ${{ env.DEV_DRIVE_WORKSPACE }}
           update: true
           msystem: MINGW64
           install: >-
@@ -52,7 +56,8 @@ jobs:
         uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
         with:
-          package-dir: "D:/OSGeo4W_pkg"
+          package-dir: "${{ env.DEV_DRIVE_WORKSPACE }}/OSGeo4W_pkg"
+          root: ${{ env.DEV_DRIVE_WORKSPACE }}/OSGeo4W
           packages: |
             cairo-devel
             freetype-devel
@@ -77,9 +82,23 @@ jobs:
             python3-wxpython
             sqlite3-devel
             zstd-devel
+      - name: Get OSGEO4W_ROOT_MSYS value
+        id: osgeo4w-msys2
+        shell: msys2 {0}
+        run: echo "OSGEO4W_ROOT_MSYS=$(cygpath -u $OSGEO4W_ROOT)" >> "${GITHUB_OUTPUT}"
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
+        env:
+          OSGEO4W_ROOT: ${{ steps.osgeo4w.outputs.root }}
+      - name: Show OSGEO4W_ROOT_MSYS value
+        shell: msys2 {0}
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
+        run: echo "${OSGEO4W_ROOT_MSYS}"
+        env:
+          OSGEO4W_ROOT_MSYS: ${{ steps.osgeo4w-msys2.outputs.OSGEO4W_ROOT_MSYS }}
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         run: |
           string(TIMESTAMP current_date "%Y-%m-%d-%H-%M-%S" UTC)
           file(APPEND "$ENV{GITHUB_OUTPUT}" "timestamp=${current_date}")
@@ -87,22 +106,25 @@ jobs:
         uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
         id: restore-cache
         with:
-          path: .ccache
+          path: ${{ env.DEV_DRIVE_WORKSPACE }}/.ccache
           key: ${{ matrix.os }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
           restore-keys: |
             ${{ matrix.os }}-ccache-
       - name: Configure ccache
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         run: |
           echo "CCACHE_BASEDIR=${GITHUB_WORKSPACE}" >> "${GITHUB_ENV}"
           echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
           echo "CCACHE_MAXSIZE=400M" >> "${GITHUB_ENV}"
         shell: msys2 {0}
       - name: Set number of cores for compilation
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
 
       - name: Compile GRASS GIS
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         shell: msys2 {0}
         run: |
           ccache --show-stats
@@ -115,22 +137,23 @@ jobs:
         env:
           PACKAGE_POSTFIX: "-dev"
           OSGEO4W_ROOT: ${{ steps.osgeo4w.outputs.root }}
-          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+          OSGEO4W_ROOT_MSYS: ${{ steps.osgeo4w-msys2.outputs.OSGEO4W_ROOT_MSYS }}
           PACKAGE_PATCH: ${{ github.sha }}-1
       - name: Upload OSGeo4W grass package artifact
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: grass-osgeo4w-package-${{ matrix.os }}
-          path: mswindows/osgeo4w/package
+          path: ${{ env.DEV_DRIVE_WORKSPACE }}/mswindows/osgeo4w/package
           include-hidden-files: true
           retention-days: 3
       - name: Save ccache early
         uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
         with:
-          path: .ccache
+          path: ${{ env.DEV_DRIVE_WORKSPACE }}/.ccache
           key: ${{ steps.restore-cache.outputs.cache-primary-key }}
       - name: Add msys to paths loaded by OSGeo4W
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         run: |
           $msys_path=";$env:MSYS2_ROOT/usr/bin;$env:MSYS2_ROOT/mingw64/bin"
           $line="set PATH=%OSGEO4W_ROOT%\bin${msys_path};%PATH%"
@@ -141,6 +164,7 @@ jobs:
           continue-on-error: true
       - name: Print installed versions
         if: always()
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         shell: msys2 {0}
         run: |
           export ARCH=x86_64-w64-mingw32
@@ -150,20 +174,24 @@ jobs:
           export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
           .github/workflows/print_versions.sh
         env:
-          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+          OSGEO4W_ROOT_MSYS: ${{ steps.osgeo4w-msys2.outputs.OSGEO4W_ROOT_MSYS }}
+          O4WROOT: ${{ steps.osgeo4w.outputs.root }}
         continue-on-error: true
 
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.bat '${{env.O4WROOT}}\bin\grass85.bat'
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         env:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
 
       - name: Test executing of the grass command in bash
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         continue-on-error: true # TODO
       - name: Test executing of the grass command in bash msys
         shell: msys2 {0}
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         run: |
           PWD="$(pwd)"
           SRC="${PWD}"
@@ -177,12 +205,13 @@ jobs:
           .github/workflows/test_simple_msys.sh
         continue-on-error: true
         env:
-          OSGEO4W_ROOT_MSYS: "/c/OSGeo4W"
+          OSGEO4W_ROOT_MSYS: ${{ steps.osgeo4w-msys2.outputs.OSGEO4W_ROOT_MSYS }}
           OSGEO4W_ROOT: ${{ steps.osgeo4w.outputs.root }}
 
       - name: Install pytest plugins
         run: python -m pip install pytest-timeout
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL E:/OSGeo4W/OSGeo4W.bat "{0}""
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
       - name: Run pytest with a single worker
         run: |
           call %OSGEO4W_ROOT%\apps\grass\grass85\etc\env.bat
@@ -191,10 +220,12 @@ jobs:
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             -ra .
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL E:/OSGeo4W/OSGeo4W.bat "{0}""
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat '${{env.O4WROOT}}\bin\grass85.bat' '${{env.O4WROOT}}\bin\python3'
+        working-directory: ${{ env.DEV_DRIVE_WORKSPACE }}
         env:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
 
