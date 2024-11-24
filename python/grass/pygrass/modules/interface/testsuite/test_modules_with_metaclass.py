@@ -6,7 +6,6 @@ Created on Tue Jun 24 09:43:53 2014
 
 # ruff: noqa: LOG015
 from fnmatch import fnmatch
-from itertools import islice
 from logging import warning
 
 from grass.gunittest.case import TestCase
