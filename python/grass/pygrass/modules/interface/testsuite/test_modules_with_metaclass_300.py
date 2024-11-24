@@ -37,7 +37,7 @@ class ModulesMeta(type):
             for c in sorted(list(get_commands()[0]))
             if c not in SKIP and not fnmatch(c, "g.gui.*")
         ]
-        for cmd in islice(cmds, 10):
+        for cmd in islice(cmds, 250, 300):
             test_name = "test__%s" % cmd.replace(".", "_")
             warning("cmd is: %s, test_name: %s", cmd, test_name)
             print(f"cmd is: {cmd}, test_name: {test_name}")
