@@ -16,7 +16,24 @@ from grass.script.core import get_commands
 from grass.pygrass.modules.interface import Module
 
 
-SKIP = [
+SKIP: list[str] = [
+    "#Rscript2",
+    "ANNOUNCE",
+    "COPYING",
+    "LICENSE",
+    "NEWS",
+    "R",
+    "README",
+    "RESOURCES",
+    "Rpathset",
+    "THANKS",
+    "batchfiles",
+    "clip2r",
+    "copydir",
+    "el",
+    "find-miktex",
+    "make-batchfiles-pdf",
+    "movedir",
     "g.parser",
 ]
 
