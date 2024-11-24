@@ -164,8 +164,9 @@ jobs:
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
       - name: Run tests
-        run: .github/workflows/test_thorough.bat '${{ steps.osgeo4w.outputs.root }}\bin\grass85.bat' '${{ steps.osgeo4w.outputs.root }}\bin\python3'
-
+        run: .github/workflows/test_thorough.bat '$env:O4WROOT\bin\grass85.bat' '$env:O4WROOT\bin\python3'
+        env:
+          O4WROOT: ${{ steps.osgeo4w.outputs.root }}
       - name: Make HTML test report available
         if: ${{ always() }}
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
