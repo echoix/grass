@@ -4,24 +4,45 @@ Created on Tue Jun 24 09:43:53 2014
 @author: pietro
 """
 
+# ruff: noqa: LOG015
 from fnmatch import fnmatch
-from io import BytesIO
+from itertools import islice
+from logging import warning
 
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 
 from grass.script.core import get_commands
-from grass.exceptions import ParameterError
 from grass.pygrass.modules.interface import Module
 
 
-SKIP = [
+SKIP: list[str] = [
+    "#Rscript2",
+    "ANNOUNCE",
+    "COPYING",
+    "LICENSE",
+    "NEWS",
+    "R",
+    "README",
+    "RESOURCES",
+    "Rpathset",
+    "THANKS",
+    "batchfiles",
+    "clip2r",
+    "copydir",
+    "el",
+    "find-miktex",
+    "make-batchfiles-pdf",
+    "movedir",
     "g.parser",
 ]
 
 
 class ModulesMeta(type):
     def __new__(cls, name, bases, dict):
+        warning("In __new__ of ModulesMeta")
+        print("In __new__ of ModulesMeta")
+
         def gen_test(cmd):
             def test(self):
                 Module(cmd)
@@ -33,8 +54,10 @@ class ModulesMeta(type):
             for c in sorted(list(get_commands()[0]))
             if c not in SKIP and not fnmatch(c, "g.gui.*")
         ]
-        for cmd in cmds:
+        for cmd in islice(cmds, 75, 100):
             test_name = "test__%s" % cmd.replace(".", "_")
+            warning("cmd is: %s, test_name: %s", cmd, test_name)
+            print(f"cmd is: {cmd}, test_name: {test_name}")
             dict[test_name] = gen_test(cmd)
         return type.__new__(cls, name, bases, dict)
 
@@ -43,28 +66,6 @@ class TestModules(TestCase, metaclass=ModulesMeta):
     pass
 
 
-class TestModulesPickability(TestCase):
-    def test_rsun(self):
-        """Test if a Module instance is pickable"""
-        import pickle
-
-        out = BytesIO()
-        pickle.dump(Module("r.sun"), out)
-        out.close()
-
-
-class TestModulesCheck(TestCase):
-    def test_flags_with_suppress_required(self):
-        """Test if flags with suppress required are handle correctly"""
-        gextension = Module("g.extension")
-        # check if raise an error if required parameter are missing
-        with self.assertRaises(ParameterError):
-            gextension.check()
-
-        # check if the flag suppress the required parameters
-        gextension.flags.a = True
-        self.assertIsNone(gextension.check())
-
-
 if __name__ == "__main__":
+    warning("Starting test of %s", __file__)
     test()
