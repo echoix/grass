@@ -9,6 +9,8 @@ for details.
 :authors: Vaclav Petras
 """
 
+from __future__ import annotations
+
 import os
 import datetime
 from pathlib import Path
@@ -453,6 +455,14 @@ def wrap_stdstream_to_html(infile, outfile, module, stream):
         html.write(after)
 
 
+def _tail(
+    filename: str | bytes | os.PathLike[str] | os.PathLike[bytes], n: int = 50
+) -> collections.deque[str]:
+    "Return the last n lines of a file"
+    with open(filename) as f:
+        return collections.deque(f, n)
+
+
 def html_file_preview(filename):
     before = "<pre>"
     after = "</pre>"
@@ -469,12 +479,8 @@ def html_file_preview(filename):
             for line in text:
                 html.write(color_error_line(html_escape(line)))
     elif size < 10 * max_size:
-
-        def tail(filename, n):
-            return collections.deque(open(filename), n)  # noqa: SIM115
-
         html.write("... (lines omitted)\n")
-        for line in tail(filename, 50):
+        for line in _tail(filename, 50):
             html.write(color_error_line(html_escape(line)))
     else:
         return '<p style="color: red>File %s is too large to show</p>' % filename
