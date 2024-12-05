@@ -131,7 +131,7 @@ jobs:
           CFLAGS: -fPIC -Wvla
           # TODO: -pedantic-errors here won't compile
           CXXFLAGS: -fPIC
-        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror
+        run: .github/workflows/build_${{ matrix.config }}.sh $HOME/install -Werror -ftime-report
 
       - name: Add the bin directory to PATH
         run: |
