@@ -402,7 +402,6 @@ def export_stds(
 
     Path(proj_file_name).write_text(proj)
 
-    init_file = open(init_file_name, "w")
     # Create the init string
     string = ""
     # This is optional, if not present strds will be assumed for backward
@@ -423,62 +422,61 @@ def export_stds(
     string += "%s=%s\n" % ("south", south)
     string += "%s=%s\n" % ("east", east)
     string += "%s=%s\n" % ("west", west)
-    init_file.write(string)
-    init_file.close()
+    Path(init_file_name).write_text(string)
 
     metadata = gs.read_command("t.info", type=type_, input=sp.get_id())
     Path(metadata_file_name).write_text(metadata)
 
-    read_file = open(read_file_name, "w")
+    readme: list[str] = []
     if type_ == "strds":
-        read_file.write(
+        readme.append(
             "This space time raster dataset was exported with "
             "t.rast.export of GRASS GIS 8\n"
         )
     elif type_ == "stvds":
-        read_file.write(
+        readme.append(
             "This space time vector dataset was exported with "
             "t.vect.export of GRASS GIS 8\n"
         )
     elif type_ == "str3ds":
-        read_file.write(
+        readme.append(
             "This space time 3D raster dataset was exported "
             "with t.rast3d.export of GRASS GIS 8\n"
         )
-    read_file.write("\n")
-    read_file.write("Files:\n")
+    readme.extend(("\n", "Files:\n"))
     if type_ == "strds":
         if format_ == "GTiff":
             # 123456789012345678901234567890
-            read_file.write("       *.tif  -- GeoTIFF raster files\n")
-            read_file.write("     *.color  -- GRASS GIS raster color rules\n")
+            readme.extend(
+                (
+                    "       *.tif  -- GeoTIFF raster files\n",
+                    "     *.color  -- GRASS GIS raster color rules\n",
+                )
+            )
         elif format_ == "pack":
-            read_file.write("      *.pack  -- GRASS raster files packed with r.pack\n")
+            readme.append("      *.pack  -- GRASS raster files packed with r.pack\n")
     elif type_ == "stvds":
         # 123456789012345678901234567890
         if format_ == "GML":
-            read_file.write("       *.xml  -- Vector GML files\n")
+            readme.append("       *.xml  -- Vector GML files\n")
         else:
-            read_file.write("      *.pack  -- GRASS vector files packed with v.pack\n")
+            readme.append("      *.pack  -- GRASS vector files packed with v.pack\n")
     elif type_ == "str3ds":
-        read_file.write("      *.pack  -- GRASS 3D raster files packed with r3.pack\n")
-    read_file.write(
-        "%13s -- Projection information in PROJ.4 format\n" % (proj_file_name)
+        readme.append("      *.pack  -- GRASS 3D raster files packed with r3.pack\n")
+    readme.extend(
+        (
+            "%13s -- Projection information in PROJ.4 format\n" % proj_file_name,
+            "%13s -- GRASS GIS space time %s dataset information\n"
+            % (init_file_name, sp.get_new_map_instance(None).get_type()),
+            "%13s -- Time series file, lists all maps by name with interval\n"
+            % list_file_name,
+            "                 time stamps in ISO-Format. Field separator is |\n",
+            "%13s -- The output of t.info\n" % metadata_file_name,
+            "%13s -- This file\n" % read_file_name,
+        )
     )
-    read_file.write(
-        "%13s -- GRASS GIS space time %s dataset information\n"
-        % (init_file_name, sp.get_new_map_instance(None).get_type())
-    )
-    read_file.write(
-        "%13s -- Time series file, lists all maps by name "
-        "with interval\n" % (list_file_name)
-    )
-    read_file.write(
-        "                 time stamps in ISO-Format. Field separator is |\n"
-    )
-    read_file.write("%13s -- The output of t.info\n" % (metadata_file_name))
-    read_file.write("%13s -- This file\n" % (read_file_name))
-    read_file.close()
+    with Path(read_file_name).open("w") as read_file_:
+        read_file_.writelines(readme)
 
     # Append the file list
     tar.add(list_file_name)
