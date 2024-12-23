@@ -467,7 +467,13 @@ skips = ["B324", "B110", "B101", "B112", "B311", "B404", "B603"]
 # ignore-list. The regex matches against paths and can be in Posix or Windows
 # format. Because '\\' represents the directory delimiter on Windows systems, it
 # can't be used as an escape character.
-ignore-paths = [".*/python/libgrass_interface_generator/.*", ".*/Makefile$", ".*/OBJ\\..*"]
+ignore-paths = [
+    ".*/python/libgrass_interface_generator/.*",
+    ".*/Makefile$",
+    ".*/OBJ[.].*",
+    "dist[.].*",
+    "bin[.].*",
+]
 
 # # Files or directories matching the regular expression patterns are skipped. The
 # # regex matches against base names, not paths. The default value ignores Emacs
@@ -534,7 +540,7 @@ py-version = "3.9"
 # source root.
 # source-roots = ["./python/", "gui/"]
 # source-roots = ["./python/*", "gui"]
-# source-roots = ["python", "gui"]
+source-roots = ["python", "gui/wxpython"]
 # source-roots = "python"
 # source-roots ="python/"
 # source-roots = ["./python/grass/*", "./gui/wxpython/*"]
