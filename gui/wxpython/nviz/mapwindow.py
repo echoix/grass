@@ -18,18 +18,20 @@ This program is free software under the GNU General Public License
 @author Anna Kratochvilova <kratochanna gmail.com> (Google SoC 2011)
 """
 
+from __future__ import annotations
+
+import copy
+import math
 import os
 import sys
 import time
-import copy
-import math
-
 from threading import Thread
+from typing import TYPE_CHECKING, TypedDict
 
 import wx
 from wx.lib.newevent import NewEvent
 from wx import glcanvas
-from wx.glcanvas import WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE
+from wx.glcanvas import WX_GL_DEPTH_SIZE, WX_GL_DOUBLEBUFFER, WX_GL_RGBA
 
 import grass.script as gs
 from grass.pydispatch.signal import Signal
@@ -45,28 +47,43 @@ from core.globalvar import CheckWxVersion
 from core.utils import str2rgb
 from core.giface import Notification
 
+if TYPE_CHECKING:
+    import lmgr.frame
+    import main_window.frame
+
 wxUpdateProperties, EVT_UPDATE_PROP = NewEvent()
 wxUpdateView, EVT_UPDATE_VIEW = NewEvent()
 wxUpdateLight, EVT_UPDATE_LIGHT = NewEvent()
 wxUpdateCPlane, EVT_UPDATE_CPLANE = NewEvent()
 
 
+class RenderTypedDict(TypedDict):
+    """Typed dictionary to store the render flags for GLWindow.
+    At runtime, it is a plain dict."""
+
+    quick: bool
+    vlines: bool
+    vpoints: bool
+    overlays: bool
+
+
 class NvizThread(Thread):
-    def __init__(self, log, progressbar, window):
+
+    def __init__(self, log, progressbar, window) -> None:
         Thread.__init__(self)
         Debug.msg(5, "NvizThread.__init__():")
         self.log = log
         self.progressbar = progressbar
         self.window = window
 
-        self._display = None
+        self._display: wxnviz.Nviz | None = None
 
         self.daemon = True
 
-    def run(self):
+    def run(self) -> None:
         self._display = wxnviz.Nviz(self.log, self.progressbar)
 
-    def GetDisplay(self):
+    def GetDisplay(self) -> wxnviz.Nviz | None:
         """Get display instance"""
         return self._display
 
@@ -74,7 +91,16 @@ class NvizThread(Thread):
 class GLWindow(MapWindowBase, glcanvas.GLCanvas):
     """OpenGL canvas for Map Display Window"""
 
-    def __init__(self, parent, giface, frame, Map, tree, lmgr, id=wx.ID_ANY):
+    def __init__(
+        self,
+        parent,
+        giface,
+        frame,
+        Map,
+        tree,
+        lmgr: main_window.frame.GMFrame | lmgr.frame.GMFrame,
+        id=wx.ID_ANY,
+    ) -> None:
         """All parameters except for id are mandatory. The todo is to remove
         them completely."""
         self.parent = parent
@@ -119,12 +145,12 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
 
         self.init = False
         self.initView = False
-        self.context = None
+        self.context: glcanvas.GLContext | None = None
         if CheckWxVersion(version=[2, 9]):
             self.context = glcanvas.GLContext(self)
 
         # render mode
-        self.render = {
+        self.render: RenderTypedDict = {
             "quick": False,
             # do not render vector lines in quick mode
             "vlines": False,
@@ -172,7 +198,10 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
         self.nvizThread = NvizThread(logerr, self.parent.GetProgressBar(), logmsg)
         self.nvizThread.start()
         time.sleep(0.1)
-        self._display = self.nvizThread.GetDisplay()
+        # self.nvizThread.start() invokes NvizThread.run() in a separate thread,
+        # which sets the _display attribute returned by GetDisplay(),
+        # so GetDisplay() shouldn't return None after calling self.nvizThread.start().
+        self._display: wxnviz.Nviz | None = self.nvizThread.GetDisplay()
 
         # GRASS_REGION needed only for initialization
         del os.environ["GRASS_REGION"]
@@ -236,7 +265,15 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
             )
             GMessage(message)
 
-    def GetContentScaleFactor(self):
+    def GetContentScaleFactor(self) -> float:
+        """See note that wx.glcanvas.GLContext always uses physical pixels, even on the
+        platforms where wx.Window uses logical pixels, in wx.glcanvas.GLCanvas docs
+        https://docs.wxpython.org/wx.glcanvas.GLCanvas.html
+
+        Docs for wx.glcanvas.GLCanvas.GetContentScaleFactor() point to
+        wx.Window.GetContentScaleFactor() at
+        https://docs.wxpython.org/wx.Window.html#wx.Window.GetContentScaleFactor
+        """
         if sys.platform == "darwin" and not CheckWxVersion(version=[4, 1, 0]):
             return 1
         return super().GetContentScaleFactor()
@@ -755,7 +792,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
 
         return (x, y)
 
-    def DoZoom(self, zoomtype, pos):
+    def DoZoom(self, zoomtype, pos) -> None:
         """Change perspective and focus"""
 
         prev_value = self.view["persp"]["value"]
@@ -1170,16 +1207,15 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
         if event.refresh:
             self.Refresh(False)
 
-    def UpdateMap(self, render=True, reRenderTool=False):
+    def UpdateMap(self, render: bool = True, reRenderTool: bool = False) -> None:
         """Updates the canvas anytime there is a change to the
         underlying images or to the geometry of the canvas.
 
         :param render: re-render map composition
-        :type render: bool
-        :param reRenderTool bool: enable re-render map if True, when
-                                  auto re-render map is disabled and
-                                  Render map tool is activated from the
-                                  Map Display toolbar
+        :param reRenderTool: enable re-render map if True, when
+                             auto re-render map is disabled and
+                             Render map tool is activated from the
+                             Map Display toolbar
         """
         if not self.parent.mapWindowProperties.autoRender and not reRenderTool:
             return
@@ -1239,7 +1275,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
         Debug.msg(
             3,
             "GLWindow.UpdateMap(): quick = %d, -> time = %g"
-            % (self.render["quick"], (stop - start)),
+            % (int(self.render["quick"]), (stop - start)),
         )
 
     def EraseMap(self):
@@ -2739,7 +2775,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
         """Get display instance"""
         return self._display
 
-    def ZoomToMap(self, layers):
+    def ZoomToMap(self, layers: list | None = None) -> None:
         """Reset view
 
         :param layers: so far unused
