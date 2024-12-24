@@ -2775,12 +2775,56 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
         """Get display instance"""
         return self._display
 
-    def ZoomToMap(self, layers: list | None = None) -> None:
+    def ZoomToMap(self, layers: list | None = None, ignoreNulls=False) -> None:
         """Reset view
 
         :param layers: so far unused
         """
+        # self.lmgr._giface.GetLayerList()
+        if not layers:
+            layers = self._giface.GetLayerList().GetSelectedLayers(checkedOnly=False)
+            layers = [layer.maplayer for layer in layers]
+        if not layers:
+            self.lmgr.nviz.OnResetView(None)
+            return
+        # this class should not ask for digit, this is a hack
+        self.digit = None
+        rast = []
+        rast3d = None
+        vect = []
+        updated = False
+        for layer in layers:
+            # only one raster is used: g.region does not support multiple
+            if layer.type == "raster":
+                rast.append(layer.GetName())
+            elif layer.type == "raster_3d":
+                rast3d = layer.GetName()
+            elif layer.type == "vector":
+                if self.digit and self.toolbar.GetLayer() == layer:
+                    w, s, b, e, n, t = self.digit.GetDisplay().GetMapBoundingBox()
+                    self.Map.GetRegion(n=n, s=s, w=w, e=e, update=True)
+                    updated = True
+                else:
+                    vect.append(layer.name)
+            elif layer.type == "rgb":
+                for rname in layer.GetName().splitlines():
+                    rast.append(rname)
+
+        if not updated:
+            self.Map.GetRegion(
+                rast=rast, rast3d=rast3d, vect=vect, zoom=ignoreNulls, update=True
+            )
+        # self.ZoomHistory(
+        #     self.Map.region["n"],
+        #     self.Map.region["s"],
+        #     self.Map.region["e"],
+        #     self.Map.region["w"],
+        # )
+
+        self.ViewHistory(view=self.view, iview=self.iview)
+
         self.lmgr.nviz.OnResetView(None)
+        # self.ViewHistory
 
     def DisactivateWin(self):
         """Use when the class instance is hidden in MapFrame."""
