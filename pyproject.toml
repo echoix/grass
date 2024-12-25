@@ -538,13 +538,7 @@ py-version = "3.9"
 # source root is an absolute path or a path relative to the current working
 # directory used to determine a package namespace for modules located under the
 # source root.
-# source-roots = ["./python/", "gui/"]
-# source-roots = ["./python/*", "gui"]
 source-roots = ["python", "gui/wxpython"]
-# source-roots = "python"
-# source-roots ="python/"
-# source-roots = ["./python/grass/*", "./gui/wxpython/*"]
-# source-roots = ["./python/grass", "./gui/wxpython/*"]
 
 # # When enabled, pylint would attempt to guess common misconfiguration and emit
 # # user-friendly hints instead of false-positive error messages.
@@ -707,17 +701,6 @@ source-roots = ["python", "gui/wxpython"]
 
 # # List of valid names for the first argument in a metaclass class method.
 # valid-metaclass-classmethod-first-arg = ["mcs"]
-# [tool.pylint.MASTER]
-# load-plugins=[
-#     "pylint_per_file_ignores",
-
-# ]
-
-# [tool.pylint.messages_control]
-# per-file-ignores = [
-#     "scripts/modal/:import-error", # Modal Image imports are a false positive
-#     "scripts/db.py:not-callable",  # not-callable is a false positive, SEE: https://github.com/pylint-dev/pylint/issues/8138
-# ]
 
 [tool.pylint.design]
 # List of regular expressions of class ancestor names to ignore when counting
