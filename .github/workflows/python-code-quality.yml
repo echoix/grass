@@ -156,7 +156,6 @@ jobs:
           echo "$HOME/install/bin" >> $GITHUB_PATH
 
       - name: Run Pylint on grass package
-        continue-on-error: true # DEBUG
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
@@ -164,7 +163,6 @@ jobs:
           pylint --persistent=no --py-version=${{ env.MIN_PYTHON_VERSION }} --jobs=$(nproc) grass
 
       - name: Run Pylint on wxGUI
-        continue-on-error: true # DEBUG
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
@@ -172,7 +170,6 @@ jobs:
           pylint --persistent=no --py-version=${{ env.MIN_PYTHON_VERSION }} --jobs=$(nproc) .
 
       - name: Run Pylint on other files using pytest
-        continue-on-error: true # DEBUG
         run: |
           pipx inject --include-apps pylint pytest
           pipx inject pylint pytest-pylint pytest-github-actions-annotate-failures pytest-timeout
@@ -187,7 +184,6 @@ jobs:
             scripts/d.rast.edit/d.rast.edit.py"
 
       - name: Run Pylint all in one pass
-        continue-on-error: true # DEBUG
         run: |
           export PYTHONPATH=`grass --config python_path`:$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
