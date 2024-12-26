@@ -470,7 +470,7 @@ ignore = ["CVS", ".git", ".ruff_cache"]
 ignore-paths = [
     "bin[.].*",
     "dist[.].*",
-    "gui/wxpython/menustrings.py",
+    # "(gui/wxpython/)?menustrings.py",
     "python/libgrass_interface_generator",
 ]
 
