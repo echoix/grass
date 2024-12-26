@@ -461,7 +461,7 @@ skips = ["B324", "B110", "B101", "B112", "B311", "B404", "B603"]
 # # from-stdin =
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore = ["CVS", ".git", ".ruff_cache"]
+ignore = ["CVS", ".git", ".ruff_cache", ".pytest_cache"]
 
 # Add files or directories matching the regular expressions patterns to the
 # ignore-list. The regex matches against paths and can be in Posix or Windows
