@@ -502,18 +502,10 @@ jobs = 0
 
 # List of plugins (as comma separated values of python module names) to load,
 # usually to register additional checkers.
-# load-plugins = [
-#     # "pylint_per_file_ignores"
-#     # ,
-#     # "pylint.extensions.redefined_variable_type", # *GRASS TODO: Enable later*
-#     # "pylint.extensions.bad_builtin", # *GRASS TODO: Enable later*
-# ]
-# load-plugins = ["pylint_per_file_ignores"]
 load-plugins = [
     # "pylint_per_file_ignores",
-    # "pylint.extensions.redefined_variable_type", # *GRASS TODO: Enable later*
-    # "pylint.extensions.bad_builtin", # *GRASS TODO: Enable later*
-    # "no_self_use",
+    "pylint.extensions.redefined_variable_type", # *GRASS TODO: Enable later*
+    "pylint.extensions.bad_builtin",             # *GRASS TODO: Enable later*
     "pylint.extensions.no_self_use",
 ]
 
