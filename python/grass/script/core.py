@@ -32,12 +32,22 @@ import shlex
 import json
 import csv
 import io
+from collections.abc import Iterable, Mapping, MutableMapping
 from tempfile import NamedTemporaryFile
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, AnyStr, Literal, NoReturn, TypeVar, overload
 
 from .utils import KeyValue, parse_key_val, basename, encode, decode, try_remove
 from grass.exceptions import ScriptError, CalledModuleError
-from grass.grassdb.manage import resolve_mapset_path
+from grass.grassdb.manage import MapsetPath, resolve_mapset_path
+
+
+if TYPE_CHECKING:
+    from _typeshed import StrPath
+
+
+T = TypeVar("T")
+_Env = Mapping[str, str]
 
 
 # subprocess wrapper that uses shell on Windows
@@ -88,7 +98,7 @@ def call(*args, **kwargs):
 
 # GRASS-oriented interface to subprocess module
 
-_popen_args = [
+_popen_args: list[str] = [
     "bufsize",
     "executable",
     "stdin",
@@ -105,7 +115,27 @@ _popen_args = [
 ]
 
 
-def _make_val(val):
+@overload
+def _make_val(val: AnyStr) -> str:
+    pass
+
+
+@overload
+def _make_val(val: float) -> str:
+    pass
+
+
+@overload
+def _make_val(val: Iterable[Any]) -> str:
+    pass
+
+
+@overload
+def _make_val(val: Any) -> str:
+    pass
+
+
+def _make_val(val: Any) -> str:
     """Convert value to a unicode string"""
     if isinstance(val, (bytes, str)):
         return decode(val)
@@ -118,7 +148,7 @@ def _make_val(val):
     return str(val)
 
 
-def _make_unicode(val, enc):
+def _make_unicode(val: AnyStr | None, enc: str | None) -> str | AnyStr | None:
     """Convert value to unicode with given encoding
 
     :param val: value to be converted
@@ -132,7 +162,7 @@ def _make_unicode(val, enc):
     return decode(val, encoding=enc)
 
 
-def get_commands(*, env=None):
+def get_commands(*, env: _Env | None = None) -> tuple[set, dict]:
     """Create list of available GRASS commands to use when parsing
     string from the command line
 
@@ -231,15 +261,15 @@ def get_real_command(cmd):
 
 
 def make_command(
-    prog,
-    flags="",
-    overwrite=False,
-    quiet=False,
-    verbose=False,
-    superquiet=False,
+    prog: str,
+    flags: str = "",
+    overwrite: bool = False,
+    quiet: bool = False,
+    verbose: bool = False,
+    superquiet: bool = False,
     errors=None,
-    **options,
-):
+    **options: Mapping,
+) -> list[str]:
     """Return a list of strings suitable for use as the args parameter to
     Popen() or call(). Example:
 
@@ -248,17 +278,17 @@ def make_command(
     ['g.message', '-w', 'message=this is a warning']
 
 
-    :param str prog: GRASS module
-    :param str flags: flags to be used (given as a string)
-    :param bool overwrite: True to enable overwriting the output (<tt>--o</tt>)
-    :param bool quiet: True to run quietly (<tt>--q</tt>)
-    :param bool superquiet: True to run extra quietly (<tt>--qq</tt>)
-    :param bool verbose: True to run verbosely (<tt>--v</tt>)
+    :param prog: GRASS module
+    :param flags: flags to be used (given as a string)
+    :param overwrite: True to enable overwriting the output (<tt>--o</tt>)
+    :param quiet: True to run quietly (<tt>--q</tt>)
+    :param verbose: True to run verbosely (<tt>--v</tt>)
+    :param superquiet: True to run extra quietly (<tt>--qq</tt>)
     :param options: module's parameters
 
     :return: list of arguments
     """
-    args = [_make_val(prog)]
+    args: list[str] = [_make_val(prog)]
     if overwrite:
         args.append("--o")
     if quiet:
@@ -296,7 +326,7 @@ def make_command(
     return args
 
 
-def handle_errors(returncode, result, args, kwargs):
+def handle_errors(returncode: int | None, result, args, kwargs: Mapping):
     """Error handler for :func:`run_command()` and similar functions
 
     The functions which are using this function to handle errors,
@@ -364,12 +394,12 @@ def handle_errors(returncode, result, args, kwargs):
 
 
 def start_command(
-    prog,
-    flags="",
-    overwrite=False,
-    quiet=False,
-    verbose=False,
-    superquiet=False,
+    prog: str,
+    flags: str = "",
+    overwrite: bool = False,
+    quiet: bool = False,
+    verbose: bool = False,
+    superquiet: bool = False,
     **kwargs,
 ):
     """Returns a Popen object with the command created by make_command.
@@ -390,12 +420,12 @@ def start_command(
     underscore at the end of the parameter. For example, use
     ``lambda_=1.6`` instead of ``lambda=1.6``.
 
-    :param str prog: GRASS module
-    :param str flags: flags to be used (given as a string)
-    :param bool overwrite: True to enable overwriting the output (<tt>--o</tt>)
-    :param bool quiet: True to run quietly (<tt>--q</tt>)
-    :param bool superquiet: True to run extra quietly (<tt>--qq</tt>)
-    :param bool verbose: True to run verbosely (<tt>--v</tt>)
+    :param prog: GRASS module
+    :param flags: flags to be used (given as a string)
+    :param overwrite: True to enable overwriting the output (<tt>--o</tt>)
+    :param quiet: True to run quietly (<tt>--q</tt>)
+    :param verbose: True to run verbosely (<tt>--v</tt>)
+    :param superquiet: True to run extra quietly (<tt>--qq</tt>)
     :param kwargs: module's parameters
 
     :return: Popen object
@@ -652,25 +682,25 @@ def write_command(*args, **kwargs):
 
 
 def exec_command(
-    prog,
-    flags="",
-    overwrite=False,
-    quiet=False,
-    verbose=False,
-    superquiet=False,
-    env=None,
-    **kwargs,
-):
+    prog: str,
+    flags: str = "",
+    overwrite: bool = False,
+    quiet: bool = False,
+    verbose: bool = False,
+    superquiet: bool = False,
+    env: _Env | None = None,
+    **kwargs: Mapping,
+) -> NoReturn:
     """Interface to os.execvpe(), but with the make_command() interface.
 
-    :param str prog: GRASS module
-    :param str flags: flags to be used (given as a string)
-    :param bool overwrite: True to enable overwriting the output (<tt>--o</tt>)
-    :param bool quiet: True to run quietly (<tt>--q</tt>)
-    :param bool superquiet: True to run quietly (<tt>--qq</tt>)
-    :param bool verbose: True to run verbosely (<tt>--v</tt>)
+    :param prog: GRASS module
+    :param flags: flags to be used (given as a string)
+    :param overwrite: True to enable overwriting the output (<tt>--o</tt>)
+    :param quiet: True to run quietly (<tt>--q</tt>)
+    :param verbose: True to run verbosely (<tt>--v</tt>)
+    :param superquiet: True to run quietly (<tt>--qq</tt>)
     :param env: dictionary with system environment variables (`os.environ` by default)
-    :param list kwargs: module's parameters
+    :param kwargs: module's parameters
 
     """
     args = make_command(prog, flags, overwrite, quiet, superquiet, verbose, **kwargs)
@@ -683,24 +713,24 @@ def exec_command(
 # interface to g.message
 
 
-def message(msg, flag=None, env=None):
+def message(msg: str, flag: str | None = None, env: _Env | None = None) -> None:
     """Display a message using `g.message`
 
-    :param str msg: message to be displayed
-    :param str flag: flags (given as string)
+    :param msg: message to be displayed
+    :param flag: flags (given as string)
     :param env: dictionary with system environment variables (`os.environ` by default)
     """
     run_command("g.message", flags=flag, message=msg, errors="ignore", env=env)
 
 
-def debug(msg, debug=1, env=None):
+def debug(msg: str, debug=1, env: _Env | None = None) -> None:
     """Display a debugging message using `g.message -d`.
 
     The visibility of a debug message at runtime is controlled by
     setting the corresponding DEBUG level with `g.gisenv set="DEBUG=X"`
     (with `X` set to the debug level specified in the function call).
 
-    :param str msg: debugging message to be displayed
+    :param msg: debugging message to be displayed
     :param str debug: debug level (0-5) with the following recommended levels:
         Use 1 for messages generated once of few times,
         3 for messages generated for each raster row or vector line,
@@ -715,25 +745,25 @@ def debug(msg, debug=1, env=None):
         run_command("g.message", flags="d", message=msg, debug=debug, env=env)
 
 
-def verbose(msg, env=None):
+def verbose(msg: str, env: _Env | None = None) -> None:
     """Display a verbose message using `g.message -v`
 
-    :param str msg: verbose message to be displayed
+    :param msg: verbose message to be displayed
     :param env: dictionary with system environment variables (`os.environ` by default)
     """
     message(msg, flag="v", env=env)
 
 
-def info(msg, env=None):
+def info(msg: str, env: _Env | None = None) -> None:
     """Display an informational message using `g.message -i`
 
-    :param str msg: informational message to be displayed
+    :param msg: informational message to be displayed
     :param env: dictionary with system environment variables (`os.environ` by default)
     """
     message(msg, flag="i", env=env)
 
 
-def percent(i, n, s, env=None):
+def percent(i: int, n: int, s: int, env: _Env | None = None) -> None:
     """Display a progress info message using `g.message -p`
 
     ::
@@ -744,44 +774,44 @@ def percent(i, n, s, env=None):
             percent(i, n, 1)
         percent(1, 1, 1)
 
-    :param int i: current item
-    :param int n: total number of items
-    :param int s: increment size
+    :param i: current item
+    :param n: total number of items
+    :param s: increment size
     :param env: dictionary with system environment variables (`os.environ` by default)
     """
     message("%d %d %d" % (i, n, s), flag="p", env=env)
 
 
-def warning(msg, env=None):
+def warning(msg: str, env: _Env | None = None):
     """Display a warning message using `g.message -w`
 
-    :param str msg: warning message to be displayed
+    :param msg: warning message to be displayed
     :param env: dictionary with system environment variables (`os.environ` by default)
     """
     message(msg, flag="w", env=env)
 
 
-def error(msg, env=None):
+def error(msg: str, env: _Env | None = None) -> None:
     """Display an error message using `g.message -e`
 
     This function does not end the execution of the program.
     The right action after the error is up to the caller.
     For error handling using the standard mechanism use :func:`fatal()`.
 
-    :param str msg: error message to be displayed
+    :param msg: error message to be displayed
     :param env: dictionary with system environment variables (`os.environ` by default)
     """
     message(msg, flag="e", env=env)
 
 
-def fatal(msg, env=None):
+def fatal(msg: str, env: _Env | None = None) -> NoReturn:
     """Display an error message using `g.message -e`, then abort or raise
 
     Raises exception when module global raise_on_error is 'True', abort
     (calls exit) otherwise.
     Use :func:`set_raise_on_error()` to set the behavior.
 
-    :param str msg: error message to be displayed
+    :param msg: error message to be displayed
     :param env: dictionary with system environment variables (`os.environ` by default)
     """
     global raise_on_error
@@ -792,10 +822,10 @@ def fatal(msg, env=None):
     sys.exit(1)
 
 
-def set_raise_on_error(raise_exp=True):
+def set_raise_on_error(raise_exp: bool = True) -> bool:
     """Define behaviour on fatal error (fatal() called)
 
-    :param bool raise_exp: True to raise ScriptError instead of calling
+    :param raise_exp: True to raise ScriptError instead of calling
                            sys.exit(1) in fatal()
 
     :return: current status
@@ -806,7 +836,7 @@ def set_raise_on_error(raise_exp=True):
     return tmp_raise
 
 
-def get_raise_on_error():
+def get_raise_on_error() -> bool:
     """Return True if a ScriptError exception is raised instead of calling
     sys.exit(1) in case a fatal error was invoked with fatal()
     """
@@ -815,7 +845,7 @@ def get_raise_on_error():
 
 
 # TODO: solve also warnings (not printed now)
-def set_capture_stderr(capture=True):
+def set_capture_stderr(capture: bool = True) -> bool:
     """Enable capturing standard error output of modules and print it.
 
     By default, standard error output (stderr) of child processes shows
@@ -937,10 +967,10 @@ def parser() -> tuple[dict[str, str], dict[str, bool]]:
 # interface to g.tempfile
 
 
-def tempfile(create=True, env=None):
+def tempfile(create: bool = True, env: _Env | None = None):
     """Returns the name of a temporary file, created with g.tempfile.
 
-    :param bool create: True to create a file
+    :param create: True to create a file
     :param env: environment
 
     :return: path to a tmp file
@@ -952,7 +982,7 @@ def tempfile(create=True, env=None):
     return read_command("g.tempfile", flags=flags, pid=os.getpid(), env=env).strip()
 
 
-def tempdir(env=None):
+def tempdir(env: _Env | None = None):
     """Returns the name of a temporary dir, created with g.tempfile."""
     tmp = tempfile(create=False, env=env)
     os.mkdir(tmp)
@@ -960,14 +990,13 @@ def tempdir(env=None):
     return tmp
 
 
-def tempname(length, lowercase=False):
+def tempname(length: int, lowercase: bool = False) -> str:
     """Generate a GRASS and SQL compliant random name starting with tmp_
     followed by a random part of length "length"
 
-    :param int length: length of the random part of the name to generate
-    :param bool lowercase: use only lowercase characters to generate name
-    :returns: String with a random name of length "length" starting with a letter
-    :rtype: str
+    :param length: length of the random part of the name to generate
+    :param lowercase: use only lowercase characters to generate name
+    :return: String with a random name of length "length" starting with a letter
 
     :Example:
 
@@ -984,7 +1013,7 @@ def tempname(length, lowercase=False):
     return "tmp_" + random_part
 
 
-def _compare_projection(dic):
+def _compare_projection(dic: Mapping):
     """Check if projection has some possibility of duplicate names like
     Universal Transverse Mercator and Universe Transverse Mercator and
     unify them
@@ -992,7 +1021,6 @@ def _compare_projection(dic):
     :param dic: The dictionary containing information about projection
 
     :return: The dictionary with the new values if needed
-
     """
     # the lookup variable is a list of list, each list contains all the
     # possible name for a projection system
@@ -1004,7 +1032,7 @@ def _compare_projection(dic):
     return dic
 
 
-def _compare_units(dic):
+def _compare_units(dic: Mapping):
     """Check if units has some possibility of duplicate names like
     meter and metre and unify them
 
@@ -1032,20 +1060,22 @@ def _compare_units(dic):
 
 
 def _text_to_key_value_dict(
-    filename, sep=":", val_sep=",", checkproj=False, checkunits=False
-):
+    filename: StrPath,
+    sep: str = ":",
+    val_sep: str = ",",
+    checkproj: bool = False,
+    checkunits: bool = False,
+) -> KeyValue[list[int | float | str]]:
     """Convert a key-value text file, where entries are separated by newlines
     and the key and value are separated by `sep', into a key-value dictionary
     and discover/use the correct data types (float, int or string) for values.
 
-    :param str filename: The name or name and path of the text file to convert
-    :param str sep: The character that separates the keys and values, default
-                    is ":"
-    :param str val_sep: The character that separates the values of a single
+    :param filename: The name or name and path of the text file to convert
+    :param sep: The character that separates the keys and values, default is ":"
+    :param val_sep: The character that separates the values of a single
                         key, default is ","
-    :param bool checkproj: True if it has to check some information about
-                           projection system
-    :param bool checkproj: True if it has to check some information about units
+    :param checkproj: True if it has to check some information about projection system
+    :param checkunits: True if it has to check some information about units
 
     :return: The dictionary
 
@@ -1066,7 +1096,7 @@ def _text_to_key_value_dict(
     """
     with Path(filename).open() as f:
         text = f.readlines()
-    kvdict = KeyValue()
+    kvdict: KeyValue[list[int | float | str]] = KeyValue()
 
     for line in text:
         if line.find(sep) >= 0:
@@ -1077,7 +1107,7 @@ def _text_to_key_value_dict(
             # Jump over empty values
             continue
         values = value.split(val_sep)
-        value_list = []
+        value_list: list[int | float | str] = []
 
         for value in values:
             not_float = False
@@ -1086,19 +1116,23 @@ def _text_to_key_value_dict(
             # Convert values into correct types
             # We first try integer then float
             try:
-                value_converted = int(value)
+                value_converted: int | float | str = int(value)
+                value_list.append(value_converted)
+                continue
             except ValueError:
                 not_int = True
             if not_int:
                 try:
                     value_converted = float(value)
+                    value_list.append(value_converted)
+                    continue
                 except ValueError:
                     not_float = True
 
             if not_int and not_float:
                 value_converted = value.strip()
-
-            value_list.append(value_converted)
+                value_list.append(value_converted)
+                continue
 
         kvdict[key] = value_list
     if checkproj:
@@ -1173,7 +1207,7 @@ def compare_key_value_text_files(
 # interface to g.gisenv
 
 
-def gisenv(env=None):
+def gisenv(env: _Env | None = None) -> KeyValue[str | None]:
     """Returns the output from running g.gisenv (with no arguments), as a
     dictionary. Example:
 
@@ -1191,23 +1225,23 @@ def gisenv(env=None):
 # interface to g.region
 
 
-def locn_is_latlong(env=None) -> bool:
+def locn_is_latlong(env: _Env | None = None) -> bool:
     """Tests if location is lat/long. Value is obtained
     by checking the "g.region -pu" projection code.
 
     :return: True for a lat/long region, False otherwise
     """
     s = read_command("g.region", flags="pu", env=env)
-    kv = parse_key_val(s, ":")
+    kv: KeyValue[str | None] = parse_key_val(s, ":")
     return kv["projection"].split(" ")[0] == "3"
 
 
-def region(region3d=False, complete=False, env=None):
+def region(region3d: bool = False, complete: bool = False, env: _Env | None = None):
     """Returns the output from running "g.region -gu", as a
     dictionary. Example:
 
-    :param bool region3d: True to get 3D region
-    :param bool complete:
+    :param region3d: True to get 3D region
+    :param complete:
     :param env: dictionary with system environment variables (`os.environ` by default)
 
     >>> curent_region = region()
@@ -1246,7 +1280,9 @@ def region(region3d=False, complete=False, env=None):
     return reg
 
 
-def region_env(region3d=False, flags=None, env=None, **kwargs):
+def region_env(
+    region3d: bool = False, flags: str | None = None, env: _Env | None = None, **kwargs
+) -> str:
     """Returns region settings as a string which can used as
     GRASS_REGION environmental variable.
 
@@ -1256,8 +1292,8 @@ def region_env(region3d=False, flags=None, env=None, **kwargs):
     See also :func:`use_temp_region()` for alternative method how to define
     temporary region used for raster-based computation.
 
-    :param bool region3d: True to get 3D region
-    :param string flags: for example 'a'
+    :param region3d: True to get 3D region
+    :param flags: for example 'a'
     :param env: dictionary with system environment variables (`os.environ` by default)
     :param kwargs: g.region's parameters like 'raster', 'vector' or 'region'
 
@@ -1271,7 +1307,7 @@ def region_env(region3d=False, flags=None, env=None, **kwargs):
     :return: empty string on error
     """
     # read proj/zone from WIND file
-    gis_env = gisenv(env)
+    gis_env: KeyValue[str | None] = gisenv(env)
     windfile = os.path.join(
         gis_env["GISDBASE"], gis_env["LOCATION_NAME"], gis_env["MAPSET"], "WIND"
     )
@@ -1354,7 +1390,7 @@ def use_temp_region():
     atexit.register(del_temp_region)
 
 
-def del_temp_region():
+def del_temp_region() -> None:
     """Unsets WIND_OVERRIDE and removes any region named by it."""
     try:
         name = os.environ.pop("WIND_OVERRIDE")
@@ -1576,7 +1612,7 @@ def list_grouped(
 
 # color parsing
 
-named_colors: dict[str, tuple[float, float, float]] = {
+named_colors: Mapping[str, tuple[float, float, float]] = {
     "white": (1.00, 1.00, 1.00),
     "black": (0.00, 0.00, 0.00),
     "red": (1.00, 0.00, 0.00),
@@ -1627,7 +1663,7 @@ def parse_color(
 # check GRASS_OVERWRITE
 
 
-def overwrite():
+def overwrite() -> bool:
     """Return True if existing files may be overwritten"""
     owstr = "GRASS_OVERWRITE"
     return owstr in os.environ and os.environ[owstr] != "0"
@@ -1636,7 +1672,7 @@ def overwrite():
 # check GRASS_VERBOSE
 
 
-def verbosity():
+def verbosity() -> int:
     """Return the verbosity level selected by GRASS_VERBOSE
 
     Currently, there are 5 levels of verbosity:
@@ -1659,7 +1695,7 @@ def verbosity():
 # Various utilities, not specific to GRASS
 
 
-def find_program(pgm, *args):
+def find_program(pgm: str, *args) -> bool:
     """Attempt to run a program, with optional arguments.
 
     You must call the program in a way that will return a successful
@@ -1674,7 +1710,7 @@ def find_program(pgm, *args):
     >>> find_program('ls', '--version')
     True
 
-    :param str pgm: program name
+    :param pgm: program name
     :param args: list of arguments
 
     :return: False if the attempt failed due to a missing executable
@@ -1695,14 +1731,14 @@ def find_program(pgm, *args):
 # interface to g.mapsets
 
 
-def mapsets(search_path=False, env=None):
+def mapsets(search_path: bool = False, env: _Env | None = None) -> list[str]:
     """List available mapsets
 
     :param bool search_path: True to list mapsets only in search path
 
     :return: list of mapsets
     """
-    flags = "p" if search_path else "l"
+    flags: Literal["p", "l"] = "p" if search_path else "l"
     mapsets = read_command("g.mapsets", flags=flags, sep="newline", quiet=True, env=env)
     if not mapsets:
         fatal(_("Unable to list mapsets"), env=env)
@@ -1724,8 +1760,8 @@ def create_location(*args, **kwargs):
 
 
 def create_project(
-    path,
-    name=None,
+    path: str,
+    name: str | None = None,
     epsg=None,
     proj4=None,
     filename=None,
@@ -1733,8 +1769,8 @@ def create_project(
     datum=None,
     datum_trans=None,
     desc=None,
-    overwrite=False,
-):
+    overwrite: bool = False,
+) -> None:
     """Create new project
 
     Raise ScriptError on error.
@@ -1750,7 +1786,7 @@ def create_project(
     :param datum: GRASS format datum code
     :param datum_trans: datum transformation parameters (used for epsg and proj4)
     :param desc: description of the project (creates MYNAME file)
-    :param bool overwrite: True to overwrite project if exists (WARNING:
+    :param overwrite: True to overwrite project if exists (WARNING:
                            ALL DATA from existing project ARE DELETED!)
     """
     # Add default mapset to project path if needed
@@ -1758,7 +1794,7 @@ def create_project(
         path = os.path.join(path, "PERMANENT")
 
     # resolve dbase, location and mapset
-    mapset_path = resolve_mapset_path(path=path, location=name)
+    mapset_path: MapsetPath = resolve_mapset_path(path=path, location=name)
 
     # create dbase if not exists
     if not os.path.exists(mapset_path.directory):
@@ -1956,7 +1992,7 @@ def version():
 _debug_level = None
 
 
-def debug_level(force=False):
+def debug_level(force: bool = False) -> int:
     global _debug_level
     if not force and _debug_level is not None:
         return _debug_level
@@ -1982,7 +2018,7 @@ def debug_level(force=False):
 # TODO: Remove the pygrass backwards compatibility version of it?
 
 
-def legal_name(s):
+def legal_name(s: str) -> bool:
     """Checks if the string contains only allowed characters.
 
     This is the Python implementation of :func:`G_legal_filename()` function.
@@ -2008,7 +2044,9 @@ def legal_name(s):
     return True
 
 
-def sanitize_mapset_environment(env):
+def sanitize_mapset_environment(
+    env: MutableMapping[str, str]
+) -> MutableMapping[str, str]:
     """Remove environmental variables relevant only
     for a specific mapset. This should be called
     when a copy of environment is used with a different mapset."""
@@ -2019,7 +2057,9 @@ def sanitize_mapset_environment(env):
     return env
 
 
-def create_environment(gisdbase, location, mapset, env=None):
+def create_environment(
+    gisdbase, location, mapset, env: dict[str, str] | None = None
+) -> tuple[str, MutableMapping[str, str]]:
     """Creates environment to be passed in run_command for example.
     Returns tuple with temporary file path and the environment. The user
     of this function is responsible for deleting the file."""
@@ -2031,8 +2071,7 @@ def create_environment(gisdbase, location, mapset, env=None):
     env = env.copy() if env else os.environ.copy()
     env["GISRC"] = f.name
     # remove mapset-specific env vars
-    env = sanitize_mapset_environment(env)
-    return f.name, env
+    return f.name, sanitize_mapset_environment(env)
 
 
 if __name__ == "__main__":
