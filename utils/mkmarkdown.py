@@ -21,12 +21,6 @@ import sys
 import string
 import urllib.parse as urlparse
 
-try:
-    import grass.script as gs
-except ImportError:
-    # During compilation GRASS GIS
-    gs = None
-
 from mkdocs import (
     read_file,
     get_version_branch,
