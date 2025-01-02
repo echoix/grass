@@ -1116,19 +1116,23 @@ def _text_to_key_value_dict(
             # Convert values into correct types
             # We first try integer then float
             try:
-                value_converted = int(value)
+                value_converted: int | float | str = int(value)
+                value_list.append(value_converted)
+                continue
             except ValueError:
                 not_int = True
             if not_int:
                 try:
                     value_converted = float(value)
+                    value_list.append(value_converted)
+                    continue
                 except ValueError:
                     not_float = True
 
             if not_int and not_float:
                 value_converted = value.strip()
-
-            value_list.append(value_converted)
+                value_list.append(value_converted)
+                continue
 
         kvdict[key] = value_list
     if checkproj:
