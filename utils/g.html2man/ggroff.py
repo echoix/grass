@@ -32,9 +32,8 @@ formats = {
     "ol": ("\n.IP\n@\n.PP\n", "index"),
     "p": "\n.PP\n@",
     "pre": ("\n.br\n.nf\n\\fC\n@\n\\fR\n.fi\n", "preformat"),
+    **styles,
 }
-
-formats.update(styles)
 
 
 def is_string(x):
@@ -73,7 +72,8 @@ class Formatter:
         self.filename = filename
         self.at_bol = True
 
-    def warning(self, msg):
+    @staticmethod
+    def warning(msg):
         sys.stderr.write(msg + "\n")
 
     def set(self, var, val):
@@ -181,10 +181,8 @@ class Formatter:
         cols = 0
         for item in content:
             n = 0
-            if is_blank(item):
-                pass
-            elif is_tuple(item):
-                (tag, attrs, body) = item
+            if not is_blank(item) and is_tuple(item):
+                tag, attrs, body = item
                 if tag in {"thead", "tbody", "tfoot"}:
                     n = self.count_cols(body)
                 elif tag == "tr":

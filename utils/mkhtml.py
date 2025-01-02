@@ -330,7 +330,6 @@ grassLogoLink.after(temp.content);
 def update_toc(data):
     ret_data = []
     pat = re.compile(r"(<(h[2|3])>)(.+)(</h[2|3]>)")
-    idx = 1
     for line in data.splitlines():
         if pat.search(line):
             xline = pat.split(line)
@@ -341,7 +340,6 @@ def update_toc(data):
                 + "</a>"
                 + xline[4]
             )
-            idx += 1
         ret_data.append(line)
 
     return "\n".join(ret_data)
@@ -369,10 +367,8 @@ else:
 
 if not re.search(r"<html>", src_data, re.IGNORECASE):
     tmp_data = read_file(tmp_file)
-    """
-    Adjusting keywords html pages paths if add-on html man page
-    stored on the server
-    """
+    # Adjusting keywords html pages paths if add-on html man page
+    # stored on the server
     if html_page_footer_pages_path:
         new_keywords_paths = []
         orig_keywords_paths = re.search(

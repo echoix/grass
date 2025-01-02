@@ -136,9 +136,7 @@ def print_support(file=None):
     if data:
         print_section_heading_3("Monthly Financial Supporters", file=file)
         random.shuffle(data)
-        supporters = []
-        for member in data:
-            supporters.append(f"""[{member['name']}]({member['profile']})""")
+        supporters = [f"[{member['name']}]({member['profile']})" for member in data]
         print(", ".join(supporters))
         print()
 
