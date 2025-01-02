@@ -112,41 +112,40 @@ def make_image(output_dir, table, grad, height, width):
     gs.run_command("r.colors", map=grad, color=table, quiet=True)
     os.environ["GRASS_RENDER_FRAME"] = "%f,%f,%f,%f" % (0, height, 2, width - 2)
     gs.run_command("d.rast", map=grad, quiet=True)
-    if 1:
-        os.environ["GRASS_RENDER_FRAME"] = "%f,%f,%f,%f" % (0, height, 0, width)
-        gs.write_command(
-            "d.graph",
-            quiet=True,
-            flags="m",
-            stdin="""
-        width 1
-        color {outcolor}
-        polyline
-        {x1} {y1}
-        {x2} {y1}
-        {x2} {y2}
-        {x1} {y2}
-        {x1} {y1}
-        color {incolor}
-        polyline
-        {x3} {y3}
-        {x4} {y3}
-        {x4} {y4}
-        {x3} {y4}
-        {x3} {y3}
-        """.format(
-                x1=1,
-                x2=width,
-                y1=0,
-                y2=height - 1,
-                x3=2,
-                x4=width - 1,
-                y3=1,
-                y4=height - 2,
-                outcolor="white",
-                incolor="black",
-            ),
-        )
+    os.environ["GRASS_RENDER_FRAME"] = "%f,%f,%f,%f" % (0, height, 0, width)
+    gs.write_command(
+        "d.graph",
+        quiet=True,
+        flags="m",
+        stdin="""
+    width 1
+    color {outcolor}
+    polyline
+    {x1} {y1}
+    {x2} {y1}
+    {x2} {y2}
+    {x1} {y2}
+    {x1} {y1}
+    color {incolor}
+    polyline
+    {x3} {y3}
+    {x4} {y3}
+    {x4} {y4}
+    {x3} {y4}
+    {x3} {y3}
+    """.format(
+            x1=1,
+            x2=width,
+            y1=0,
+            y2=height - 1,
+            x3=2,
+            x4=width - 1,
+            y3=1,
+            y4=height - 2,
+            outcolor="white",
+            incolor="black",
+        ),
+    )
 
 
 def main():
