@@ -399,12 +399,11 @@ if not re.search(r"<html>", src_data, re.IGNORECASE):
             if not re.search(
                 r"</body>|</html>|</div> <!-- end container -->", line, re.IGNORECASE
             ):
+
+                sys.stdout.write(line)
                 if header_logo_img_el in line:
-                    sys.stdout.write(line)
                     # create hamburger menu TOC
                     write_toc(create_toc(src_data), hamburger_menu_toc=True)
-                else:
-                    sys.stdout.write(line)
 
 # create TOC
 write_toc(create_toc(src_data))

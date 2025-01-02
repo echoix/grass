@@ -189,12 +189,11 @@ def format_git_commit_date_from_local_git(
             commit_datetime,
         )
     except ValueError:
-        if commit_datetime.endswith("Z"):
-            # Python 3.10 and older does not support Z in time, while recent versions
-            # of Git (2.45.1) use it. Try to help the parsing if Z is in the string.
-            date = datetime.fromisoformat(commit_datetime[:-1] + "+00:00")
-        else:
+        if not commit_datetime.endswith("Z"):
             raise
+        # Python 3.10 and older does not support Z in time, while recent versions
+        # of Git (2.45.1) use it. Try to help the parsing if Z is in the string.
+        date = datetime.fromisoformat(commit_datetime[:-1] + "+00:00")
     return date.strftime(datetime_format)
 
 
