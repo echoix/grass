@@ -84,9 +84,7 @@ def set_proxy():
     """Set proxy"""
     proxy = os.getenv("GRASS_PROXY")
     if proxy:
-        proxies = {}
-        for ptype, purl in (p.split("=") for p in proxy.split(",")):
-            proxies[ptype] = purl
+        proxies = dict(p.split("=") for p in proxy.split(","))
         urlrequest.install_opener(
             urlrequest.build_opener(urlrequest.ProxyHandler(proxies))
         )
@@ -448,9 +446,7 @@ def to_title(name):
     return name.capitalize()
 
 
-index_titles = {}
-for key, name in index_names.items():
-    index_titles[key] = to_title(name)
+index_titles = {key: to_title(name) for key, name in index_names.items()}
 
 # process footer
 index = re.search(r"(<!-- meta page index:)(.*)(-->)", src_data, re.IGNORECASE)
