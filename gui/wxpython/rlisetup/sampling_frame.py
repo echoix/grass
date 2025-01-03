@@ -476,11 +476,8 @@ class RLiSetupToolbar(BaseToolbar):
         else:
             self._default = self.draw
 
-        for tool in (self._default, self.pan, self.zoomIn, self.zoomOut):
-            if tool:
-                self.toolSwitcher.AddToolToGroup(
-                    group="mouseUse", toolbar=self, tool=tool
-                )
+        for tool in filter(None, (self._default, self.pan, self.zoomIn, self.zoomOut)):
+            self.toolSwitcher.AddToolToGroup(group="mouseUse", toolbar=self, tool=tool)
 
         # realize the toolbar
         self.Realize()

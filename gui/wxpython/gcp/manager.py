@@ -2726,9 +2726,7 @@ class VectGroup(wx.Dialog):
     def MakeVGroup(self):
         """Create VREF file"""
         vgrouplist = []
-        for item in range(self.listMap.GetCount()):
-            if not self.listMap.IsChecked(item):
-                continue
+        for item in filter(self.listMap.IsChecked, range(self.listMap.GetCount())):
             vgrouplist.append(self.listMap.GetString(item) + "@" + self.xymapset)
 
         dirname = os.path.dirname(self.vgrpfile)

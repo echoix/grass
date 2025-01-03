@@ -379,9 +379,8 @@ class MapPanelBase(wx.Panel):
 
     def StatusbarEnableLongHelp(self, enable=True):
         """Enable/disable toolbars long help"""
-        for toolbar in self.toolbars.values():
-            if toolbar:
-                toolbar.EnableLongHelp(enable)
+        for toolbar in filter(None, self.toolbars.values()):
+            toolbar.EnableLongHelp(enable)
 
     def ShowAllToolbars(self, show=True):
         action = self.RemoveToolbar if not show else self.AddToolbar
