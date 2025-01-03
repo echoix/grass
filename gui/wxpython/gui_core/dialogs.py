@@ -1173,10 +1173,7 @@ class GroupDialog(wx.Dialog):
             if subgroup:
                 maps = self.GetGroupLayers(group, subgroup)
                 for m in maps:
-                    if m in gmaps:
-                        self.subgmaps[m] = True
-                    else:
-                        self.subgmaps[m] = False
+                    self.subgmaps[m] = m in gmaps
 
         gmaps = self._filter(gmaps)
         self.subgListBox.Set(gmaps)
