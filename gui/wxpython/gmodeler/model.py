@@ -547,11 +547,9 @@ class Model:
 
         for finput in self.fileInput:
             # read lines
-            fd = open(finput)
-            try:
-                data = self.fileInput[finput] = fd.read()
-            finally:
-                fd.close()
+            with open(finput) as fd:
+                data = fd.read()
+                self.fileInput[finput] = data
 
             # substitute variables
             write = False
@@ -584,11 +582,8 @@ class Model:
 
             if not checkOnly:
                 if write:
-                    fd = open(finput, "w")
-                    try:
+                    with open(finput, "w") as fd:
                         fd.write(data)
-                    finally:
-                        fd.close()
                 else:
                     self.fileInput[finput] = None
 
