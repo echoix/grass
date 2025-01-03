@@ -754,9 +754,8 @@ class IClassMapPanel(DoubleMapPanel):
 
         # we use first layer with table, TODO: user should choose
         layer = None
-        for key in dbInfo.layers.keys():
-            if dbInfo.GetTable(key):
-                layer = key
+        for key in filter(dbInfo.GetTable, dbInfo.layers.keys()):
+            layer = key
 
         # get columns to check if we can use them
         # TODO: let user choose which columns mean what

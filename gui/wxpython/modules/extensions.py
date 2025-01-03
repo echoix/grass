@@ -545,11 +545,13 @@ class CheckListExtension(GListCtrl):
     def LoadData(self):
         """Load data into list"""
         self.DeleteAllItems()
-        for ext in RunCommand(
-            "g.extension", quiet=True, parent=self, read=True, flags="a"
-        ).splitlines():
-            if ext:
-                self.InsertItem(self.GetItemCount(), ext)
+        for ext in filter(
+            None,
+            RunCommand(
+                "g.extension", quiet=True, parent=self, read=True, flags="a"
+            ).splitlines(),
+        ):
+            self.InsertItem(self.GetItemCount(), ext)
 
     def GetExtensions(self):
         """Get extensions to be un-installed"""
