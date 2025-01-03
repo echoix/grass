@@ -1052,8 +1052,7 @@ class Map:
             env["GISRC"] = self.gisrc
 
         # do not update & shell style output
-        cmd = {}
-        cmd["flags"] = "ugpc"
+        cmd = {"flags": "ugpc"}
 
         if default:
             cmd["flags"] += "d"
