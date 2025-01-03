@@ -203,8 +203,7 @@ class RulesPanel:
             self.mainPanel.FindWindowById(id + 1000).Enable()
             self.mainPanel.FindWindowById(id + 2000).Enable()
             if self.mapType == "vector" and not self.parent.GetParent().colorTable:
-                vals = []
-                vals.append(self.mainPanel.FindWindowById(id + 1000).GetValue())
+                vals = [self.mainPanel.FindWindowById(id + 1000).GetValue()]
                 try:
                     vals.append(self.mainPanel.FindWindowById(id + 1 + 1000).GetValue())
                 except AttributeError:
@@ -273,8 +272,7 @@ class RulesPanel:
 
     def SetVectorRule(self, num, val):
         """Set vector rule"""
-        vals = []
-        vals.append(val)
+        vals = [val]
         try:
             vals.append(self.mainPanel.FindWindowById(num + 1).GetValue())
         except AttributeError:
@@ -336,12 +334,10 @@ class RulesPanel:
 
     def SQLConvert(self, vals):
         """Prepare value for SQL query"""
+        sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
         if vals[0].isdigit():
-            sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
             if vals[1]:
                 sqlrule += " AND %s<%s" % (self.properties["sourceColumn"], vals[1])
-        else:
-            sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
 
         return sqlrule
 
@@ -689,9 +685,7 @@ class ColorTable(wx.Frame):
             GMessage(message=_("Nothing to save."), parent=self)
             return
 
-        fd = open(path, "w")
-        fd.write(rulestxt)
-        fd.close()
+        Path(path).write_text(rulestxt)
 
     def OnLoadRulesFile(self, event):
         """Load color table from file"""
@@ -700,10 +694,7 @@ class ColorTable(wx.Frame):
             return
 
         self.rulesPanel.Clear()
-
-        fd = open(path)
-        self.ReadColorTable(ctable=fd.read())
-        fd.close()
+        self.ReadColorTable(ctable=Path(path).read_text())
 
     def ReadColorTable(self, ctable):
         """Read color table
@@ -725,9 +716,7 @@ class ColorTable(wx.Frame):
             self.rulesPanel.ruleslines[count]["value"] = value
             self.rulesPanel.ruleslines[count]["color"] = color
             self.rulesPanel.mainPanel.FindWindowById(count + 1000).SetValue(value)
-            rgb = []
-            for c in color.split(":"):
-                rgb.append(int(c))
+            rgb = [int(c) for c in color.split(":")]
             self.rulesPanel.mainPanel.FindWindowById(count + 2000).SetColour(rgb)
             # range
             try:
@@ -805,11 +794,7 @@ class ColorTable(wx.Frame):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
-        try:
-            output.write(rulestxt)
-        finally:
-            output.close()
+        Path(gtemp).write_text(rulestxt)
 
         cmd = [
             "%s.colors" % self.mapType[0],  # r.colors/v.colors
@@ -819,7 +804,7 @@ class ColorTable(wx.Frame):
         if (
             self.mapType == "vector"
             and self.properties["sourceColumn"]
-            and self.properties["sourceColumn"] != "cat"
+            and (self.properties["sourceColumn"] != "cat")
         ):
             cmd.append("column=%s" % self.properties["sourceColumn"])
 
@@ -1830,11 +1815,7 @@ class VectorColorTable(ColorTable):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
-        try:
-            output.write(rulestxt)
-        finally:
-            output.close()
+        Path(gtemp).write_text(rulestxt)
 
         RunCommand("db.execute", parent=self, input=gtemp)
         return True

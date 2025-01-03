@@ -1148,9 +1148,7 @@ class MapPanel(SingleMapPanel, MainPageBase):
             self._highlighter_layer.SetMap(
                 vectQuery[0]["Map"] + "@" + vectQuery[0]["Mapset"]
             )
-            tmp = []
-            for i in vectQuery:
-                tmp.append(i["Category"])
+            tmp = [i["Category"] for i in vectQuery]
 
             self._highlighter_layer.SetCats(tmp)
             self._highlighter_layer.DrawSelected()
@@ -1217,23 +1215,23 @@ class MapPanel(SingleMapPanel, MainPageBase):
                 cmd[-1].append("layer=%d" % layer)
                 cmd[-1].append("cats=%s" % ListOfCatsToRange(lcats))
 
-        if addLayer:
-            args = {}
-            if useId:
-                args["ltype"] = "vector"
-            else:
-                args["ltype"] = "command"
+        if not addLayer:
+            return cmd
 
-            return self.Map.AddLayer(
-                name=globalvar.QUERYLAYER,
-                command=cmd,
-                active=True,
-                hidden=True,
-                opacity=1.0,
-                render=True,
-                **args,
-            )
-        return cmd
+        args = {}
+        if useId:
+            args["ltype"] = "vector"
+        else:
+            args["ltype"] = "command"
+        return self.Map.AddLayer(
+            name=globalvar.QUERYLAYER,
+            command=cmd,
+            active=True,
+            hidden=True,
+            opacity=1.0,
+            render=True,
+            **args,
+        )
 
     def OnMeasureDistance(self, event):
         self._onMeasure(MeasureDistanceController)
@@ -1285,11 +1283,11 @@ class MapPanel(SingleMapPanel, MainPageBase):
 
     def OnHistogramPyPlot(self, event):
         """Init PyPlot histogram display canvas and tools"""
-        raster = []
-
-        for layer in self._giface.GetLayerList().GetSelectedLayers():
-            if layer.maplayer.GetType() == "raster":
-                raster.append(layer.maplayer.GetName())
+        raster = [
+            layer.maplayer.GetName()
+            for layer in self._giface.GetLayerList().GetSelectedLayers()
+            if layer.maplayer.GetType() == "raster"
+        ]
 
         from wxplot.histogram import HistogramPlotFrame
 
@@ -1299,11 +1297,11 @@ class MapPanel(SingleMapPanel, MainPageBase):
 
     def OnScatterplot(self, event):
         """Init PyPlot scatterplot display canvas and tools"""
-        raster = []
-
-        for layer in self._giface.GetLayerList().GetSelectedLayers():
-            if layer.maplayer.GetType() == "raster":
-                raster.append(layer.maplayer.GetName())
+        raster = [
+            layer.maplayer.GetName()
+            for layer in self._giface.GetLayerList().GetSelectedLayers()
+            if layer.maplayer.GetType() == "raster"
+        ]
 
         from wxplot.scatter import ScatterFrame
 

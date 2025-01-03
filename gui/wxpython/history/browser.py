@@ -165,7 +165,7 @@ class HistoryInfoPanel(SP.ScrolledPanel):
 
     def _general_info_filter(self, key, value):
         filter_keys = ["timestamp", "runtime", "status"]
-        return key in filter_keys or ((key in {"mask2d", "mask3d"}) and value is True)
+        return key in filter_keys or (key in {"mask2d", "mask3d"} and value is True)
 
     def _region_settings_filter(self, key):
         return key not in {"projection", "zone", "cells"}
@@ -326,11 +326,11 @@ class HistoryInfoPanel(SP.ScrolledPanel):
 
     def _get_history_region(self):
         """Get computational region settings of executed command."""
-        history_region = {}
-        for key, value in self.region_settings.items():
-            if self._region_settings_filter(key):
-                history_region[key] = value
-        return history_region
+        return {
+            key: value
+            for key, value in self.region_settings.items()
+            if self._region_settings_filter(key)
+        }
 
     def OnUpdateRegion(self, event):
         """Set current region to the region of executed command."""

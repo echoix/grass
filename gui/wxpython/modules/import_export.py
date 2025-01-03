@@ -311,10 +311,7 @@ class ImportDialog(wx.Dialog):
 
     def OnCheckOverwrite(self, event):
         """Check/uncheck overwrite checkbox widget"""
-        if self.overwrite.IsChecked():
-            self.list.validate = False
-        else:
-            self.list.validate = True
+        self.list.validate = not self.overwrite.IsChecked()
 
     def AddLayers(self, returncode, cmd=None, userData=None):
         """Add imported/linked layers into layer tree"""
@@ -398,13 +395,12 @@ class ImportDialog(wx.Dialog):
 
             ret = dlg.ShowModal()
 
-            if ret == wx.ID_OK:
-                # do not import unchecked layers
-                for itm in reversed(list(dlg.GetData(checked=False))):
-                    idx = itm[-1]
-                    layers.pop(idx)
-            else:
+            if ret != wx.ID_OK:
                 return None
+            # do not import unchecked layers
+            for itm in reversed(list(dlg.GetData(checked=False))):
+                idx = itm[-1]
+                layers.pop(idx)
 
         return layers
 

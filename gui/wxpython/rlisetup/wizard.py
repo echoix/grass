@@ -4,8 +4,7 @@
 @brief   GUI per r.li.setup module
 
 Classes:
- - RLiSetupFrame (first frame to show existing conf file and choose some
-                 operation)
+ - RLiSetupFrame (first frame to show existing conf file and choose some operation)
  - RLIWizard (the main wizard)
  - FirstPage (first page of wizard, choose name of conf file, raster, vector,
               sampling region)
@@ -159,11 +158,10 @@ class RLIWizard:
 
     def _write_confile(self):
         """Write the configuration file"""
-        f = open(os.path.join(self.rlipath, self.startpage.conf_name), "w")
-        self.rasterinfo = grast.raster_info(self.startpage.rast)
-        self._write_region(f)
-        self._write_area(f)
-        f.close()
+        with open(os.path.join(self.rlipath, self.startpage.conf_name), "w") as f:
+            self.rasterinfo = grast.raster_info(self.startpage.rast)
+            self._write_region(f)
+            self._write_area(f)
 
     def _temp_region(self):
         # save current settings:
@@ -728,9 +726,7 @@ class FirstPage(TitledPage):
             )
             return False, []
         if links > 0:
-            layers = []
-            for i in range(1, links + 1):
-                layers.append(str(i))
+            layers = [str(i) for i in range(1, links + 1)]
             return True, layers
         return False, []
 

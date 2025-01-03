@@ -88,6 +88,8 @@ else:
 if TYPE_CHECKING:
     from wx.adv import WizardEvent
 
+DATUM_TRANSFORM_IS_REQUIRED = "Datum transform is required."
+
 
 class TitledPage(WizardPageSimple):
     """Class to make wizard pages. Generic methods to make labels,
@@ -1062,7 +1064,7 @@ class DatumPage(TitledPage):
         self.searchb = SearchCtrl(self, size=(200, -1), style=wx.TE_PROCESS_ENTER)
         self.searchb.ShowCancelButton(True)
 
-        # create list control for datum/elipsoid list
+        # create list control for datum/ellipsoid list
         data = []
         for key in self.parent.datums.keys():
             data.append([key, self.parent.datums[key][0], self.parent.datums[key][1]])
@@ -1149,11 +1151,11 @@ class DatumPage(TitledPage):
                         if dtrans == "":
                             dlg.Destroy()
                             event.Veto()
-                            return "Datum transform is required."
+                            return DATUM_TRANSFORM_IS_REQUIRED
                     else:
                         dlg.Destroy()
                         event.Veto()
-                        return "Datum transform is required."
+                        return DATUM_TRANSFORM_IS_REQUIRED
 
                     self.parent.datum_trans = dtrans
 
@@ -1678,11 +1680,11 @@ class EPSGPage(TitledPage):
                     if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
-                        return "Datum transform is required."
+                        return DATUM_TRANSFORM_IS_REQUIRED
                 else:
                     dlg.Destroy()
                     event.Veto()
-                    return "Datum transform is required."
+                    return DATUM_TRANSFORM_IS_REQUIRED
 
                 self.parent.datum_trans = dtrans
             self.GetNext().SetPrev(self)
@@ -1753,10 +1755,11 @@ class EPSGPage(TitledPage):
             self.epsglist.Populate([], update=True)
             return
 
-        data = []
-        for code, val in self.epsgCodeDict.items():
-            if code is not None:
-                data.append((code, val[0], val[1]))
+        data = [
+            (code, val[0], val[1])
+            for code, val in self.epsgCodeDict.items()
+            if code is not None
+        ]
 
         self.epsglist.Populate(data, update=True)
 
@@ -1901,11 +1904,11 @@ class IAUPage(TitledPage):
                     if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
-                        return "Datum transform is required."
+                        return DATUM_TRANSFORM_IS_REQUIRED
                 else:
                     dlg.Destroy()
                     event.Veto()
-                    return "Datum transform is required."
+                    return DATUM_TRANSFORM_IS_REQUIRED
 
                 self.parent.datum_trans = dtrans
                 self.parent.epsgcode = self.epsgcode
@@ -2025,10 +2028,11 @@ class IAUPage(TitledPage):
             self.epsglist.Populate([], update=True)
             return
 
-        data = []
-        for code, val in self.epsgCodeDict.items():
-            if code is not None:
-                data.append((code, val[0], val[1]))
+        data = [
+            (code, val[0], val[1])
+            for code, val in self.epsgCodeDict.items()
+            if code is not None
+        ]
 
         self.epsglist.Populate(data, update=True)
 
@@ -2119,11 +2123,11 @@ class CustomPage(TitledPage):
                     if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
-                        return _("Datum transform is required.")
+                        return _(DATUM_TRANSFORM_IS_REQUIRED)
                 else:
                     dlg.Destroy()
                     event.Veto()
-                    return _("Datum transform is required.")
+                    return _(DATUM_TRANSFORM_IS_REQUIRED)
 
                 self.parent.datum_trans = dtrans
 
@@ -2287,10 +2291,7 @@ class SummaryPage(TitledPage):
 
         # print coordsys,proj4string
         if coordsys in {"proj", "epsg", "iau", "wkt", "file"}:
-            extra_opts = {}
-            extra_opts["project"] = "project"
-            extra_opts["getErrorMsg"] = True
-            extra_opts["read"] = True
+            extra_opts = {"project": "project", "getErrorMsg": True, "read": True}
 
             if coordsys == "proj":
                 if len(datum) > 0:
@@ -2502,8 +2503,8 @@ class LocationWizard(wx.Object):
         #
         if self.wizard.RunWizard(self.startpage):
             msg = self.OnWizFinished()
+            self.wizard.Destroy()
             if not msg:
-                self.wizard.Destroy()
                 self.location = self.startpage.location
                 self.grassdatabase = self.startpage.grassdatabase
                 self.georeffile = self.filepage.georeffile
@@ -2511,7 +2512,6 @@ class LocationWizard(wx.Object):
                 # if self.altdb is False:
 
             else:  # -> error
-                self.wizard.Destroy()
                 GError(
                     parent=self.parent,
                     message="%s"
@@ -2541,89 +2541,86 @@ class LocationWizard(wx.Object):
         """Get georeferencing information from tables in $GISBASE/etc/proj"""
 
         # read projection and parameters
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "parms.table"))
         self.projections = {}
         self.projdesc = {}
-        for line in f:
-            line = line.strip()
-            try:
-                proj, projdesc, params = line.split(":")
-                paramslist = params.split(";")
-                plist = []
-                for p in paramslist:
-                    if p == "":
-                        continue
-                    p1, pdefault = p.split(",")
-                    pterm, pask = p1.split("=")
-                    p = [pterm.strip(), pask.strip(), pdefault.strip()]
-                    plist.append(p)
-                self.projections[proj.lower().strip()] = (projdesc.strip(), plist)
-                self.projdesc[proj.lower().strip()] = projdesc.strip()
-            except:
-                continue
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "parms.table")) as f:
+            for line in f:
+                line = line.strip()
+                try:
+                    proj, projdesc, params = line.split(":")
+                    paramslist = params.split(";")
+                    plist = []
+                    for p in paramslist:
+                        if p == "":
+                            continue
+                        p1, pdefault = p.split(",")
+                        pterm, pask = p1.split("=")
+                        p = [pterm.strip(), pask.strip(), pdefault.strip()]
+                        plist.append(p)
+                    self.projections[proj.lower().strip()] = (projdesc.strip(), plist)
+                    self.projdesc[proj.lower().strip()] = projdesc.strip()
+                except:
+                    continue
 
         # read datum definitions
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "datum.table"))
         self.datums = {}
         paramslist = []
-        for line in f:
-            line = line.expandtabs(1)
-            line = line.strip()
-            if line == "" or line[0] == "#":
-                continue
-            datum, info = line.split(" ", 1)
-            info = info.strip()
-            datumdesc, params = info.split(" ", 1)
-            datumdesc = datumdesc.strip('"')
-            paramlist = params.split()
-            ellipsoid = paramlist.pop(0)
-            self.datums[datum] = (ellipsoid, datumdesc.replace("_", " "), paramlist)
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "datum.table")) as f:
+            for line in f:
+                line = line.expandtabs(1)
+                line = line.strip()
+                if line == "" or line[0] == "#":
+                    continue
+                datum, info = line.split(" ", 1)
+                info = info.strip()
+                datumdesc, params = info.split(" ", 1)
+                datumdesc = datumdesc.strip('"')
+                paramlist = params.split()
+                ellipsoid = paramlist.pop(0)
+                self.datums[datum] = (ellipsoid, datumdesc.replace("_", " "), paramlist)
 
         # read Earth-based ellipsiod definitions
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "ellipse.table"))
         self.ellipsoids = {}
-        for line in f:
-            line = line.expandtabs(1)
-            line = line.strip()
-            if line == "" or line[0] == "#":
-                continue
-            ellipse, rest = line.split(" ", 1)
-            rest = rest.strip('" ')
-            desc, params = rest.split('"', 1)
-            desc = desc.strip('" ')
-            paramslist = params.split()
-            self.ellipsoids[ellipse] = (desc, paramslist)
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "ellipse.table")) as f:
+            for line in f:
+                line = line.expandtabs(1)
+                line = line.strip()
+                if line == "" or line[0] == "#":
+                    continue
+                ellipse, rest = line.split(" ", 1)
+                rest = rest.strip('" ')
+                desc, params = rest.split('"', 1)
+                desc = desc.strip('" ')
+                paramslist = params.split()
+                self.ellipsoids[ellipse] = (desc, paramslist)
 
         # read Planetary ellipsiod definitions
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "ellipse.table.solar.system"))
         self.planetary_ellipsoids = {}
-        for line in f:
-            line = line.expandtabs(1)
-            line = line.strip()
-            if line == "" or line[0] == "#":
-                continue
-            ellipse, rest = line.split(" ", 1)
-            rest = rest.strip('" ')
-            desc, params = rest.split('"', 1)
-            desc = desc.strip('" ')
-            paramslist = params.split()
-            self.planetary_ellipsoids[ellipse] = (desc, paramslist)
-        f.close()
+        with open(
+            os.path.join(globalvar.ETCDIR, "proj", "ellipse.table.solar.system")
+        ) as f:
+            for line in f:
+                line = line.expandtabs(1)
+                line = line.strip()
+                if line == "" or line[0] == "#":
+                    continue
+                ellipse, rest = line.split(" ", 1)
+                rest = rest.strip('" ')
+                desc, params = rest.split('"', 1)
+                desc = desc.strip('" ')
+                paramslist = params.split()
+                self.planetary_ellipsoids[ellipse] = (desc, paramslist)
 
         # read projection parameter description and parsing table
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "desc.table"))
         self.paramdesc = {}
-        for line in f:
-            line = line.strip()
-            try:
-                pparam, datatype, proj4term, desc = line.split(":")
-                self.paramdesc[pparam] = (datatype, proj4term, desc)
-            except:
-                continue
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "desc.table")) as f:
+            for line in f:
+                line = line.strip()
+                try:
+                    pparam, datatype, proj4term, desc = line.split(":")
+                    self.paramdesc[pparam] = (datatype, proj4term, desc)
+                except:
+                    continue
 
     def OnWizFinished(self):
         """Wizard finished, create new location

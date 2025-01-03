@@ -136,9 +136,7 @@ class NvizTask:
             self._setMultiTaskParam(mode2, value)
 
         # position
-        pos = []
-        for coor in ("x", "y", "z"):
-            pos.append(str(surface["position"][coor]))
+        pos = [str(surface["position"][coor]) for coor in ("x", "y", "z")]
         value = ",".join(pos)
         self._setMultiTaskParam("surface_position", value)
 
@@ -177,14 +175,15 @@ class NvizTask:
         if isosurfaces:
             res_value = volume["draw"]["resolution"]["isosurface"]["value"]
             self._setMultiTaskParam("volume_resolution", res_value)
+            attributes = ("topo", "color", "shine", "transp")
+
+            parameters = (
+                (None, "isosurf_level"),
+                ("isosurf_color_map", "isosurf_color_value"),
+                ("isosurf_shininess_map", "isosurf_shininess_value"),
+                ("isosurf_transparency_map", "isosurf_transparency_value"),
+            )
             for isosurface in isosurfaces:
-                attributes = ("topo", "color", "shine", "transp")
-                parameters = (
-                    (None, "isosurf_level"),
-                    ("isosurf_color_map", "isosurf_color_value"),
-                    ("isosurf_shininess_map", "isosurf_shininess_value"),
-                    ("isosurf_transparency_map", "isosurf_transparency_value"),
-                )
                 for attr, params in zip(attributes, parameters):
                     mapname = None
                     const = None
@@ -301,12 +300,10 @@ class NvizTask:
 
         if len(layerList) > 1:
             raise GException(_("Please add only one layer in the list."))
-            return
         layer = layerList[0]
-        if hasattr(layer, "maps"):
-            series = layer.maps
-        else:
+        if not hasattr(layer, "maps"):
             raise GException(_("No map series nor space-time dataset is added."))
+        series = layer.maps
 
         for value in series:
             self.task.set_param(paramName, value)

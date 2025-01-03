@@ -383,23 +383,25 @@ class ExtensionTreeModelBuilder:
                     currentNode.data = {"command": value}
                 elif currentNode is not None:
                     currentNode.data[key] = value
-            else:
-                try:
-                    prefix, name = line.strip().split(".", 1)
-                except ValueError:
-                    prefix = ""
-                    name = line.strip()
 
-                if self._expandPrefix(prefix) == prefix:
-                    prefix = ""
-                module = prefix + "." + name
-                mainNode = self.mainNodes[self._expandPrefix(prefix)]
-                currentNode = self.model.AppendNode(parent=mainNode, label=module)
-                currentNode.data = {
-                    "command": module,
-                    "keywords": "",
-                    "description": "",
-                }
+                continue
+
+            try:
+                prefix, name = line.strip().split(".", 1)
+            except ValueError:
+                prefix = ""
+                name = line.strip()
+
+            if self._expandPrefix(prefix) == prefix:
+                prefix = ""
+            module = prefix + "." + name
+            mainNode = self.mainNodes[self._expandPrefix(prefix)]
+            currentNode = self.model.AppendNode(parent=mainNode, label=module)
+            currentNode.data = {
+                "command": module,
+                "keywords": "",
+                "description": "",
+            }
 
 
 class ManageExtensionWindow(wx.Frame):
@@ -543,11 +545,13 @@ class CheckListExtension(GListCtrl):
     def LoadData(self):
         """Load data into list"""
         self.DeleteAllItems()
-        for ext in RunCommand(
-            "g.extension", quiet=True, parent=self, read=True, flags="a"
-        ).splitlines():
-            if ext:
-                self.InsertItem(self.GetItemCount(), ext)
+        for ext in filter(
+            None,
+            RunCommand(
+                "g.extension", quiet=True, parent=self, read=True, flags="a"
+            ).splitlines(),
+        ):
+            self.InsertItem(self.GetItemCount(), ext)
 
     def GetExtensions(self):
         """Get extensions to be un-installed"""

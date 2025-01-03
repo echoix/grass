@@ -296,10 +296,8 @@ class NvizToolWindow(GNotebook):
 
         :param obj foldPanelBar: FolPanelBar widget obj instance
         :param obj scrolledPanel: ScrolledPanel widget obj instance
-        :param int collapsed: number of collapsed panels of FoldPanelBar
-                              widget
-        :param int expanded: number of expanded panels of FoldPanelBar
-                             widget
+        :param int collapsed: number of collapsed panels of FoldPanelBar widget
+        :param int expanded: number of expanded panels of FoldPanelBar widget
         """
         if expanded > 0:
             foldPanelBar.Expand(foldPanelBar.GetFoldPanel(0))
@@ -1938,9 +1936,10 @@ class NvizToolWindow(GNotebook):
 
     def GselectOnPopup(self, ltype, exclude=False):
         """Update gselect.Select() items"""
-        maps = []
-        for layer in self.mapWindow.Map.GetListOfLayers(ltype=ltype, active=True):
-            maps.append(layer.GetName())
+        maps = [
+            layer.GetName()
+            for layer in self.mapWindow.Map.GetListOfLayers(ltype=ltype, active=True)
+        ]
         return maps, exclude
 
     def _createVolumePage(self, parent):
@@ -5463,18 +5462,19 @@ class NvizToolWindow(GNotebook):
                     display.SetSelection(1)
                 else:
                     display.SetSelection(0)
-            if data[vtype]["mode"]["type"] == "surface":
-                rasters = self.mapWindow.GetLayerNames("raster")
-                constants = self.mapWindow.GetLayerNames("constant")
-                surfaces = rasters + constants
-                surfaceWin = self.FindWindowById(self.win["vector"][vtype]["surface"])
-                surfaceWin.SetItems(surfaces)
-                for idx, surface in enumerate(surfaces):
-                    try:  # TODO fix this mess
-                        selected = data[vtype]["mode"]["surface"]["show"][idx]
-                    except (TypeError, IndexError, KeyError):
-                        selected = False
-                    surfaceWin.Check(idx, selected)
+            if data[vtype]["mode"]["type"] != "surface":
+                continue
+            rasters = self.mapWindow.GetLayerNames("raster")
+            constants = self.mapWindow.GetLayerNames("constant")
+            surfaces = rasters + constants
+            surfaceWin = self.FindWindowById(self.win["vector"][vtype]["surface"])
+            surfaceWin.SetItems(surfaces)
+            for idx, surface in enumerate(surfaces):
+                try:  # TODO fix this mess
+                    selected = data[vtype]["mode"]["surface"]["show"][idx]
+                except (TypeError, IndexError, KeyError):
+                    selected = False
+                surfaceWin.Check(idx, selected)
 
         for type in ("slider", "text"):
             win = self.FindWindowById(self.win["vector"]["lines"]["height"][type])
@@ -5824,7 +5824,7 @@ class ViewPositionWindow(PositionWindow):
         return x, y
 
     def TransformCoordinates(self, x, y, toLight=True):
-        return x, y
+        return (x, y)
 
     def OnMouse(self, event):
         # use focus instead of viewdir
@@ -5871,7 +5871,7 @@ class LightPositionWindow(PositionWindow):
         else:
             x = (x + 1) / 2
             y = (1 - y) / 2
-        return x, y
+        return (x, y)
 
     def PostDraw(self):
         event = wxUpdateLight(refresh=True)

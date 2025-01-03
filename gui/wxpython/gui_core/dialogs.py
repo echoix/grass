@@ -280,12 +280,11 @@ class VectorDialog(SimpleDialog):
         :param full: True to get fully qualified name
         """
         name = self.element.GetValue()
-        if full:
-            if "@" in name:
-                return name
-            return name + "@" + grass.gisenv()["MAPSET"]
-
-        return name.split("@", 1)[0]
+        if not full:
+            return name.split("@", 1)[0]
+        if "@" in name:
+            return name
+        return name + "@" + grass.gisenv()["MAPSET"]
 
 
 class NewVectorDialog(VectorDialog):
@@ -532,12 +531,11 @@ def CreateNewVector(
             caption=_("Overwrite?"),
             style=wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION,
         )
-        if dlgOw.ShowModal() == wx.ID_YES:
-            overwrite = True
-        else:
+        if dlgOw.ShowModal() != wx.ID_YES:
             dlgOw.Destroy()
             dlg.Destroy()
             return None
+        overwrite = True
 
     if UserSettings.Get(group="cmd", key="overwrite", subkey="enabled"):
         overwrite = True
@@ -1055,14 +1053,11 @@ class GroupDialog(wx.Dialog):
 
     def SubgChbox(self, edit_subg):
         self._checkChange()
+        self.edit_subg = edit_subg
         if edit_subg:
-            self.edit_subg = edit_subg
-
             self.SubGroupSelected()
             self._subgroupLayout()
         else:
-            self.edit_subg = edit_subg
-
             self.GroupSelected()
             self._groupLayout()
 
@@ -1114,10 +1109,7 @@ class GroupDialog(wx.Dialog):
     def GetLayers(self):
         """Get layers"""
         if self.edit_subg:
-            layers = []
-            for maps, sel in self.subgmaps.items():
-                if sel:
-                    layers.append(maps)
+            layers = [maps for maps, sel in self.subgmaps.items() if sel]
         else:
             layers = self.gmaps[:]
 
@@ -1181,10 +1173,7 @@ class GroupDialog(wx.Dialog):
             if subgroup:
                 maps = self.GetGroupLayers(group, subgroup)
                 for m in maps:
-                    if m in gmaps:
-                        self.subgmaps[m] = True
-                    else:
-                        self.subgmaps[m] = False
+                    self.subgmaps[m] = m in gmaps
 
         gmaps = self._filter(gmaps)
         self.subgListBox.Set(gmaps)
@@ -1342,8 +1331,7 @@ class GroupDialog(wx.Dialog):
 
     def GetGroupLayers(self, group, subgroup=None):
         """Get layers in group"""
-        kwargs = {}
-        kwargs["group"] = group
+        kwargs = {"group": group}
         if subgroup:
             kwargs["subgroup"] = subgroup
 
@@ -2139,9 +2127,10 @@ class SymbolDialog(wx.Dialog):
         mainSizer.Add(btnSizer, proportion=0, flag=wx.EXPAND | wx.ALL, border=5)
 
         # show panel with the largest number of images and fit size
-        count = []
-        for folder in os.listdir(self.symbolPath):
-            count.append(len(os.listdir(os.path.join(self.symbolPath, folder))))
+        count = [
+            len(os.listdir(os.path.join(self.symbolPath, folder)))
+            for folder in os.listdir(self.symbolPath)
+        ]
 
         index = count.index(max(count))
         self.folderChoice.SetSelection(index)
@@ -2196,9 +2185,7 @@ class SymbolDialog(wx.Dialog):
 
     def _getSymbols(self, path):
         # we assume that images are in subfolders (1 level only)
-        imageList = []
-        for image in os.listdir(path):
-            imageList.append(os.path.join(path, image))
+        imageList = [os.path.join(path, image) for image in os.listdir(path)]
 
         return sorted(imageList)
 
@@ -2580,8 +2567,7 @@ class DefaultFontDialog(wx.Dialog):
             fontdict[longname] = shortname
             fontdict_reverse[shortname] = longname
         fontlist = naturally_sorted(list(set(fontlist)))
-
-        return fontdict, fontdict_reverse, fontlist
+        return (fontdict, fontdict_reverse, fontlist)
 
     def RenderText(self, font, text, size):
         """Renders an example text with the selected font and resets the bitmap

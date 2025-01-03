@@ -667,13 +667,14 @@ class PolygonDrawer:
         self.it = 0
 
     def _getPolygonStyle(self):
-        style = {}
-        style["sel_pol"] = UserSettings.Get(
-            group="scatt", key="selection", subkey="sel_pol"
-        )
-        style["sel_pol_vertex"] = UserSettings.Get(
-            group="scatt", key="selection", subkey="sel_pol_vertex"
-        )
+        style = {
+            "sel_pol": UserSettings.Get(
+                group="scatt", key="selection", subkey="sel_pol"
+            ),
+            "sel_pol_vertex": UserSettings.Get(
+                group="scatt", key="selection", subkey="sel_pol_vertex"
+            ),
+        }
 
         style["sel_pol"] = [i / 255.0 for i in style["sel_pol"]]
         style["sel_pol_vertex"] = [i / 255.0 for i in style["sel_pol_vertex"]]
@@ -765,7 +766,7 @@ class PolygonDrawer:
         if not event.inaxes:
             return
 
-        if event.button in [2, 3]:
+        if event.button in {2, 3}:
             return
 
         if self.mode == "delete_vertex":
