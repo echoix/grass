@@ -334,12 +334,10 @@ class RulesPanel:
 
     def SQLConvert(self, vals):
         """Prepare value for SQL query"""
+        sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
         if vals[0].isdigit():
-            sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
             if vals[1]:
                 sqlrule += " AND %s<%s" % (self.properties["sourceColumn"], vals[1])
-        else:
-            sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
 
         return sqlrule
 

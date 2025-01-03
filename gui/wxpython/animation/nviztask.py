@@ -175,14 +175,15 @@ class NvizTask:
         if isosurfaces:
             res_value = volume["draw"]["resolution"]["isosurface"]["value"]
             self._setMultiTaskParam("volume_resolution", res_value)
+            attributes = ("topo", "color", "shine", "transp")
+
+            parameters = (
+                (None, "isosurf_level"),
+                ("isosurf_color_map", "isosurf_color_value"),
+                ("isosurf_shininess_map", "isosurf_shininess_value"),
+                ("isosurf_transparency_map", "isosurf_transparency_value"),
+            )
             for isosurface in isosurfaces:
-                attributes = ("topo", "color", "shine", "transp")
-                parameters = (
-                    (None, "isosurf_level"),
-                    ("isosurf_color_map", "isosurf_color_value"),
-                    ("isosurf_shininess_map", "isosurf_shininess_value"),
-                    ("isosurf_transparency_map", "isosurf_transparency_value"),
-                )
                 for attr, params in zip(attributes, parameters):
                     mapname = None
                     const = None

@@ -467,9 +467,9 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
             )
 
             check = "0"
+            coordX0 = "0"
+            coordY0 = "0"
             for index in range(numberOfFiducial):
-                coordX0 = "0"
-                coordY0 = "0"
                 coordX1 = dataFiducialX[index]
                 coordY1 = dataFiducialY[index]
                 f.write(
