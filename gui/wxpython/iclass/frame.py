@@ -1469,9 +1469,9 @@ class MapManager:
         :param str resultsLayer: True if layer is temp. raster showing the results of
                                  computation
         """
-        if resultsLayer and name in [
+        if resultsLayer and name in (
             layer.GetName() for layer in self.map.GetListOfLayers(name=name)
-        ]:
+        ):
             self.frame.Render(self.mapWindow)
             return
 
