@@ -117,13 +117,10 @@ class BasePlotFrame(wx.Frame):
         for assigning colors to images in imagery groups"""
 
         self.colorDict = {}
-        for clr in gs.named_colors.keys():
+        for clr, (r, g, b) in gs.named_colors.items():
             if clr == "white":
                 continue
-            r = int(gs.named_colors[clr][0] * 255)
-            g = int(gs.named_colors[clr][1] * 255)
-            b = int(gs.named_colors[clr][2] * 255)
-            self.colorDict[clr] = (r, g, b, 255)
+            self.colorDict[clr] = (int(r * 255), int(g * 255), int(b * 255), 255)
 
     def InitPlotOpts(self, plottype):
         """Initialize options for entire plot"""
