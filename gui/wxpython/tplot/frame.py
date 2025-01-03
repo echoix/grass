@@ -1368,7 +1368,6 @@ class DataCursor:
     """A simple data cursor widget that displays the x,y location of a
     matplotlib artist when it is selected.
 
-
     Source: https://stackoverflow.com/questions/4652439/
             is-there-a-matplotlib-equivalent-of-matlabs-datacursormode/4674445
     """
