@@ -311,10 +311,7 @@ class ImportDialog(wx.Dialog):
 
     def OnCheckOverwrite(self, event):
         """Check/uncheck overwrite checkbox widget"""
-        if self.overwrite.IsChecked():
-            self.list.validate = False
-        else:
-            self.list.validate = True
+        self.list.validate = not self.overwrite.IsChecked()
 
     def AddLayers(self, returncode, cmd=None, userData=None):
         """Add imported/linked layers into layer tree"""

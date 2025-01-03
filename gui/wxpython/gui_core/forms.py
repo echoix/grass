@@ -510,10 +510,7 @@ class TaskFrame(wx.Frame):
         guisizer = wx.BoxSizer(wx.VERTICAL)
 
         # set appropriate output window
-        if self.parent:
-            self.standalone = False
-        else:
-            self.standalone = True
+        self.standalone = not self.parent
 
         # logo + description
         topsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -3050,10 +3047,7 @@ class GUI:
         self.cmd = []
 
         global _blackList
-        if self.parent:
-            _blackList["enabled"] = True
-        else:
-            _blackList["enabled"] = False
+        _blackList["enabled"] = bool(self.parent)
 
     def GetCmd(self):
         """Get validated command"""

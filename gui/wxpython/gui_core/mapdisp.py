@@ -428,10 +428,9 @@ class MapPanelBase(wx.Panel):
 
     def OnEnableDisableRender(self, event):
         """Enable/disable auto-rendering map composition (each map layer)"""
-        if self.MapWindow.parent.mapWindowProperties.autoRender:
-            self.MapWindow.parent.mapWindowProperties.autoRender = False
-        else:
-            self.MapWindow.parent.mapWindowProperties.autoRender = True
+        self.MapWindow.parent.mapWindowProperties.autoRender = (
+            not self.MapWindow.parent.mapWindowProperties.autoRender
+        )
 
     def OnDraw(self, event):
         """Re-display current map composition"""

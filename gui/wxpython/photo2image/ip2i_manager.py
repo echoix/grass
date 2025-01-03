@@ -305,10 +305,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         self.grwiz = grwiz  # GR Wizard
         self._giface = giface
 
-        if tgt_map == "":
-            self.show_target = False
-        else:
-            self.show_target = True
+        self.show_target = tgt_map != ""
 
         self.camera = camera
 

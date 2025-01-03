@@ -803,10 +803,7 @@ class DisplayDriver:
         :param list: of ids (None to unselect features)
         :param layer: layer number for features selected based on category number
         """
-        if ids:
-            self._drawSelected = True
-        else:
-            self._drawSelected = False
+        self._drawSelected = bool(ids)
 
         self.selected["field"] = layer
         if layer > 0:

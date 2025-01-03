@@ -999,10 +999,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         self.grwiz = grwiz  # GR Wizard
         self._giface = giface
 
-        if tgt_map["raster"] == "" and tgt_map["vector"] == "":
-            self.show_target = False
-        else:
-            self.show_target = True
+        self.show_target = not (tgt_map["raster"] == "" and tgt_map["vector"] == "")
 
         # wx.Frame.__init__(self, parent, id, title, size = size, name = "GCPFrame")
         MapPanel.__init__(

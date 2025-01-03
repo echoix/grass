@@ -4168,10 +4168,7 @@ class LegendDialog(PsmapDialog):
         """Save information from raster legend dialog to dictionary"""
 
         # is raster legend
-        if not self.isRLegend.GetValue():
-            self.rLegendDict["rLegend"] = False
-        else:
-            self.rLegendDict["rLegend"] = True
+        self.rLegendDict["rLegend"] = bool(self.isRLegend.GetValue())
         # units
         currUnit = self.unitConv.findUnit(
             self.panelRaster.units["unitsCtrl"].GetStringSelection()
@@ -4308,10 +4305,7 @@ class LegendDialog(PsmapDialog):
             self.vectorId = None
 
         # is vector legend
-        if not self.isVLegend.GetValue():
-            self.vLegendDict["vLegend"] = False
-        else:
-            self.vLegendDict["vLegend"] = True
+        self.vLegendDict["vLegend"] = bool(self.isVLegend.GetValue())
         if self.vLegendDict["vLegend"] and self.vectorId is not None:
             # labels
             # reindex order
