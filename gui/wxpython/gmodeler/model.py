@@ -2087,8 +2087,7 @@ class ProcessModelFile:
                 size = (sizeVal[0], sizeVal[1])
             except IndexError:
                 size = None
-
-        return pos, size
+        return (pos, size)
 
     def _processData(self):
         """Process model file"""
@@ -2680,8 +2679,7 @@ class WriteScriptFile(ABC):
                     item_true_flags += name
 
         item_parameterized_flags = ", ".join(item_parameterized_flags)
-
-        return item_true_flags, item_parameterized_flags, item_params
+        return (item_true_flags, item_parameterized_flags, item_params)
 
 
 class WriteActiniaFile(WriteScriptFile):

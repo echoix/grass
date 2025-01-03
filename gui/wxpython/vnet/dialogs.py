@@ -840,8 +840,7 @@ class VNETDialog(wx.Dialog):
         mapValSpl = vectMapStr.strip().split("@")
         mapSet = mapValSpl[1] if len(mapValSpl) > 1 else grass.gisenv()["MAPSET"]
         mapName = mapValSpl[0]
-
-        return mapName, mapSet
+        return (mapName, mapSet)
 
     def OnCloseDialog(self, event=None):
         """Cancel dialog"""

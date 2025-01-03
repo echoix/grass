@@ -448,7 +448,7 @@ class Nviz:
         dir = (c_float * 3)()
         GS_get_viewdir(byref(dir))
 
-        return dir[0], dir[1], dir[2]
+        return (dir[0], dir[1], dir[2])
 
     def SetViewdir(self, x: float, y: float, z: float) -> None:
         """Set viewdir"""

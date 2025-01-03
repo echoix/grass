@@ -2567,8 +2567,7 @@ class DefaultFontDialog(wx.Dialog):
             fontdict[longname] = shortname
             fontdict_reverse[shortname] = longname
         fontlist = naturally_sorted(list(set(fontlist)))
-
-        return fontdict, fontdict_reverse, fontlist
+        return (fontdict, fontdict_reverse, fontlist)
 
     def RenderText(self, font, text, size):
         """Renders an example text with the selected font and resets the bitmap
