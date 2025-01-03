@@ -808,7 +808,7 @@ class ColorTable(wx.Frame):
         if (
             self.mapType == "vector"
             and self.properties["sourceColumn"]
-            and self.properties["sourceColumn"] != "cat"
+            and (self.properties["sourceColumn"] != "cat")
         ):
             cmd.append("column=%s" % self.properties["sourceColumn"])
 
