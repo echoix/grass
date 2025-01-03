@@ -923,15 +923,14 @@ def parser() -> tuple[dict[str, str], dict[str, bool]]:
             argv[0] = os.path.join(sys.path[0], name)
 
     prog = "g.parser.exe" if sys.platform == "win32" else "g.parser"
-    p = subprocess.Popen([prog, "-n"] + argv, stdout=subprocess.PIPE)
-    s = p.communicate()[0]
-    lines = s.split(b"\0")
-
-    if not lines or lines[0] != b"@ARGS_PARSED@":
-        stdout = os.fdopen(sys.stdout.fileno(), "wb")
-        stdout.write(s)
-        sys.exit(p.returncode)
-    return _parse_opts(lines[1:])
+    with subprocess.Popen([prog, "-n"] + argv, stdout=subprocess.PIPE) as p:
+        s = p.communicate()[0]
+        lines = s.split(b"\0")
+        if not lines or lines[0] != b"@ARGS_PARSED@":
+            stdout = os.fdopen(sys.stdout.fileno(), "wb")
+            stdout.write(s)
+            sys.exit(p.returncode)
+        return _parse_opts(lines[1:])
 
 
 # interface to g.tempfile
@@ -1069,13 +1068,12 @@ def _text_to_key_value_dict(
     kvdict = KeyValue()
 
     for line in text:
-        if line.find(sep) >= 0:
-            key, value = line.split(sep)
-            key = key.strip()
-            value = value.strip()
-        else:
+        if line.find(sep) < 0:
             # Jump over empty values
             continue
+        key, value = line.split(sep)
+        key = key.strip()
+        value = value.strip()
         values = value.split(val_sep)
         value_list = []
 
@@ -1450,20 +1448,19 @@ def list_strings(type, pattern=None, mapset=None, exclude=None, flag="", env=Non
     if type == "cell":
         verbose(_('Element type should be "raster" and not "%s"') % type, env=env)
 
-    result = []
-    for line in read_command(
-        "g.list",
-        quiet=True,
-        flags="m" + flag,
-        type=type,
-        pattern=pattern,
-        exclude=exclude,
-        mapset=mapset,
-        env=env,
-    ).splitlines():
-        result.append(line.strip())
-
-    return result
+    return [
+        line.strip()
+        for line in read_command(
+            "g.list",
+            quiet=True,
+            flags="m" + flag,
+            type=type,
+            pattern=pattern,
+            exclude=exclude,
+            mapset=mapset,
+            env=env,
+        ).splitlines()
+    ]
 
 
 def list_pairs(type, pattern=None, mapset=None, exclude=None, flag="", env=None):
