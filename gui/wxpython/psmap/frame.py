@@ -370,7 +370,7 @@ class PsMapFrame(wx.Frame):
 
         pdfname = filename if pdf else None
         # preview or pdf
-        if not filename or (filename and pdf):
+        if pdf or not filename:
             temp = True
             filename = gs.tempfile()
             if not pdf:  # lower resolution for preview
