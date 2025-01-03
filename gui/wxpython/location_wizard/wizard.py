@@ -88,6 +88,8 @@ else:
 if TYPE_CHECKING:
     from wx.adv import WizardEvent
 
+DATUM_TRANSFORM_IS_REQUIRED = "Datum transform is required."
+
 
 class TitledPage(WizardPageSimple):
     """Class to make wizard pages. Generic methods to make labels,
@@ -1062,7 +1064,7 @@ class DatumPage(TitledPage):
         self.searchb = SearchCtrl(self, size=(200, -1), style=wx.TE_PROCESS_ENTER)
         self.searchb.ShowCancelButton(True)
 
-        # create list control for datum/elipsoid list
+        # create list control for datum/ellipsoid list
         data = [
             [key, datum[0], datum[1]] for (key, datum) in self.parent.datums.items()
         ]
@@ -1149,11 +1151,11 @@ class DatumPage(TitledPage):
                         if dtrans == "":
                             dlg.Destroy()
                             event.Veto()
-                            return "Datum transform is required."
+                            return DATUM_TRANSFORM_IS_REQUIRED
                     else:
                         dlg.Destroy()
                         event.Veto()
-                        return "Datum transform is required."
+                        return DATUM_TRANSFORM_IS_REQUIRED
 
                     self.parent.datum_trans = dtrans
 
@@ -1678,11 +1680,11 @@ class EPSGPage(TitledPage):
                     if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
-                        return "Datum transform is required."
+                        return DATUM_TRANSFORM_IS_REQUIRED
                 else:
                     dlg.Destroy()
                     event.Veto()
-                    return "Datum transform is required."
+                    return DATUM_TRANSFORM_IS_REQUIRED
 
                 self.parent.datum_trans = dtrans
             self.GetNext().SetPrev(self)
@@ -1902,11 +1904,11 @@ class IAUPage(TitledPage):
                     if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
-                        return "Datum transform is required."
+                        return DATUM_TRANSFORM_IS_REQUIRED
                 else:
                     dlg.Destroy()
                     event.Veto()
-                    return "Datum transform is required."
+                    return DATUM_TRANSFORM_IS_REQUIRED
 
                 self.parent.datum_trans = dtrans
                 self.parent.epsgcode = self.epsgcode
@@ -2121,11 +2123,11 @@ class CustomPage(TitledPage):
                     if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
-                        return _("Datum transform is required.")
+                        return _(DATUM_TRANSFORM_IS_REQUIRED)
                 else:
                     dlg.Destroy()
                     event.Veto()
-                    return _("Datum transform is required.")
+                    return _(DATUM_TRANSFORM_IS_REQUIRED)
 
                 self.parent.datum_trans = dtrans
 

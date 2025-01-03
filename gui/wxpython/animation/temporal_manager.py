@@ -26,6 +26,8 @@ from core.gcmd import GException
 from core.settings import UserSettings
 from animation.utils import validateTimeseriesName, TemporalType
 
+A_TEST_WITH_INPUT_FILES = "A test with input files"
+
 
 class DataMode:
     SIMPLE = 1
@@ -446,8 +448,8 @@ def createAbsoluteInterval():
             type="strds",
             temporaltype="absolute",
             output=name,
-            title="A test with input files",
-            descr="A test with input files",
+            title=A_TEST_WITH_INPUT_FILES,
+            descr=A_TEST_WITH_INPUT_FILES,
         )
         gs.run_command("t.register", flags="i", input=name, file=fname, overwrite=True)
 
@@ -519,8 +521,8 @@ def createRelativeInterval():
             type="strds",
             temporaltype="relative",
             output=name,
-            title="A test with input files",
-            descr="A test with input files",
+            title=A_TEST_WITH_INPUT_FILES,
+            descr=A_TEST_WITH_INPUT_FILES,
         )
         gs.run_command(
             "t.register",
@@ -572,8 +574,8 @@ def createAbsolutePoint():
         type="strds",
         temporaltype="absolute",
         output=name,
-        title="A test with input files",
-        descr="A test with input files",
+        title=A_TEST_WITH_INPUT_FILES,
+        descr=A_TEST_WITH_INPUT_FILES,
     )
 
     gs.run_command("t.register", flags="i", input=name, file=n1, overwrite=True)
@@ -612,8 +614,8 @@ def createRelativePoint():
         type="strds",
         temporaltype="relative",
         output=name,
-        title="A test with input files",
-        descr="A test with input files",
+        title=A_TEST_WITH_INPUT_FILES,
+        descr=A_TEST_WITH_INPUT_FILES,
     )
 
     gs.run_command("t.register", unit="day", input=name, file=n1, overwrite=True)
