@@ -584,8 +584,9 @@ class GridModule:
                 if self.inlist:
                     inms = {}
                     cols = len(box_row)
+
+                    indx = row * cols + col
                     for key in self.inlist:
-                        indx = row * cols + col
                         inms[key] = "%s@%s" % (self.inlist[key][indx], self.mset.name)
                 # set the computational region, prepare the region parameters
                 bbox = {
