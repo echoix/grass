@@ -998,7 +998,7 @@ class PsMapFrame(wx.Frame):
         rotation = float(rotation) / 180 * pi
         H = float(w) * sin(rotation)
         W = float(w) * cos(rotation)
-        X, Y = x, y
+        X, Y = (x, y)
         if pi / 2 < rotation <= 3 * pi / 2:
             X = x + W
         if 0 < rotation < pi:

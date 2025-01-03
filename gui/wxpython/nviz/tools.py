@@ -5826,7 +5826,7 @@ class ViewPositionWindow(PositionWindow):
         return x, y
 
     def TransformCoordinates(self, x, y, toLight=True):
-        return x, y
+        return (x, y)
 
     def OnMouse(self, event):
         # use focus instead of viewdir
@@ -5873,7 +5873,7 @@ class LightPositionWindow(PositionWindow):
         else:
             x = (x + 1) / 2
             y = (1 - y) / 2
-        return x, y
+        return (x, y)
 
     def PostDraw(self):
         event = wxUpdateLight(refresh=True)
