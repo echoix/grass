@@ -766,7 +766,7 @@ class PolygonDrawer:
         if not event.inaxes:
             return
 
-        if event.button in [2, 3]:
+        if event.button in {2, 3}:
             return
 
         if self.mode == "delete_vertex":
