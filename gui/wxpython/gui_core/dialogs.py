@@ -1053,14 +1053,11 @@ class GroupDialog(wx.Dialog):
 
     def SubgChbox(self, edit_subg):
         self._checkChange()
+        self.edit_subg = edit_subg
         if edit_subg:
-            self.edit_subg = edit_subg
-
             self.SubGroupSelected()
             self._subgroupLayout()
         else:
-            self.edit_subg = edit_subg
-
             self.GroupSelected()
             self._groupLayout()
 

@@ -1017,8 +1017,8 @@ def PilImageToWxImage(pilImage, copyAlpha=True):
     from gui_core.wrap import EmptyImage
 
     hasAlpha = pilImage.mode[-1] == "A"
+    wxImage = EmptyImage(*pilImage.size)
     if copyAlpha and hasAlpha:  # Make sure there is an alpha layer copy.
-        wxImage = EmptyImage(*pilImage.size)
         pilImageCopyRGBA = pilImage.copy()
         pilImageCopyRGB = pilImageCopyRGBA.convert("RGB")  # RGBA --> RGB
         wxImage.SetData(pilImageCopyRGB.tobytes())
@@ -1029,7 +1029,6 @@ def PilImageToWxImage(pilImage, copyAlpha=True):
             wxImage.SetAlphaData(pilImageCopyRGBA.tobytes()[3::4])
 
     else:  # The resulting image will not have alpha.
-        wxImage = EmptyImage(*pilImage.size)
         pilImageCopy = pilImage.copy()
         # Discard any alpha from the PIL image.
         pilImageCopyRGB = pilImageCopy.convert("RGB")

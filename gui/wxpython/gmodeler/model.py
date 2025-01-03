@@ -2936,6 +2936,10 @@ if __name__ == "__main__":
     def _write_input_outputs(self, item, intermediates):
         parameterized_params = item.GetParameterizedParams()
 
+        io_data = "inputs"
+        object_type = "LiteralInput"
+        format_spec = 'data_type="string",'
+
         for flag in parameterized_params["flags"]:
             desc = flag["label"] or flag["description"]
 
@@ -2945,10 +2949,6 @@ if __name__ == "__main__":
                 )
             else:
                 value = '\n{}default="False"'.format(" " * (self.indent + 4))
-
-            io_data = "inputs"
-            object_type = "LiteralInput"
-            format_spec = 'data_type="string",'
 
             self._write_input_output_object(
                 io_data,
@@ -2962,16 +2962,15 @@ if __name__ == "__main__":
 
             self.fd.write("\n")
 
+        io_data = "inputs"
         for param in parameterized_params["params"]:
             desc = self._getParamDesc(param)
             value = self._getParamValue(param)
 
             if "input" in param["name"]:
-                io_data = "inputs"
                 object_type = "ComplexInput"
                 format_spec = self._getSupportedFormats(param["prompt"])
             else:
-                io_data = "inputs"
                 object_type = "LiteralInput"
                 format_spec = 'data_type="{}"'.format(param["type"])
 

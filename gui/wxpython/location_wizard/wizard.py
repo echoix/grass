@@ -2501,8 +2501,8 @@ class LocationWizard(wx.Object):
         #
         if self.wizard.RunWizard(self.startpage):
             msg = self.OnWizFinished()
+            self.wizard.Destroy()
             if not msg:
-                self.wizard.Destroy()
                 self.location = self.startpage.location
                 self.grassdatabase = self.startpage.grassdatabase
                 self.georeffile = self.filepage.georeffile
@@ -2510,7 +2510,6 @@ class LocationWizard(wx.Object):
                 # if self.altdb is False:
 
             else:  # -> error
-                self.wizard.Destroy()
                 GError(
                     parent=self.parent,
                     message="%s"
