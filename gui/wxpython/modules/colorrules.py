@@ -694,9 +694,7 @@ class ColorTable(wx.Frame):
             return
 
         self.rulesPanel.Clear()
-
-        with open(path) as fd:
-            self.ReadColorTable(ctable=fd.read())
+        self.ReadColorTable(ctable=Path(path).read_text())
 
     def ReadColorTable(self, ctable):
         """Read color table
