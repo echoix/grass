@@ -276,23 +276,20 @@ class ExampleMapPanel(SingleMapPanel):
         RunCommand("g.manual", entry="wxGUI.Example")
 
     def OnSelectRaster(self, event):
-        """!Opens dialog to select raster map"""
-        dlg = ExampleMapDialog(self)
-
-        if dlg.ShowModal() == wx.ID_OK:
-            raster = gcore.find_file(name=dlg.GetRasterMap(), element="cell")
-            if raster["fullname"]:
-                self.SetLayer(name=raster["fullname"])
-            else:
-                # show user that the map name is incorrect
-                GError(
-                    parent=self,
-                    message=_("Raster map <{raster}> not found").format(
-                        raster=dlg.GetRasterMap()
-                    ),
-                )
-
-        dlg.Destroy()
+        """Opens dialog to select raster map"""
+        with ExampleMapDialog(self) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                raster = gcore.find_file(name=dlg.GetRasterMap(), element="cell")
+                if raster["fullname"]:
+                    self.SetLayer(name=raster["fullname"])
+                else:
+                    # show user that the map name is incorrect
+                    GError(
+                        parent=self,
+                        message=_("Raster map <{raster}> not found").format(
+                            raster=dlg.GetRasterMap()
+                        ),
+                    )
 
     def SetLayer(self, name):
         """!Sets layer in Map and updates statistics.
