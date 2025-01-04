@@ -2389,40 +2389,39 @@ class GCPList(ListCtrl, CheckListCtrlMixin, ListCtrlAutoWidthMixin):
         self.selectedkey = -1
 
     def _Create(self):
-        if 0:
-            # normal, simple columns
-            idx_col = 0
-            for col in (
-                _("use"),
-                _("source E"),
-                _("source N"),
-                _("target E"),
-                _("target N"),
-                _("Forward error"),
-                _("Backward error"),
-            ):
-                self.InsertColumn(idx_col, col)
-                idx_col += 1
-        else:
-            # the hard way: we want images on the column header
-            info = wx.ListItem()
-            info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
-            info.SetImage(-1)
-            info.m_format = wx.LIST_FORMAT_LEFT
+        # # normal, simple columns
+        # idx_col = 0
+        # for col in (
+        #     _("use"),
+        #     _("source E"),
+        #     _("source N"),
+        #     _("target E"),
+        #     _("target N"),
+        #     _("Forward error"),
+        #     _("Backward error"),
+        # ):
+        #     self.InsertColumn(idx_col, col)
+        #     idx_col += 1
 
-            idx_col = 0
-            for lbl in (
-                _("use"),
-                _("source E"),
-                _("source N"),
-                _("target E"),
-                _("target N"),
-                _("Forward error"),
-                _("Backward error"),
-            ):
-                info.SetText(lbl)
-                self.InsertColumn(idx_col, info)
-                idx_col += 1
+        # the hard way: we want images on the column header
+        info = wx.ListItem()
+        info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
+        info.SetImage(-1)
+        info.m_format = wx.LIST_FORMAT_LEFT
+
+        idx_col = 0
+        for lbl in (
+            _("use"),
+            _("source E"),
+            _("source N"),
+            _("target E"),
+            _("target N"),
+            _("Forward error"),
+            _("Backward error"),
+        ):
+            info.SetText(lbl)
+            self.InsertColumn(idx_col, info)
+            idx_col += 1
 
     def LoadData(self):
         """Load data into list"""

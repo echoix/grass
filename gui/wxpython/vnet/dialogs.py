@@ -682,10 +682,10 @@ class VNETDialog(wx.Dialog):
 
         cmd = ["d.vect", "map=" + vectorMap]
 
-        if True:
-            self.giface.GetLayerList().AddLayer(
-                ltype="vector", cmd=cmd, name=vectorMap, checked=True
-            )
+        self.giface.GetLayerList().AddLayer(
+            ltype="vector", cmd=cmd, name=vectorMap, checked=True
+        )
+
         # d.mon case is not need giface implementation should solve it for us
 
     def UseTurns(self):

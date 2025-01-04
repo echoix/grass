@@ -210,9 +210,7 @@ class SbManager:
             else:
                 item.Update()  # render
 
-        if self.progressbar.IsShown():
-            pass
-        else:
+        if not self.progressbar.IsShown():
             item = list(self.statusbarItems.values())[self.GetMode()]
             item.Update()
 

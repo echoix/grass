@@ -147,28 +147,27 @@ class PointsList(
 
     def _createCols(self):
         """Creates columns in list"""
-        if 0:
-            # normal, simple columns
-            for col in enumerate(self.colsData):
-                iLabel = self.dataTypes["colLabel"]
-                self.InsertColumn(col[0], col[1][iLabel])
-        else:
-            # the hard way: we want images on the column header
-            info = wx.ListItem()
-            info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
-            info.SetImage(-1)
-            if globalvar.wxPythonPhoenix:
-                info.Format = wx.LIST_FORMAT_LEFT
-            else:
-                info.m_format = wx.LIST_FORMAT_LEFT
+        # # normal, simple columns
+        # for col in enumerate(self.colsData):
+        #     iLabel = self.dataTypes["colLabel"]
+        #     self.InsertColumn(col[0], col[1][iLabel])
 
-            for col in enumerate(self.colsData):
-                iLabel = self.dataTypes["colLabel"]
-                info.SetText(col[1][iLabel])
-                if globalvar.wxPythonPhoenix:
-                    self.InsertColumn(col[0], info)
-                else:
-                    self.InsertColumnInfo(col[0], info)
+        # the hard way: we want images on the column header
+        info = wx.ListItem()
+        info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
+        info.SetImage(-1)
+        if globalvar.wxPythonPhoenix:
+            info.Format = wx.LIST_FORMAT_LEFT
+        else:
+            info.m_format = wx.LIST_FORMAT_LEFT
+
+        for col in enumerate(self.colsData):
+            iLabel = self.dataTypes["colLabel"]
+            info.SetText(col[1][iLabel])
+            if globalvar.wxPythonPhoenix:
+                self.InsertColumn(col[0], info)
+            else:
+                self.InsertColumnInfo(col[0], info)
 
     def AddItem(self):
         """Appends an item to list with default values"""
