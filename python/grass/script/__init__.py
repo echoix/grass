@@ -1,6 +1,7 @@
 """Python interface to launch GRASS GIS modules in scripts
 """
 
+from typing import TYPE_CHECKING
 from . import setup
 from .core import (
     PIPE,
@@ -209,3 +210,10 @@ __all__ = [
     "warning",
     "write_command",
 ]
+if TYPE_CHECKING:
+    from typing import Callable
+
+    from grass import _
+
+    __all__ += ["_"]
+    _: Callable[[str], str]

@@ -18,6 +18,7 @@ so that the function ``_`` appears in the global namespace (as an additional bui
 
 import builtins as _builtins
 import os
+from typing import TYPE_CHECKING, Annotated
 
 
 # Setup translations
@@ -54,7 +55,7 @@ import os
 # - https://www.wefearchange.org/2012/06/the-right-way-to-internationalize-your.html
 
 
-def _translate(text):
+def _translate(text: str) -> str:
     """Get translated version of text
 
     The first call to this function initializes translations, i.e., simply importing
@@ -104,3 +105,9 @@ _builtins.__dict__["_"] = _translate
 __all__ = ["script", "temporal"]
 if os.path.exists(os.path.join(os.path.dirname(__file__), "lib", "__init__.py")):
     __all__.append("lib")
+
+if TYPE_CHECKING:
+    from typing import Callable
+
+    _: Annotated[Callable[[str], str], "translation"]
+    __all__ += ["_"]

@@ -760,3 +760,13 @@ line_length = 88
 profile = "black"
 # *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
 py_version = 39
+
+
+
+[tool.mypy]
+packages = "grass"
+mypy_path = ["$MYPY_CONFIG_FILE_DIR/python/", "$MYPY_CONFIG_FILE_DIR/gui/wxpython","$MYPY_CONFIG_FILE_DIR/typings",]
+
+[[tool.mypy.overrides]]
+module = ["wx.*", "wx"]
+follow_untyped_imports = true

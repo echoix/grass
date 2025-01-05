@@ -18,6 +18,7 @@ This program is free software under the GNU General Public License
         (GSoC 2012, mentor: Martin Landa)
 """
 
+from typing import reveal_type
 import wx
 import wx.lib.scrolledpanel as scrolled
 
@@ -40,7 +41,7 @@ class DisplayAttributesDialog(wx.Dialog):
         pos=wx.DefaultPosition,
         action="add",
         ignoreError=False,
-    ):
+    ) -> None:
         """Standard dialog used to add/update/display attributes linked
         to the vector map.
 
@@ -85,6 +86,7 @@ class DisplayAttributesDialog(wx.Dialog):
                     caption=_("Create table?"),
                     style=wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
                 )
+                reveal_type(dlg)
                 if dlg.ShowModal() == wx.ID_YES:
                     lmgr = self.parent.lmgr
                     lmgr.OnShowAttributeTable(event=None, selection="layers")
