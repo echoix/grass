@@ -13,6 +13,7 @@ jobs:
     if: github.event.pull_request.merged
     permissions:
       contents: read
+      issues: read
       pull-requests: write
     steps:
       # Retrieving the current milestone from API instead of github context,
