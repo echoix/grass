@@ -117,13 +117,10 @@ class BasePlotFrame(wx.Frame):
         for assigning colors to images in imagery groups"""
 
         self.colorDict = {}
-        for clr in gs.named_colors.keys():
+        for clr, (r, g, b) in gs.named_colors.items():
             if clr == "white":
                 continue
-            r = int(gs.named_colors[clr][0] * 255)
-            g = int(gs.named_colors[clr][1] * 255)
-            b = int(gs.named_colors[clr][2] * 255)
-            self.colorDict[clr] = (r, g, b, 255)
+            self.colorDict[clr] = (int(r * 255), int(g * 255), int(b * 255), 255)
 
     def InitPlotOpts(self, plottype):
         """Initialize options for entire plot"""
@@ -247,11 +244,12 @@ class BasePlotFrame(wx.Frame):
                         rdict[r]["pcolor"] = self.colorDict[self.colorList[idx]]
                 else:
                     rdict[r]["pcolor"] = self.colorDict[self.colorList[idx]]
-            else:
-                r = randint(0, 255)
-                b = randint(0, 255)
-                g = randint(0, 255)
-                rdict[r]["pcolor"] = (r, g, b, 255)
+                continue
+
+            r = randint(0, 255)
+            b = randint(0, 255)
+            g = randint(0, 255)
+            rdict[r]["pcolor"] = (r, g, b, 255)
 
         return rdict
 
@@ -322,11 +320,12 @@ class BasePlotFrame(wx.Frame):
 
             if idx <= len(self.colorList):
                 rdict[rpair]["pcolor"] = self.colorDict[self.colorList[idx]]
-            else:
-                r = randint(0, 255)
-                b = randint(0, 255)
-                g = randint(0, 255)
-                rdict[rpair]["pcolor"] = (r, g, b, 255)
+                continue
+
+            r = randint(0, 255)
+            b = randint(0, 255)
+            g = randint(0, 255)
+            rdict[rpair]["pcolor"] = (r, g, b, 255)
 
         return rdict
 

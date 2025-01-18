@@ -429,13 +429,13 @@ class Nviz:
     def GetFocus(self):
         """Get focus"""
         Debug.msg(3, "Nviz::GetFocus()")
-        if Nviz_has_focus(self.data):
-            x = c_float()
-            y = c_float()
-            z = c_float()
-            Nviz_get_focus(self.data, byref(x), byref(y), byref(z))
-            return x.value, y.value, z.value
-        return -1, -1, -1
+        if not Nviz_has_focus(self.data):
+            return (-1, -1, -1)
+        x = c_float()
+        y = c_float()
+        z = c_float()
+        Nviz_get_focus(self.data, byref(x), byref(y), byref(z))
+        return (x.value, y.value, z.value)
 
     def SetFocus(self, x: float, y: float, z: float) -> None:
         """Set focus"""
@@ -448,7 +448,7 @@ class Nviz:
         dir = (c_float * 3)()
         GS_get_viewdir(byref(dir))
 
-        return dir[0], dir[1], dir[2]
+        return (dir[0], dir[1], dir[2])
 
     def SetViewdir(self, x: float, y: float, z: float) -> None:
         """Set viewdir"""

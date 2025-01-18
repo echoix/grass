@@ -754,9 +754,8 @@ class IClassMapPanel(DoubleMapPanel):
 
         # we use first layer with table, TODO: user should choose
         layer = None
-        for key in dbInfo.layers.keys():
-            if dbInfo.GetTable(key):
-                layer = key
+        for key in filter(dbInfo.GetTable, dbInfo.layers.keys()):
+            layer = key
 
         # get columns to check if we can use them
         # TODO: let user choose which columns mean what
@@ -792,25 +791,25 @@ class IClassMapPanel(DoubleMapPanel):
 
             for cat in cats:
                 listCtrl.AddCategory(cat=cat, name="class_%d" % cat, color="0:0:0")
+
+            return
+
         # connection, table and columns exists
-        else:
-            columns = ["cat", "class", "color"]
-            ret = RunCommand(
-                "v.db.select",
-                quiet=True,
-                parent=self,
-                flags="c",
-                map=vector,
-                layer=1,
-                columns=",".join(columns),
-                read=True,
-            )
-            records = ret.strip().splitlines()
-            for record in records:
-                record = record.split("|")
-                listCtrl.AddCategory(
-                    cat=int(record[0]), name=record[1], color=record[2]
-                )
+        columns = ["cat", "class", "color"]
+        ret = RunCommand(
+            "v.db.select",
+            quiet=True,
+            parent=self,
+            flags="c",
+            map=vector,
+            layer=1,
+            columns=",".join(columns),
+            read=True,
+        )
+        records = ret.strip().splitlines()
+        for record in records:
+            record = record.split("|")
+            listCtrl.AddCategory(cat=int(record[0]), name=record[1], color=record[2])
 
     def OnExportAreas(self, event):
         """Export training areas"""
@@ -1470,9 +1469,9 @@ class MapManager:
         :param str resultsLayer: True if layer is temp. raster showing the results of
                                  computation
         """
-        if resultsLayer and name in [
+        if resultsLayer and name in (
             layer.GetName() for layer in self.map.GetListOfLayers(name=name)
-        ]:
+        ):
             self.frame.Render(self.mapWindow)
             return
 

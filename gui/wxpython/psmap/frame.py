@@ -19,6 +19,7 @@ import os
 import queue as Queue
 import sys
 from math import cos, pi, sin, sqrt
+from pathlib import Path
 
 import wx
 
@@ -358,20 +359,19 @@ class PsMapFrame(wx.Frame):
     def PSFile(self, filename=None, pdf=False):
         """Create temporary instructions file and run ps.map with output = filename"""
         instrFile = gs.tempfile()
-        instrFileFd = open(instrFile, mode="wb")
-        content = self.InstructionFile()
-        if not content:
-            return
-        instrFileFd.write(content)
-        instrFileFd.flush()
-        instrFileFd.close()
+        with open(instrFile, mode="wb") as instrFileFd:
+            content = self.InstructionFile()
+            if not content:
+                return
+            instrFileFd.write(content)
+            instrFileFd.flush()
 
         temp = False
         regOld = gs.region(env=self.env)
 
         pdfname = filename if pdf else None
         # preview or pdf
-        if not filename or (filename and pdf):
+        if pdf or not filename:
             temp = True
             filename = gs.tempfile()
             if not pdf:  # lower resolution for preview
@@ -598,12 +598,10 @@ class PsMapFrame(wx.Frame):
             wildcard="*.psmap|*.psmap|Text file(*.txt)|*.txt|All files(*.*)|*.*"
         )
         if filename:
-            instrFile = open(filename, "wb")
             content = self.InstructionFile()
             if not content:
                 return
-            instrFile.write(content)
-            instrFile.close()
+            Path(filename).write_bytes(content)
 
     def OnLoadFile(self, event):
         """Launch file dialog and load selected file"""
@@ -1000,7 +998,7 @@ class PsMapFrame(wx.Frame):
         rotation = float(rotation) / 180 * pi
         H = float(w) * sin(rotation)
         W = float(w) * cos(rotation)
-        X, Y = x, y
+        X, Y = (x, y)
         if pi / 2 < rotation <= 3 * pi / 2:
             X = x + W
         if 0 < rotation < pi:
@@ -1068,13 +1066,12 @@ class PsMapFrame(wx.Frame):
         """Create default map frame when no map is selected, needed for coordinates in
         map units"""
         instrFile = gs.tempfile()
-        instrFileFd = open(instrFile, mode="wb")
-        content = self.InstructionFile()
-        if not content:
-            return
-        instrFileFd.write(content)
-        instrFileFd.flush()
-        instrFileFd.close()
+        with open(instrFile, mode="wb") as instrFileFd:
+            content = self.InstructionFile()
+            if not content:
+                return
+            instrFileFd.write(content)
+            instrFileFd.flush()
 
         page = self.instruction.FindInstructionByType("page")
         mapInitRect = GetMapBounds(
@@ -1302,26 +1299,26 @@ class PsMapFrame(wx.Frame):
                 else:
                     self.deleteObject(id)
 
-            if itype == "vectorLegend":
-                if not self.instruction.FindInstructionByType("vector"):
-                    self.deleteObject(id)
-                elif self.instruction[id]["vLegend"]:
-                    self.canvas.UpdateLabel(itype=itype, id=id)
-                    drawRectangle = self.canvas.CanvasPaperCoordinates(
-                        rect=self.instruction[id]["rect"], canvasToPaper=False
-                    )
-                    self.canvas.Draw(
-                        pen=self.pen[itype],
-                        brush=self.brush[itype],
-                        pdc=self.canvas.pdcObj,
-                        drawid=id,
-                        pdctype="rectText",
-                        bb=drawRectangle,
-                    )
-                    self.canvas.RedrawSelectBox(id)
-
-                else:
-                    self.deleteObject(id)
+            if itype != "vectorLegend":
+                continue
+            if not self.instruction.FindInstructionByType("vector"):
+                self.deleteObject(id)
+            elif self.instruction[id]["vLegend"]:
+                self.canvas.UpdateLabel(itype=itype, id=id)
+                drawRectangle = self.canvas.CanvasPaperCoordinates(
+                    rect=self.instruction[id]["rect"], canvasToPaper=False
+                )
+                self.canvas.Draw(
+                    pen=self.pen[itype],
+                    brush=self.brush[itype],
+                    pdc=self.canvas.pdcObj,
+                    drawid=id,
+                    pdctype="rectText",
+                    bb=drawRectangle,
+                )
+                self.canvas.RedrawSelectBox(id)
+            else:
+                self.deleteObject(id)
 
     def OnPageChanged(self, event):
         """GNotebook page has changed"""

@@ -90,22 +90,13 @@ maptype = "raster"
 
 
 def getSmallUpArrowImage():
-    stream = open(os.path.join(globalvar.IMGDIR, "small_up_arrow.png"), "rb")
-    try:
-        img = wx.Image(stream)
-    finally:
-        stream.close()
-    return img
+    with open(os.path.join(globalvar.IMGDIR, "small_up_arrow.png"), "rb") as stream:
+        return wx.Image(stream)
 
 
 def getSmallDnArrowImage():
-    stream = open(os.path.join(globalvar.IMGDIR, "small_down_arrow.png"), "rb")
-    try:
-        img = wx.Image(stream)
-    finally:
-        stream.close()
-    stream.close()
-    return img
+    with open(os.path.join(globalvar.IMGDIR, "small_down_arrow.png"), "rb") as stream:
+        return wx.Image(stream)
 
 
 class GCPWizard:
@@ -921,9 +912,7 @@ class DispMapPage(TitledPage):
                 flags="g",
             )
 
-            if ret:
-                self.parent.src_maps = ret.splitlines()
-            else:
+            if not ret:
                 GError(
                     parent=self,
                     message=_(
@@ -933,6 +922,7 @@ class DispMapPage(TitledPage):
                     % self.parent.grouppage.xygroup,
                 )
                 return
+            self.parent.src_maps = ret.splitlines()
 
         elif maptype == "vector":
             grassdatabase = self.parent.grassdatabase
@@ -949,15 +939,12 @@ class DispMapPage(TitledPage):
                 "VREF",
             )
 
-            f = open(vgrpfile)
-            try:
+            with open(vgrpfile) as f:
                 for vect in f:
                     vect = vect.strip("\n")
                     if len(vect) < 1:
                         continue
                     self.parent.src_maps.append(vect)
-            finally:
-                f.close()
 
             if len(self.parent.src_maps) < 1:
                 GError(
@@ -1010,10 +997,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         self.grwiz = grwiz  # GR Wizard
         self._giface = giface
 
-        if tgt_map["raster"] == "" and tgt_map["vector"] == "":
-            self.show_target = False
-        else:
-            self.show_target = True
+        self.show_target = not (tgt_map["raster"] == "" and tgt_map["vector"] == "")
 
         # wx.Frame.__init__(self, parent, id, title, size = size, name = "GCPFrame")
         MapPanel.__init__(
@@ -1723,25 +1707,24 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         are active for the selected transformation order
         """
         if (
-            (self.GCPcount < 3 and self.gr_order == 1)
-            or (self.GCPcount < 6 and self.gr_order == 2)
-            or (self.GCPcount < 10 and self.gr_order == 3)
+            (self.GCPcount >= 3 or self.gr_order != 1)
+            and (self.GCPcount >= 6 or self.gr_order != 2)
+            and (self.GCPcount >= 10 or self.gr_order != 3)
         ):
-            if msg:
-                GWarning(
-                    parent=self,
-                    message=_(
-                        "Insufficient points defined and active (checked) "
-                        "for selected rectification method (order: %d).\n"
-                        "3+ points needed for 1st order,\n"
-                        "6+ points for 2nd order, and\n"
-                        "10+ points for 3rd order."
-                    )
-                    % self.gr_order,
-                )
-                return False
-        else:
             return True
+        if msg:
+            GWarning(
+                parent=self,
+                message=_(
+                    "Insufficient points defined and active (checked) "
+                    "for selected rectification method (order: %d).\n"
+                    "3+ points needed for 1st order,\n"
+                    "6+ points for 2nd order, and\n"
+                    "10+ points for 3rd order."
+                )
+                % self.gr_order,
+            )
+            return False
 
     def OnGeorect(self, event):
         """
@@ -1782,16 +1765,13 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
             self.grwiz.SwitchEnv("source")
 
             # make list of vectors to georectify from VREF
-            f = open(self.file["vgrp"])
             vectlist = []
-            try:
+            with open(self.file["vgrp"]) as f:
                 for vect in f:
                     vect = vect.strip("\n")
                     if len(vect) < 1:
                         continue
                     vectlist.append(vect)
-            finally:
-                f.close()
 
             # georectify each vector in VREF using v.rectify
             for vect in vectlist:
@@ -1976,9 +1956,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
 
         self.grwiz.SwitchEnv("target")
 
-        if ret:
-            errlist = ret.splitlines()
-        else:
+        if not ret:
             GError(
                 parent=self,
                 message=_(
@@ -1987,6 +1965,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                 ),
             )
             return
+        errlist = ret.splitlines()
 
         # insert error values into GCP list for checked items
         sdfactor = float(UserSettings.Get(group="gcpman", key="rms", subkey="sdfactor"))
@@ -2017,12 +1996,13 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                 sumsq_bkw_err += float(bkw_err) ** 2
                 sum_fwd_err += float(fwd_err)
                 GCPcount += 1
-            else:
-                self.list.SetItem(index, 7, "")
-                self.list.SetItem(index, 8, "")
-                self.mapcoordlist[key][7] = 0.0
-                self.mapcoordlist[key][8] = 0.0
-                self.list.SetItemTextColour(index, wx.BLACK)
+                continue
+
+            self.list.SetItem(index, 7, "")
+            self.list.SetItem(index, 8, "")
+            self.mapcoordlist[key][7] = 0.0
+            self.mapcoordlist[key][8] = 0.0
+            self.list.SetItemTextColour(index, wx.BLACK)
 
         # SD
         if GCPcount > 0:
@@ -2110,9 +2090,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
 
         self.grwiz.SwitchEnv("target")
 
-        if ret:
-            errlist = ret.splitlines()
-        else:
+        if not ret:
             GError(
                 parent=self,
                 message=_(
@@ -2121,6 +2099,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                 ),
             )
             return
+        errlist = ret.splitlines()
 
         # fist corner
         e, n = errlist[0].split()
@@ -2357,44 +2336,43 @@ class GCPList(ListCtrl, CheckListCtrlMixin, ListCtrlAutoWidthMixin):
         self.selectedkey = -1
 
     def _Create(self):
-        if 0:
-            # normal, simple columns
-            idx_col = 0
-            for col in (
-                _("use"),
-                _("source E"),
-                _("source N"),
-                _("source Z"),
-                _("target E"),
-                _("target N"),
-                _("target Z"),
-                _("Forward error"),
-                _("Backward error"),
-            ):
-                self.InsertColumn(idx_col, col)
-                idx_col += 1
-        else:
-            # the hard way: we want images on the column header
-            info = wx.ListItem()
-            info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
-            info.SetImage(-1)
-            info.m_format = wx.LIST_FORMAT_LEFT
+        # # normal, simple columns
+        # idx_col = 0
+        # for col in (
+        #     _("use"),
+        #     _("source E"),
+        #     _("source N"),
+        #     _("source Z"),
+        #     _("target E"),
+        #     _("target N"),
+        #     _("target Z"),
+        #     _("Forward error"),
+        #     _("Backward error"),
+        # ):
+        #     self.InsertColumn(idx_col, col)
+        #     idx_col += 1
 
-            idx_col = 0
-            for lbl in (
-                _("use"),
-                _("source E"),
-                _("source N"),
-                _("source Z"),
-                _("target E"),
-                _("target N"),
-                _("target Z"),
-                _("Forward error"),
-                _("Backward error"),
-            ):
-                info.SetText(lbl)
-                self.InsertColumn(idx_col, info)
-                idx_col += 1
+        # the hard way: we want images on the column header
+        info = wx.ListItem()
+        info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
+        info.SetImage(-1)
+        info.m_format = wx.LIST_FORMAT_LEFT
+
+        idx_col = 0
+        for lbl in (
+            _("use"),
+            _("source E"),
+            _("source N"),
+            _("source Z"),
+            _("target E"),
+            _("target N"),
+            _("target Z"),
+            _("Forward error"),
+            _("Backward error"),
+        ):
+            info.SetText(lbl)
+            self.InsertColumn(idx_col, info)
+            idx_col += 1
 
     def LoadData(self):
         """Load data into list"""
@@ -2638,8 +2616,7 @@ class VectGroup(wx.Dialog):
         self.listMap = CheckListBox(parent=self, id=wx.ID_ANY, choices=vectlist)
 
         if os.path.isfile(self.vgrpfile):
-            f = open(self.vgrpfile)
-            try:
+            with open(self.vgrpfile) as f:
                 checked = []
                 for line in f:
                     line = line.replace("\n", "")
@@ -2647,8 +2624,6 @@ class VectGroup(wx.Dialog):
                         continue
                     checked.append(line)
                 self.listMap.SetCheckedStrings(checked)
-            finally:
-                f.close()
 
         line = wx.StaticLine(
             parent=self, id=wx.ID_ANY, size=(20, -1), style=wx.LI_HORIZONTAL
@@ -2702,17 +2677,13 @@ class VectGroup(wx.Dialog):
     def MakeVGroup(self):
         """Create VREF file"""
         vgrouplist = []
-        for item in range(self.listMap.GetCount()):
-            if not self.listMap.IsChecked(item):
-                continue
+
+        for item in filter(self.listMap.IsChecked, range(self.listMap.GetCount())):
             vgrouplist.append(self.listMap.GetString(item) + "@" + self.xymapset)
 
-        f = open(self.vgrpfile, mode="w")
-        try:
+        with open(self.vgrpfile, mode="w") as f:
             for vect in vgrouplist:
                 f.write(vect + "\n")
-        finally:
-            f.close()
 
 
 class EditGCP(wx.Dialog):

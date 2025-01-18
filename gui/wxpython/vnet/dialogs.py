@@ -682,10 +682,10 @@ class VNETDialog(wx.Dialog):
 
         cmd = ["d.vect", "map=" + vectorMap]
 
-        if True:
-            self.giface.GetLayerList().AddLayer(
-                ltype="vector", cmd=cmd, name=vectorMap, checked=True
-            )
+        self.giface.GetLayerList().AddLayer(
+            ltype="vector", cmd=cmd, name=vectorMap, checked=True
+        )
+
         # d.mon case is not need giface implementation should solve it for us
 
     def UseTurns(self):
@@ -840,8 +840,7 @@ class VNETDialog(wx.Dialog):
         mapValSpl = vectMapStr.strip().split("@")
         mapSet = mapValSpl[1] if len(mapValSpl) > 1 else grass.gisenv()["MAPSET"]
         mapName = mapValSpl[0]
-
-        return mapName, mapSet
+        return (mapName, mapSet)
 
     def OnCloseDialog(self, event=None):
         """Cancel dialog"""
@@ -1189,15 +1188,16 @@ class PtsList(PointsList):
                     self.CheckItem(idx, True)
                 elif not v and self.IsItemChecked(idx):
                     self.CheckItem(idx, False)
-            else:
-                found = 0
-                for col in self.colsData:
-                    if k == col[0]:
-                        found = 1
-                        break
+                continue
 
-                if found:
-                    self.EditCellKey(key, k, v)
+            found = 0
+            for col in self.colsData:
+                if k == col[0]:
+                    found = 1
+                    break
+
+            if found:
+                self.EditCellKey(key, k, v)
 
     def OnItemSelected(self, event):
         """Item selected"""

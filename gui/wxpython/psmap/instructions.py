@@ -57,6 +57,8 @@ from psmap.utils import (  # Add any additional required names from psmap.utils 
     projInfo,
 )
 
+FAILED_TO_READ_INSTRUCTION_S = "Failed to read instruction %s"
+
 
 def NewId():
     return int(wxNewId())
@@ -101,21 +103,22 @@ class Instruction:
     def __delitem__(self, id):
         """Delete instruction"""
         for each in self.instruction:
-            if each.id == id:
-                if each.type == "map":
-                    # must remove raster, vector layers, labels too
-                    vektor = self.FindInstructionByType("vector", list=True)
-                    vProperties = self.FindInstructionByType("vProperties", list=True)
-                    raster = self.FindInstructionByType("raster", list=True)
-                    labels = self.FindInstructionByType("labels", list=True)
-                    for item in vektor + vProperties + raster + labels:
-                        if item in self.instruction:
-                            self.instruction.remove(item)
+            if each.id != id:
+                continue
+            if each.type == "map":
+                # must remove raster, vector layers, labels too
+                vektor = self.FindInstructionByType("vector", list=True)
+                vProperties = self.FindInstructionByType("vProperties", list=True)
+                raster = self.FindInstructionByType("raster", list=True)
+                labels = self.FindInstructionByType("labels", list=True)
+                for item in vektor + vProperties + raster + labels:
+                    if item in self.instruction:
+                        self.instruction.remove(item)
 
-                self.instruction.remove(each)
-                if id in self.objectsToDraw:
-                    self.objectsToDraw.remove(id)
-                return
+            self.instruction.remove(each)
+            if id in self.objectsToDraw:
+                self.objectsToDraw.remove(id)
+            return
 
     def AddInstruction(self, instruction):
         """Add instruction"""
@@ -702,7 +705,7 @@ class MapFrame(InstructionObject):
                     elif line.startswith("color"):
                         instr["color"] = line.split()[1]
                 except IndexError:
-                    GError(_("Failed to read instruction %s") % instruction)
+                    GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                     return False
 
         elif instruction == "scale":
@@ -925,7 +928,7 @@ class Mapinfo(InstructionObject):
                 elif sub[0] == "where":
                     instr["where"] = float(sub[1].split()[0]), float(sub[1].split()[1])
         except (ValueError, IndexError):
-            GError(_("Failed to read instruction %s") % instruction)
+            GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
             return False
         self.instruction.update(instr)
         self.instruction["rect"] = self.EstimateRect(mapinfoDict=self.instruction)
@@ -1053,7 +1056,7 @@ class Text(InstructionObject):
                         instr["background"] = "none"
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
         instr["where"] = PaperMapCoordinates(
             mapInstr=map,
@@ -1128,7 +1131,7 @@ class Image(InstructionObject):
                     instr["scale"] = float(line.split(None, 1)[1])
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
         if not os.path.exists(instr["epsfile"]):
             GError(
@@ -1212,21 +1215,21 @@ class Image(InstructionObject):
         If eps, size is read from image header.
         """
         fileName = os.path.split(imagePath)[1]
+        if os.path.splitext(fileName)[1].lower() != ".eps":
+            # we can use wx.Image
+            img = wx.Image(fileName, type=wx.BITMAP_TYPE_ANY)
+            return (img.GetWidth(), img.GetHeight())
+
         # if eps, read info from header
-        if os.path.splitext(fileName)[1].lower() == ".eps":
-            bbInfo = "%%BoundingBox"
-            file = open(imagePath)
-            w = h = 0
+        bbInfo = "%%BoundingBox"
+        w = h = 0
+        with open(imagePath) as file:
             while file:
                 line = file.readline()
                 if line.find(bbInfo) == 0:
                     w, h = line.split()[3:5]
                     break
-            file.close()
-            return float(w), float(h)
-        # we can use wx.Image
-        img = wx.Image(fileName, type=wx.BITMAP_TYPE_ANY)
-        return img.GetWidth(), img.GetHeight()
+        return (float(w), float(h))
 
 
 class NorthArrow(Image):
@@ -1313,7 +1316,7 @@ class Point(InstructionObject):
                     instr["fcolor"] = line.split(None, 1)[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1388,7 +1391,7 @@ class Line(InstructionObject):
                     instr["color"] = line.split(None, 1)[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1466,7 +1469,7 @@ class Rectangle(InstructionObject):
                     instr["fcolor"] = line.split(None, 1)[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1572,7 +1575,7 @@ class Scalebar(InstructionObject):
                     elif line.split()[1].strip().lower() in {"n", "no", "none"}:
                         instr["background"] = "n"
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1713,7 +1716,7 @@ class RasterLegend(InstructionObject):
                         instr["discrete"] = "n"
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
 
         if "raster" in instr:
@@ -1855,7 +1858,7 @@ class VectorLegend(InstructionObject):
                     instr["border"] = line.split()[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1905,7 +1908,7 @@ class Raster(InstructionObject):
         try:
             map = text.split()[1]
         except IndexError:
-            GError(_("Failed to read instruction %s") % instruction)
+            GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
             return False
         try:
             info = gs.find_file(map, element="cell")
@@ -1937,29 +1940,30 @@ class Vector(InstructionObject):
         instr = {}
 
         for line in text:
-            if line.startswith(("vpoints", "vlines", "vareas")):
-                # subtype
-                if line.startswith("vpoints"):
-                    subType = "points"
-                elif line.startswith("vlines"):
-                    subType = "lines"
-                elif line.startswith("vareas"):
-                    subType = "areas"
-                # name of vector map
-                vmap = line.split()[1]
-                try:
-                    info = gs.find_file(vmap, element="vector")
-                except gs.ScriptError as e:
-                    GError(message=e.value)
-                    return False
-                vmap = info["fullname"]
-                # id
-                id = kwargs["id"]
-                # lpos
-                lpos = kwargs["vectorMapNumber"]
-                # label
-                label = "(".join(vmap.split("@")) + ")"
-                break
+            if not line.startswith(("vpoints", "vlines", "vareas")):
+                continue
+            # subtype
+            if line.startswith("vpoints"):
+                subType = "points"
+            elif line.startswith("vlines"):
+                subType = "lines"
+            elif line.startswith("vareas"):
+                subType = "areas"
+            # name of vector map
+            vmap = line.split()[1]
+            try:
+                info = gs.find_file(vmap, element="vector")
+            except gs.ScriptError as e:
+                GError(message=e.value)
+                return False
+            vmap = info["fullname"]
+            # id
+            id = kwargs["id"]
+            # lpos
+            lpos = kwargs["vectorMapNumber"]
+            # label
+            label = "(".join(vmap.split("@")) + ")"
+            break
         instr = [vmap, subType, id, lpos, label]
         if not self.instruction["list"]:
             self.instruction["list"] = []
@@ -2256,7 +2260,7 @@ class Labels(InstructionObject):
                     labels = line.split(None, 1)[1]
                     self.instruction["labels"].append(labels)
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_(FAILED_TO_READ_INSTRUCTION_S) % instruction)
                 return False
 
         return True

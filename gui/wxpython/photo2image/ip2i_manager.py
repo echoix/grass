@@ -67,22 +67,13 @@ maptype = "raster"
 
 
 def getSmallUpArrowImage():
-    stream = open(os.path.join(globalvar.IMGDIR, "small_up_arrow.png"), "rb")
-    try:
-        img = wx.Image(stream)
-    finally:
-        stream.close()
-    return img
+    with open(os.path.join(globalvar.IMGDIR, "small_up_arrow.png"), "rb") as stream:
+        return wx.Image(stream)
 
 
 def getSmallDnArrowImage():
-    stream = open(os.path.join(globalvar.IMGDIR, "small_down_arrow.png"), "rb")
-    try:
-        img = wx.Image(stream)
-    finally:
-        stream.close()
-    stream.close()
-    return img
+    with open(os.path.join(globalvar.IMGDIR, "small_down_arrow.png"), "rb") as stream:
+        return wx.Image(stream)
 
 
 class GCPWizard:
@@ -312,10 +303,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         self.grwiz = grwiz  # GR Wizard
         self._giface = giface
 
-        if tgt_map == "":
-            self.show_target = False
-        else:
-            self.show_target = True
+        self.show_target = tgt_map != ""
 
         self.camera = camera
 
@@ -474,9 +462,9 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
             )
 
             check = "0"
+            coordX0 = "0"
+            coordY0 = "0"
             for index in range(numberOfFiducial):
-                coordX0 = "0"
-                coordY0 = "0"
                 coordX1 = dataFiducialX[index]
                 coordY1 = dataFiducialY[index]
                 f.write(
@@ -1062,25 +1050,24 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         are active for the selected transformation order
         """
         if (
-            (self.GCPcount < 3 and self.gr_order == 1)
-            or (self.GCPcount < 6 and self.gr_order == 2)
-            or (self.GCPcount < 10 and self.gr_order == 3)
+            (self.GCPcount >= 3 or self.gr_order != 1)
+            and (self.GCPcount >= 6 or self.gr_order != 2)
+            and (self.GCPcount >= 10 or self.gr_order != 3)
         ):
-            if msg:
-                GWarning(
-                    parent=self,
-                    message=_(
-                        "Insufficient points defined and active (checked) "
-                        "for selected rectification method (order: %d).\n"
-                        "3+ points needed for 1st order,\n"
-                        "6+ points for 2nd order, and\n"
-                        "10+ points for 3rd order."
-                    )
-                    % self.gr_order,
-                )
-                return False
-        else:
             return True
+        if msg:
+            GWarning(
+                parent=self,
+                message=_(
+                    "Insufficient points defined and active (checked) "
+                    "for selected rectification method (order: %d).\n"
+                    "3+ points needed for 1st order,\n"
+                    "6+ points for 2nd order, and\n"
+                    "10+ points for 3rd order."
+                )
+                % self.gr_order,
+            )
+            return False
 
     def OnGeorect(self, event):
         """
@@ -1274,9 +1261,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
 
         self.grwiz.SwitchEnv("target")
 
-        if ret:
-            errlist = ret.splitlines()
-        else:
+        if not ret:
             GError(
                 parent=self,
                 message=_(
@@ -1285,6 +1270,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                 ),
             )
             return
+        errlist = ret.splitlines()
 
         # insert error values into GCP list for checked items
         sdfactor = float(UserSettings.Get(group="gcpman", key="rms", subkey="sdfactor"))
@@ -1315,12 +1301,13 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                 sumsq_bkw_err += float(bkw_err) ** 2
                 sum_fwd_err += float(fwd_err)
                 GCPcount += 1
-            else:
-                self.list.SetItem(index, 5, "")
-                self.list.SetItem(index, 6, "")
-                self.mapcoordlist[key][5] = 0.0
-                self.mapcoordlist[key][6] = 0.0
-                self.list.SetItemTextColour(index, wx.BLACK)
+
+                continue
+            self.list.SetItem(index, 5, "")
+            self.list.SetItem(index, 6, "")
+            self.mapcoordlist[key][5] = 0.0
+            self.mapcoordlist[key][6] = 0.0
+            self.list.SetItemTextColour(index, wx.BLACK)
 
         # SD
         if GCPcount > 0:
@@ -1410,9 +1397,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
 
         self.grwiz.SwitchEnv("target")
 
-        if ret:
-            errlist = ret.splitlines()
-        else:
+        if not ret:
             GError(
                 parent=self,
                 message=_(
@@ -1421,6 +1406,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                 ),
             )
             return
+        errlist = ret.splitlines()
 
         # fist corner
         e, n = errlist[0].split()
@@ -1658,40 +1644,39 @@ class GCPList(ListCtrl, CheckListCtrlMixin, ListCtrlAutoWidthMixin):
         self.selectedkey = -1
 
     def _Create(self):
-        if 0:
-            # normal, simple columns
-            idx_col = 0
-            for col in (
-                _("use"),
-                _("source X"),
-                _("source Y"),
-                _("target X"),
-                _("target Y"),
-                _("Forward error"),
-                _("Backward error"),
-            ):
-                self.InsertColumn(idx_col, col)
-                idx_col += 1
-        else:
-            # the hard way: we want images on the column header
-            info = wx.ListItem()
-            info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
-            info.SetImage(-1)
-            info.m_format = wx.LIST_FORMAT_LEFT
+        # # normal, simple columns
+        # idx_col = 0
+        # for col in (
+        #     _("use"),
+        #     _("source X"),
+        #     _("source Y"),
+        #     _("target X"),
+        #     _("target Y"),
+        #     _("Forward error"),
+        #     _("Backward error"),
+        # ):
+        #     self.InsertColumn(idx_col, col)
+        #     idx_col += 1
 
-            idx_col = 0
-            for lbl in (
-                _("use"),
-                _("source X"),
-                _("source Y"),
-                _("target X"),
-                _("target Y"),
-                _("Forward error"),
-                _("Backward error"),
-            ):
-                info.SetText(lbl)
-                self.InsertColumn(idx_col, info)
-                idx_col += 1
+        # the hard way: we want images on the column header
+        info = wx.ListItem()
+        info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
+        info.SetImage(-1)
+        info.m_format = wx.LIST_FORMAT_LEFT
+
+        idx_col = 0
+        for lbl in (
+            _("use"),
+            _("source X"),
+            _("source Y"),
+            _("target X"),
+            _("target Y"),
+            _("Forward error"),
+            _("Backward error"),
+        ):
+            info.SetText(lbl)
+            self.InsertColumn(idx_col, info)
+            idx_col += 1
 
     def LoadData(self):
         """Load data into list"""

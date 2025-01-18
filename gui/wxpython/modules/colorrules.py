@@ -334,12 +334,10 @@ class RulesPanel:
 
     def SQLConvert(self, vals):
         """Prepare value for SQL query"""
+        sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
         if vals[0].isdigit():
-            sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
             if vals[1]:
                 sqlrule += " AND %s<%s" % (self.properties["sourceColumn"], vals[1])
-        else:
-            sqlrule = "%s=%s" % (self.properties["sourceColumn"], vals[0])
 
         return sqlrule
 
@@ -687,9 +685,7 @@ class ColorTable(wx.Frame):
             GMessage(message=_("Nothing to save."), parent=self)
             return
 
-        fd = open(path, "w")
-        fd.write(rulestxt)
-        fd.close()
+        Path(path).write_text(rulestxt)
 
     def OnLoadRulesFile(self, event):
         """Load color table from file"""
@@ -698,10 +694,7 @@ class ColorTable(wx.Frame):
             return
 
         self.rulesPanel.Clear()
-
-        fd = open(path)
-        self.ReadColorTable(ctable=fd.read())
-        fd.close()
+        self.ReadColorTable(ctable=Path(path).read_text())
 
     def ReadColorTable(self, ctable):
         """Read color table
@@ -801,11 +794,7 @@ class ColorTable(wx.Frame):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
-        try:
-            output.write(rulestxt)
-        finally:
-            output.close()
+        Path(gtemp).write_text(rulestxt)
 
         cmd = [
             "%s.colors" % self.mapType[0],  # r.colors/v.colors
@@ -815,7 +804,7 @@ class ColorTable(wx.Frame):
         if (
             self.mapType == "vector"
             and self.properties["sourceColumn"]
-            and self.properties["sourceColumn"] != "cat"
+            and (self.properties["sourceColumn"] != "cat")
         ):
             cmd.append("column=%s" % self.properties["sourceColumn"])
 
@@ -1826,11 +1815,7 @@ class VectorColorTable(ColorTable):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
-        try:
-            output.write(rulestxt)
-        finally:
-            output.close()
+        Path(gtemp).write_text(rulestxt)
 
         RunCommand("db.execute", parent=self, input=gtemp)
         return True

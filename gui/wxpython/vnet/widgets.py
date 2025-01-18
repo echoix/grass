@@ -147,28 +147,27 @@ class PointsList(
 
     def _createCols(self):
         """Creates columns in list"""
-        if 0:
-            # normal, simple columns
-            for col in enumerate(self.colsData):
-                iLabel = self.dataTypes["colLabel"]
-                self.InsertColumn(col[0], col[1][iLabel])
-        else:
-            # the hard way: we want images on the column header
-            info = wx.ListItem()
-            info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
-            info.SetImage(-1)
-            if globalvar.wxPythonPhoenix:
-                info.Format = wx.LIST_FORMAT_LEFT
-            else:
-                info.m_format = wx.LIST_FORMAT_LEFT
+        # # normal, simple columns
+        # for col in enumerate(self.colsData):
+        #     iLabel = self.dataTypes["colLabel"]
+        #     self.InsertColumn(col[0], col[1][iLabel])
 
-            for col in enumerate(self.colsData):
-                iLabel = self.dataTypes["colLabel"]
-                info.SetText(col[1][iLabel])
-                if globalvar.wxPythonPhoenix:
-                    self.InsertColumn(col[0], info)
-                else:
-                    self.InsertColumnInfo(col[0], info)
+        # the hard way: we want images on the column header
+        info = wx.ListItem()
+        info.SetMask(wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT)
+        info.SetImage(-1)
+        if globalvar.wxPythonPhoenix:
+            info.Format = wx.LIST_FORMAT_LEFT
+        else:
+            info.m_format = wx.LIST_FORMAT_LEFT
+
+        for col in enumerate(self.colsData):
+            iLabel = self.dataTypes["colLabel"]
+            info.SetText(col[1][iLabel])
+            if globalvar.wxPythonPhoenix:
+                self.InsertColumn(col[0], info)
+            else:
+                self.InsertColumnInfo(col[0], info)
 
     def AddItem(self):
         """Appends an item to list with default values"""
@@ -439,21 +438,15 @@ class PointsList(
 
     def getSmallUpArrowImage(self):
         """Get arrow up symbol for indication of sorting"""
-        stream = open(os.path.join(globalvar.IMGDIR, "small_up_arrow.png"), "rb")
-        try:
-            img = wx.Image(stream)
-        finally:
-            stream.close()
-        return img
+        with open(os.path.join(globalvar.IMGDIR, "small_up_arrow.png"), "rb") as stream:
+            return wx.Image(stream)
 
     def getSmallDnArrowImage(self):
         """Get arrow down symbol for indication of sorting"""
-        stream = open(os.path.join(globalvar.IMGDIR, "small_down_arrow.png"), "rb")
-        try:
-            img = wx.Image(stream)
-        finally:
-            stream.close()
-        return img
+        with open(
+            os.path.join(globalvar.IMGDIR, "small_down_arrow.png"), "rb"
+        ) as stream:
+            return wx.Image(stream)
 
     def _getColumnNum(self, colName):
         """Get position of column among showed columns
@@ -513,22 +506,19 @@ class PointsList(
         """
         if pos < 0 or pos >= self.GetColumnCount():
             return False
-        if colName in self.hiddenCols:
-            col = self.hiddenCols[colName]
+        if colName not in self.hiddenCols:
+            return False
+        col = self.hiddenCols[colName]
 
-            for item in enumerate(self.itemDataMap):
-                item[1].insert(pos, col["itemDataMap"][item[0]])
-            for item in enumerate(self.selIdxs):
-                item[1].insert(pos, col["selIdxs"][item[0]])
-
-            self.colsData.insert(pos, col["colsData"])
-
-            self.InsertColumnItem(pos, col["wxCol"])
-            self.ResizeColumns()
-            del self.hiddenCols[colName]
-            return True
-
-        return False
+        for item in enumerate(self.itemDataMap):
+            item[1].insert(pos, col["itemDataMap"][item[0]])
+        for item in enumerate(self.selIdxs):
+            item[1].insert(pos, col["selIdxs"][item[0]])
+        self.colsData.insert(pos, col["colsData"])
+        self.InsertColumnItem(pos, col["wxCol"])
+        self.ResizeColumns()
+        del self.hiddenCols[colName]
+        return True
 
     def IsShown(self, colName) -> bool:
         """Is column shown

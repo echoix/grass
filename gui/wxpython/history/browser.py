@@ -165,7 +165,7 @@ class HistoryInfoPanel(SP.ScrolledPanel):
 
     def _general_info_filter(self, key, value):
         filter_keys = ["timestamp", "runtime", "status"]
-        return key in filter_keys or ((key in {"mask2d", "mask3d"}) and value is True)
+        return key in filter_keys or (key in {"mask2d", "mask3d"} and value is True)
 
     def _region_settings_filter(self, key):
         return key not in {"projection", "zone", "cells"}

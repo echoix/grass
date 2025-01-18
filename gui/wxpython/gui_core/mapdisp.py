@@ -379,9 +379,8 @@ class MapPanelBase(wx.Panel):
 
     def StatusbarEnableLongHelp(self, enable=True):
         """Enable/disable toolbars long help"""
-        for toolbar in self.toolbars.values():
-            if toolbar:
-                toolbar.EnableLongHelp(enable)
+        for toolbar in filter(None, self.toolbars.values()):
+            toolbar.EnableLongHelp(enable)
 
     def ShowAllToolbars(self, show=True):
         action = self.RemoveToolbar if not show else self.AddToolbar
@@ -429,10 +428,9 @@ class MapPanelBase(wx.Panel):
 
     def OnEnableDisableRender(self, event):
         """Enable/disable auto-rendering map composition (each map layer)"""
-        if self.MapWindow.parent.mapWindowProperties.autoRender:
-            self.MapWindow.parent.mapWindowProperties.autoRender = False
-        else:
-            self.MapWindow.parent.mapWindowProperties.autoRender = True
+        self.MapWindow.parent.mapWindowProperties.autoRender = (
+            not self.MapWindow.parent.mapWindowProperties.autoRender
+        )
 
     def OnDraw(self, event):
         """Re-display current map composition"""
