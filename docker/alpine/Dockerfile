@@ -16,6 +16,7 @@ ENV GRASS_RUN_PACKAGES="\
       build-base \
       bzip2 \
       cairo \
+      cmake \
       curl \
       fftw \
       flex \
@@ -123,7 +124,6 @@ ENV GRASS_BUILD_PACKAGES="\
       build-base \
       bzip2-dev \
       cairo-dev \
-      cmake \
       fftw-dev \
       freetype-dev \
       geos-dev \
