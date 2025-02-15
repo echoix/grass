@@ -146,8 +146,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           file: docker/${{ matrix.os }}/Dockerfile
           annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: gha
-          cache-to: type=gha,mode=max
+          cache-from: gha,scope=${{ matrix.os }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.os }}
           provenance: mode=max
           sbom: true
       - name: Image digest
