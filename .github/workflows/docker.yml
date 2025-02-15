@@ -144,7 +144,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           file: docker/${{ matrix.os }}/Dockerfile
           annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: gha
+          cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
