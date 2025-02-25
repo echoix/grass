@@ -60,8 +60,10 @@ build_program_in_subdir(
 # TODO: add CAIRO_HAS_XRENDER and CAIRO_HAS_XRENDER_SURFACE to if clause
 if(WITH_CAIRO AND USE_X11)
   if(NOT MSVC)
-    build_program_in_subdir(g.cairocomp DEPENDS grass_gis CAIRO
+    build_program_in_subdir(g.cairocomp DEPENDS grass_gis Cairo::Cairo
                             grass_cairodriver)
+    #build_program_in_subdir(g.cairocomp DEPENDS grass_gis CAIRO
+    #                        grass_cairodriver)
   endif()
 endif()
 

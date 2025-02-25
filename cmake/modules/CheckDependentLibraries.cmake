@@ -119,6 +119,13 @@ if(WITH_CAIRO)
     set_property(TARGET CAIRO PROPERTY INTERFACE_INCLUDE_DIRECTORIES
                                        ${CAIRO_INCLUDE_DIRS})
   endif()
+  # if(Cairo_FOUND)
+  #   add_library(Cairo::Cairo INTERFACE IMPORTED GLOBAL)
+  #   set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_LINK_LIBRARIES
+  #                                      ${CAIRO_LIBRARIES})
+  #   set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+  #                                      ${CAIRO_INCLUDE_DIRS})
+  # endif()
 endif()
 
 if(WITH_LIBPNG)
