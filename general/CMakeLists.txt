@@ -48,7 +48,8 @@ build_program_in_subdir(
   grass_gis
   PROJ
   GDAL
-  SQLITE
+  #SQLITE
+  SQLite::SQLite3
   OPTIONAL_DEPENDS
   GEOS
   DEFS

@@ -104,15 +104,19 @@ build_program_in_subdir(
   DEFS
   "${grass_dbstubs_DEFS}"
   PRIMARY_DEPENDS
-  SQLITE
+  #SQLITE
+  SQLite::SQLite3
   HTML_FILE_NAME
   grass-sqlite
   RUNTIME_OUTPUT_DIR
   "${GRASS_INSTALL_DRIVERDIR}/db")
 
-if(TARGET SQLITE)
+if(TARGET SQLite::SQLite3)
   list(APPEND db_drivers sqlite)
 endif()
+#if(TARGET SQLITE)
+#  list(APPEND db_drivers sqlite)
+#endif()
 
 build_program_in_subdir(
   postgres

@@ -142,7 +142,7 @@ endif()
 # Data storage options
 
 if(WITH_SQLITE)
-  find_package(SQLite REQUIRED)
+  find_package(SQLite3 REQUIRED)
   if(SQLITE_FOUND)
     add_library(SQLITE INTERFACE IMPORTED GLOBAL)
     set_property(TARGET SQLITE PROPERTY INTERFACE_LINK_LIBRARIES
@@ -388,7 +388,8 @@ check_target(ZLIB HAVE_ZLIB_H)
 check_target(ICONV HAVE_ICONV_H)
 check_target(LIBPNG HAVE_PNG_H)
 check_target(LIBJPEG HAVE_JPEGLIB_H)
-check_target(SQLITE HAVE_SQLITE)
+check_target(SQLite::SQLite3 HAVE_SQLITE)
+# check_target(SQLITE HAVE_SQLITE)
 check_target(POSTGRES HAVE_POSTGRES)
 check_target(MYSQL HAVE_MYSQL_H)
 check_target(ODBC HAVE_SQL_H)
