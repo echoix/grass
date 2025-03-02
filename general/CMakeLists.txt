@@ -51,7 +51,7 @@ build_program_in_subdir(
   #SQLITE
   SQLite::SQLite3
   OPTIONAL_DEPENDS
-  GEOS
+  GEOS::geos_c
   DEFS
   "-DGRASS_VERSION_NUMBER=\"${GRASS_VERSION_NUMBER}\""
   "-DGRASS_VERSION_GIT=\"${GRASS_VERSION_GIT}\""
