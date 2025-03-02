@@ -105,7 +105,7 @@ class AboutWindow(wx.Frame):
         sizer.Add(self.aboutNotebook, proportion=1, flag=wx.EXPAND | wx.ALL, border=1)
         sizer.Add(btnSizer, proportion=0, flag=wx.ALL | wx.ALIGN_RIGHT, border=1)
 
-        self.SetMinSize((400, 400))
+        self.SetMinSize(self.FromDIP((400, 400)))
 
         self.panel.SetSizer(sizer)
         sizer.Fit(self.panel)
