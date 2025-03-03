@@ -56,7 +56,7 @@ LOCATIONS = [
     },
     {
         "label": "Spearfish (SD) dataset",
-        "url": "https://grass.osgeo.org/sampledata/spearfish_grass70data-0.3.tar.gz",
+        "url": "https://grasss.osgeo.org/sampledata/spearfish_grass70data-0.3.tar.gz",
     },
     {
         "label": "Piemonte, Italy dataset",
@@ -83,10 +83,11 @@ LOCATIONS = [
         "maintainer": "Brendan Harmon (brendan.harmon@gmail.com)",
     },
 ]
+import logging
 
 
 class RedirectText:
-    def __init__(self, window):
+    def __init__(self, window: wx.StaticText):
         self.out = window
 
     def write(self, string):
@@ -94,8 +95,34 @@ class RedirectText:
             if self.out:
                 string = self._wrap_string(string)
                 heigth = self._get_heigth(string)
+                heigth2 = self._get_heigth2(string)
+                # print(f"height old is {heigth}")
+                logging.warning(f"height old is {heigth}")
+                logging.warning(f"height2 is {heigth2}")
+                text_extent = self.out.GetTextExtent(string)
+                # mlTextExtent = self.out.Size.GetMultiLineTextExtent()
+                # heigth = self.out.GetTextExtent(string)[1]
+                # print(f"height new is {heigth}")
+                # logging.warning(f"height new is {heigth}, text extent: {text_extent}, {self.out.GetSi}")
+                logging.warning(
+                    f"height new is {heigth}, text extent: {text_extent}, {self.out.GetSizeFromText(string)}"
+                )
+                # self.out.Wrap(40)
                 wx.CallAfter(self.out.SetLabel, string)
-                self._resize(heigth)
+                # wx.CallAfter(self.out.SetLabel, string)
+                # wx.CallAfter(self.out.Wrap, 80)
+                # self.out.Wrap(40)
+                bw = self.out.GetBestWidth(-1)
+                bh = self.out.GetBestHeight(-1)
+                bs = self.out.GetBestSize()
+                sft = self.out.GetSizeFromText(string)
+                logging.warning(
+                    f"bestsize is: {bs}, bestheight: {bh},bestwidth: {bw}, GetSizeFromText: {sft}"
+                )
+
+                # self._resize(heigth)
+                self._resize(heigth2)
+                # self._resize(self.out.GetBestSize()[1])
         except (RuntimeError, AttributeError):
             # window closed or destroyed
             pass
@@ -103,7 +130,7 @@ class RedirectText:
     def flush(self):
         pass
 
-    def _wrap_string(self, string, width=40):
+    def _wrap_string(self, string, width=80):
         """Wrap string
 
         :param str string: input string
@@ -111,7 +138,11 @@ class RedirectText:
 
         :return str: newline-separated string
         """
-        wrapper = textwrap.TextWrapper(width=width)
+        wrapper = textwrap.TextWrapper(
+            width=width,
+            replace_whitespace=False,
+        )
+        # return wrapper.wrap(text=string)
         return wrapper.fill(text=string)
 
     def _get_heigth(self, string):
@@ -121,22 +152,48 @@ class RedirectText:
 
         :return int: widget heigth
         """
+        # print("locdownload redirecttext getheigth")
         n_lines = string.count("\n")
         attr = self.out.GetClassDefaultAttributes()
         font_size = attr.font.GetPointSize()
         return int((n_lines + 2) * font_size // 0.75)  # 1 px = 0.75 pt
+
+    def _get_heigth2(self, string):
+        """Get widget new heigth
+
+        :param str string: input string
+
+        :return int: widget heigth
+        """
+        # print("locdownload redirecttext getheigth")
+        n_lines = string.count("\n")
+        attr = self.out.GetClassDefaultAttributes()
+        font_size = attr.font.GetPointSize()
+        # dc = wx.ClientDC(self)
+        dc = wx.ClientDC(self.out)
+        mte = dc.GetMultiLineTextExtent(string)
+        logging.warning(f"dc.GetMultiLineTextExtent {mte}")
+        # return int((n_lines + 2) * font_size // 0.75)  # 1 px = 0.75 pt
+        return mte[1]
 
     def _resize(self, heigth=-1):
         """Resize widget heigth
 
         :param int heigth: widget heigth
         """
-        wx.CallAfter(self.out.GetParent().SetMinSize, (-1, -1))
-        wx.CallAfter(self.out.SetMinSize, (-1, heigth))
-        wx.CallAfter(
-            self.out.GetParent().parent.sizer.Fit,
-            self.out.GetParent().parent,
-        )
+        # # print("locdownload redirecttext resize")
+        # wx.CallAfter(self.out.GetParent().SetMinSize, (-1, -1))
+        # # wx.CallAfter(self.out.GetParent().SetBestSize, (-1, -1))
+        # # wx.CallAfter(self.out.GetParent().SetBestSize)
+        # # wx.CallAfter(self.out.SetMinSize, (-1, self.out.GetBestSize()[1]))
+        # # wx.CallAfter(self.out.SetMinSize, (-1, self.out.GetBestSize()[1]))
+        # # wx.CallAfter(self.out.SetMinSize, (-1, -1))
+        # wx.CallAfter(self.out.SetMinSize, (-1, heigth))
+        # wx.CallAfter(
+        #     self.out.GetParent().parent.sizer.Fit,
+        #     self.out.GetParent().parent,
+        # )
+        pass
 
 
 # based on
@@ -147,7 +204,7 @@ def reporthook(count, block_size, total_size):
     if count == 0:
         start_time = time.time()
         sys.stdout.write(
-            _("Download in progress, wait until it is finished 0%"),
+            _("Download in progress, wait until it is finished\n0%"),
         )
         return
     if count % 100 != 0:  # be less verbose
@@ -158,8 +215,9 @@ def reporthook(count, block_size, total_size):
     percent = int(count * block_size * 100 / total_size)
     sys.stdout.write(
         _(
-            "Download in progress, wait until it is finished "
-            "{0}%, {1} MB, {2} KB/s, {3:.0f} seconds passed"
+            "Download in progress, wait until it is finished\n"
+            "{0}%, {1} MB, {2} KB/s,\n"
+            "{3:.0f} seconds passed"
         ).format(
             percent,
             progress_size / (1024 * 1024),
@@ -240,7 +298,11 @@ class LocationDownloadPanel(wx.Panel):
         # TODO: add thumbnail for each location?
 
         # TODO: messages copied from gis_set.py, need this as API?
-        self.message = StaticText(parent=self, size=(-1, 50))
+        # print("locdownload locationdownloadpanel init message")
+        # self.message = StaticText(parent=self, size=(-1, -1))
+        # self.message = StaticText(parent=self)
+        # self.message = StaticText(parent=self, size=(-1, 50))
+        self.message = StaticText(parent=self, size=self.FromDIP((-1, 50)))
         sys.stdout = RedirectText(self.message)
 
         # It is not clear if all wx versions supports color, so try-except.
@@ -282,12 +344,16 @@ class LocationDownloadPanel(wx.Panel):
         vertical.Add(
             self.message,
             proportion=0,
+            # proportion=1,
             flag=wx.ALIGN_LEFT | wx.ALL | wx.EXPAND,
             border=10,
         )
-
-        self.SetSizer(vertical)
-        vertical.Fit(self)
+        # vertical.AddStretchSpacer()
+        # self.sizer.SetSizeHints(self)
+        # self.SetSizer(vertical)
+        # vertical.Fit(self)
+        self.SetSizerAndFit(vertical)
+        # vertical.FitInside(self)
         self.Layout()
         self.SetMinSize(self.GetBestSize())
 
@@ -472,8 +538,10 @@ class LocationDownloadDialog(wx.Dialog):
             flag=wx.ALIGN_RIGHT | wx.TOP | wx.BOTTOM,
             border=10,
         )
+        self.sizer.SetSizeHints(self)
         self.SetSizer(self.sizer)
-        self.sizer.Fit(self)
+        # self.sizer.Fit(self)
+        self.sizer.FitInside(self)
 
         self.Layout()
 
@@ -510,6 +578,11 @@ def main():
     database = sys.argv[1]
 
     app = wx.App()
+    wx.Dialog.EnableLayoutAdaptation(True)
+    if wx.Platform == "__WXMSW__":
+        import ctypes
+
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
     if len(sys.argv) == 2 or sys.argv[2] == "dialog":
         window = LocationDownloadDialog(parent=None, database=database)
@@ -520,6 +593,15 @@ def main():
         window.Destroy()
     elif sys.argv[2] == "panel":
         window = wx.Dialog(parent=None)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        download_button = Button(parent=None, id=wx.ID_ANY, label=_("Do&wnload"))
+        # download_button = Button(parent=window, id=wx.ID_ANY, label=_("Do&wnload"))
+        download_button.SetToolTip(_("Download selected dataset"))
+        sizer.Add(download_button)
+        window.SetSizer(sizer)
+        # window.
+        # window.download_button = Button(parent=window, id=wx.ID_ANY, label=_("Do&wnload"))
+        # window.download_button.SetToolTip(_("Download selected dataset"))
         panel = LocationDownloadPanel(parent=window, database=database)
         window.ShowModal()
         location = panel.GetLocation()
