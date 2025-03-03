@@ -61,11 +61,31 @@ from core.debug import Debug
 class AboutWindow(wx.Frame):
     """Create custom About Window"""
 
-    def __init__(self, parent, size=(770, 460), title=_("About GRASS GIS"), **kwargs):
+    def __init__(self, parent, **kwargs):
+        size = wx.DefaultSize
+        title = _("About GRASS GIS6")
         wx.Frame.__init__(
-            self, parent=parent, id=wx.ID_ANY, title=title, size=size, **kwargs
+            self, parent=parent, id=wx.ID_ANY, size=size, title=title, **kwargs
         )
 
+        # if size is None:
+        #     size = self.FromDIP((770, 460))
+        # self.SetSize(size)
+        self.SetSize(self.FromDIP((770, 460)))
+        # self.size
+        # newsize = self.ConvertDialogToPixels(wx.Size(770, 460))
+        # self.SetSize(self.ConvertDialogToPixels((770, 460)))
+        # self.SetSize(self.ConvertDialogToPixels(wx.Size(770, 460)))
+        # self.SetSize(self.ConvertDialogToPixels(wx.Size(int(770 / 4), int(460 / 8))))
+        # self.SetSize(self.ConvertDialogToPixels(wx.Size(200, 120)))
+        # self.SetSize(self.ConvertDialogToPixels(wx.Size(400, 120)))
+        # self.SetInitialSize(self.ConvertDialogToPixels(wx.Size(int(770 / 4), int(460 / 8))))
+        # self.SetInitialSize(
+        #     self.ConvertDialogToPixels(wx.Point(int(770 / 4), int(460 / 8)))
+        # )
+        # self.SetSize(self.ConvertDialogToPixels(wx.Point(770, 460)))
+        # self.SetInitialSize(self.FromDIP((770, 460)))
+        # self.SetInitialSize(newsize)
         self.panel = wx.Panel(parent=self, id=wx.ID_ANY)
 
         # icon
