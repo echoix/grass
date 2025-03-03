@@ -137,7 +137,7 @@ class MapToolbar(BaseToolbar):
             id=wx.ID_ANY,
             choices=choices,
             style=wx.CB_READONLY,
-            size=self.FromDIP((110, -1)),
+            # size=self.FromDIP((110, -1)),
         )
         self.combo.SetSelection(0)
 
@@ -163,7 +163,7 @@ class MapToolbar(BaseToolbar):
 
         self.EnableTool(self.zoomBack, False)
 
-        self.FixSize(width=90)
+        self.FixSize(width=self.FromDIP(90))
 
     def _toolbarData(self):
         """Toolbar data"""

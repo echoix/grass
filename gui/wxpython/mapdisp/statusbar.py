@@ -442,7 +442,7 @@ class SbMapScale(SbItem):
             parent=self.statusbar,
             id=wx.ID_ANY,
             style=wx.TE_PROCESS_ENTER,
-            size=(150, -1),
+            size=self.statusbar.FromDIP((150, -1)),
         )
 
         self.widget.SetItems(
