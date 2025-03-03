@@ -172,7 +172,10 @@ def main(argv=None):
 
 if __name__ == "__main__":
     if wx.Platform == "__WXMSW__":
-        import ctypes
+        # import ctypes
 
-        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        # ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        from ctypes import windll, wintypes
+
+        windll.user32.SetThreadDpiAwarenessContext(wintypes.HANDLE(-4))
     sys.exit(main())
