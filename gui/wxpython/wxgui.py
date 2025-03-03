@@ -54,10 +54,6 @@ class GMApp(wx.App):
 
         # call parent class initializer
         wx.App.__init__(self, False)
-        if wx.Platform == "__WXMSW__":
-            import ctypes
-
-            ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
         self.locale = wx.Locale(language=wx.LANGUAGE_DEFAULT)
 
@@ -175,4 +171,8 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    if wx.Platform == "__WXMSW__":
+        import ctypes
+
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
     sys.exit(main())
