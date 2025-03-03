@@ -61,4 +61,4 @@ class DataCatalogFrame(wx.Frame):
         self.panel.SetSizer(sizer)
         sizer.Fit(self.panel)
 
-        self.SetMinSize((450, 500))
+        self.SetMinSize(self.FromDIP((450, 500)))
