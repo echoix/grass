@@ -3203,6 +3203,10 @@ class GrassGUIApp(wx.App):
 
     def __init__(self, grass_task):
         self.grass_task = grass_task
+        if wx.Platform == "__WXMSW__":
+            import ctypes
+
+            ctypes.windll.shcore.SetProcessDpiAwareness(2)
         wx.App.__init__(self, False)
 
     def OnInit(self):
