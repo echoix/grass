@@ -76,17 +76,19 @@ class PreferencesBaseDialog(wx.Dialog):
         giface,
         settings,
         title=_("User settings"),
-        size=(-1, 500),
+        size=None,
         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
     ):
         self.parent = parent  # ModelerFrame
         self.title = title
-        self.size = size
         self.settings = settings
         self._giface = giface
-
         wx.Dialog.__init__(self, parent=parent, id=wx.ID_ANY, title=title, style=style)
+        if size is None:
+            size = self.FromDIP((-1, 500))
+            # size = wx.DefaultSize
 
+        self.size = size
         self.settingsChanged = Signal("PreferencesBaseDialog.settingsChanged")
 
         # notebook
@@ -647,7 +649,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         elementList = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(325, -1),
+            size=self.FromDIP((325, -1)),
             choices=locales,
             name="GetStringSelection",
         )
@@ -686,7 +688,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         elementList = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(325, -1),
+            size=self.FromDIP((325, -1)),
             choices=self.settings.Get(
                 group="appearance",
                 key="elementListExpand",
@@ -729,7 +731,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         menuItemText = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(325, -1),
+            size=self.FromDIP((325, -1)),
             choices=listOfStyles,
             name="GetSelection",
         )
@@ -771,7 +773,9 @@ class PreferencesDialog(PreferencesBaseDialog):
             group="appearance", key="gSelectPopupHeight", subkey="value"
         )
 
-        popupHeightSpin = SpinCtrl(parent=panel, id=wx.ID_ANY, size=(100, -1))
+        popupHeightSpin = SpinCtrl(
+            parent=panel, id=wx.ID_ANY, size=self.FromDIP((100, -1))
+        )
         popupHeightSpin.SetRange(min, max)
         popupHeightSpin.SetValue(value)
 
@@ -795,7 +799,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         iconTheme = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(100, -1),
+            size=self.FromDIP((100, -1)),
             choices=self.settings.Get(
                 group="appearance",
                 key="iconTheme",
@@ -824,7 +828,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         styleList = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(325, -1),
+            size=self.FromDIP((325, -1)),
             choices=self.settings.Get(
                 group="appearance",
                 key="commandNotebook",
@@ -924,7 +928,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         driver = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(150, -1),
+            size=self.FromDIP((150, -1)),
             choices=listOfDrivers,
             name="GetStringSelection",
         )
@@ -953,7 +957,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         statusbarMode = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(150, -1),
+            size=self.FromDIP((150, -1)),
             choices=listOfModes,
             name="GetSelection",
         )
@@ -977,7 +981,7 @@ class PreferencesDialog(PreferencesBaseDialog):
             parent=panel,
             id=wx.ID_ANY,
             colour=self.settings.Get(group="display", key="bgcolor", subkey="color"),
-            size=globalvar.DIALOG_COLOR_SIZE,
+            size=self.FromDIP(globalvar.DIALOG_COLOR_SIZE),
         )
         bgColor.SetName("GetColour")
         self.winId["display:bgcolor:color"] = bgColor.GetId()
@@ -1087,7 +1091,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         zoomAction = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(200, -1),
+            size=self.FromDIP((200, -1)),
             choices=listOfModes,
             name="GetSelection",
         )
@@ -1113,7 +1117,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         scrollDir = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(200, -1),
+            size=self.FromDIP((200, -1)),
             choices=listOfModes,
             name="GetSelection",
         )
@@ -1273,7 +1277,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         verbosity = wx.Choice(
             parent=panel,
             id=wx.ID_ANY,
-            size=(200, -1),
+            size=self.FromDIP((200, -1)),
             choices=self.settings.Get(
                 group="cmd", key="verbosity", subkey="choices", settings_type="internal"
             ),
@@ -1393,7 +1397,7 @@ class PreferencesDialog(PreferencesBaseDialog):
 
         rasterCTName = ColorTablesComboBox(
             parent=panel,
-            size=globalvar.DIALOG_COMBOBOX_SIZE,
+            size=self.FromDIP(globalvar.DIALOG_COMBOBOX_SIZE),
             choices=GetColorTables(),
             name="GetStringSelection",
         )
@@ -1456,7 +1460,7 @@ class PreferencesDialog(PreferencesBaseDialog):
             colour=self.settings.Get(
                 group="vectorLayer", key="featureColor", subkey="color"
             ),
-            size=globalvar.DIALOG_COLOR_SIZE,
+            size=self.FromDIP(globalvar.DIALOG_COLOR_SIZE),
         )
         featureColor.SetName("GetColour")
         self.winId["vectorLayer:featureColor:color"] = featureColor.GetId()
@@ -1490,7 +1494,7 @@ class PreferencesDialog(PreferencesBaseDialog):
             colour=self.settings.Get(
                 group="vectorLayer", key="areaFillColor", subkey="color"
             ),
-            size=globalvar.DIALOG_COLOR_SIZE,
+            size=self.FromDIP(globalvar.DIALOG_COLOR_SIZE),
         )
         fillColor.SetName("GetColour")
         self.winId["vectorLayer:areaFillColor:color"] = fillColor.GetId()
@@ -1519,7 +1523,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         hlWidth = SpinCtrl(
             parent=panel,
             id=wx.ID_ANY,
-            size=(50, -1),
+            size=self.FromDIP((50, -1)),
             initial=self.settings.Get(group="vectorLayer", key="line", subkey="width"),
             min=1,
             max=1e6,
@@ -1552,7 +1556,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         ptSize = SpinCtrl(
             parent=panel,
             id=wx.ID_ANY,
-            size=(50, -1),
+            size=self.FromDIP((50, -1)),
             initial=self.settings.Get(group="vectorLayer", key="point", subkey="size"),
             min=1,
             max=1e6,
@@ -1627,7 +1631,7 @@ class PreferencesDialog(PreferencesBaseDialog):
             parent=panel,
             id=wx.ID_ANY,
             colour=self.settings.Get(group="atm", key="highlight", subkey="color"),
-            size=globalvar.DIALOG_COLOR_SIZE,
+            size=self.FromDIP(globalvar.DIALOG_COLOR_SIZE),
         )
         hlColor.SetName("GetColour")
         self.winId["atm:highlight:color"] = hlColor.GetId()
@@ -1642,7 +1646,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         hlWidth = SpinCtrl(
             parent=panel,
             id=wx.ID_ANY,
-            size=(50, -1),
+            size=self.FromDIP((50, -1)),
             initial=self.settings.Get(group="atm", key="highlight", subkey="width"),
             min=1,
             max=1e6,
@@ -1712,7 +1716,7 @@ class PreferencesDialog(PreferencesBaseDialog):
             id=wx.ID_ANY,
             value=self.settings.Get(group="atm", key="encoding", subkey="value"),
             name="GetValue",
-            size=(200, -1),
+            size=self.FromDIP((200, -1)),
         )
         self.winId["atm:encoding:value"] = encoding.GetId()
 
@@ -1754,7 +1758,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         flexSizer.AddGrowableCol(0)
 
         label = StaticText(parent=panel, id=wx.ID_ANY, label=_("Key column:"))
-        keyColumn = TextCtrl(parent=panel, id=wx.ID_ANY, size=(250, -1))
+        keyColumn = TextCtrl(parent=panel, id=wx.ID_ANY, size=self.FromDIP((250, -1)))
         keyColumn.SetValue(
             self.settings.Get(group="atm", key="keycolumn", subkey="value")
         )
@@ -1818,7 +1822,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         row += 1
         label = StaticText(parent=panel, id=wx.ID_ANY, label=_("EPSG code:"))
         epsgCode = wx.ComboBox(
-            parent=panel, id=wx.ID_ANY, name="GetValue", size=(150, -1)
+            parent=panel, id=wx.ID_ANY, name="GetValue", size=self.FromDIP((150, -1))
         )
         self.epsgCodeDict = {}
         epsgCode.SetValue(
@@ -1841,7 +1845,7 @@ class PreferencesDialog(PreferencesBaseDialog):
                 group="projection", key="statusbar", subkey="proj4"
             ),
             name="GetValue",
-            size=(400, -1),
+            size=self.FromDIP((400, -1)),
         )
         self.winId["projection:statusbar:proj4"] = projString.GetId()
 
@@ -1860,7 +1864,7 @@ class PreferencesDialog(PreferencesBaseDialog):
                 group="projection", key="statusbar", subkey="projFile"
             ),
             name="GetValue",
-            size=(400, -1),
+            size=self.FromDIP((400, -1)),
         )
         self.winId["projection:statusbar:projFile"] = projFile.GetId()
         gridSizer.Add(label, pos=(row, 0), flag=wx.ALIGN_CENTER_VERTICAL)
