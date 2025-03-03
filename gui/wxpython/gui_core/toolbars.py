@@ -351,7 +351,11 @@ class BaseToolbar(ToolBar):
         wx.ToolBar.__init__(self, parent=self.parent, id=wx.ID_ANY, style=style)
 
         self._default = None
-        self.SetToolBitmapSize(globalvar.toolbarSize)
+
+        # Recommended to remove calls to SetToolBitmapSize() in
+        # https://docs.wxwidgets.org/3.2/overview_high_dpi.html#high_dpi_existing_code
+        # self.SetToolBitmapSize(globalvar.toolbarSize)
+        self.SetToolBitmapSize(self.FromDIP(globalvar.toolbarSize))
 
         self.toolSwitcher = toolSwitcher
         self.controller = ToolbarController(
@@ -399,7 +403,8 @@ class AuiToolbar(aui.AuiToolBar):
         )
 
         self._default = None
-        self.SetToolBitmapSize(globalvar.toolbarSize)
+        # self.SetToolBitmapSize(globalvar.toolbarSize)
+        self.SetToolBitmapSize(self.FromDIP(globalvar.toolbarSize))
 
         self.toolSwitcher = toolSwitcher
         self.controller = AuiToolbarController(

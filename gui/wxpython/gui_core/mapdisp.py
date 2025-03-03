@@ -83,7 +83,7 @@ class MapPanelBase(wx.Panel):
 
         # toolbars
         self.toolbars = {}
-        self.iconsize = (16, 16)
+        self.iconsize = self.FromDIP((16, 16))
 
         # properties are shared in other objects, so defining here
         self.mapWindowProperties = MapWindowProperties()

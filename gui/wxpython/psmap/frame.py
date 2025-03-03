@@ -109,7 +109,7 @@ class PsMapFrame(wx.Frame):
         if sys.platform != "darwin":
             self.SetToolBar(self.toolbar)
 
-        self.iconsize = (16, 16)
+        self.iconsize = self.FromDIP((16, 16))
         # satusbar
         self.statusbar = self.CreateStatusBar(number=1)
 

@@ -311,11 +311,13 @@ class MapPanel(SingleMapPanel):
             .LeftDockable(False)
             .RightDockable(False)
             .PinButton()
+            # .FloatingSize(self.FromDIP((600, 200)))
             .FloatingSize((600, 200))
             .CloseButton(False)
             .DestroyOnClose(True)
             .Top()
             .Layer(1)
+            # .MinSize(self.FromDIP((200, 100))),
             .MinSize((200, 100)),
         )
         self._mgr.AddPane(

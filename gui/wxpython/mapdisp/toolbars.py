@@ -137,7 +137,7 @@ class MapToolbar(BaseToolbar):
             id=wx.ID_ANY,
             choices=choices,
             style=wx.CB_READONLY,
-            size=(110, -1),
+            size=self.FromDIP((110, -1)),
         )
         self.combo.SetSelection(0)
 

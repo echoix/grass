@@ -54,7 +54,7 @@ class AnimationFrame(wx.Frame):
         )
         self._giface = giface
         self.SetClientSize(self.GetSize())
-        self.iconsize = (16, 16)
+        self.iconsize = self.FromDIP((16, 16))
 
         self.SetIcon(
             wx.Icon(

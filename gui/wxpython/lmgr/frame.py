@@ -110,7 +110,7 @@ class GMFrame(wx.Frame):
         else:
             self.baseTitle = _("GRASS GIS")
 
-        self.iconsize = (16, 16)
+        self.iconsize = self.FromDIP((16, 16))
 
         self.displayIndex = 0  # index value for map displays and layer trees
         self.currentPage = None  # currently selected page for layer tree notebook

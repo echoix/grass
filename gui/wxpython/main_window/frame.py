@@ -126,7 +126,6 @@ class GMFrame(wx.Frame):
         else:
             self.baseTitle = _("GRASS GIS")
 
-        self.iconsize = (16, 16)
         self.size = size
 
         self.displayIndex = 0  # index value for map displays and layer trees
@@ -137,6 +136,8 @@ class GMFrame(wx.Frame):
         self.cwdPath = None  # current working directory
 
         wx.Frame.__init__(self, parent=parent, id=id, size=size, style=style, **kwargs)
+
+        self.iconsize = self.FromDIP((16, 16))
 
         self._giface = LayerManagerGrassInterface(self)
 

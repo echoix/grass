@@ -1730,12 +1730,15 @@ class MapDisplay(FrameMixin, MapPanel):
                 if y == 1:
                     # Get client display y offset (OS panel)
                     y = client_disp[1]
+                # parent.SetPosition(self.FromDIP((x, y)))
+                # parent.SetSize(self.FromDIP((w, h)))
                 parent.SetPosition((x, y))
                 parent.SetSize((w, h))
             except Exception:
                 pass
         else:
             # Set client display x, y offset (OS panel)
+            # parent.SetPosition(self.FromDIP((client_disp[0], client_disp[1])))
             parent.SetPosition((client_disp[0], client_disp[1]))
 
         # bindings
