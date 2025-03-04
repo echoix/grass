@@ -110,7 +110,8 @@ set(_grass_display_DEPENDS grass_driver grass_raster grass_htmldriver
                            grass_pngdriver grass_psdriver grass_gis)
 
 if(WITH_CAIRO)
-  set(_cairodriver_DEPENDS CAIRO FREETYPE grass_gis grass_driver ICONV)
+  set(_cairodriver_DEPENDS Cairo::Cairo FREETYPE grass_gis grass_driver ICONV)
+  #set(_cairodriver_DEPENDS CAIRO FREETYPE grass_gis grass_driver ICONV)
   if(WITH_X11)
     list(APPEND _cairodriver_DEPENDS X11)
   endif()

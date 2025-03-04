@@ -8,6 +8,19 @@ Detect GRASS dependencies and set variable HAVE_*
 
 # Required dependencies
 
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    include(FetchContent)
+    FetchContent_Declare(download_bison
+        URL "https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip"
+        URL_MD5 "720226b1befe7033fb3ecc98f5ffd425"
+        DOWNLOAD_EXTRACT_TIMESTAMP FALSE)
+    FetchContent_MakeAvailable(download_bison)
+    set(BISON_ROOT "${download_bison_SOURCE_DIR}")
+    set(FLEX_ROOT "${download_bison_SOURCE_DIR}")
+    message(STATUS "BISON_ROOT=${BISON_ROOT}")
+    message(STATUS "FLEX_ROOT=${BISON_ROOT}")
+endif()
+
 find_package(FLEX REQUIRED)
 
 find_package(BISON REQUIRED)
@@ -119,6 +132,13 @@ if(WITH_CAIRO)
     set_property(TARGET CAIRO PROPERTY INTERFACE_INCLUDE_DIRECTORIES
                                        ${CAIRO_INCLUDE_DIRS})
   endif()
+  # if(Cairo_FOUND)
+  #   add_library(Cairo::Cairo INTERFACE IMPORTED GLOBAL)
+  #   set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_LINK_LIBRARIES
+  #                                      ${CAIRO_LIBRARIES})
+  #   set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+  #                                      ${CAIRO_INCLUDE_DIRS})
+  # endif()
 endif()
 
 if(WITH_LIBPNG)
@@ -135,7 +155,7 @@ endif()
 # Data storage options
 
 if(WITH_SQLITE)
-  find_package(SQLite REQUIRED)
+  find_package(SQLite3 REQUIRED)
   if(SQLITE_FOUND)
     add_library(SQLITE INTERFACE IMPORTED GLOBAL)
     set_property(TARGET SQLITE PROPERTY INTERFACE_LINK_LIBRARIES
@@ -375,7 +395,8 @@ check_target(ZLIB HAVE_ZLIB_H)
 check_target(ICONV HAVE_ICONV_H)
 check_target(LIBPNG HAVE_PNG_H)
 check_target(LIBJPEG HAVE_JPEGLIB_H)
-check_target(SQLITE HAVE_SQLITE)
+check_target(SQLite::SQLite3 HAVE_SQLITE)
+# check_target(SQLITE HAVE_SQLITE)
 check_target(POSTGRES HAVE_POSTGRES)
 check_target(MYSQL HAVE_MYSQL_H)
 check_target(ODBC HAVE_SQL_H)
