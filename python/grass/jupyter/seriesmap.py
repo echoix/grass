@@ -31,7 +31,7 @@ class SeriesMap(BaseSeriesMap):
 
     >>> series = gj.SeriesMap(height = 500)
     >>> series.add_rasters(["elevation_shade", "geology", "soils"])
-    >>> series.add_vectors(["streams", "streets", "viewpoints"])
+    >>> series.add_vectors(["streams", "streets", "points_of_interest"])
     >>> series.d_barscale()
     >>> series.show()  # Create Slider
     >>> series.save("image.gif")
