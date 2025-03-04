@@ -40,8 +40,7 @@ def _win32_longpath(path):
             else:
                 normalized = "\\\\?\\" + normalized
         return normalized
-    else:
-        return path
+    return path
 
 
 @pytest.fixture(autouse=True)
