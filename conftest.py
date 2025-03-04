@@ -48,15 +48,17 @@ def gunittest_datadir(
     monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest, tmp_path: Path
 ) -> None:
     """Fixture to change directory to a temporary directory containing a copy of the data directory"""
-    original_data_path = os.path.join(request.path.parent, "data")
-    if (
-        os.path.isdir(original_data_path)
-        and os.path.basename(os.path.dirname(original_data_path)) == "testsuite"
-    ):
-        temp_path = tmp_path / "data"
-        shutil.copytree(
-            src=_win32_longpath(original_data_path),
-            dst=_win32_longpath(str(temp_path)),
-        )
+    parent_path = request.path.parent
+    if parent_path.name == "testsuite":
+        original_data_path = os.path.join(parent_path, "data")
+        if (
+            os.path.isdir(original_data_path)
+            and os.path.basename(os.path.dirname(original_data_path)) == "testsuite"
+        ):
+            temp_path = tmp_path / "data"
+            shutil.copytree(
+                src=_win32_longpath(original_data_path),
+                dst=_win32_longpath(str(temp_path)),
+            )
 
-    monkeypatch.chdir(tmp_path)
+        monkeypatch.chdir(tmp_path)
