@@ -158,6 +158,8 @@ Category=4
 
 
 class TestMultiLayerMap(TestCase):
+    fixture = ["gunittest_datadir"]
+    
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
