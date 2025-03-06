@@ -162,7 +162,7 @@ Category=4
 class TestMultiLayerMap(TestCase):
     fixture = ["gunittest_datadir"]
 
-    @pytest.fixture(autouse=true, scope="class")
+    @pytest.fixture(autouse=True, scope="class")
     def setUpClassImpl(self):
         self.runModule(
             "v.in.ascii",
