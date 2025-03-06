@@ -163,7 +163,7 @@ class TestMultiLayerMap(TestCase):
     # fixture = ["gunittest_datadir"]
 
     @pytest.fixture(autouse=True, scope="class")
-    def setUpClassImpl(self):
+    def setUpClassImpl(self, gunittest_datadir):
         self.runModule(
             "v.in.ascii",
             input="data/testing.ascii",
