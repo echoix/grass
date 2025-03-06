@@ -179,6 +179,7 @@ class TestMultiLayerMap(TestCase):
         self.runModule(
             "v.db.connect", map="test_vector", table="t2", key="cat_", layer=2
         )
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
