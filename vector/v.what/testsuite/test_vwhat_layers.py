@@ -168,13 +168,13 @@ class TestMultiLayerMap(TestCase):
     def setUpClassImpl(self):
         self.runModule(
             "v.in.ascii",
-            input="data/testing.ascii",
+            input="./data/testing.ascii",
             output="test_vector",
             format="standard",
         )
         self.runModule("db.connect", flags="c")
-        self.runModule("db.in.ogr", input="data/table1.csv", output="t1")
-        self.runModule("db.in.ogr", input="data/table2.csv", output="t2")
+        self.runModule("db.in.ogr", input="./data/table1.csv", output="t1")
+        self.runModule("db.in.ogr", input="./data/table2.csv", output="t2")
         self.runModule(
             "v.db.connect", map="test_vector", table="t1", key="cat_", layer=1
         )
