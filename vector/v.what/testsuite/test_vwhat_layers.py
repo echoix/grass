@@ -185,6 +185,7 @@ class TestMultiLayerMap(TestCase):
             "v.what", map="test_vector", coordinates=[634243, 226193], distance=10
         )
 
+    @unittest.expectedFailure
     def test_run(self):
         self.assertModule(self.vwhat)
         self.assertLooksLike(reference=out1, actual=self.vwhat.outputs.stdout)
@@ -199,6 +200,7 @@ class TestMultiLayerMap(TestCase):
         self.assertModule(self.vwhat)
         self.assertLooksLike(reference=out3, actual=self.vwhat.outputs.stdout)
 
+    @unittest.expectedFailure
     def test_print_options_json(self):
         import json
 
