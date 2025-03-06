@@ -161,6 +161,7 @@ Category=4
 
 class TestMultiLayerMap(TestCase):
     fixture = ["gunittest_datadir"]
+
     @pytest.fixture(autouse=true, scope="class")
     def setUpClassImpl(cls):
         cls.runModule(
@@ -178,7 +179,7 @@ class TestMultiLayerMap(TestCase):
         cls.runModule(
             "v.db.connect", map="test_vector", table="t2", key="cat_", layer=2
         )
-    
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
