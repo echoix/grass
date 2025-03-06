@@ -120,6 +120,7 @@ jobs:
             pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
             --cov \
             --cov-context=test \
+            --cov-append \
             -ra . \
             -k "testsuite"
       - name: Fix non-standard installed script paths in coverage data
