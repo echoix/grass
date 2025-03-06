@@ -163,20 +163,20 @@ class TestMultiLayerMap(TestCase):
     fixture = ["gunittest_datadir"]
 
     @pytest.fixture(autouse=true, scope="class")
-    def setUpClassImpl(cls):
-        cls.runModule(
+    def setUpClassImpl(self):
+        self.runModule(
             "v.in.ascii",
             input="./data/testing.ascii",
             output="test_vector",
             format="standard",
         )
-        cls.runModule("db.connect", flags="c")
-        cls.runModule("db.in.ogr", input="./data/table1.csv", output="t1")
-        cls.runModule("db.in.ogr", input="./data/table2.csv", output="t2")
-        cls.runModule(
+        self.runModule("db.connect", flags="c")
+        self.runModule("db.in.ogr", input="./data/table1.csv", output="t1")
+        self.runModule("db.in.ogr", input="./data/table2.csv", output="t2")
+        self.runModule(
             "v.db.connect", map="test_vector", table="t1", key="cat_", layer=1
         )
-        cls.runModule(
+        self.runModule(
             "v.db.connect", map="test_vector", table="t2", key="cat_", layer=2
         )
 
