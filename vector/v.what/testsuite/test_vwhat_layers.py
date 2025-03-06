@@ -160,6 +160,7 @@ Category=4
 class TestMultiLayerMap(TestCase):
     @classmethod
     def setUpClass(cls):
+        super(TestMultiLayerMap, cls).setUpClass()
         cls.runModule(
             "v.in.ascii",
             input="./data/testing.ascii",
