@@ -160,8 +160,9 @@ Category=4
 
 
 class TestMultiLayerMap(TestCase):
-    @pytest.fixture(autouse=True)
-    def setUpClassImpl(self, gunittest_datadir):
+    # def setUpClassImpl(self, gunittest_datadir):
+    # @pytest.fixture(autouse=True)
+    def setUpClassImpl(self):
         self.runModule(
             "v.in.ascii",
             input="data/testing.ascii",
@@ -203,6 +204,8 @@ class TestMultiLayerMap(TestCase):
         cls.runModule("g.remove", type="vector", name="test_vector", flags="f")
 
     def setUp(self):
+        if os.environ.get("PYTEST_VERSION") is not None:
+            self.setUpClassImpl()
         self.vwhat = SimpleModule(
             "v.what", map="test_vector", coordinates=[634243, 226193], distance=10
         )
