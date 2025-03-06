@@ -121,6 +121,7 @@ jobs:
             # --numprocesses auto \
             --cov \
             --cov-context=test \
+            --cov-append \
             -ra . \
             -k "testsuite"
       - name: Fix non-standard installed script paths in coverage data
