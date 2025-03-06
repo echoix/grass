@@ -209,6 +209,7 @@ class TestMultiLayerMap(TestCase):
 
     def setUp(self):
         if os.environ.get("PYTEST_VERSION") is not None:
+            print(os.getcwd())
             self.setUpClassImpl()
         self.vwhat = SimpleModule(
             "v.what", map="test_vector", coordinates=[634243, 226193], distance=10
