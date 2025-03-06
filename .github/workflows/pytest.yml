@@ -118,7 +118,7 @@ jobs:
           export INITIAL_PWD="${PWD}"
           grass $HOME/nc_spm_full_v2alpha2/PERMANENT --exec \
             pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
-            --numprocesses auto \
+            # --numprocesses auto \
             --cov \
             --cov-context=test \
             -ra . \
