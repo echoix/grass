@@ -9,8 +9,23 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from collections.abc import Generator
 
 import pytest
+
+
+@pytest.fixture(scope="session")
+def monkeypatch_session() -> Generator[pytest.MonkeyPatch]:
+    """Yield a monkeypatch context, through a session-scoped fixture"""
+    with pytest.MonkeyPatch.context() as mp:
+        yield mp
+
+
+@pytest.fixture(scope="class")
+def monkeypatch_class() -> Generator[pytest.MonkeyPatch]:
+    """Yield a monkeypatch context, through a class-scoped fixture"""
+    with pytest.MonkeyPatch.context() as mp:
+        yield mp
 
 
 def _win32_longpath(path):
