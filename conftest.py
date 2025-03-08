@@ -58,11 +58,13 @@ def _win32_longpath(path):
     return path
 
 
-@pytest.fixture(autouse=True)
+# @pytest.fixture(autouse=True)
+@pytest.fixture()
 def gunittest_datadir(
     monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest, tmp_path: Path
 ) -> None:
     """Fixture to change directory to a temporary directory containing a copy of the data directory"""
+    print("gunittest_datadir from global conftest")
     print("request.path: ", request.path)
     parent_path = request.path.parent
     if parent_path.name == "testsuite":
