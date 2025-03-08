@@ -406,8 +406,8 @@ class TestMultiLayerMap(TestCase):
         print("setUpClass was called")
         super().setUpClass()
         print("setUpClass (after super) was called")
-        # if os.environ.get("PYTEST_VERSION") is not None:
-        #     return
+        if os.environ.get("PYTEST_VERSION") is not None:
+            return
         print("setUpClass (after pytest guard) was called")
 
         cls.runModule(
@@ -428,28 +428,30 @@ class TestMultiLayerMap(TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        if os.environ.get("PYTEST_VERSION") is not None:
+            return
         cls.runModule("g.remove", type="vector", name="test_vector", flags="f")
 
     def setUp(self):
-        # if os.environ.get("PYTEST_VERSION") is not None:
-        #     print(os.getcwd())
-        #     self.setUpClassImpl()
+        if os.environ.get("PYTEST_VERSION") is not None:
+            print(os.getcwd())
+            self.setUpClassImpl()
         self.vwhat = SimpleModule(
             "v.what", map="test_vector", coordinates=[634243, 226193], distance=10
         )
 
-    # def tearDown(self):
-    #     if os.environ.get("PYTEST_VERSION") is not None:
-    #         self.runModule("g.remove", type="vector", name="test_vector", flags="f")
+    def tearDown(self):
+        if os.environ.get("PYTEST_VERSION") is not None:
+            self.runModule("g.remove", type="vector", name="test_vector", flags="f")
 
     @unittest.expectedFailure
-    @pytest.mark.usefixtures("gunittest_datadir2")
+    # @pytest.mark.usefixtures("gunittest_datadir2")
     def test_run(self):
         self.assertModule(self.vwhat)
         self.assertLooksLike(reference=out1, actual=self.vwhat.outputs.stdout)
 
     @unittest.expectedFailure
-    @pytest.mark.usefixtures("_a_gunittest_datadir2")
+    # @pytest.mark.usefixtures("_a_gunittest_datadir2")
     def test_print_options(self):
         self.vwhat.flags["a"].value = True
         self.assertModule(self.vwhat)
