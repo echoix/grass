@@ -58,8 +58,8 @@ def _win32_longpath(path):
     return path
 
 
-# @pytest.fixture(autouse=True)
-@pytest.fixture()
+@pytest.fixture(autouse=True)
+# @pytest.fixture()
 def gunittest_datadir(
     monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest, tmp_path: Path
 ) -> None:
