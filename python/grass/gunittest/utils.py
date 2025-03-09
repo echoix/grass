@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import shutil
 import sys
+import types
 from unittest import expectedFailure
 import warnings
 
@@ -89,6 +90,15 @@ def xfail_windows(test_item):
     Equivalent to applying @unittest.expectedFailure only when running
     on Windows.
     """
+    # # if isinstance(reason, types.FunctionType):
+    #     # test_item = reason
+    #     # reason = ''
+    #     # return decorator(test_item)
+    # # return decorator
+    # if isinstance(test_item, types.FunctionType):
+    #     warnings.warn("Ed: in xfail_windows, is functiontype")
+    # else:
+    #     warnings.warn("Ed: in xfail_windows, is not functiontype")
     if not sys.platform.startswith("win"):
         return lambda func: func
     warnings.warn(
