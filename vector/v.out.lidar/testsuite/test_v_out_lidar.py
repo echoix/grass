@@ -10,6 +10,8 @@ Licence:   This program is free software under the GNU General Public
 """
 
 import os
+import shutil
+import unittest
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 from grass.gunittest.utils import xfail_windows
@@ -56,12 +58,15 @@ class BasicTest(TestCase):
             os.remove(self.las_file)
         self.runModule("g.remove", flags="f", type="vector", name=self.imported_points)
 
+    @unittest.skipUnless(shutil.which("v.out.lidar"), "Needs v.out.lidar")
     def test_module_runs_output_created(self):
         """Test to see if the standard outputs are created"""
         self.assertModule("v.out.lidar", input=self.vector_points, output=self.las_file)
         self.assertFileExists(self.las_file)
 
     @xfail_windows
+    @unittest.skipUnless(shutil.which("v.in.lidar"), "Needs v.in.lidar")
+    @unittest.skipUnless(shutil.which("v.out.lidar"), "Needs v.out.lidar")
     def test_output_identical(self):
         """Test to see if the standard outputs are created
 
