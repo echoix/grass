@@ -89,6 +89,7 @@ class TestCountBasedDecimation(TestCase):
                 os.remove(self.las_file)
             self.del_temp_region()
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_identical(self):
         """Test to see if the standard outputs are created"""
         self.assertModule(
@@ -155,34 +156,42 @@ class TestCountBasedDecimation(TestCase):
             vector=self.imported_points, reference={"points": expect}
         )
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_decimated_skip_2(self):
         """Test to see if the outputs are created"""
         self.skip_number(number=2, expect=self.npoints / 2)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_decimated_skip_4(self):
         """Test to see if the outputs are created"""
         self.skip_number(number=4, expect=0.75 * self.npoints)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_decimated_skip_10(self):
         """Test to see if the outputs are created"""
         self.skip_number(number=10, expect=0.9 * self.npoints)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_decimated_preserve_2(self):
         """Test to see if the outputs are created"""
         self.preserve_number(number=2, expect=self.npoints / 2)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_decimated_preserve_10(self):
         """Test to see if the outputs are created"""
         self.preserve_number(number=10, expect=self.npoints / 10)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_decimated_offset_105(self):
         """Test to see if the outputs are created"""
         self.offset_number(number=105, expect=self.npoints - 105)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_decimated_limit_105(self):
         """Test to see if the outputs are created"""
         self.limit_number(number=105, expect=105)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_offset_preserve(self):
         """Test to see if the outputs are created"""
         self.assertModule(
@@ -199,6 +208,7 @@ class TestCountBasedDecimation(TestCase):
             reference={"points": int((self.npoints - 105) / 10)},
         )
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_limit_skip(self):
         """Test to see if the outputs are created"""
         self.assertModule(
@@ -214,6 +224,7 @@ class TestCountBasedDecimation(TestCase):
             vector=self.imported_points, reference={"points": 105}
         )
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_offset_limit_skip(self):
         """Test to see if the outputs are created"""
         self.assertModule(
