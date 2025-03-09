@@ -98,6 +98,7 @@ jobs:
             --numprocesses auto \
             --cov \
             --cov-context=test \
+            --maxfail=4 \
             -ra . \
             -k "not testsuite" \
             -m 'not needs_solo_run'
@@ -113,6 +114,7 @@ jobs:
             --cov \
             --cov-context=test \
             --cov-append \
+            --maxfail=4 \
             -ra . \
             -k "not testsuite" \
             -m 'needs_solo_run'
