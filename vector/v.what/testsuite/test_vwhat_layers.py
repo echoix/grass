@@ -214,7 +214,6 @@ class TestMultiLayerMap(TestCase):
         if os.environ.get("PYTEST_VERSION") is not None:
             self.runModule("g.remove", type="vector", name="test_vector", flags="f")
 
-    @unittest.expectedFailure
     def test_run(self):
         self.assertModule(self.vwhat)
         self.assertLooksLike(reference=out1, actual=self.vwhat.outputs.stdout)
