@@ -29,9 +29,41 @@ class BasicTest(TestCase):
     las_file = "vinlidar_basic_points.las"
     npoints = 300
 
+    def setUpClassImpl(self):
+        """Ensures expected computational region and generated data"""
+        self.use_temp_region()
+        self.addCleanup(self.del_temp_region)
+        self.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
+        self.runModule(
+            "v.random",
+            flags="zb",
+            output=self.vector_points,
+            npoints=self.npoints,
+            zmin=200,
+            zmax=500,
+            seed=100,
+        )
+        self.addCleanup(
+            self.runModule,
+            "g.remove",
+            flags="f",
+            type="vector",
+            name=self.vector_points,
+        )
+        self.runModule("v.out.lidar", input=self.vector_points, output=self.las_file)
+        self.addCleanup(
+            lambda x: os.remove(x) if os.path.isfile(x) else None, self.las_file
+        )
+
+    def setUp(self):
+        if os.environ.get("PYTEST_VERSION") is not None:
+            self.setUpClassImpl()
+
     @classmethod
     def setUpClass(cls):
         """Ensures expected computational region and generated data"""
+        if os.environ.get("PYTEST_VERSION") is not None:
+            return
         cls.use_temp_region()
         cls.addClassCleanup(cls.del_temp_region)
         cls.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
