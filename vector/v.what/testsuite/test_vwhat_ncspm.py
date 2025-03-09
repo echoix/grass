@@ -1,7 +1,5 @@
 # Author: Anna Petrasova
 
-import unittest
-
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 from grass.gunittest.gmodules import SimpleModule
