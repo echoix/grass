@@ -77,5 +77,3 @@ def gunittest_datadir(
             )
 
         monkeypatch.chdir(tmp_path)
-    else:
-        print("not in a testsuite dir")
