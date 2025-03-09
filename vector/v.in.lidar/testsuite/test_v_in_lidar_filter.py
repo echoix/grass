@@ -56,6 +56,7 @@ class FilterTest(TestCase):
     def setUpClass(cls):
         """Ensures expected computational region and generated data"""
         cls.use_temp_region()
+        cls.addClassCleanup(cls.del_temp_region)
         cls.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
         cls.runModule(
             "v.in.ascii",
@@ -86,7 +87,6 @@ class FilterTest(TestCase):
         cls.runModule("g.remove", flags="f", type="vector", name=cls.vector_points)
         if os.path.isfile(cls.las_file):
             os.remove(cls.las_file)
-        cls.del_temp_region()
 
     def tearDown(self):
         """Remove the outputs created by the import
