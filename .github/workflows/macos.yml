@@ -99,6 +99,7 @@ jobs:
           pytest --verbose --color=yes \
             --durations=0 --durations-min=0.5 \
             --numprocesses auto \
+            --maxfail=4 \
             -ra . \
             -k "not testsuite" \
             -m 'not needs_solo_run'
