@@ -141,7 +141,10 @@ jobs:
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
           set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
-          grass85 --tmp-project XY --exec g.download.project url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz path=%USERPROFILE%
+          grass85 --tmp-project XY --exec ^
+            g.download.project ^
+            url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz ^
+            path=%USERPROFILE%
           grass85 %USERPROFILE%/nc_spm_full_v2alpha2/PERMANENT --exec ^
             pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
