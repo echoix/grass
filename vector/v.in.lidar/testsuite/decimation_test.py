@@ -29,9 +29,29 @@ class TestCountBasedDecimation(TestCase):
     las_file = "vinlidar_decimation_points.las"
     npoints = 300  # the values works well for 300 without rounding
 
+    def setUpClassImpl(self):
+        self.use_temp_region()
+        self.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
+        self.runModule(
+            "v.random",
+            flags="zb",
+            output=self.vector_points,
+            npoints=self.npoints,
+            zmin=200,
+            zmax=500,
+            seed=100,
+        )
+        self.runModule("v.out.lidar", input=self.vector_points, output=self.las_file)
+
+    def setUp(self):
+        if os.environ.get("PYTEST_VERSION") is not None:
+            self.setUpClassImpl()
+
     @classmethod
     def setUpClass(cls):
         """Ensures expected computational region and generated data"""
+        if os.environ.get("PYTEST_VERSION") is not None:
+            return
         cls.use_temp_region()
         cls.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
         cls.runModule(
@@ -51,6 +71,8 @@ class TestCountBasedDecimation(TestCase):
         cls.runModule("g.remove", flags="f", type="vector", name=cls.vector_points)
         if os.path.isfile(cls.las_file):
             os.remove(cls.las_file)
+        if os.environ.get("PYTEST_VERSION") is not None:
+            return
         cls.del_temp_region()
 
     def tearDown(self):
@@ -59,6 +81,13 @@ class TestCountBasedDecimation(TestCase):
         This is executed after each test run.
         """
         self.runModule("g.remove", flags="f", type="vector", name=self.imported_points)
+        if os.environ.get("PYTEST_VERSION") is not None:
+            self.runModule(
+                "g.remove", flags="f", type="vector", name=self.vector_points
+            )
+            if os.path.isfile(self.las_file):
+                os.remove(self.las_file)
+            self.del_temp_region()
 
     def test_identical(self):
         """Test to see if the standard outputs are created"""
