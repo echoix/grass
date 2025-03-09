@@ -59,13 +59,10 @@ def _win32_longpath(path):
 
 
 @pytest.fixture(autouse=True)
-# @pytest.fixture()
 def gunittest_datadir(
     monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest, tmp_path: Path
 ) -> None:
     """Fixture to change directory to a temporary directory containing a copy of the data directory"""
-    print("gunittest_datadir from global conftest")
-    print("request.path: ", request.path)
     parent_path = request.path.parent
     if parent_path.name == "testsuite":
         original_data_path = os.path.join(parent_path, "data")
@@ -74,12 +71,9 @@ def gunittest_datadir(
             and os.path.basename(os.path.dirname(original_data_path)) == "testsuite"
         ):
             temp_path = tmp_path / "data"
-            print("in a testsuite/data folder, copying to", temp_path)
             shutil.copytree(
                 src=_win32_longpath(original_data_path),
                 dst=_win32_longpath(str(temp_path)),
             )
 
         monkeypatch.chdir(tmp_path)
-    else:
-        print("not in a testsuite dir")
