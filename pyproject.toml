@@ -371,14 +371,17 @@ addopts = """
     --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
-    -p grass_conftest
+    -p utils.grassconftest
 """
+    # -p pyconftest
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "needs_solo_run: marks tests that must be run without any other tests running in parallel",
 ]
 minversion = "8.2"
 python_files = "*/tests/*_test.py */tests/test_*.py vector/**/testsuite/*test*.py"
+# python_path = "/home/vscode/grass"
+# pytest_plugins = "pyconftest"
 timeout = 300
 
 
