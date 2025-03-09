@@ -69,7 +69,7 @@ Number|Distance
 
 
 class TestProfiling(TestCase):
-    to_remove = []
+    to_remove: list[str] = []
     points = "test_v_profile_points"
     multiline = "test_v_profile_multiline"
     in_points = "poi_names_wake"
