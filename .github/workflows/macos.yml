@@ -58,6 +58,7 @@ jobs:
             ipython
             pytest
             pytest-github-actions-annotate-failures
+            pytest-randomly
             pytest-timeout
             pytest-xdist
             pyyaml
