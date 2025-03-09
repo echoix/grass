@@ -136,6 +136,17 @@ jobs:
             -k "not testsuite" ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      - name: Run supported gunittest-based tests
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          grass85 %USERPROFILE%/nc_spm_full_v2alpha2/PERMANENT --exec ^
+            pytest --verbose --color=yes ^
+            --durations=0 --durations-min=0.5 ^
+            -k "testsuite" ^
+            -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat '${{env.O4WROOT}}\opt\grass\grass85.bat' '${{env.O4WROOT}}\bin\python3'
