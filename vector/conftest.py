@@ -21,6 +21,13 @@ def monkeypatch_session() -> Generator[pytest.MonkeyPatch]:
         yield mp
 
 
+@pytest.fixture(scope="module")
+def monkeypatch_module() -> Generator[pytest.MonkeyPatch]:
+    """Yield a monkeypatch context, through a module-scoped fixture"""
+    with pytest.MonkeyPatch.context() as mp:
+        yield mp
+
+
 @pytest.fixture(scope="class")
 def monkeypatch_class() -> Generator[pytest.MonkeyPatch]:
     """Yield a monkeypatch context, through a class-scoped fixture"""
