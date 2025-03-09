@@ -125,7 +125,8 @@ jobs:
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
           grass $HOME/nc_spm_full_v2alpha2/PERMANENT --exec \
-            pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
+            pytest --verbose --color=yes \
+            --durations=0 --durations-min=0.5 \
             --cov \
             --cov-context=test \
             --cov-append \
