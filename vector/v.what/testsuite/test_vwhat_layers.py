@@ -180,10 +180,7 @@ class TestMultiLayerMap(TestCase):
     @classmethod
     def setUpClass(cls):
         # PYTEST_VERSION needs pytest >= 8.2.0
-        if (
-            os.environ.get("PYTEST_VERSION") is not None
-            or os.environ.get("PYTEST_CURRENT_TEST") is not None
-        ):
+        if os.environ.get("PYTEST_VERSION") is not None:
             return
         cls.runModule(
             "v.in.ascii",
@@ -203,28 +200,19 @@ class TestMultiLayerMap(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        if (
-            os.environ.get("PYTEST_VERSION") is not None
-            or os.environ.get("PYTEST_CURRENT_TEST") is not None
-        ):
+        if os.environ.get("PYTEST_VERSION") is not None:
             return
         cls.runModule("g.remove", type="vector", name="test_vector", flags="f")
 
     def setUp(self):
-        if (
-            os.environ.get("PYTEST_VERSION") is not None
-            or os.environ.get("PYTEST_CURRENT_TEST") is not None
-        ):
+        if os.environ.get("PYTEST_VERSION") is not None:
             self.setUpClassImpl()
         self.vwhat = SimpleModule(
             "v.what", map="test_vector", coordinates=[634243, 226193], distance=10
         )
 
     def tearDown(self):
-        if (
-            os.environ.get("PYTEST_VERSION") is not None
-            or os.environ.get("PYTEST_CURRENT_TEST") is not None
-        ):
+        if os.environ.get("PYTEST_VERSION") is not None:
             self.runModule("g.remove", type="vector", name="test_vector", flags="f")
 
     def test_run(self):
