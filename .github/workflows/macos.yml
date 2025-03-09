@@ -130,6 +130,17 @@ jobs:
           SAMPLE_DATA: "https://grass.osgeo.org/sampledata/north_carolina/\
             nc_spm_full_v2alpha2.tar.gz"
 
+      - name: Run supported gunittest-based tests
+        shell: micromamba-shell {0}
+        run: |
+          export PYTHONPATH=$(grass --config python_path):$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          grass $HOME/nc_spm_full_v2alpha2/PERMANENT --exec \
+            pytest --verbose --color=yes \
+            --durations=0 --durations-min=0.5 \
+            -ra . \
+            -k "testsuite"
+
       - name: Run gunittest tests
         shell: micromamba-shell {0}
         run: .github/workflows/test_thorough.sh --config .github/workflows/macos_gunittest.cfg
