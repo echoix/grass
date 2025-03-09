@@ -100,7 +100,7 @@ def xfail_windows(test_item):
     # else:
     #     warnings.warn("Ed: in xfail_windows, is not functiontype")
     if not sys.platform.startswith("win"):
-        return lambda func: func
+        return test_item
     warnings.warn(
         "Once the test is fixed and passing, remove the @xfail_windows decorator",
         stacklevel=2,
