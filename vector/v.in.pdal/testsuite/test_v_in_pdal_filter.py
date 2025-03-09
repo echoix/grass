@@ -38,6 +38,7 @@ POINTS = """\
 """
 
 
+@unittest.skipUnless(shutil.which("v.out.lidar"), "Needs v.out.lidar")
 class FilterTest(TestCase):
     """Test case for filter and selection options
 
@@ -45,9 +46,9 @@ class FilterTest(TestCase):
     """
 
     # Setup variables to be used for outputs
-    vector_points = "vinlidar_filters_original"
-    imported_points = "vinlidar_filters_imported"
-    las_file = "vinlidar_filters_points.las"
+    vector_points = "vinpdal_filters_original"
+    imported_points = "vinpdal_filters_imported"
+    las_file = "vinpdal_filters_points.las"
     npoints = 300
 
     @classmethod

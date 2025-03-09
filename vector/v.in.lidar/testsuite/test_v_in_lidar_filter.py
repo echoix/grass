@@ -10,6 +10,8 @@ Licence:   This program is free software under the GNU General Public
 """
 
 import os
+import shutil
+import unittest
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 
@@ -37,6 +39,7 @@ POINTS = """\
 """
 
 
+@unittest.skipUnless(shutil.which("v.out.lidar"), "Needs v.out.lidar")
 class FilterTest(TestCase):
     """Test case for filter and selection options
 

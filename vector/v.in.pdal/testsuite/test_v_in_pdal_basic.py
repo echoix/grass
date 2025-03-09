@@ -16,6 +16,7 @@ from grass.gunittest.main import test
 import unittest
 
 
+@unittest.skipUnless(shutil.which("v.out.lidar"), "Needs v.out.lidar")
 class BasicTest(TestCase):
     """Test case for watershed module
 

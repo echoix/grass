@@ -10,6 +10,8 @@ Licence:   This program is free software under the GNU General Public
 """
 
 import os
+import shutil
+import unittest
 
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
@@ -82,6 +84,7 @@ C  1 1
 """
 
 
+@unittest.skipUnless(shutil.which("v.out.lidar"), "Needs v.out.lidar")
 class VectorMaskTest(TestCase):
     """Test case for watershed module
 
