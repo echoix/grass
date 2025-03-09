@@ -41,6 +41,7 @@ skewness=-2.41826e-14"""
         v_univar = SimpleModule("v.univar", flags="g", map="lakes", column="cat")
         v_univar.run()
         self.assertLooksLike(actual=v_univar.outputs.stdout, reference=output_str)
+        print("Ed: ran test_flagg")
 
     @xfail_windows
     def test_flage(self):
@@ -70,6 +71,7 @@ median (even number of cells): 10308.4
         )
         v_univar.run()
         self.assertLooksLike(actual=v_univar.outputs.stdout, reference=output_str)
+        print("Ed: ran test_flage")
 
     @xfail_windows
     def test_flagw(self):
@@ -86,6 +88,7 @@ mean of absolute values: 6190.76"""
         v_univar = SimpleModule("v.univar", map="lakes", column="FULL_HYDRO", flags="w")
         v_univar.run()
         self.assertLooksLike(actual=v_univar.outputs.stdout, reference=output_str)
+        print("Ed: ran test_flagw")
 
     @xfail_windows
     def test_flagd(self):
@@ -109,6 +112,7 @@ skewness: 0.801646"""
         v_univar = SimpleModule("v.univar", map="hospitals", column="CITY", flags="d")
         v_univar.run()
         self.assertLooksLike(actual=v_univar.outputs.stdout, reference=univar_string)
+        print("Ed: ran test_flagd")
 
     def test_output(self):
         """Testing output of v.univar"""
@@ -121,6 +125,7 @@ skewness: 0.801646"""
         self.assertVectorFitsUnivar(
             map="hospitals", column="cat", reference=univar_string, precision=3
         )
+        print("Ed: ran test_output")
 
     def test_output2(self):
         """Testing output of v.univar"""
@@ -133,6 +138,7 @@ skewness: 0.801646"""
         self.assertVectorFitsUnivar(
             map="roadsmajor", column="MAJORRDS_", reference=univar_string, precision=3
         )
+        print("Ed: ran test_output2")
 
     def test_json(self):
         """Testing output in JSON fomrat"""
@@ -174,6 +180,7 @@ skewness: 0.801646"""
         self.assertCountEqual(list(expected.keys()), list(results.keys()))
         for key in expected.keys():  # noqa: PLC0206
             self.assertAlmostEqual(expected[key], results[key])
+        print("Ed: ran test_json")
 
 
 if __name__ == "__main__":
