@@ -132,6 +132,7 @@ jobs:
             --cov \
             --cov-context=test \
             --cov-append \
+            --maxfail=4 \
             -ra . \
             -k "testsuite"
       - name: Fix non-standard installed script paths in coverage data
