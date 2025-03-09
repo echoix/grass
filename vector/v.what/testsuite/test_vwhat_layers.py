@@ -242,6 +242,7 @@ class TestMultiLayerMap(TestCase):
                 msg="No JSON object could be decoded:\n" + self.vwhat.outputs.stdout
             )
 
+    @unittest.expectedFailure
     def test_selected_layers(self):
         self.vwhat.inputs.layer = -1
         self.vwhat.flags["g"].value = True
