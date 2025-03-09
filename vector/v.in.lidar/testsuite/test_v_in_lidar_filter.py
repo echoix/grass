@@ -71,6 +71,9 @@ class FilterTest(TestCase):
             " z double precision, return_n integer,"
             " n_returns integer, class_n integer",
         )
+        cls.addClassCleanup(
+            cls.runModule, "g.remove", flags="f", type="vector", name=cls.vector_points
+        )
         cls.runModule(
             "v.out.lidar",
             input=cls.vector_points,
@@ -80,13 +83,9 @@ class FilterTest(TestCase):
             n_returns_column="n_returns",
             class_column="class_n",
         )
-
-    @classmethod
-    def tearDownClass(cls):
-        """Remove the temporary region and generated data"""
-        cls.runModule("g.remove", flags="f", type="vector", name=cls.vector_points)
-        if os.path.isfile(cls.las_file):
-            os.remove(cls.las_file)
+        cls.addClassCleanup(
+            lambda x: os.remove(x) if os.path.isfile(x) else None, cls.las_file
+        )
 
     def tearDown(self):
         """Remove the outputs created by the import
