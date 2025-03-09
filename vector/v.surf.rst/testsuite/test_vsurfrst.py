@@ -4,9 +4,11 @@ from grass.gunittest.gmodules import SimpleModule
 
 
 class TestVsurfrst(TestCase):
-    elevation = "elevation"
+    elevation = "vsurfrst_elevation"
     elevation_attrib = "elevation_attrib"
     elevation_threads = "elevation_threads"
+    elevation_3d_input = "elev_lid792_randpts"
+    elevation_3d_output = "elev_points3d"
     slope = "slope"
     aspect = "aspect"
     pcurvature = "pcurvature"
@@ -22,12 +24,12 @@ class TestVsurfrst(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.use_temp_region()
-        cls.runModule("g.region", vector="elev_lid792_randpts", res=1)
+        cls.runModule("g.region", vector=cls.elevation_3d_input, res=1)
         cls.runModule(
             "v.to.3d",
-            input="elev_lid792_randpts",
+            input=cls.elevation_3d_input,
             type="point",
-            output="elev_points3d",
+            output=cls.elevation_3d_output,
             column="value",
             overwrite=True,
         )
@@ -39,7 +41,7 @@ class TestVsurfrst(TestCase):
             "g.remove",
             type=["raster", "vector"],
             name=[
-                "elev_points3d",
+                cls.elevation_3d_output,
                 cls.elevation,
                 cls.elevation_threads,
                 cls.elevation_attrib,
@@ -61,7 +63,7 @@ class TestVsurfrst(TestCase):
     def setUp(self):
         self.vsurfrst = SimpleModule(
             "v.surf.rst",
-            input="elev_points3d",
+            input=self.elevation_3d_output,
             npmin=100,
             elevation=self.elevation,
             overwrite=True,
@@ -69,7 +71,7 @@ class TestVsurfrst(TestCase):
 
         self.vsurfrst_cv = SimpleModule(
             "v.surf.rst",
-            input="elev_points3d",
+            input=self.elevation_3d_output,
             npmin=100,
             cvdev=self.cvdev,
             overwrite=True,
