@@ -93,7 +93,8 @@ jobs:
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
-          pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
+          pytest --verbose --color=yes \
+            --durations=0 --durations-min=0.5 \
             --numprocesses auto \
             --cov \
             --cov-context=test \
@@ -107,7 +108,8 @@ jobs:
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
           export INITIAL_GISBASE="$(grass --config path)"
           export INITIAL_PWD="${PWD}"
-          pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
+          pytest --verbose --color=yes \
+            --durations=0 --durations-min=0.5 \
             --cov \
             --cov-context=test \
             --cov-append \
