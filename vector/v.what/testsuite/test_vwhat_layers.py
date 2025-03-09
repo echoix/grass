@@ -461,7 +461,6 @@ class TestMultiLayerMap(TestCase):
         self.assertModule(self.vwhat)
         self.assertLooksLike(reference=out3, actual=self.vwhat.outputs.stdout)
 
-    @unittest.expectedFailure
     def test_print_options_json(self):
         import json
 
