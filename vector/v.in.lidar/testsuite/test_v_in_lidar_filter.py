@@ -52,9 +52,53 @@ class FilterTest(TestCase):
     las_file = "vinlidar_filters_points.las"
     npoints = 300
 
+    def setUpClassImpl(self):
+        """Ensures expected computational region and generated data"""
+        self.use_temp_region()
+        self.addCleanup(self.del_temp_region)
+        self.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
+        self.runModule(
+            "v.in.ascii",
+            input="-",
+            stdin_=POINTS,
+            flags="z",
+            z=3,
+            cat=0,
+            separator="comma",
+            output=self.vector_points,
+            columns="x double precision, y double precision,"
+            " z double precision, return_n integer,"
+            " n_returns integer, class_n integer",
+        )
+        self.addCleanup(
+            self.runModule,
+            "g.remove",
+            flags="f",
+            type="vector",
+            name=self.vector_points,
+        )
+        self.runModule(
+            "v.out.lidar",
+            input=self.vector_points,
+            layer=1,
+            output=self.las_file,
+            return_column="return_n",
+            n_returns_column="n_returns",
+            class_column="class_n",
+        )
+        self.addCleanup(
+            lambda x: os.remove(x) if os.path.isfile(x) else None, self.las_file
+        )
+
+    def setUp(self):
+        if os.environ.get("PYTEST_VERSION") is not None:
+            self.setUpClassImpl()
+
     @classmethod
     def setUpClass(cls):
         """Ensures expected computational region and generated data"""
+        if os.environ.get("PYTEST_VERSION") is not None:
+            return
         cls.use_temp_region()
         cls.addClassCleanup(cls.del_temp_region)
         cls.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
