@@ -372,6 +372,7 @@ addopts = """
     --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
+    -p grass_conftest
 """
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
