@@ -1,10 +1,12 @@
 """Fixtures for grass.script"""
 
 import os
+from collections.abc import Generator
 
 import pytest
 
 import grass.script as gs
+from grass.script.setup import SessionHandle
 
 
 @pytest.fixture
@@ -25,24 +27,25 @@ def mock_no_session(monkeypatch):
 
 
 @pytest.fixture
-def empty_session(tmp_path):
+def empty_session(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> Generator[SessionHandle]:
     """Set up a GRASS session for the tests."""
     project = tmp_path / "test_project"
     gs.create_project(project)
     with gs.setup.init(project, env=os.environ.copy()) as session:
+        for key, value in session.env.items():
+            monkeypatch.setenv(key, value)
         yield session
 
 
 @pytest.fixture
-def session_2x2(tmp_path):
+def session_2x2(empty_session: SessionHandle) -> SessionHandle:
     """Set up a GRASS session for the tests."""
-    project = tmp_path / "test_project"
-    gs.create_project(project)
-    with gs.setup.init(project, env=os.environ.copy()) as session:
-        gs.run_command("g.region", rows=2, cols=2, env=session.env)
-        gs.mapcalc("ones = 1", env=session.env)
-        gs.mapcalc(
-            "nulls_and_one_1_1 = if(row() == 1 && col() == 1, 1, null())",
-            env=session.env,
-        )
-        yield session
+    gs.run_command("g.region", rows=2, cols=2, env=empty_session.env)
+    gs.mapcalc("ones = 1", env=empty_session.env)
+    gs.mapcalc(
+        "nulls_and_one_1_1 = if(row() == 1 && col() == 1, 1, null())",
+        env=empty_session.env,
+    )
+    return empty_session
