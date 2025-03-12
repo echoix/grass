@@ -1,6 +1,7 @@
 """Fixtures for grass.script"""
 
 import os
+from collections.abc import Generator
 
 import pytest
 
@@ -26,7 +27,9 @@ def mock_no_session(monkeypatch):
 
 
 @pytest.fixture
-def empty_session(tmp_path, monkeypatch: pytest.MonkeyPatch) -> Generator[SessionHandle]:
+def empty_session(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> Generator[SessionHandle]:
     """Set up a GRASS session for the tests."""
     project = tmp_path / "test_project"
     gs.create_project(project)
