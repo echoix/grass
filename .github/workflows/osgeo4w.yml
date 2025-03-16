@@ -134,7 +134,7 @@ jobs:
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             -k "not testsuite" ^
-            -p no:randomly
+            -p no:randomly ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run supported gunittest-based tests
