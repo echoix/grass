@@ -147,11 +147,14 @@ jobs:
             g.download.project ^
             url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz ^
             path=%USERPROFILE%
+          echo "Done downloading dataset, starting tests"
           %grass% %USERPROFILE%/nc_spm_full_v2alpha2/PERMANENT --exec ^
             pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
             -k "testsuite" ^
             -ra .
+          echo "Done running tests"
+          rmdir /s /q %USERPROFILE%\nc_spm_full_v2alpha2
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
       - name: Run tests
