@@ -1,6 +1,7 @@
 """Fixtures for v.dissolve tests"""
 
 import os
+from collections.abc import Generator
 
 from types import SimpleNamespace
 
@@ -46,7 +47,9 @@ def value_update_by_category(map_name, layer, column_name, cats, values, env):
 
 
 @pytest.fixture(scope="module")
-def dataset(tmp_path_factory):
+def dataset(
+    tmp_path_factory, monkeypatch_module: pytest.MonkeyPatch
+) -> Generator[SimpleNamespace]:
     """Creates a session with a mapset which has vector with a float column"""
     tmp_path = tmp_path_factory.mktemp("dataset")
     location = "test"
@@ -64,6 +67,8 @@ def dataset(tmp_path_factory):
 
     gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
     with grass_setup.init(tmp_path / location, env=os.environ.copy()) as session:
+        for key, value in session.env.items():
+            monkeypatch_module.setenv(key, value)
         gs.run_command(
             "g.region",
             s=0,
@@ -133,7 +138,9 @@ def dataset(tmp_path_factory):
 
 
 @pytest.fixture(scope="module")
-def discontinuous_dataset(tmp_path_factory):
+def discontinuous_dataset(
+    tmp_path_factory, monkeypatch_module: pytest.MonkeyPatch
+) -> Generator[SimpleNamespace]:
     """Creates a session with a mapset which has vector with a float column"""
     tmp_path = tmp_path_factory.mktemp("discontinuous_dataset")
     location = "test"
@@ -151,6 +158,8 @@ def discontinuous_dataset(tmp_path_factory):
 
     gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
     with grass_setup.init(tmp_path / location, env=os.environ.copy()) as session:
+        for key, value in session.env.items():
+            monkeypatch_module.setenv(key, value)
         gs.run_command(
             "g.region",
             s=0,
@@ -220,7 +229,9 @@ def discontinuous_dataset(tmp_path_factory):
 
 
 @pytest.fixture(scope="module")
-def dataset_layer_2(tmp_path_factory):
+def dataset_layer_2(
+    tmp_path_factory, monkeypatch_module: pytest.MonkeyPatch
+) -> Generator[SimpleNamespace]:
     """Creates a session with a mapset which has vector with a float column"""
     tmp_path = tmp_path_factory.mktemp("dataset_layer_2")
     location = "test"
@@ -241,6 +252,8 @@ def dataset_layer_2(tmp_path_factory):
 
     gs.core._create_location_xy(tmp_path, location)  # pylint: disable=protected-access
     with grass_setup.init(tmp_path / location, env=os.environ.copy()) as session:
+        for key, value in session.env.items():
+            monkeypatch_module.setenv(key, value)
         gs.run_command(
             "g.region",
             s=0,
