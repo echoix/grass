@@ -69,7 +69,6 @@ Number|Distance
 
 
 class TestProfiling(TestCase):
-    to_remove = []
     points = "test_v_profile_points"
     multiline = "test_v_profile_multiline"
     in_points = "poi_names_wake"
@@ -82,7 +81,14 @@ class TestProfiling(TestCase):
     def setUpClass(cls):
         """Create vector map with points for sampling"""
         cls.runModule("v.in.ascii", input="-", output=cls.points, stdin=buf_points)
-        cls.to_remove.append(cls.points)
+        cls.addClassCleanup(
+            cls.runModule,
+            "g.remove",
+            flags="f",
+            type="vector",
+            name=cls.points,
+            verbose=True,
+        )
         cls.runModule(
             "v.in.ascii",
             flags="n",
@@ -91,19 +97,14 @@ class TestProfiling(TestCase):
             output=cls.multiline,
             stdin=multi_line_in,
         )
-        cls.to_remove.append(cls.multiline)
-
-    @classmethod
-    def tearDownClass(cls):
-        """Remove vector maps"""
-        for to_remove in cls.to_remove:
-            cls.runModule(
-                "g.remove",
-                flags="f",
-                type="vector",
-                name=",".join(to_remove),
-                verbose=True,
-            )
+        cls.addClassCleanup(
+            cls.runModule,
+            "g.remove",
+            flags="f",
+            type="vector",
+            name=cls.multiline,
+            verbose=True,
+        )
 
     def testParsing(self):
         """Test input parameter parsing"""
