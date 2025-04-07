@@ -6,24 +6,18 @@ COPYRIGHT:  (C) 2020 by the GRASS Development Team
 SPDX-License-Identifier: GPL-2.0-or-later
 #]]
 
-function(repo_status repo_dir)
-  set(time_format "%Y-%m-%dT%H:%M:%S+00:00")
-  set(GRASS_VERSION_GIT
-      "exported"
-      PARENT_SCOPE)
-  set(GRASS_HEADERS_GIT_HASH
-      ${GRASS_VERSION_NUMBER}
-      PARENT_SCOPE)
-  string(TIMESTAMP GRASS_HEADERS_GIT_DATE ${time_format} UTC)
-  set(GRASS_HEADERS_GIT_DATE
-      ${GRASS_HEADERS_GIT_DATE}
-      PARENT_SCOPE)
+function(repo_status repo_dir version_git_var)
 
   if(NOT EXISTS "${repo_dir}/.git")
+    message(
+      STATUS ".git directory not found. GRASS_VERSION_GIT is set to 'exported'")
+    set(GRASS_VERSION_GIT "exported")
     return()
   endif()
   find_package(Git)
   if(NOT GIT_FOUND)
+    message(WARNING "git not found. GRASS_VERSION_GIT is set to 'exported'")
+    set(GRASS_VERSION_GIT "exported")
     return()
   endif()
 
@@ -38,43 +32,10 @@ function(repo_status repo_dir)
     message(FATAL_ERROR "Error running git ${git_rev_EV}")
   else()
     string(STRIP ${git_rev_OV} GRASS_VERSION_GIT)
-    set(GRASS_VERSION_GIT
-        "${GRASS_VERSION_GIT}"
-        PARENT_SCOPE)
   endif()
 
-  execute_process(
-    COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:%h --
-            "${CMAKE_SOURCE_DIR}/include"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE git_hash_OV
-    ERROR_VARIABLE git_hash_EV
-    RESULT_VARIABLE git_hash_RV)
+  set(${version_git_var}
+      "${GRASS_VERSION_GIT}"
+      PARENT_SCOPE)
 
-  if(git_hash_RV)
-    message(FATAL_ERROR "Error running git ${git_hash_EV}")
-  else()
-    string(STRIP ${git_hash_OV} GRASS_HEADERS_GIT_HASH)
-    set(GRASS_HEADERS_GIT_HASH
-        "${GRASS_HEADERS_GIT_HASH}"
-        PARENT_SCOPE)
-  endif()
-
-  execute_process(
-    COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:%ct --
-            "${CMAKE_SOURCE_DIR}/include"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE git_date_OV
-    ERROR_VARIABLE git_date_EV
-    RESULT_VARIABLE git_date_RV)
-
-  if(git_date_RV)
-    message(FATAL_ERROR "Error running git ${git_date_EV}")
-  else()
-    set(ENV{SOURCE_DATE_EPOCH} ${git_date_OV})
-    string(TIMESTAMP GRASS_HEADERS_GIT_DATE ${time_format} UTC)
-    set(GRASS_HEADERS_GIT_DATE
-        "${GRASS_HEADERS_GIT_DATE}"
-        PARENT_SCOPE)
-  endif()
-endfunction()
+endfunction() #repo_status

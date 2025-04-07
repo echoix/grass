@@ -5,69 +5,62 @@ COPYRIGHT:  (c) 2020-2025 by the GRASS Development Team
 
 SPDX-License-Identifier: GPL-2.0-or-later
 #]]
-
-foreach(req OUT_FILE HDRS LIBS CTYPESGEN_PY COMPILER)
-  if(NOT DEFINED ${req} OR "${${req}}" STREQUAL "")
-    message(FATAL_ERROR "ctypesgen.cmake: you must set ${req}")
-  endif()
-endforeach()
-
-set(ENV{GISRC}
-    "${OUTDIR}/${GRASS_INSTALL_DEMODIR}/.grassrc${GRASS_VERSION_MAJOR}${GRASS_VERSION_MINOR}"
-)
-set(ENV{GISBASE} "${OUTDIR}/${GISBASE_DIR}")
-set(ENV{PATH}
-    "${OUTDIR}/${GRASS_INSTALL_BINDIR}:${OUTDIR}/${GRASS_INSTALL_SCRIPTDIR}:$ENV{PATH}"
-)
+set(ENV{GISRC} "${BIN_DIR}/etc/config/rc")
+set(ENV{GISBASE} "${BIN_DIR}")
+set(ENV{PATH} "${BIN_DIR}/bin:${BIN_DIR}/scripts:$ENV{PATH}")
 set(ENV{PYTHONPATH}
-    "${OUTDIR}/${GRASS_INSTALL_GUIDIR}/wxpython:${OUTDIR}/${GRASS_INSTALL_PYDIR}:$ENV{PYTHONPATH}"
-)
+    "${BIN_DIR}/gui/wxpython:${BIN_DIR}/etc/python:$ENV{PYTHONPATH}")
 if(NOT MSVC)
-  set(_d
-      "${OUTDIR}/${GRASS_INSTALL_LIBDIR}:${OUTDIR}/${GRASS_INSTALL_BINDIR}:${OUTDIR}/${GRASS_INSTALL_SCRIPTDIR}"
-  )
-  set(ENV{${LD_LIBRARY_PATH_VAR}} "${_d}:$ENV{${LD_LIBRARY_PATH_VAR}}")
-  unset(_d)
+  set(ENV{LD_LIBRARY_PATH} "${BIN_DIR}/lib:$ENV{LD_LIBRARY_PATH}")
 endif()
 set(ENV{LC_ALL} C)
 
-set(CTYPESFLAGS "${COMPILER} -E ${C_FLAGS}")
-
 set(LIBRARIES)
 foreach(LIB ${LIBS})
-  list(APPEND LIBRARIES "-l${LIB}")
+  if(WIN32)
+    list(APPEND LIBRARIES
+         "--library=${BIN_DIR}/lib/${LIB}.${GRASS_VERSION_NUMBER}.dll")
+  elseif(APPLE)
+    list(APPEND LIBRARIES
+         "--library=${BIN_DIR}/lib/lib${LIB}.${GRASS_VERSION_NUMBER}.so")
+  else()
+    #This can be linux or unix
+    list(APPEND LIBRARIES
+         "--library=${BIN_DIR}/lib/lib${LIB}.${GRASS_VERSION_NUMBER}.so")
+  endif()
 endforeach()
-
-set(INC_HEADERS)
-foreach(INCHDR ${INCHDRS})
-  list(APPEND INC_HEADERS "-I${INCHDR}")
-endforeach()
-
-set(DEFINES)
-if(MSVC)
-  # ??
-elseif(APPLE)
-  # ??
-else()
-  list(APPEND DEFINES "__GLIBC_HAVE_LONG_LONG")
-endif()
-list(TRANSFORM DEFINES PREPEND "-D")
 
 set(HEADERS)
 foreach(HDR ${HDRS})
-  list(APPEND HEADERS "${OUTDIR}/${GRASS_INSTALL_INCLUDEDIR}/grass/${HDR}")
+  list(APPEND HEADERS "${BIN_DIR}/include/grass/${HDR}")
 endforeach()
 
-message(STATUS "Generating ${OUT_FILE}")
+foreach(req OUT_FILE HDRS LIBS CTYPESGEN_PY COMPILER)
+  if(NOT DEFINED ${req} OR "${${req}}" STREQUAL "")
+    message(FATAL_ERROR "you must set ${req}")
+  endif()
+endforeach()
+
+if(MSVC)
+  set(CTYPESFLAGS "${COMPILER} -E -DPACKAGE=\"grasslibs\"")
+else()
+  set(CTYPESFLAGS
+      "${COMPILER} -E -DPACKAGE=\"grasslibs\" -D__GLIBC_HAVE_LONG_LONG")
+endif()
+
+message(
+  STATUS
+    "Running ${PYTHON_EXECUTABLE} ${CTYPESGEN_PY} --cpp=${CTYPESFLAGS} --includedir=\"${BIN_DIR}/include\" --runtime-libdir=\"${BIN_DIR}/lib\" ${HEADERS} ${LIBRARIES} --output=${OUT_FILE}"
+)
 execute_process(
   COMMAND
-    ${PYTHON_EXECUTABLE} ${CTYPESGEN_PY} --cpp "${CTYPESFLAGS}"
-    --no-embed-preamble --strip-build-path ${RUNTIME_GISBASE} ${INC_HEADERS}
-    ${LIBRARIES} ${DEFINES} -o ${OUT_FILE} ${HEADERS}
+    ${PYTHON_EXECUTABLE} ${CTYPESGEN_PY} --cpp=${CTYPESFLAGS}
+    --includedir="${BIN_DIR}/include" --runtime-libdir="${BIN_DIR}/lib"
+    ${HEADERS} ${LIBRARIES} --output=${OUT_FILE}
   OUTPUT_VARIABLE ctypesgen_OV
   ERROR_VARIABLE ctypesgen_EV
-  RESULT_VARIABLE ctypesgen_RV COMMAND_ECHO STDOUT)
+  RESULT_VARIABLE ctypesgen_RV)
 
 if(ctypesgen_RV)
-  message(FATAL_ERROR "${CTYPESGEN_PY}: ${ctypesgen_EV} \n ${ctypesgen_OV}")
+  message(FATAL_ERROR "ctypesgen.py: ${ctypesgen_EV} \n ${ctypesgen_OV}")
 endif()
