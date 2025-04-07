@@ -92,7 +92,8 @@ foreach(module ${MODULES})
       ${CMAKE_COMMAND} -DCTYPESGEN_PY=${CMAKE_CURRENT_SOURCE_DIR}/ctypesgen.py
       -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DCOMPILER=${CMAKE_C_COMPILER}
       -DBIN_DIR=${GISBASE} -DHDRS=${${module}_HDRS} -DLIBS=${${module}_LIBS}
-      -DOUT_FILE=${output_file} -P ${CMAKE_SOURCE_DIR}/cmake/ctypesgen.cmake
+      -DOUT_FILE=${output_file} -DGRASS_VERSION_NUMBER=${GRASS_VERSION_NUMBER}
+      -P ${CMAKE_SOURCE_DIR}/cmake/ctypesgen.cmake
     COMMENT "Generating ${output_file}"
     VERBATIM)
 

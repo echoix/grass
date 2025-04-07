@@ -49,8 +49,7 @@ add_custom_target(
           python_pygrass_modules_interface
           python_pygrass_modules_grid)
 
-#TODO: MODULES DISABLED
-#  add_subdirectory(ctypes)
+add_subdirectory(ctypes)
 
 set_target_properties(LIB_PYTHON PROPERTIES FOLDER lib)
 

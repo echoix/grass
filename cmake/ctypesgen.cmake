@@ -5,9 +5,7 @@ COPYRIGHT:  (c) 2020-2025 by the GRASS Development Team
 
 SPDX-License-Identifier: GPL-2.0-or-later
 #]]
-set(ENV{GISRC}
-    "${BIN_DIR}/demolocation/.grassrc${GRASS_VERSION_MAJOR}${GRASS_VERSION_MINOR}"
-)
+set(ENV{GISRC} "${BIN_DIR}/etc/config/rc")
 set(ENV{GISBASE} "${BIN_DIR}")
 set(ENV{PATH} "${BIN_DIR}/bin:${BIN_DIR}/scripts:$ENV{PATH}")
 set(ENV{PYTHONPATH}
@@ -20,12 +18,15 @@ set(ENV{LC_ALL} C)
 set(LIBRARIES)
 foreach(LIB ${LIBS})
   if(WIN32)
-    list(APPEND LIBRARIES "--library=${BIN_DIR}/bin/${LIB}.dll")
+    list(APPEND LIBRARIES
+         "--library=${BIN_DIR}/lib/${LIB}.${GRASS_VERSION_NUMBER}.dll")
   elseif(APPLE)
-    list(APPEND LIBRARIES "--library=${BIN_DIR}/lib/lib${LIB}.so")
+    list(APPEND LIBRARIES
+         "--library=${BIN_DIR}/lib/lib${LIB}.${GRASS_VERSION_NUMBER}.so")
   else()
     #This can be linux or unix
-    list(APPEND LIBRARIES "--library=${BIN_DIR}/lib/lib${LIB}.so")
+    list(APPEND LIBRARIES
+         "--library=${BIN_DIR}/lib/lib${LIB}.${GRASS_VERSION_NUMBER}.so")
   endif()
 endforeach()
 
