@@ -12,12 +12,10 @@ build_module(
   grass_gproj
   DEPENDS
   grass_driver
-  grass_gis
-  GDAL::GDAL
-  PROJ::proj
+  GDAL
+  ZLIB
+  PROJ
   SOURCES
   "${grass_gproj_SOURCES}"
   INCLUDES
   "../driver")
-
-target_include_directories(grass_gproj PUBLIC ${GDAL_INCLUDE_DIR} ${PROJ_INCLUDE_DIRS})

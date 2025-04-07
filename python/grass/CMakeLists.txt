@@ -1,47 +1,57 @@
-set(PYDIRS
-    app
-    benchmark
-    exceptions
-    grassdb
-    gunittest
-    imaging
-    jupyter
-    pydispatch
-    pygrass
-    pygrass/gis
-    pygrass/messages
-    pygrass/modules
-    pygrass/modules/grid
-    pygrass/modules/interface
-    pygrass/raster
-    pygrass/rpc
-    pygrass/shell
-    pygrass/tests
-    pygrass/vector
-    script
-    semantic_label
-    temporal
-    utils)
+copy_python_files_in_subdir(bandref etc/python/grass)
+copy_python_files_in_subdir(exceptions etc/python/grass)
+copy_python_files_in_subdir(gunittest etc/python/grass)
+copy_python_files_in_subdir(imaging etc/python/grass)
+copy_python_files_in_subdir(pydispatch etc/python/grass)
+copy_python_files_in_subdir(script etc/python/grass)
+copy_python_files_in_subdir(temporal etc/python/grass)
+copy_python_files_in_subdir(pygrass etc/python/grass)
+copy_python_files_in_subdir(pygrass/messages etc/python/grass)
+copy_python_files_in_subdir(pygrass/modules etc/python/grass)
+copy_python_files_in_subdir(pygrass/raster etc/python/grass)
+copy_python_files_in_subdir(pygrass/vector etc/python/grass)
+copy_python_files_in_subdir(pygrass/gis etc/python/grass)
+copy_python_files_in_subdir(pygrass/shell etc/python/grass)
+copy_python_files_in_subdir(pygrass/tests etc/python/grass)
+copy_python_files_in_subdir(pygrass/rpc etc/python/grass)
+copy_python_files_in_subdir(pygrass/modules/interface etc/python/grass)
+copy_python_files_in_subdir(pygrass/modules/grid etc/python/grass)
 
-set(PYDIR_GRASS ${GRASS_INSTALL_PYDIR}/grass)
-
-foreach(pydir ${PYDIRS})
-  copy_python_files_in_subdir(${pydir} ${PYDIR_GRASS})
-endforeach()
-
-configure_file(__init__.py ${OUTDIR}/${PYDIR_GRASS}/ COPYONLY)
-configure_file(script/setup.py ${OUTDIR}/${PYDIR_GRASS}/script/setup.py
-               COPYONLY)
-
-set(pydir_targets ${PYDIRS})
-list(TRANSFORM pydir_targets REPLACE "/" "_")
-list(TRANSFORM pydir_targets PREPEND "python_")
+configure_file(script/setup.py
+               ${CMAKE_BINARY_DIR}/etc/python/grass/script/setup.py COPYONLY)
 
 add_custom_target(
   LIB_PYTHON
-  VERBATIM
-  DEPENDS ${pydir_targets})
+  COMMAND ${CMAKE_COMMAND} -E echo "#coding=utf-8" >
+          ${GISBASE}/etc/python/__init__.py
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+          ${GISBASE}/etc/python/grass/
+  COMMAND
+    ${CMAKE_COMMAND} -E copy
+    ${CMAKE_BINARY_DIR}/etc/python/grass/script/setup.py
+    ${GISBASE}/etc/python/grass/script/
+  DEPENDS python_bandref
+          python_exceptions
+          python_imaging
+          python_pydispatch
+          python_script
+          python_temporal
+          python_pygrass
+          python_pygrass_messages
+          python_pygrass_modules
+          python_pygrass_modules
+          python_pygrass_raster
+          python_pygrass_vector
+          python_pygrass_gis
+          python_pygrass_shell
+          python_pygrass_tests
+          python_pygrass_rpc
+          python_pygrass_modules_interface
+          python_pygrass_modules_grid)
+
+#TODO: MODULES DISABLED
+#  add_subdirectory(ctypes)
 
 set_target_properties(LIB_PYTHON PROPERTIES FOLDER lib)
 
-install(DIRECTORY ${OUTDIR}/${PYDIR_GRASS} DESTINATION ${GRASS_INSTALL_PYDIR})
+install(DIRECTORY ${GISBASE}/etc/python/grass DESTINATION etc/python/grass/)

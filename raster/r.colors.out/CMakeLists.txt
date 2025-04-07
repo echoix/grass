@@ -1,20 +1,20 @@
+set(r_colors_out_SRCS raster_main.c)
+set(r3_colors_out_SRCS raster3d_main.c)
+
 build_program(
   NAME
   r.colors.out
   SOURCES
-  raster_main.c
+  "${r_colors_out_SRCS}"
   DEPENDS
   grass_gis
-  grass_raster
-  grass_parson)
+  grass_raster)
 
 build_program(
   NAME
   r3.colors.out
   SOURCES
-  raster3d_main.c
+  "${r3_colors_out_SRCS}"
   DEPENDS
   grass_gis
-  grass_raster
-  grass_raster3d
-  grass_parson)
+  grass_raster3d)

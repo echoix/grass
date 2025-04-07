@@ -31,12 +31,8 @@ build_module(
   SOURCES
   ${dig2_SRCS}
   DEPENDS
+  GDAL
+  GEOS
   grass_gmath
   grass_gis
-  grass_rtree
-  GDAL::GDAL
-  ${LIBM})
-
-if(TARGET PostgreSQL::PostgreSQL)
-  target_include_directories(grass_dig2 PUBLIC ${PostgreSQL_INCLUDE_DIR})
-endif()
+  grass_rtree)

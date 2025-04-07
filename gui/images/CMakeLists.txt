@@ -4,37 +4,31 @@ set(output_images)
 foreach(IMG ${GUI_IMAGES})
   get_filename_component(FILE_NAME ${IMG} NAME)
   add_custom_command(
-    OUTPUT ${OUTDIR}/${GRASS_INSTALL_GUIDIR}/images/${FILE_NAME}
-    COMMAND ${CMAKE_COMMAND} -E copy ${IMG}
-            ${OUTDIR}/${GRASS_INSTALL_GUIDIR}/images)
-  list(APPEND output_images
-       ${OUTDIR}/${GRASS_INSTALL_GUIDIR}/images/${FILE_NAME})
+    OUTPUT ${GISBASE}/gui/images/${FILE_NAME}
+    COMMAND ${CMAKE_COMMAND} -E copy ${IMG} ${GISBASE}/gui/images/)
+  list(APPEND output_images ${GISBASE}/gui/images/${FILE_NAME})
 endforeach()
-
-if(CMAKE_VERSION VERSION_LESS 3.17)
-  set(RM remove)
-else()
-  set(RM rm)
-endif()
 
 add_custom_target(
   gui_images
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/symbols
-          ${OUTDIR}/${GRASS_INSTALL_GUIDIR}/images/symbols
-  COMMAND ${CMAKE_COMMAND} -E ${RM}
-          ${OUTDIR}/${GRASS_INSTALL_GUIDIR}/images/symbols/README
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/symbols/basic/
+          ${GISBASE}/gui/images/symbols/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/symbols/demo/
+          ${GISBASE}/gui/images/symbols/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/symbols/extra/
+          ${GISBASE}/gui/images/symbols/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/symbols/geology/
+          ${GISBASE}/gui/images/symbols/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/symbols/legend/
+          ${GISBASE}/gui/images/symbols/
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/symbols/n_arrows/
+          ${GISBASE}/gui/images/symbols/
   DEPENDS gui_icons ${output_images})
 
-install(FILES ${GUI_IMAGES} DESTINATION ${GRASS_INSTALL_GUIDIR}/images)
-install(DIRECTORY symbols/basic
-        DESTINATION ${GRASS_INSTALL_GUIDIR}/images/symbols)
-install(DIRECTORY symbols/demo
-        DESTINATION ${GRASS_INSTALL_GUIDIR}/images/symbols)
-install(DIRECTORY symbols/extra
-        DESTINATION ${GRASS_INSTALL_GUIDIR}/images/symbols)
-install(DIRECTORY symbols/geology
-        DESTINATION ${GRASS_INSTALL_GUIDIR}/images/symbols)
-install(DIRECTORY symbols/legend
-        DESTINATION ${GRASS_INSTALL_GUIDIR}/images/symbols)
-install(DIRECTORY symbols/n_arrows
-        DESTINATION ${GRASS_INSTALL_GUIDIR}/images/symbols)
+install(FILES ${GUI_IMAGES} DESTINATION gui/images/)
+install(DIRECTORY basic DESTINATION gui/images/symbols/)
+install(DIRECTORY demo DESTINATION gui/images/symbols/)
+install(DIRECTORY extra DESTINATION gui/images/symbols/)
+install(DIRECTORY geology DESTINATION gui/images/symbols/)
+install(DIRECTORY legend DESTINATION gui/images/symbols/)
+install(DIRECTORY n_arrows DESTINATION gui/images/symbols/)
