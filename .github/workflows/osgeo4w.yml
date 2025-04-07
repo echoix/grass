@@ -89,7 +89,6 @@ jobs:
             python3-numpy
             python3-pip
             python3-ply
-            python3-pytest
             python3-pywin32
             python3-six
             python3-wxpython
@@ -121,7 +120,11 @@ jobs:
         run: .github/workflows/test_simple.sh
 
       - name: Install pytest plugins
-        run: python -m pip install pytest-timeout
+        run: |
+          python -m pip install ^
+            pytest ^
+            pytest-randomly ^
+            pytest-timeout
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with a single worker
         run: |
@@ -130,7 +133,28 @@ jobs:
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
+            -k "not testsuite" ^
+            -p no:randomly ^
             -ra .
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      - name: Run supported gunittest-based tests
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          set grass=%OSGEO4W_ROOT%\opt\grass\grass85.bat
+          %grass% --tmp-project XY --exec ^
+            g.download.project ^
+            url=https://grass.osgeo.org/sampledata/north_carolina/nc_spm_full_v2alpha2.tar.gz ^
+            path=%USERPROFILE%
+          echo "Done downloading dataset, starting tests"
+          %grass% %USERPROFILE%/nc_spm_full_v2alpha2/PERMANENT --exec ^
+            pytest --verbose --color=yes ^
+            --durations=0 --durations-min=0.5 ^
+            -k "testsuite" ^
+            -ra .
+          echo "Done running tests"
+          rmdir /s /q %USERPROFILE%\nc_spm_full_v2alpha2
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
 
       - name: Run tests

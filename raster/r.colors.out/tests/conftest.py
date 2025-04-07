@@ -1,16 +1,24 @@
 """Fixture for r.colors.out and r3.colors.out test"""
 
 import os
+from collections.abc import Generator
+
 import pytest
+
 import grass.script as gs
+from grass.script.setup import SessionHandle
 
 
 @pytest.fixture
-def raster_color_dataset(tmp_path):
+def raster_color_dataset(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> Generator[SessionHandle]:
     """Set up a GRASS session and create test rasters with color rules."""
     project = tmp_path / "raster_color_project"
     gs.create_project(project)
     with gs.setup.init(project, env=os.environ.copy()) as session:
+        for key, value in session.env.items():
+            monkeypatch.setenv(key, value)
         gs.run_command(
             "g.region",
             s=0,
@@ -30,11 +38,15 @@ def raster_color_dataset(tmp_path):
 
 
 @pytest.fixture
-def raster3_color_dataset(tmp_path):
+def raster3_color_dataset(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> Generator[SessionHandle]:
     """Set up a GRASS session and create test raster3 with color rules."""
     project = tmp_path / "raster3_color_project"
     gs.create_project(project)
     with gs.setup.init(project, env=os.environ.copy()) as session:
+        for key, value in session.env.items():
+            monkeypatch.setenv(key, value)
         gs.run_command(
             "g.region",
             s=0,
