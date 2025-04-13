@@ -109,6 +109,14 @@ jobs:
             -ra . \
             -k "not testsuite" \
             -m 'needs_solo_run'
+      - name: Run pytest with a single worker (for gunittest-based tests)
+        shell: micromamba-shell {0}
+        run: |
+          export PYTHONPATH=$(grass --config python_path):$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          pytest --verbose --color=yes --durations=0 --durations-min=0.5 \
+            -ra . \
+            -k "testsuite"
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
