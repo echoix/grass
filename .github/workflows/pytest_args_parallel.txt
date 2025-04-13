@@ -1,2 +1,2 @@
---numprocesses auto
+--numprocesses=auto
 -m not needs_solo_run
