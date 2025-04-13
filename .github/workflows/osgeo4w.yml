@@ -132,7 +132,7 @@ jobs:
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           pytest --verbose --color=yes ^
             --durations=0 --durations-min=0.5 ^
-            -k "testsuite" ^
+            -k "not testsuite" ^
             -ra .
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with a single worker (for gunittest-based tests)
