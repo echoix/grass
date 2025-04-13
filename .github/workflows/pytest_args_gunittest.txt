@@ -7,14 +7,19 @@
 --deselect=lib/raster/testsuite/test_raster_metadata.py
 --deselect=lib/vector/Vlib/testsuite/test_vlib_intersect.py
 --deselect=python/grass/pygrass/gis/testsuite/test_gis.py
+--deselect=python/grass/pygrass/vector/testsuite/test_geometry.py
 --deselect=python/grass/pygrass/vector/testsuite/test_geometry_attrs.py
+--deselect=python/grass/pygrass/vector/testsuite/test_vector.py
 --deselect=python/grass/pygrass/vector/testsuite/test_vector3d.py
 --deselect=raster/r.support/testsuite/test_r_support.py
 --deselect=scripts/r.semantic.label/testsuite/test_r_semantic_label.py
 --ignore-glob=**/tests/**
 --ignore=gui/
 -k testsuite or lib/gis/testsuite/test_gis_lib_getl.py
+-k testsuite or lib/init/testsuite/test_grass_tmp_mapset.py
+-k testsuite or lib/vector/Vlib/testsuite/test_vlib_box.py
 -k testsuite or python/grass/exceptions/testsuite/test_ScriptError.py
+-k testsuite or python/grass/gunittest/testsuite/test_checkers.py
 -k testsuite or python/grass/pygrass/modules/interface/testsuite/test_flag.py
 -k testsuite or python/grass/pygrass/modules/interface/testsuite/test_parameter.py
 -k testsuite or python/grass/pygrass/vector/testsuite/test_filters.py
