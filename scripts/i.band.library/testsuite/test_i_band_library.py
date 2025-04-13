@@ -7,7 +7,7 @@ from grass.gunittest.gmodules import call_module
 
 class TestBandsSystemDefined(TestCase):
     @staticmethod
-    def _number_of_bands(**kwargs):
+    def _number_of_bands(**kwargs) -> int:
         gbands = call_module("i.band.library", **kwargs)
         return len(gbands.rstrip(os.linesep).split(os.linesep))
 

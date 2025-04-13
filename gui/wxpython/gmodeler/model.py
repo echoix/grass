@@ -38,6 +38,7 @@ import re
 import mimetypes
 import time
 
+from typing import LiteralString
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.sax import saxutils
@@ -3222,7 +3223,7 @@ if __name__ == "__main__":
         return value
 
     @staticmethod
-    def _getSupportedFormats(prompt):
+    def _getSupportedFormats(prompt) -> LiteralString:
         """Get supported formats of an item.
 
         :param prompt: param['prompt'] of an item

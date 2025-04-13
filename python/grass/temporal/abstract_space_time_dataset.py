@@ -15,6 +15,7 @@ from __future__ import annotations
 import copy
 import os
 import sys
+from typing import Any
 import uuid
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
@@ -1909,7 +1910,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
         return rows
 
     @staticmethod
-    def shift_map_list(maps, gran):
+    def shift_map_list(maps, gran):  # -> None | Any:
         """Temporally shift each map in the list with the provided granularity
 
         This method does not perform any temporal database operations.
@@ -2057,7 +2058,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
             dbif.close()
 
     @staticmethod
-    def snap_map_list(maps):
+    def snap_map_list(maps) -> list[Any] | None:
         """For each map in the list snap the end time to the start time of its
         temporal nearest neighbor in the future.
 

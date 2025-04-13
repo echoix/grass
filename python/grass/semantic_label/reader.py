@@ -48,7 +48,7 @@ class SemanticLabelReader:
             self.config[os.path.basename(json_file)] = config
 
     @staticmethod
-    def _check_config(config):
+    def _check_config(config) -> None:
         """Check if config is valid
 
         :todo: check shortcut uniqueness
@@ -65,7 +65,7 @@ class SemanticLabelReader:
                 raise SemanticLabelReaderError(msg)
 
     @staticmethod
-    def _print_label_extended(label, item):
+    def _print_label_extended(label, item) -> None:
         """Print label specific metadata
 
         :param str label: label identifier
