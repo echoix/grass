@@ -2,3 +2,4 @@
 --ignore-glob=**/tests/**
 --ignore=gui/
 --deselect=imagery/i.signatures/testsuite/test_i_signatures.py
+--deselect=lib/imagery/testsuite/test_imagery_find.py
