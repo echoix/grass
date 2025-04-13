@@ -1,4 +1,10 @@
+--deselect=imagery/i.signatures/testsuite/test_i_signatures.py
+--deselect=lib/gis/testsuite/gis_lib_env_test.py
+--deselect=lib/imagery/testsuite/test_imagery_find.py
+--deselect=lib/imagery/testsuite/test_imagery_signature_management.py
+--deselect=lib/raster/testsuite/test_raster_metadata.py
+--deselect=lib/vector/Vlib/testsuite/test_vlib_intersect.py
 --ignore-glob=**/tests/**
 --ignore=gui/
---deselect=imagery/i.signatures/testsuite/test_i_signatures.py
---deselect=lib/imagery/testsuite/test_imagery_find.py
+-k testsuite or python/grass/exceptions/testsuite/test_ScriptError.py
+-k testsuite or python/grass/pygrass/modules/interface/testsuite/test_parameter.py
