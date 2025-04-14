@@ -36,7 +36,7 @@
 
 
 let
-  pyPackages = python311Packages;
+  pyPackages = python312Packages;
 
 in
 stdenv.mkDerivation (finalAttrs: {
