@@ -26,7 +26,7 @@
 , pkg-config
 , postgresql
 , proj
-, python311Packages
+, python312Packages
 , readline
 , sqlite
 , wxGTK32
