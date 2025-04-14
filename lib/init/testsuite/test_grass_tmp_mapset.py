@@ -69,7 +69,6 @@ class TestTmpMapset(unittest.TestCase):
                 "-g",
             ]
         )
-        breakpoint()
         self.assertNotEqual(
             return_code,
             0,
