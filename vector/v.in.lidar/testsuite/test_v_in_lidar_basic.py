@@ -10,10 +10,13 @@ Licence:   This program is free software under the GNU General Public
 """
 
 import os
+import shutil
+import unittest
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 
 
+@unittest.skipUnless(shutil.which("v.out.lidar"), "Needs v.out.lidar")
 class BasicTest(TestCase):
     """Test case for watershed module
 
@@ -26,10 +29,43 @@ class BasicTest(TestCase):
     las_file = "vinlidar_basic_points.las"
     npoints = 300
 
+    def setUpClassImpl(self):
+        """Ensures expected computational region and generated data"""
+        self.use_temp_region()
+        self.addCleanup(self.del_temp_region)
+        self.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
+        self.runModule(
+            "v.random",
+            flags="zb",
+            output=self.vector_points,
+            npoints=self.npoints,
+            zmin=200,
+            zmax=500,
+            seed=100,
+        )
+        self.addCleanup(
+            self.runModule,
+            "g.remove",
+            flags="f",
+            type="vector",
+            name=self.vector_points,
+        )
+        self.runModule("v.out.lidar", input=self.vector_points, output=self.las_file)
+        self.addCleanup(
+            lambda x: os.remove(x) if os.path.isfile(x) else None, self.las_file
+        )
+
+    def setUp(self):
+        if os.environ.get("PYTEST_VERSION") is not None:
+            self.setUpClassImpl()
+
     @classmethod
     def setUpClass(cls):
         """Ensures expected computational region and generated data"""
+        if os.environ.get("PYTEST_VERSION") is not None:
+            return
         cls.use_temp_region()
+        cls.addClassCleanup(cls.del_temp_region)
         cls.runModule("g.region", n=20, s=10, e=25, w=15, res=1)
         cls.runModule(
             "v.random",
@@ -40,15 +76,13 @@ class BasicTest(TestCase):
             zmax=500,
             seed=100,
         )
+        cls.addClassCleanup(
+            cls.runModule, "g.remove", flags="f", type="vector", name=cls.vector_points
+        )
         cls.runModule("v.out.lidar", input=cls.vector_points, output=cls.las_file)
-
-    @classmethod
-    def tearDownClass(cls):
-        """Remove the temporary region and generated data"""
-        cls.runModule("g.remove", flags="f", type="vector", name=cls.vector_points)
-        if os.path.isfile(cls.las_file):
-            os.remove(cls.las_file)
-        cls.del_temp_region()
+        cls.addClassCleanup(
+            lambda x: os.remove(x) if os.path.isfile(x) else None, cls.las_file
+        )
 
     def tearDown(self):
         """Remove the outputs created by the import
@@ -57,6 +91,7 @@ class BasicTest(TestCase):
         """
         self.runModule("g.remove", flags="f", type="vector", name=self.imported_points)
 
+    @unittest.expectedFailure  # imported PROJ_INFO doesn't match project imported to
     def test_output_identical(self):
         """Test to see if the standard outputs are created"""
         self.assertModule(

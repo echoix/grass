@@ -37,6 +37,18 @@ class TestVInfo(TestCase):
         cls.runModule(
             "v.random", output=cls.test_vinfo_no_db, npoints=5, zmin=0, zmax=100
         )
+        cls.addClassCleanup(
+            cls.runModule,
+            "g.remove",
+            flags="f",
+            type="vector",
+            name=[
+                cls.test_vinfo_no_db,
+                cls.test_vinfo_with_db,
+                cls.test_vinfo_with_db_3d,
+                cls.test_vinfo_with_hist,
+            ],
+        )
 
         cls.runModule(
             "v.random",

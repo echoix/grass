@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later AND MIT
-"""General pytest test fixtures
+"""General pytest test fixtures for the complete repo
 
-Author: Edouard Choinière (2025-03-09)
+Author: Edouard Choinière (2025-02-16)
 SPDX-License-Identifier: GPL-2.0-or-later
 """
 
