@@ -121,6 +121,7 @@ jobs:
           python utils/coverage_mapper.py
           coverage combine
           coverage html
+          coverage json
       - run: ls -la
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
