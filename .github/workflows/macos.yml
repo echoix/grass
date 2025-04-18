@@ -57,6 +57,7 @@ jobs:
           test_dependencies: |
             ipython
             pytest
+            pytest-cov
             pytest-github-actions-annotate-failures
             pytest-timeout
             pytest-xdist
@@ -103,8 +104,11 @@ jobs:
         run: |
           export PYTHONPATH=$(grass --config python_path):$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          export INITIAL_GISBASE="$(grass --config path)"
+          export INITIAL_PWD="${PWD}"
           pytest \
             @.github/workflows/pytest_args_ci.txt \
+            @.github/workflows/pytest_args_cov.txt \
             @.github/workflows/pytest_args_not_parallel.txt
 
       - name: Upload coverage reports to Codecov
