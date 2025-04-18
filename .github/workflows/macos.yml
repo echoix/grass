@@ -107,6 +107,14 @@ jobs:
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_not_parallel.txt
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
+        with:
+          verbose: true
+          flags: pytest-macos-14
+          name: pytest-macos-14
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Cache GRASS Sample Dataset
         id: cached-data
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
