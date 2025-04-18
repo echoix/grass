@@ -130,6 +130,14 @@ jobs:
           python utils/coverage_mapper.py
           coverage combine
           coverage html
+      - name: Make python-only code coverage test report available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: >-
+            python-codecoverage-report-${{ 'macos-14' }}
+          path: coverage_html_report
+          retention-days: 1
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
         with:
