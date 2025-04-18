@@ -143,7 +143,7 @@ jobs:
         uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
         with:
           verbose: true
-          flags: pytest,pytest-macos-14
+          flags: pytest-macos-14
           name: pytest-macos-14
           token: ${{ secrets.CODECOV_TOKEN }}
 
