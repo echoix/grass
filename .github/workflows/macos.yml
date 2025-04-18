@@ -57,6 +57,7 @@ jobs:
           test_dependencies: |
             ipython
             pytest
+            coverage
             pytest-cov
             pytest-github-actions-annotate-failures
             pytest-timeout
