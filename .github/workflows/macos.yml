@@ -123,6 +123,14 @@ jobs:
           coverage html
           coverage json
       - run: ls -la
+      - name: Make python-only code coverage test report available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: >-
+            python-codecoverage-report-${{ 'macos-14' }}
+          path: coverage_html_report
+          retention-days: 1
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
         with:
