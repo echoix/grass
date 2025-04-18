@@ -55,6 +55,7 @@ jobs:
       - name: Prepare Conda environment file
         env:
           test_dependencies: |
+            coverage
             ipython
             pytest
             pytest-cov
