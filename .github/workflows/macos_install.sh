@@ -61,7 +61,7 @@ CONFIGURE_FLAGS="\
 
 export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPRECATION -Wall -Wextra -Wpedantic -Wvla -fprofile-instr-generate -fcoverage-mapping"
 export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic -fprofile-instr-generate -fcoverage-mapping"
-export CPPFLAGS="-isystem${CONDA_PREFIX}/include -fprofile-instr-generate -fcoverage-mapping"
+export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
 ./configure $CONFIGURE_FLAGS
 
