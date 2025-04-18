@@ -59,12 +59,14 @@ CONFIGURE_FLAGS="\
   --without-x \
 "
 
-export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPRECATION -Wall -Wextra -Wpedantic -Wvla -fprofile-instr-generate -fcoverage-mapping"
-export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic -fprofile-instr-generate -fcoverage-mapping"
+export EXTRA_COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -mllvm -runtime-counter-relocation"
+export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPRECATION -Wall -Wextra -Wpedantic -Wvla"
+export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic $EXTRA_COV_FLAGS"
 export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
-export LDFLAGS="-fprofile-instr-generate"
 
 ./configure $CONFIGURE_FLAGS
+
+export LDFLAGS="-fprofile-instr-generate -v"
 
 EXEMPT=""
 make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
