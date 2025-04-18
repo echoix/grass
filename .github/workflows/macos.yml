@@ -112,6 +112,7 @@ jobs:
             @.github/workflows/pytest_args_cov.txt \
             @.github/workflows/pytest_args_not_parallel.txt
       - name: Fix non-standard installed script paths in coverage data
+        shell: micromamba-shell {0}
         run: |
           export PYTHONPATH=$(grass --config python_path):$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
