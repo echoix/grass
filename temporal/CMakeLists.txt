@@ -1,68 +1,55 @@
-set(temporal_script_modules_list
-    t.copy
+set(temporal_DIRS
     t.create
-    t.info
-    t.list
-    t.merge
-    t.rast.accdetect
-    t.rast.accumulate
-    t.rast.aggregate
-    t.rast.aggregate.ds
-    t.rast.algebra
-    t.rast.colors
-    t.rast.contour
-    t.rast.export
-    t.rast.extract
-    t.rast.gapfill
-    t.rast.import
-    t.rast.list
-    t.rast.mapcalc
-    t.rast.neighbors
-    t.rast.out.vtk
-    t.rast.series
-    t.rast.to.rast3
-    t.rast.to.vect
-    t.rast.univar
-    t.rast.what
-    t.rast3d.algebra
-    t.rast3d.extract
-    t.rast3d.list
-    t.rast3d.mapcalc
-    t.rast3d.univar
-    t.register
-    t.remove
-    t.rename
-    t.sample
-    t.select
-    t.shift
-    t.snap
     t.support
     t.topology
+    t.list
+    t.info
+    t.merge
+    t.remove
+    t.sample
+    t.register
     t.unregister
-    t.upgrade
-    t.vect.algebra
+    t.rast.accumulate
+    t.rast.accdetect
+    t.rast.aggregate
+    t.rast.aggregate.ds
+    t.rast.colors
+    t.rast.contour
+    t.rast.to.rast3
+    t.rast.univar
+    t.rast.list
+    t.rast.mapcalc
+    t.rast.algebra
+    t.rast.neighbors
+    t.rast.series
+    t.rast.export
+    t.rast.out.vtk
+    t.rast.import
+    t.rast.gapfill
+    t.rast.extract
+    t.rast.to.vect
+    t.rast.what
+    t.rast3d.list
+    t.rast3d.extract
+    t.rast3d.mapcalc
+    t.rast3d.algebra
+    t.rast3d.univar
+    t.rename
+    t.select
+    t.snap
+    t.shift
+    t.vect.list
     t.vect.db.select
     t.vect.export
     t.vect.extract
+    t.vect.algebra
     t.vect.import
-    t.vect.list
+    t.vect.what.strds
     t.vect.observe.strds
-    t.vect.univar
-    t.vect.what.strds)
-
-set(temporal_modules_list t.connect)
-
-add_custom_target(
-  ALL_TEMPORAL_MODULES ALL
-  DEPENDS ${temporal_script_modules_list} ${temporal_modules_list}
-  COMMENT "All temporal modules are built.")
-
-if(WITH_DOCS)
-  generate_html(TARGET ALL_TEMPORAL_MODULES NAME temporalintro)
-endif()
+    t.vect.univar)
 
 build_program_in_subdir(t.connect DEPENDS grass_gis grass_temporal)
 
-foreach(temporal_DIR ${temporal_script_modules_list})
+foreach(temporal_DIR ${temporal_DIRS})
   build_script_in_subdir(${temporal_DIR})
 endforeach()

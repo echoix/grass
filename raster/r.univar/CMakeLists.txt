@@ -8,11 +8,7 @@ build_program(
   "${r_univar_SRCS}"
   DEPENDS
   grass_gis
-  grass_raster
-  grass_parson
-  ${LIBM}
-  OPTIONAL_DEPENDS
-  OPENMP)
+  grass_raster)
 
 build_program(
   NAME
@@ -21,9 +17,4 @@ build_program(
   "${r3_univar_SRCS}"
   DEPENDS
   grass_gis
-  grass_raster
-  grass_raster3d
-  grass_parson
-  ${LIBM}
-  OPTIONAL_DEPENDS
-  OPENMP)
+  grass_raster3d)

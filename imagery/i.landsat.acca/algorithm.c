@@ -70,24 +70,21 @@ double th_7 = 1.0;     /* Band 4/5 Ratio */
 
 double th_8 = 210.; /* Band 5/6 Composite */
 
-extern int hist_n;
-
 void acca_algorithm(Gfile *out, Gfile band[], int single_pass, int with_shadow,
-                    int cloud_signature)
+                    int cloud_signature, int hist_n)
 {
     int i, count[5];
-    double max, value[5], signa[5], idesert, review_warm, shift;
+    double max, value[5], signa[5], idesert, shift;
+    int review_warm;
 
-    int *hist_cold = G_malloc(hist_n * sizeof(int));
-    int *hist_warm = G_malloc(hist_n * sizeof(int));
+    int *hist_cold, *hist_warm;
+    hist_cold = (int *)G_calloc(hist_n, sizeof(int));
+    hist_warm = (int *)G_calloc(hist_n, sizeof(int));
 
     /* Reset variables ... */
     for (i = 0; i < 5; i++) {
         count[i] = 0;
         value[i] = 0.;
-    }
-    for (i = 0; i < hist_n; i++) {
-        hist_cold[i] = hist_warm[i] = 0;
     }
 
     /* FIRST FILTER ... */
@@ -209,7 +206,7 @@ void acca_algorithm(Gfile *out, Gfile band[], int single_pass, int with_shadow,
     /* SECOND FILTER ... */
     /* By-pass two processing but it retains warm and cold clouds */
     if (single_pass == TRUE) {
-        review_warm = -1.;
+        review_warm = -1;
         value[KUPPER] = 0.;
         value[KLOWER] = 0.;
     }
