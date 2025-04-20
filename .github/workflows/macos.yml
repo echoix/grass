@@ -55,7 +55,14 @@ jobs:
       - name: Prepare Conda environment file
         env:
           test_dependencies: |
+            compiler-rt
             ipython
+            libllvm20
+            lit
+            llvm
+            llvm-tools
+            llvm-tools-20
+            llvmdev
             pytest
             pytest-github-actions-annotate-failures
             pytest-timeout
