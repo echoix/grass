@@ -98,7 +98,10 @@ jobs:
         if: ${{ !cancelled() }}
         shell: micromamba-shell {0}
         run: source ./.github/workflows/print_versions.sh
-
+      - run: ls -la bin.*-*-*
+      - run: ls -la dist.*-*-*/bin
+      - run: ls -la "$HOME/install"
+      - run: ls -la "$HOME/install/bin"
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
         run: |
@@ -141,7 +144,11 @@ jobs:
       - name: Merge and index profile data
         shell: micromamba-shell {0}
         run: llvm-profdata merge -sparse *.profraw -o merged.profdata
+      - run: ls -la "$HOME/install"
+      - run: ls -la "$HOME/install/bin"
       - run: ls -la
+      - run: ls -la "$HOME/install"
+      - run: ls -la "$HOME/install/bin"
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
