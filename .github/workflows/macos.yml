@@ -130,7 +130,7 @@ jobs:
           coverage html
           coverage json
       - name: Merge and index profile data
-        run: llvm-profdata merge *.profraw -o merged.profdata
+        run: llvm-profdata merge -sparse *.profraw -o merged.profdata
       - run: ls -la
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
