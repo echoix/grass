@@ -89,6 +89,9 @@ jobs:
         if: ${{ !cancelled() }}
         shell: micromamba-shell {0}
         run: source ./.github/workflows/print_versions.sh
+      - name: Print config
+        shell: micromamba-shell {0}
+        run: grass --config
 
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
