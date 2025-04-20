@@ -99,7 +99,10 @@ jobs:
       - name: Print config
         shell: micromamba-shell {0}
         run: grass --config
-
+      - run: ls -la bin.*-*-*
+      - run: ls -la dist.*-*-*/bin
+      - run: ls -la "$HOME/install"
+      - run: ls -la "$HOME/install/bin"
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
         run: |
@@ -128,7 +131,13 @@ jobs:
       - name: Merge and index profile data
         shell: micromamba-shell {0}
         run: llvm-profdata merge -sparse *.profraw -o merged.profdata
+      - run: ls -la "$HOME/install"
+      - run: ls -la "$HOME/install/bin"
       - run: ls -la
+      - run: ls -la "$HOME/install"
+      - run: ls -la "$HOME/install/bin"
+      - run: ls -la -R "$HOME/install"
+      - run: ls -la -R .
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
         with:
