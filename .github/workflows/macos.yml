@@ -57,6 +57,7 @@ jobs:
           test_dependencies: |
             coverage
             ipython
+            llvmdev
             pytest
             pytest-cov
             pytest-github-actions-annotate-failures
