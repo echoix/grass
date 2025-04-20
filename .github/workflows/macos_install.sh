@@ -66,7 +66,7 @@ export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
 ./configure $CONFIGURE_FLAGS
 
-export LDFLAGS="-v -fprofile-instr-generate"
+export LDFLAGS="-v -fprofile-instr-generate -fcoverage-mapping"
 export CFLAGS="$EXTRA_COV_FLAGS $CFLAGS"
 export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
 export CPPFLAGS="$EXTRA_COV_FLAGS $CPPFLAGS"
