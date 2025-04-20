@@ -130,6 +130,7 @@ jobs:
           coverage html
           coverage json
       - name: Merge and index profile data
+        shell: micromamba-shell {0}
         run: llvm-profdata merge -sparse *.profraw -o merged.profdata
       - run: ls -la
       - name: Make python-only code coverage test report available
