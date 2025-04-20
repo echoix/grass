@@ -66,7 +66,7 @@ export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
 ./configure $CONFIGURE_FLAGS
 
-export LDFLAGS="-v"
+export LDFLAGS="-v -fprofile-instr-generate"
 export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
 
 EXEMPT=""
