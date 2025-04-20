@@ -154,6 +154,9 @@ jobs:
             profile-data-${{ 'macos-14' }}
           path: '*.prof*'
           retention-days: 1
+      - name: Create a line-oriented coverage report
+        shell: micromamba-shell {0}
+        run: llvm-cov show $HOME/install/bin/grass -instr-profile=merged.profdata
       - run: ls -la
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
