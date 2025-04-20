@@ -65,7 +65,7 @@ export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPR
 export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic"
 export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
-export LDFLAGS="-v -fprofile-instr-generate -fcoverage-mapping"
+export LINK_FLAGS="-v -fprofile-instr-generate -fcoverage-mapping"
 export CFLAGS="$EXTRA_COV_FLAGS $CFLAGS"
 export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
 
@@ -73,6 +73,6 @@ export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
 
 EXEMPT=""
 make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
-  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT" LDFLAGS="$LDFLAGS"
+  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT" LINK_FLAGS="$LINK_FLAGS"
 
 make install
