@@ -116,6 +116,9 @@ jobs:
           pytest \
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_not_parallel.txt
+      - name: Merge and index profile data
+        shell: micromamba-shell {0}
+        run: llvm-profdata merge -sparse *.profraw -o merged.profdata
       - run: ls -la
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
