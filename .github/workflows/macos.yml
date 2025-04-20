@@ -55,8 +55,15 @@ jobs:
       - name: Prepare Conda environment file
         env:
           test_dependencies: |
+            compiler-rt
             coverage
             ipython
+            libllvm20
+            lit
+            llvm
+            llvm-tools
+            llvm-tools-20
+            llvmdev
             pytest
             pytest-cov
             pytest-github-actions-annotate-failures
