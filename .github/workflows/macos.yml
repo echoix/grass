@@ -130,7 +130,11 @@ jobs:
       - name: Show merged profile data
         shell: micromamba-shell {0}
         continue-on-error: true
-        run: llvm-profdata show merged.profdata
+        run: llvm-profdata show --binary-ids merged.profdata
+      - name: Show merged profile data (only covered)
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: llvm-profdata show --binary-ids --covered --all-functions merged.profdata
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
       - name: Create a line-oriented coverage report
