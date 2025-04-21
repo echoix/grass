@@ -58,10 +58,6 @@ jobs:
           test_dependencies: |
             compiler-rt
             ipython
-            libllvm20
-            llvm-tools
-            llvm-tools-20
-            llvmdev
             pytest
             pytest-github-actions-annotate-failures
             pytest-timeout
