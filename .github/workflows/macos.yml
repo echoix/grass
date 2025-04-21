@@ -169,7 +169,7 @@ jobs:
       - name: Export coverage report with llvm-cov export
         shell: micromamba-shell {0}
         continue-on-error: true
-        run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib
+        run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib | tee coverage.libgrass_gis.json
       - run: /usr/bin/find . -type f \( -name "*.o" -or -name "*.prof*" \)
       - run: /usr/bin/find . -type f \( -name "*.profraw" -or -name "*.profdata" \)
       - run: /usr/bin/find $HOME/install -type f \( -name "*.o" -or -name "*.prof*" \)
