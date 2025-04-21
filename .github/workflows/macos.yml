@@ -83,7 +83,7 @@ jobs:
           # Persist on the same period (date).
           cache-environment-key: environment-${{ steps.date.outputs.date }}
       # - name: Set profile file name env var
-        # run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%9m.profraw" >> $GITHUB_ENV
+      #   run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%9m.profraw" >> $GITHUB_ENV
       - name: Environment info
         shell: bash -el {0}
         run: |
@@ -161,12 +161,12 @@ jobs:
         continue-on-error: true
         run: llvm-cov show -instr-profile=merged.profdata /Users/runner/install/grass85/lib/*.dylib
       - name: Export coverage report with llvm-cov export
-        if: 'false'
+        if: false
         shell: micromamba-shell {0}
         continue-on-error: true
         run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib | tee coverage.libgrass_gis.json
       - name: Export coverage report with llvm-cov export
-        if: 'false'
+        if: false
         shell: micromamba-shell {0}
         continue-on-error: true
         run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/*.dylib | tee coverage.libs.json
