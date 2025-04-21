@@ -143,16 +143,6 @@ jobs:
         run: llvm-profdata show merged.profdata
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
-      - name: Make profile data available
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
-        with:
-          name: >-
-            profile-data-${{ 'macos-14' }}
-          path: |
-            *.prof*
-            *coverage*
-          retention-days: 1
       - name: Create a line-oriented coverage report
         shell: micromamba-shell {0}
         continue-on-error: true
@@ -169,6 +159,16 @@ jobs:
         shell: micromamba-shell {0}
         continue-on-error: true
         run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/*.dylib | tee coverage.libs.json
+      - name: Make profile data available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: >-
+            profile-data-${{ 'macos-14' }}
+          path: |
+            *.prof*
+            *coverage*
+          retention-days: 1
       - run: /usr/bin/find . -type f \( -name "*.o" -or -name "*.prof*" \)
       - run: /usr/bin/find . -type f \( -name "*.profraw" -or -name "*.profdata" \)
       - run: /usr/bin/find $HOME/install -type f \( -name "*.o" -or -name "*.prof*" \)
