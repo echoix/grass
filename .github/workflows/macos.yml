@@ -151,14 +151,14 @@ jobs:
             profile-data-${{ 'macos-14' }}
           path: "*.prof*"
           retention-days: 1
-      # - name: Create a line-oriented coverage report
-      #   shell: micromamba-shell {0}
-      #   continue-on-error: true
-      #   run: llvm-cov show lib/init/OBJ.*-*/lock.o -instr-profile=merged.profdata
+      - name: Create a line-oriented coverage report
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: llvm-cov show -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib
       - name: Export coverage report with llvm-cov export
         shell: micromamba-shell {0}
         continue-on-error: true
-        run: llvm-cov export -format=text -instr-profile=merged.profdata
+        run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib
       - run: /usr/bin/find . -type f \( -name "*.o" -or -name "*.prof*" \)
       - run: /usr/bin/find . -type f \( -name "*.profraw" -or -name "*.profdata" \)
       - run: /usr/bin/find $HOME/install -type f \( -name "*.o" -or -name "*.prof*" \)
