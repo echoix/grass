@@ -146,6 +146,10 @@ jobs:
       - name: Merge and index profile data
         shell: micromamba-shell {0}
         run: llvm-profdata merge -sparse *.profraw -o merged.profdata
+      - name: Show merged profile data
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: llvm-profdata show merged.profdata
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
       - name: Make profile data available
