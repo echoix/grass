@@ -137,13 +137,13 @@ jobs:
         shell: micromamba-shell {0}
         continue-on-error: true
         run: |
-          llvm-cov show -use-color -instr-profile=merged.profdata \
+          llvm-cov show -check-binary-ids -use-color -instr-profile=merged.profdata \
             /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib
       - name: Create a line-oriented coverage report
         shell: micromamba-shell {0}
         continue-on-error: true
         run: |
-          llvm-cov show -use-color -instr-profile=merged.profdata \
+          llvm-cov show -check-binary-ids -use-color -instr-profile=merged.profdata \
             /Users/runner/install/grass85/lib/*.dylib
       - name: Export coverage report with llvm-cov export
         if: false
