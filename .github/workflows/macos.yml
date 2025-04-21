@@ -143,15 +143,24 @@ jobs:
       - name: Export coverage report with llvm-cov export (libgrass_gis, json)
         shell: micromamba-shell {0}
         continue-on-error: true
-        run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib | tee coverage.libgrass_gis.json
+        run: |
+          llvm-cov export -format=text -instr-profile=merged.profdata \
+            /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib \
+            | tee coverage.libgrass_gis.json
       - name: Export coverage report with llvm-cov export (all libs, json)
         shell: micromamba-shell {0}
         continue-on-error: true
-        run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/*.dylib | tee coverage.libs.json
+        run: |
+          llvm-cov export -format=text -instr-profile=merged.profdata \
+            /Users/runner/install/grass85/lib/*.dylib \
+            | tee coverage.libs.json
       - name: Export coverage report with llvm-cov export (all libs, lcov)
         shell: micromamba-shell {0}
         continue-on-error: true
-        run: llvm-cov export -format=lcov -instr-profile=merged.profdata /Users/runner/install/grass85/lib/*.dylib | tee coverage.libs.lcov
+        run: |
+          llvm-cov export -format=lcov -instr-profile=merged.profdata \
+            /Users/runner/install/grass85/lib/*.dylib \
+            | tee coverage.libs.lcov
       - name: Make profile data available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
