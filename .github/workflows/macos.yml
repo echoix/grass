@@ -98,7 +98,7 @@ jobs:
       - run: ls -la dist.*-*-*/bin
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
-      - run: ls -la "$HOME/install/grass*/lib"
+      - run: ls -la "$HOME"/install/grass*/lib
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
         run: |
@@ -187,7 +187,7 @@ jobs:
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
       - run: ls -la -R "$HOME/install"
-      - run: ls -la -R "$HOME/install/grass*/lib"
+      - run: ls -la -R "$HOME"/install/grass*/lib
       - run: ls -la -R .
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
