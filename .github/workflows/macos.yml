@@ -134,6 +134,10 @@ jobs:
       #   shell: micromamba-shell {0}
       #   continue-on-error: true
       #   run: llvm-cov show lib/init/OBJ.*-*/lock.o -instr-profile=merged.profdata
+      - name: Export coverage report with llvm-cov export
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: llvm-cov export -format=text -instr-profile=merged.profdata
       - name: Make profile data available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
