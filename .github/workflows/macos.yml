@@ -139,14 +139,14 @@ jobs:
         run: llvm-profdata show merged.profdata
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
-      # - name: Create a line-oriented coverage report
-      #   shell: micromamba-shell {0}
-      #   continue-on-error: true
-      #   run: llvm-cov show lib/init/OBJ.*-*/lock.o -instr-profile=merged.profdata
+      - name: Create a line-oriented coverage report
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: llvm-cov show -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib
       - name: Export coverage report with llvm-cov export
         shell: micromamba-shell {0}
         continue-on-error: true
-        run: llvm-cov export -format=text -instr-profile=merged.profdata
+        run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib | tee coverage.libgrass_gis.json
       - name: Make profile data available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
