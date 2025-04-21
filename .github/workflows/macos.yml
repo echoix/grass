@@ -23,6 +23,7 @@ jobs:
     runs-on: macos-14
     env:
       PYTHONWARNINGS: always
+      LLVM_PROFILE_FILE: "grass-prof-%9m.profraw"
     steps:
       - name: Info
         run: |
