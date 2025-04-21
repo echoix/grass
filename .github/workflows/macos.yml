@@ -23,7 +23,7 @@ jobs:
     runs-on: macos-14
     env:
       PYTHONWARNINGS: always
-      LLVM_PROFILE_FILE: "grass-prof-%9m.profraw"
+      # LLVM_PROFILE_FILE: "grass-prof-%9m.profraw"
     steps:
       - name: Info
         run: |
@@ -82,8 +82,8 @@ jobs:
           environment-name: grass-env
           # Persist on the same period (date).
           cache-environment-key: environment-${{ steps.date.outputs.date }}
-      # - name: Set profile file name env var
-      #   run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%9m.profraw" >> $GITHUB_ENV
+      - name: Set profile file name env var
+        run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%9m.profraw" >> $GITHUB_ENV
       - name: Environment info
         shell: bash -el {0}
         run: |
