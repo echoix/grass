@@ -157,10 +157,18 @@ jobs:
         shell: micromamba-shell {0}
         continue-on-error: true
         run: llvm-cov show -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib
+      - name: Create a line-oriented coverage report
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: llvm-cov show -instr-profile=merged.profdata /Users/runner/install/grass85/lib/*.dylib
       - name: Export coverage report with llvm-cov export
         shell: micromamba-shell {0}
         continue-on-error: true
         run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib | tee coverage.libgrass_gis.json
+      - name: Export coverage report with llvm-cov export
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: llvm-cov export -format=text -instr-profile=merged.profdata /Users/runner/install/grass85/lib/*.dylib | tee coverage.libs.json
       - run: /usr/bin/find . -type f \( -name "*.o" -or -name "*.prof*" \)
       - run: /usr/bin/find . -type f \( -name "*.profraw" -or -name "*.profdata" \)
       - run: /usr/bin/find $HOME/install -type f \( -name "*.o" -or -name "*.prof*" \)
