@@ -158,7 +158,9 @@ jobs:
         with:
           name: >-
             profile-data-${{ 'macos-14' }}
-          path: "*.prof*"
+          path: |
+            *.prof*
+            *coverage*
           retention-days: 1
       - name: Create a line-oriented coverage report
         shell: micromamba-shell {0}
