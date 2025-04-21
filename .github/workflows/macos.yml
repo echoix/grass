@@ -98,7 +98,7 @@ jobs:
       - run: ls -la dist.*-*-*/bin
       - run: ls -la "$HOME/install"
       - run: ls -la "$HOME/install/bin"
-      - run: ls -la "$HOME/install/grass*/lib"
+      - run: ls -la "$HOME"/install/grass*/lib
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
         run: |
