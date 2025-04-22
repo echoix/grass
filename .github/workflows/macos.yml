@@ -125,7 +125,9 @@ jobs:
           pytest \
             @.github/workflows/pytest_args_gunittest.txt
       - run: /usr/bin/find . -type f \( -executable -o -name "*.dylib" \)
-      - run: /usr/bin/find "$HOME/install" -type f \( -executable -o -name "*.dylib" \)
+        shell: micromamba-shell {0}
+      - run: find "$HOME/install" -type f \( -executable -o -name "*.dylib" \)
+        shell: micromamba-shell {0}
       - name: Merge and index profile data
         shell: micromamba-shell {0}
         run: llvm-profdata merge -sparse *.profraw -o merged.profdata
