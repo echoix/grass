@@ -115,6 +115,8 @@ jobs:
           pytest \
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_not_parallel.txt
+      - run: /usr/bin/find . -type f \( -executable -o -name "*.dylib" \)
+      - run: /usr/bin/find "$HOME/install" -type f \( -executable -o -name "*.dylib" \)
       - name: Merge and index profile data
         shell: micromamba-shell {0}
         run: llvm-profdata merge -sparse *.profraw -o merged.profdata
