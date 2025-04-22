@@ -184,7 +184,7 @@ jobs:
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
             -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
-          llvm-cov export -check-binary-ids -format=json -instr-profile=merged.profdata $binaries_and_libs \
+          llvm-cov export -check-binary-ids -format=text -instr-profile=merged.profdata $binaries_and_libs \
             | tee coverage.bin_and_dylib.json
       - name: Export coverage report with llvm-cov export (all, lcov)
         shell: micromamba-shell {0}
