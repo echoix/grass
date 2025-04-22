@@ -116,7 +116,7 @@ jobs:
           pytest \
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_not_parallel.txt
-      - run: /usr/bin/find . -type f \( -executable -o -name "*.dylib" \)
+      - run: find . -type f \( -executable -o -name "*.dylib" \)
         shell: micromamba-shell {0}
       - run: find "$HOME/install" -type f \( -executable -o -name "*.dylib" \)
         shell: micromamba-shell {0}
