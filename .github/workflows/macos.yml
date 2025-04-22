@@ -56,6 +56,7 @@ jobs:
       - name: Prepare Conda environment file
         env:
           test_dependencies: |
+            findutils
             ipython
             pytest
             pytest-github-actions-annotate-failures
