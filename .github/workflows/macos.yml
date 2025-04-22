@@ -194,6 +194,26 @@ jobs:
             -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
           llvm-cov export -check-binary-ids -format=lcov -instr-profile=merged.profdata $binaries_and_libs \
             | tee coverage.bin_and_dylib.lcov
+      - name: Export coverage report with llvm-cov export (all, json, with install)
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: |
+          binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+          binaries_and_libs_install=$(find $HOME/install -type f \( -executable -o -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+          llvm-cov export -check-binary-ids -format=text -instr-profile=merged.profdata $binaries_and_libs $binaries_and_libs_install \
+            | tee coverage.bin_and_dylib_install.lcov
+      - name: Export coverage report with llvm-cov export (all, lcov, with install)
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: |
+          binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+          binaries_and_libs_install=$(find $HOME/install -type f \( -executable -o -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+          llvm-cov export -check-binary-ids -format=lcov -instr-profile=merged.profdata $binaries_and_libs $binaries_and_libs_install \
+            | tee coverage.bin_and_dylib_install.lcov
       - name: Make profile data available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
