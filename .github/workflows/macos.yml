@@ -129,6 +129,9 @@ jobs:
         shell: micromamba-shell {0}
       - run: find "$HOME/install" -type f \( -executable -o -name "*.dylib" \)
         shell: micromamba-shell {0}
+      - run: |
+          find "$HOME/install" -type f \( -executable -o -name "*.dylib" \) -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1
+        shell: micromamba-shell {0}
       - name: Merge and index profile data
         shell: micromamba-shell {0}
         run: llvm-profdata merge -sparse *.profraw -o merged.profdata
@@ -179,14 +182,16 @@ jobs:
         shell: micromamba-shell {0}
         continue-on-error: true
         run: |
-          binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \))
+          binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
           llvm-cov export -check-binary-ids -format=json -instr-profile=merged.profdata $binaries_and_libs \
             | tee coverage.bin_and_dylib.json
       - name: Export coverage report with llvm-cov export (all, lcov)
         shell: micromamba-shell {0}
         continue-on-error: true
         run: |
-          binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \))
+          binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
           llvm-cov export -check-binary-ids -format=lcov -instr-profile=merged.profdata $binaries_and_libs \
             | tee coverage.bin_and_dylib.lcov
       - name: Make profile data available
