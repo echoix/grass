@@ -88,8 +88,8 @@ jobs:
           apt-get install -y wget git gawk findutils sudo bash
       - name: Get dependencies
         run: |
-          apt-get update -y
-          apt-get install -y wget git gawk findutils sudo
+          sudo apt-get update -y
+          sudo apt-get install -y wget git gawk findutils sudo
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
       - name: Create installation directory
