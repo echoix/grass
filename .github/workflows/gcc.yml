@@ -59,12 +59,12 @@ jobs:
         run: |
           .github/workflows/build_ubuntu-22.04.sh $HOME/install \
               -isystem/usr/include/gdal -Wpedantic -Werror
-  build2:
+  build-container:
     name: Container ${{ matrix.c }} & ${{ matrix.cpp }}
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.c }}-${{ matrix.cpp }}
+        matrix.c }}-${{ matrix.cpp }}-container
       cancel-in-progress: true
 
     runs-on: ubuntu-24.04
