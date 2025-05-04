@@ -23,27 +23,11 @@ build_program(
   SOURCES
   "${r_mapcalc_SRCS}"
   DEPENDS
+  grass_gis
   grass_btree
   grass_calc
-  grass_gis
-  grass_raster
-  OPTIONAL_DEPENDS
-  Readline::Readline
-  Readline::History
-  Threads::Threads)
+  grass_raster)
 
-build_program(
-  NAME
-  r3.mapcalc
-  SOURCES
-  "${r3_mapcalc_SRCS}"
-  DEPENDS
-  grass_btree
-  grass_calc
-  grass_gis
-  grass_raster
-  grass_raster3d
-  OPTIONAL_DEPENDS
-  Readline::Readline
-  Readline::History
-  Threads::Threads)
+#build_program(NAME r3.mapcalc
+#   SOURCES "${r3_mapcalc_SRCS}"
+#   DEPENDS grass_gis grass_btree grass_calc grass_raster3d)

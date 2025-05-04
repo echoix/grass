@@ -22,5 +22,4 @@ build_program(
   DEPENDS
   grass_gis
   grass_raster
-  grass_display
-  ${LIBM})
+  grass_display)

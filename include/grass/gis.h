@@ -85,7 +85,7 @@ static const char *GRASS_copyright UNUSED = "GRASS GNU GPL licensed Software";
 
 /*! \brief Cross-platform Newline Character */
 #define NEWLINE '\n'
-#ifdef __MINGW32__
+#ifdef _WIN32
 #define HOST_NEWLINE "\r\n"
 #else
 #define HOST_NEWLINE "\n"
@@ -228,7 +228,7 @@ static const char *GRASS_copyright UNUSED = "GRASS GNU GPL licensed Software";
 
 /* Cross-platform Directory Separator Character and null device stuff */
 #define GRASS_DIRSEP '/'
-#ifdef __MINGW32__
+#ifdef _WIN32
 #define HOST_DIRSEP '\\'
 #define G_DEV_NULL  "NUL:"
 #else
@@ -634,7 +634,7 @@ typedef float FCELL;
 #if HAVE_INT64_T
 #include <sys/types.h>
 typedef int64_t grass_int64;
-#elif defined(__MINGW32__)
+#elif defined(_WIN32)
 typedef __int64 grass_int64;
 #elif HAVE_LONG_LONG_INT
 typedef long long int grass_int64;

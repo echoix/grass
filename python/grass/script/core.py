@@ -173,6 +173,8 @@ def get_commands(*, env=None):
         dir_path = os.path.join(gisbase, directory)
         if os.path.exists(dir_path):
             for fname in os.listdir(os.path.join(gisbase, directory)):
+                if fname == "__pycache__":
+                    continue
                 if scripts:  # win32
                     name, ext = os.path.splitext(fname)
                     if ext != ".manifest":

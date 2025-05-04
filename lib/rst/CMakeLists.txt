@@ -1,3 +1,7 @@
+#add_subdirectory(data)
+#add_subdirectory(qtree)
+#add_subdirectory(interp_float)
+
 build_library_in_subdir(
   data
   NAME
@@ -20,24 +24,15 @@ build_library_in_subdir(
   interp_float
   NAME
   grass_interpfl
+  DEFS
+  "-DPOINT2D_C=1"
   DEPENDS
+  GEOS
   grass_gis
-  grass_dbmibase
-  grass_dbmiclient
-  grass_dbmidriver
-  grass_gmath
   grass_raster
   grass_bitmap
   grass_vector
   grass_qtree
   grass_interpdata
-  ${LIBM}
-  OPTIONAL_DEPENDS
-  OPENMP
   HEADERS
   "interpf.h")
-
-target_include_directories(grass_interpfl PUBLIC ${GDAL_INCLUDE_DIR})
-if(TARGET PostgreSQL::PostgreSQL)
-  target_include_directories(grass_interpfl PUBLIC ${PostgreSQL_INCLUDE_DIR})
-endif()

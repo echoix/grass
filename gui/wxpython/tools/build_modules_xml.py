@@ -82,8 +82,8 @@ def get_module_metadata(name):
     except ScriptError as exc:
         sys.stderr.write(
             "Cannot parse interface for module %s. Empty strings"
-            " will be placed instead of description and keywords."
-            " Reason: %s\n" % (name, str(exc))
+            " will be placed instead of description and keywords. "
+            "Reason: %s\n" % (name, str(exc))
         )
         return "", ""
 
