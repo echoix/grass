@@ -92,6 +92,7 @@ jobs:
           sudo apt-get install -y wget git gawk findutils sudo
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
+        shell: bash
       - name: Create installation directory
         run: |
           mkdir $HOME/install
