@@ -13,3 +13,5 @@ grass --version
 grass --tmp-project XY --exec g.version -ergb
 # Detailed Python version info (in one line thanks to echo)
 grass --tmp-project XY --exec bash -c "echo Python: \$(\$GRASS_PYTHON -c 'import sys; print(sys.version)')"
+
+grass --config
