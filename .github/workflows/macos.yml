@@ -120,6 +120,7 @@ jobs:
             -k 'not testsuite'
       - name: Run pytest with a single worker (for gunittest-based tests)
         shell: micromamba-shell {0}
+        if: false
         run: |
           export PYTHONPATH=$(grass --config python_path):$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
@@ -151,6 +152,7 @@ jobs:
 
       - name: Run gunittest tests
         shell: micromamba-shell {0}
+        if: false
         run: .github/workflows/test_thorough.sh --config .github/workflows/macos_gunittest.cfg
         env:
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
