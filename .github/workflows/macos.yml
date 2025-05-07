@@ -107,7 +107,8 @@ jobs:
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
           pytest \
             @.github/workflows/pytest_args_ci.txt \
-            @.github/workflows/pytest_args_parallel.txt
+            @.github/workflows/pytest_args_parallel.txt \
+            -k 'not testsuite'
       - name: Run pytest with a single worker (for tests marked with needs_solo_run)
         shell: micromamba-shell {0}
         run: |
@@ -115,7 +116,15 @@ jobs:
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
           pytest \
             @.github/workflows/pytest_args_ci.txt \
-            @.github/workflows/pytest_args_not_parallel.txt
+            @.github/workflows/pytest_args_not_parallel.txt \
+            -k 'not testsuite'
+      - name: Run pytest with a single worker (for gunittest-based tests)
+        shell: micromamba-shell {0}
+        run: |
+          export PYTHONPATH=$(grass --config python_path):$PYTHONPATH
+          export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          pytest \
+            @.github/workflows/pytest_args_gunittest.txt
       - run: find . -type f \( -executable -o -name "*.dylib" \)
         shell: micromamba-shell {0}
       - run: find "$HOME/install" -type f \( -executable -o -name "*.dylib" \)
@@ -123,6 +132,7 @@ jobs:
       - run: |
           find "$HOME/install" -type f \( -executable -o -name "*.dylib" \) -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1
         shell: micromamba-shell {0}
+
       - name: Cache GRASS Sample Dataset
         id: cached-data
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
