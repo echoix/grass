@@ -217,7 +217,7 @@ jobs:
         continue-on-error: true
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           llvm-cov export -check-binary-ids -format=text -instr-profile=merged.profdata $binaries_and_libs \
             | tee coverage.bin_and_dylib.json
       - name: Export coverage report with llvm-cov export (all, lcov)
@@ -225,7 +225,7 @@ jobs:
         continue-on-error: true
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           llvm-cov export -check-binary-ids -format=lcov -instr-profile=merged.profdata $binaries_and_libs \
             | tee coverage.bin_and_dylib.lcov
       - name: Export coverage report with llvm-cov export (all, json, with install)
@@ -233,9 +233,9 @@ jobs:
         continue-on-error: true
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           binaries_and_libs_install=$(find $HOME/install -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           llvm-cov export -check-binary-ids -format=text -instr-profile=merged.profdata \
             $binaries_and_libs $binaries_and_libs_install \
             | tee coverage.bin_and_dylib_install.lcov
@@ -244,9 +244,9 @@ jobs:
         continue-on-error: true
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           binaries_and_libs_install=$(find $HOME/install -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           llvm-cov export -check-binary-ids -format=lcov -instr-profile=merged.profdata \
             $binaries_and_libs $binaries_and_libs_install \
             | tee coverage.bin_and_dylib_install.lcov
@@ -255,9 +255,9 @@ jobs:
         continue-on-error: true
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           binaries_and_libs_install=$(find $HOME/install -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           llvm-cov report -check-binary-ids -instr-profile=merged.profdata \
             -object $binaries_and_libs $binaries_and_libs_install \
             | tee coverage_report.bin_and_dylib_install.txt
@@ -266,9 +266,9 @@ jobs:
         continue-on-error: true
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           binaries_and_libs_install=$(find $HOME/install -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           llvm-cov show -check-binary-ids -format=html -instr-profile=merged.profdata \
             -object $binaries_and_libs $binaries_and_libs_install \
             -output-dir llvm_coverage
