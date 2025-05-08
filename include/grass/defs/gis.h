@@ -152,6 +152,9 @@ int G_vfaprintf(FILE *, const char *, va_list);
 int G_vsaprintf(char *, const char *, va_list);
 int G_vsnaprintf(char *, size_t, const char *, va_list);
 
+/* strlcat.c */
+size_t G_strlcat(char *, const char *, size_t);
+
 /* strlcpy.c */
 size_t G_strlcpy(char *, const char *, size_t);
 
@@ -482,7 +485,7 @@ void G_ls(const char *, FILE *);
 void G_ls_format(char **, int, int, FILE *);
 
 /* ls_filter.c */
-#ifdef HAVE_REGEX_H
+#if defined(HAVE_REGEX_H) || defined(HAVE_PCRE_H)
 void *G_ls_regex_filter(const char *, int, int, int);
 void *G_ls_glob_filter(const char *, int, int);
 void G_free_ls_filter(void *);
