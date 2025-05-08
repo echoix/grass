@@ -303,7 +303,7 @@ jobs:
           # done
 
           # Clear out any stale profiles.
-          rm -rf $BUILD_DIR/profiles
+          # rm -rf $BUILD_DIR/profiles
 
           # Run the tests.
           #IGNORE_ERRORS_OVERRIDE=1 python llvm-zorg/zorg/jenkins/monorepo_build.py lldb-cmake testlong || echo "Some tests may have failed."
