@@ -331,7 +331,7 @@ jobs:
         continue-on-error: true
         run: |
           binaries_and_libs=$(find . -type f \( -executable -o -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1)
           llvm-cov export -check-binary-ids -format=text -instr-profile=coverage.profdata $binaries_and_libs \
             | tee coverage.bin_and_dylib2.json
       - name: Make profile data available
