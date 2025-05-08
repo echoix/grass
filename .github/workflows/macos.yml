@@ -272,6 +272,60 @@ jobs:
           llvm-cov show -check-binary-ids -format=html -instr-profile=merged.profdata \
             -object $binaries_and_libs $binaries_and_libs_install \
             -output-dir llvm_coverage
+      - name: Use llvm's coverage script
+        shell: micromamba-shell {0}
+        continue-on-error: true
+        run: |
+          WORKSPACE=$GITHUB_WORKSPACE
+          
+          BUILD_DIR=$(pwd)/lldb-build
+          FAST_BUILD_DIR=$(pwd)/clang-build
+          REPORT_DIR=$(pwd)/coverage-reports
+          HOST=$(pwd)/host-compiler/bin
+          LLVM_PROFDATA=$HOST/llvm-profdata
+          LLVM_COV=$HOST/llvm-cov
+          ARTIFACT_PREP_SCRIPT=$WORKSPACE/llvm-project/llvm/utils/prepare-code-coverage-artifact.py
+          
+          BUILD_DIR=$(pwd)/dist*
+          FAST_BUILD_DIR=$(pwd)/clang-build
+          REPORT_DIR=$(pwd)/coverage-reports
+          HOST=
+          LLVM_PROFDATA=llvm-profdata
+          LLVM_COV=llvm-cov
+          ARTIFACT_PREP_SCRIPT=$WORKSPACE/utils/prepare-code-coverage-artifact.py
+
+
+          PROFILES_DIR=$WORKSPACE
+          # FAST_TOOLS=(FileCheck count not)
+          # for TOOL in ${FAST_TOOLS[@]}; do
+          #     cp $FAST_BUILD_DIR/bin/$TOOL $BUILD_DIR/bin/$TOOL
+          # done
+
+          # Clear out any stale profiles.
+          rm -rf $BUILD_DIR/profiles
+
+          # Run the tests.
+          IGNORE_ERRORS_OVERRIDE=1 python llvm-zorg/zorg/jenkins/monorepo_build.py lldb-cmake testlong || echo "Some tests may have failed."
+
+          cd $BUILD_DIR
+          ninja -k 0 check-llvm check-clang || echo "Some tests may have failed."
+          cd -
+
+          # Temporarily exclude debugserver from the reports.
+          # It is a universal binary and the coverage report script
+          # doesn't yet know how to handle it.
+          # rm -rf $BUILD_DIR/bin/debugserver
+
+          #COV_BINARIES=$(find $BUILD_DIR/bin $BUILD_DIR/lib -depth 1 -type f -exec file {} \\; | grep Mach-O | cut -d':' -f1 | grep -vE '/(FileCheck|count|not)$' | xargs)
+          COV_BINARIES=$(find . -type f \( -executable -o -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1 | xargs)
+
+          rm -rf $REPORT_DIR
+          mkdir -p $REPORT_DIR
+          python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV $PROFILES_DIR $REPORT_DIR $COV_BINARIES --unified-report
+          # python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV $BUILD_DIR/profiles $REPORT_DIR $COV_BINARIES --unified-report --restrict $WORKSPACE/llvm-project
+
+          # rm -rf lldb-build/profiles
       - name: Make profile data available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
