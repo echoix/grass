@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     G_add_keyword(_("search path"));
     module->label = _("Modifies/prints the user's current mapset search path.");
     module->description = _("Affects the user's access to data existing "
-                            "under the other mapsets in the current location.");
+                            "under the other mapsets in the current project.");
 
     opt.mapset = G_define_standard_option(G_OPT_M_MAPSET);
     opt.mapset->required = YES;
@@ -105,15 +105,7 @@ int main(int argc, char *argv[])
     opt.op->description = _("Operation to be performed");
     opt.op->answer = "add";
 
-    opt.format = G_define_option();
-    opt.format->key = "format";
-    opt.format->type = TYPE_STRING;
-    opt.format->required = YES;
-    opt.format->label = _("Output format for printing (-l and -p flags)");
-    opt.format->options = "plain,json";
-    opt.format->descriptions = "plain;Configurable plain text output;"
-                               "json;JSON (JavaScript Object Notation);";
-    opt.format->answer = "plain";
+    opt.format = G_define_standard_option(G_OPT_F_FORMAT);
     opt.format->guisection = _("Print");
 
     opt.fsep = G_define_standard_option(G_OPT_F_SEP);
@@ -223,8 +215,8 @@ int main(int argc, char *argv[])
     if (opt.dialog->answer) {
         if (opt.mapset->answer)
             G_warning(_("Option <%s> ignored"), opt.mapset->key);
-        sprintf(path_buf, "%s/gui/wxpython/modules/mapsets_picker.py",
-                G_gisbase());
+        snprintf(path_buf, sizeof(path_buf),
+                 "%s/gui/wxpython/modules/mapsets_picker.py", G_gisbase());
         G_spawn(getenv("GRASS_PYTHON"), "mapsets_picker.py", path_buf, NULL);
         exit(EXIT_SUCCESS);
     }

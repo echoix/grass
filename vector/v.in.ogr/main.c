@@ -897,10 +897,10 @@ int main(int argc, char *argv[])
      * polygons are written to the vector then cleaned and centroids are
      * calculated for all areas in clean vector. Then second pass through finds
      * all centroids in each polygon feature and adds its category to the
-     * centroid. The result is that one centroid may have 0, 1 ore more
-     * categories of one ore more (more input layers) fields. */
+     * centroid. The result is that one centroid may have 0, 1 or more
+     * categories of one or more (more input layers) fields. */
 
-    /* get input column to use for categoy values, create tables */
+    /* get input column to use for category values, create tables */
     OGR_iterator_reset(&OGR_iter);
     key_column = G_malloc(nlayers * sizeof(char *));
     key_idx = G_malloc(nlayers * sizeof(int));
@@ -1145,12 +1145,12 @@ int main(int argc, char *argv[])
 
             /* Create table */
             i = 0;
-            sprintf(buf, "create table %s (%s %s", Fi->table, col_info[i].name,
-                    col_info[i].type);
+            sprintf(buf, "create table %s (\"%s\" %s", Fi->table,
+                    col_info[i].name, col_info[i].type);
             db_set_string(&sql, buf);
 
             for (i = 1; i < ncols_out; i++) {
-                sprintf(buf, ", %s %s", col_info[i].name, col_info[i].type);
+                sprintf(buf, ", \"%s\" %s", col_info[i].name, col_info[i].type);
                 db_append_string(&sql, buf);
             }
 
@@ -1444,7 +1444,7 @@ int main(int argc, char *argv[])
          * centroids were not identical */
         /* Disabled, because the mechanism has changed:
          * at this stage, there are no centroids yet, centroids are calculated
-         * later for output areas, not fo input polygons */
+         * later for output areas, not for input polygons */
         /*
            fprintf ( stderr, separator );
            fprintf ( stderr, "Snap centroids (threshold 0.000001):\n" );
