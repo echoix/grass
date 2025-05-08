@@ -2,7 +2,7 @@ from grass.pygrass.modules.interface.docstring import docstring_property
 from grass.pygrass.modules.interface import read
 
 
-class Flag(object):
+class Flag:
     """The Flag object store all information about a flag of module.
 
     It is possible to set flags of command using this object.
@@ -26,13 +26,11 @@ class Flag(object):
         self.value = False
         diz = read.element2dict(xflag) if xflag is not None else diz
         self.name = diz["name"]
-        self.special = (
-            True if self.name in ("verbose", "overwrite", "quiet", "run") else False
-        )
+        self.special = self.name in {"verbose", "overwrite", "quiet", "run"}
         self.description = diz.get("description", None)
         self.default = diz.get("default", None)
         self.guisection = diz.get("guisection", None)
-        self.suppress_required = True if "suppress_required" in diz else False
+        self.suppress_required = "suppress_required" in diz
 
     def get_bash(self):
         """Return the BASH representation of a flag.
@@ -51,13 +49,11 @@ class Flag(object):
         >>> flag.get_bash()
         '--o'
         """
-        if self.value:
-            if self.special:
-                return "--%s" % self.name[0]
-            else:
-                return "-%s" % self.name
-        else:
+        if not self.value:
             return ""
+        if self.special:
+            return "--%s" % self.name[0]
+        return "-%s" % self.name
 
     def get_python(self):
         """Return the python representation of a flag.

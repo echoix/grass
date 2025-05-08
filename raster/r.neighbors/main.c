@@ -310,7 +310,10 @@ int main(int argc, char *argv[])
                     "threads setting."));
     ncb.threads = 1;
 #endif
-
+    if (ncb.threads > 1 && Rast_mask_is_present()) {
+        G_warning(_("Parallel processing disabled due to active mask."));
+        ncb.threads = 1;
+    }
     if (strcmp(parm.weighting_function->answer, "none") && flag.circle->answer)
         G_fatal_error(_("-%c and %s= are mutually exclusive"), flag.circle->key,
                       parm.weighting_function->answer);
@@ -446,8 +449,9 @@ int main(int argc, char *argv[])
         if (parm.title->answer)
             strcpy(out->title, parm.title->answer);
         else
-            sprintf(out->title, "%dx%d neighborhood: %s of %s", ncb.nsize,
-                    ncb.nsize, menu[method].name, ncb.oldcell);
+            snprintf(out->title, sizeof(out->title),
+                     "%dx%d neighborhood: %s of %s", ncb.nsize, ncb.nsize,
+                     menu[method].name, ncb.oldcell);
     }
 
     /* copy color table? */
