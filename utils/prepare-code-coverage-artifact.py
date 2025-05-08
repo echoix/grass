@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
 
 """Prepare a code coverage artifact.
 
 - Collate raw profiles into one indexed profile.
 - Generate html reports for the given binaries.
 
-Caution: The positional arguments to this script must be specified before any 
+Caution: The positional arguments to this script must be specified before any
 optional arguments, such as --restrict.
 """
 
@@ -140,7 +139,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--only-merge",
         action="store_true",
-        help="Only merge raw profiles together, skip report " "generation",
+        help="Only merge raw profiles together, skip report generation",
     )
     parser.add_argument(
         "--preserve-profiles", help="Do not delete raw profiles", action="store_true"
@@ -173,7 +172,7 @@ if __name__ == "__main__":
 
     if args.use_existing_profdata and args.only_merge:
         print("--use-existing-profdata and --only-merge are incompatible")
-        exit(1)
+        sys.exit(1)
 
     if args.use_existing_profdata:
         profdata_path = args.use_existing_profdata
@@ -184,7 +183,7 @@ if __name__ == "__main__":
 
     if not len(args.binaries):
         print("No binaries specified, no work to do!")
-        exit(1)
+        sys.exit(1)
 
     if not args.only_merge:
         prepare_html_reports(
