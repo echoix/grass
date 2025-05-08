@@ -121,7 +121,7 @@ jobs:
             -k 'not testsuite'
       - name: Run pytest with a single worker (for gunittest-based tests)
         shell: micromamba-shell {0}
-        if: false
+        if: true
         run: |
           export PYTHONPATH=$(grass --config python_path):$PYTHONPATH
           export LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
