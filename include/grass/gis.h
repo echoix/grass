@@ -22,7 +22,6 @@
 /* System include files */
 #include <stdio.h>
 #include <stdarg.h>
-#include <stdbool.h>
 
 /* Grass and local include files */
 #include <grass/config.h>
@@ -76,11 +75,11 @@ static const char *GRASS_copyright UNUSED = "GRASS GNU GPL licensed Software";
  */
 /* and 'false' For historical reasons 'TRUE' and 'FALSE' are still valid. */
 #ifndef TRUE
-#define TRUE true
+#define TRUE 1
 #endif
 
 #ifndef FALSE
-#define FALSE false
+#define FALSE 0
 #endif
 
 /*! \brief Cross-platform Newline Character */
@@ -331,6 +330,7 @@ typedef enum {
     G_OPT_M_REGION,     /*!< saved region */
     G_OPT_M_NULL_VALUE, /*!< null value string */
     G_OPT_M_NPROCS,     /*!< number of threads for parallel computing */
+    G_OPT_M_SEED,       /*!< seed for random number generator */
 
     G_OPT_STDS_INPUT, /*!< old input space time dataset of type strds, str3ds or
                          stvds */

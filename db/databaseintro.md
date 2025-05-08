@@ -36,7 +36,7 @@ a user/password for driver/database to be set with
 
 Attribute data can be imported with [db.in.ogr](db.in.ogr.md) from
 various formats and exported with [db.out.ogr](db.out.ogr.md). To
-internally copy a a full table or selectively parts of it, use
+internally copy a full table or selectively parts of it, use
 [db.copy](db.copy.md).
 
 Further conversion tools:
@@ -111,4 +111,3 @@ original MAPSET to the current MAPSET with [g.copy](g.copy.md).
 - [Introduction into image processing](imageryintro.md)
 - [Introduction into temporal data processing](temporalintro.md)
 - [Projections and spatial transformations](projectionintro.md)
-- [Graphical User Interface](wxguiintro.md)
