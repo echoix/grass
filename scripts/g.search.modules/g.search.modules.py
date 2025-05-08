@@ -65,11 +65,11 @@
 
 import os
 import sys
-
-from grass.script import core as grass
-from grass.exceptions import CalledModuleError
-
 import xml.etree.ElementTree as ET
+from operator import itemgetter
+
+from grass.exceptions import CalledModuleError
+from grass.script import core as grass
 
 COLORIZE = False
 
@@ -182,8 +182,7 @@ def colorize(text, attrs=None, pattern=None):
 
     if pattern:
         return text.replace(pattern, colored(pattern, attrs=attrs))
-    else:
-        return colored(text, attrs=attrs)
+    return colored(text, attrs=attrs)
 
 
 def _search_module(
@@ -199,10 +198,8 @@ def _search_module(
 
     WXGUIDIR = os.path.join(os.getenv("GISBASE"), "gui", "wxpython")
     filename = os.path.join(WXGUIDIR, "xml", "module_items.xml")
-    menudata_file = open(filename, "r")
-
-    menudata = ET.parse(menudata_file)
-    menudata_file.close()
+    with open(filename) as menudata_file:
+        menudata = ET.parse(menudata_file)
 
     items = menudata.findall("module-item")
 
@@ -210,18 +207,16 @@ def _search_module(
     if os.getenv("GRASS_ADDON_BASE"):
         filename_addons = os.path.join(os.getenv("GRASS_ADDON_BASE"), "modules.xml")
         if os.path.isfile(filename_addons):
-            addon_menudata_file = open(filename_addons, "r")
-            addon_menudata = ET.parse(addon_menudata_file)
-            addon_menudata_file.close()
+            with open(filename_addons) as addon_menudata_file:
+                addon_menudata = ET.parse(addon_menudata_file)
             addon_items = addon_menudata.findall("task")
             items.extend(addon_items)
 
     # add system-wide installed addons to modules list
     filename_addons_s = os.path.join(os.getenv("GISBASE"), "modules.xml")
     if os.path.isfile(filename_addons_s):
-        addon_menudata_file_s = open(filename_addons_s, "r")
-        addon_menudata_s = ET.parse(addon_menudata_file_s)
-        addon_menudata_file_s.close()
+        with open(filename_addons_s) as addon_menudata_file_s:
+            addon_menudata_s = ET.parse(addon_menudata_file_s)
         addon_items_s = addon_menudata_s.findall("task")
         items.extend(addon_items_s)
 
@@ -283,7 +278,7 @@ def _search_module(
                 }
             )
 
-    return sorted(found_modules, key=lambda k: k["name"])
+    return sorted(found_modules, key=itemgetter("name"))
 
 
 def _basic_search(pattern, name, description, module_keywords) -> bool:
@@ -311,10 +306,7 @@ def _exact_search(keyword, module_keywords):
     :param module_keywords: comma separated list of keywords
     """
     module_keywords = module_keywords.split(",")
-    for current in module_keywords:
-        if keyword == current:
-            return True
-    return False
+    return keyword in module_keywords
 
 
 def _manpage_search(pattern, name):

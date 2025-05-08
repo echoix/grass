@@ -83,7 +83,7 @@ def main():
     # define classes which needs imports as local
     # for longer definitions, a separate file would be a better option
     class RDigitMapDisplay(FrameMixin, MapPanel):
-        """Map display for wrapping map panel with r.digit mathods and frame methods"""
+        """Map display for wrapping map panel with r.digit methods and frame methods"""
 
         def __init__(
             self,
@@ -154,7 +154,7 @@ def main():
             :param str name: map name
             :param str ltype: layer type
             """
-            mapLayer = self._mapObj.AddLayer(
+            self._mapObj.AddLayer(
                 ltype=ltype,
                 name=name,
                 command=["d.rast", "map={}".format(name)],
@@ -193,10 +193,8 @@ def main():
 
         if not edit_map:
             gs.fatal(
-                _(
-                    "Raster map <{}> not found in current mapset.".format(
-                        options["edit"],
-                    ),
+                _("Raster map <{}> not found in current mapset.").format(
+                    options["edit"],
                 ),
             )
         else:
@@ -209,11 +207,8 @@ def main():
         )["fullname"]
         if not base_map:
             gs.fatal(
-                _(
-                    "Base raster map <{}> not found in "
-                    "current mapset.".format(
-                        options["base"],
-                    ),
+                _("Base raster map <{}> not found in current mapset.").format(
+                    options["base"],
                 ),
             )
         kwargs["base_map"] = base_map
