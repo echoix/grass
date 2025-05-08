@@ -132,8 +132,8 @@ int main(int argc, char **argv)
                     "threads setting."));
     nprocs = 1;
 #endif
-    if (nprocs > 1 && G_find_raster("MASK", G_mapset()) != NULL) {
-        G_warning(_("Parallel processing disabled due to active MASK."));
+    if (nprocs > 1 && Rast_mask_is_present()) {
+        G_warning(_("Parallel processing disabled due to active mask."));
         nprocs = 1;
     }
     out_name = opt2->answer;
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
     else {
         if (*temp == 0)
             strcpy(temp, "unknown filter");
-        sprintf(title, "%s filtered using %s", in_name, temp);
+        snprintf(title, sizeof(title), "%s filtered using %s", in_name, temp);
     }
 
     perform_filter(in_name, out_name, filter, nfilters, repeat);
