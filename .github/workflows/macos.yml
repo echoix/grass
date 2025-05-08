@@ -238,7 +238,7 @@ jobs:
             -exec file {} + | grep -E 'Mach-O|ELF' | cut -d: -f1 | xargs)
           llvm-cov export -check-binary-ids -format=text -instr-profile=merged.profdata \
             $binaries_and_libs $binaries_and_libs_install \
-            | tee coverage.bin_and_dylib_install.lcov
+            | tee coverage.bin_and_dylib_install.json
       - name: Export coverage report with llvm-cov export (all, lcov, with install)
         shell: micromamba-shell {0}
         continue-on-error: true
