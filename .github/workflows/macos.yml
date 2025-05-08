@@ -322,7 +322,7 @@ jobs:
 
           rm -rf $REPORT_DIR
           mkdir -p $REPORT_DIR
-          python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV $PROFILES_DIR $REPORT_DIR $COV_BINARIES --unified-report
+          python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV $PROFILES_DIR $REPORT_DIR $COV_BINARIES --unified-report --restrict $WORKSPACE
           # python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV $BUILD_DIR/profiles $REPORT_DIR $COV_BINARIES --unified-report --restrict $WORKSPACE/llvm-project
 
           # rm -rf lldb-build/profiles
