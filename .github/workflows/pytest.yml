@@ -26,6 +26,7 @@ jobs:
           - "3.9"
           - "3.12"
           - "3.13"
+          - "3.14"
       fail-fast: true
 
     runs-on: ${{ matrix.os }}
@@ -59,6 +60,8 @@ jobs:
           pip install -r .github/workflows/python_requirements.txt
           pip install -r .github/workflows/optional_requirements.txt
           pip install pytest pytest-timeout pytest-github-actions-annotate-failures pytest-xdist pytest-cov
+        env:
+          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
 
       - name: Create installation directory
         run: |
