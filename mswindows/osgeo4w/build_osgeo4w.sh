@@ -26,7 +26,7 @@ mkdir -p mswindows/osgeo4w/lib
 rm -f $OSGEO4W_ROOT_MSYS/lib/libpq.a
 cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/libpq.lib
 
-CFLAGS="$CFLAGS -pipe" \
+CFLAGS="$CFLAGS -pipe -std=gnu17" \
 CXXFLAGS="$CXXFLAGS -pipe" \
 ./configure \
     --bindir=${OSGEO4W_ROOT_MSYS}/bin \
