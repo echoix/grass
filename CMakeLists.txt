@@ -210,8 +210,10 @@ include(copy_python_files_in_subdir)
 include(build_script_in_subdir)
 include(build_gui_in_subdir)
 include(generate_html)
+include(generate_md)
 
 set(MKHTML_PY ${CMAKE_BINARY_DIR}/utils/mkhtml.py)
+set(MKMARKDOWN_PY ${CMAKE_BINARY_DIR}/utils/mkmarkdown.py)
 set(THUMBNAILS_PY ${CMAKE_BINARY_DIR}/utils/thumbnails.py)
 set(HTML2MAN VERSION_NUMBER=${GRASS_VERSION_NUMBER} ${PYTHON_EXECUTABLE}
              ${OUTDIR}/${GRASS_INSTALL_UTILSDIR}/g.html2man.py)
@@ -251,6 +253,7 @@ else()
 endif()
 
 set(NO_HTML_DESCR_TARGETS "g.parser;ximgview;test.raster3d.lib")
+set(NO_MD_DESCR_TARGETS "g.parser;ximgview;test.raster3d.lib")
 
 add_subdirectory(demolocation)
 
@@ -264,6 +267,7 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(python)
 add_subdirectory(utils)
+unset(modules_list CACHE)
 set(modules_list)
 
 set(ALL_SUBDIRS
