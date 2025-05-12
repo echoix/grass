@@ -111,7 +111,7 @@ jobs:
         shell: msys2 {0}
         run: .github/workflows/print_versions.sh
       - name: Setup tmate session
-        uses: mxschmitt/action-tmate/detached@v3
+        uses: mxschmitt/action-tmate@v3
         with:
           limit-access-to-actor: true
       - name: Test executing of the grass command
