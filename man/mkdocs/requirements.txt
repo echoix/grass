@@ -1,6 +1,7 @@
 mkdocs
 mkdocs-glightbox
 mkdocs-material
+mkdocs-minify-html-plugin
 pymdown-extensions
 pyyaml-env-tag
 mkdocs-material[imaging]
