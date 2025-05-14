@@ -30,6 +30,11 @@ jobs:
       fail-fast: false
 
     steps:
+      - name: Set TEMP to D:/Temp
+        run: |
+          mkdir "D:\\Temp"
+          echo "TEMP=D:\\Temp" >> $env:GITHUB_ENV          
+
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
