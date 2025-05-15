@@ -82,6 +82,7 @@ extra_css:
 plugins:
   - search
   - glightbox
+  - minify_html
   - tags:
       tags_name_property: keywords
       tags_slugify_format: "{slug}"
