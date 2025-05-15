@@ -158,6 +158,7 @@ jobs:
         run: .github/workflows/test_thorough.bat '${{env.O4WROOT}}\opt\grass\grass85.bat' '${{env.O4WROOT}}\bin\python3'
         env:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
+          USERPROFILE: "D:\\a\\gdata"
 
       - name: Make HTML test report available
         if: ${{ always() }}
