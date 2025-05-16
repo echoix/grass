@@ -30,6 +30,11 @@ jobs:
       fail-fast: false
 
     steps:
+      - name: Set TEMP to D:/Temp
+        run: |
+          mkdir "D:\\Temp"
+          echo "TEMP=D:\\Temp" >> $env:GITHUB_ENV
+
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
@@ -71,6 +76,7 @@ jobs:
         uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
         with:
+          root: "D:/OSGeo4W"
           package-dir: "D:/OSGeo4W_pkg"
           packages: |
             cairo-devel
@@ -104,6 +110,7 @@ jobs:
       - name: Compile GRASS GIS
         shell: msys2 {0}
         run: |
+          export OSGEO4W_ROOT_MSYS="$(cygpath -u "${{ steps.osgeo4w.outputs.root }}")"
           .github/workflows/build_osgeo4w.sh
 
       - name: Print installed versions
@@ -125,7 +132,7 @@ jobs:
           python -m pip install ^
             pytest ^
             pytest-timeout
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with a single worker
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
@@ -134,7 +141,7 @@ jobs:
           pytest ^
             @.github/workflows/pytest_args_ci.txt ^
             -k "not testsuite"
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
       - name: Run pytest with a single worker (for gunittest-based tests)
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
@@ -145,12 +152,13 @@ jobs:
             @.github/workflows/pytest_args_deselect.txt ^
             @.github/workflows/pytest_args_gunittest.txt ^
             --deselect=lib/init/testsuite/test_grass_tmp_mapset.py
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL D:/OSGeo4W/OSGeo4W.bat "{0}""
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat '${{env.O4WROOT}}\opt\grass\grass85.bat' '${{env.O4WROOT}}\bin\python3'
         env:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
+          USERPROFILE: "D:\\a\\gdata"
 
       - name: Make HTML test report available
         if: ${{ always() }}
