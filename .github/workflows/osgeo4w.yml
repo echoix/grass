@@ -39,7 +39,6 @@ jobs:
       - uses: msys2/setup-msys2@61f9e5e925871ba6c9e3e8da24ede83ea27fa91f # v2.27.0
         with:
           path-type: inherit
-          location: D:\
           update: true
           msystem: MINGW64
           install: >-
@@ -72,7 +71,7 @@ jobs:
         uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
         with:
-          package-dir: "D:/OSGeo4W_pkg"
+          package-dir: "C:/OSGeo4W_pkg"
           packages: |
             cairo-devel
             freetype-devel
