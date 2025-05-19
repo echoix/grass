@@ -14,7 +14,7 @@ set -e
 
 test -d "$1" && cd "$1"
 
-export OSGEO4W_ROOT_MSYS=/c/OSGeo4W
+export OSGEO4W_ROOT_MSYS="${OSGEO4W_ROOT_MSYS:-/c/OSGeo4W}"
 export SRC=$(pwd)
 export UNITTEST=1
 
