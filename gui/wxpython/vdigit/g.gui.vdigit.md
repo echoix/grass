@@ -63,7 +63,7 @@ below for details.
 The vector digitizer allows you to select a "background" vector map.
 Loading it within the digitizer is different from simply loading it via
 *Layer Manager* since direct interaction with single vector features
-then becomes possible.  
+then becomes possible.\
 Vector features may be copied from the background map by "Copy features
 from (background) vector map" tool from the "Additional tools" of the
 digitizer toolbar. Newly digitized vector features are snapped in the

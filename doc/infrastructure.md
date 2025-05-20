@@ -102,6 +102,7 @@ Maintainer: M. Neteler
   - nightly backup at OSGeo.org, bacula
 
 - Web statistics
+
   - Matomo: <https://2022.foss4g.org/matomo/> (not publicly accessible;
     access: Markus Neteler)
   - Selected stats: <https://wiki.osgeo.org/wiki/Project_Stats> and <https://wiki.osgeo.org/wiki/VisibilityStats#Mailing_list_subscribers>

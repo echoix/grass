@@ -2,7 +2,7 @@
 
 ### Developed by
 
-Robert Szczepanek <robert.szczepanek AT uj.edu.pl>
+Robert Szczepanek \<robert.szczepanek AT uj.edu.pl>
 
 ### Source
 

@@ -1,7 +1,7 @@
 ---
 authors:
-    - Corey T. White
-    - GRASS Development Team
+  - Corey T. White
+  - GRASS Development Team
 ---
 
 # Jupyter notebooks introduction
@@ -34,22 +34,17 @@ The following examples will use the [North Carolina dataset](https://grass.osgeo
 
 !!! grass-tip "Importing packages"
     <!-- markdownlint-disable-next-line MD046 -->
-    To import the grass.script and grass.jupyter packages, you need to tell
-    Python where the GRASS Python package is unless you are running a notebook
-    in a GRASS session.
+To import the grass.script and grass.jupyter packages, you need to tell
+Python where the GRASS Python package is unless you are running a notebook
+in a GRASS session.
     <!-- markdownlint-disable-next-line MD046 -->
-    ```python
-    import sys
-    sys.path.append(
-        subprocess.check_output(["grass", "--config", "python_path"], text=True).strip()
-    )
-    ```
+`python     import sys     sys.path.append(         subprocess.check_output(["grass", "--config", "python_path"], text=True).strip()     )     `
 
 !!! grass-tip "Mapsets"
-    If not specified otherwise in the `gj.init` function, the session will
-    start in the default
-    mapset (subproject) of a project. If you need later to switch to a
-    different mapset, you can use the `gj.switch_mapset` function.
+If not specified otherwise in the `gj.init` function, the session will
+start in the default
+mapset (subproject) of a project. If you need later to switch to a
+different mapset, you can use the `gj.switch_mapset` function.
 
 ## Map
 
@@ -74,9 +69,9 @@ m.show()
 
 !!! grass-tip "Order Matters"
     <!-- markdownlint-disable-next-line MD046 -->
-    Map features are added to the map in the order they are called. For example,
-    if you add a raster map and then a vector map, the vector map will be drawn
-    on top of the raster map.
+Map features are added to the map in the order they are called. For example,
+if you add a raster map and then a vector map, the vector map will be drawn
+on top of the raster map.
 
 In addition to displaying raster and vector maps, the `gj.Map` can access many
 of the [display tools](display.md) in GRASS. For a complete list of cartographic
@@ -112,8 +107,8 @@ m.show()
 ```
 
 !!! grass-tip "Map Size and Extent"
-    See [detailed documentation](https://grass.osgeo.org/grass-stable/manuals/libpython/grass.jupyter.html#module-grass.jupyter.map)
-    for changing the map size and geographic extent.
+See [detailed documentation](https://grass.osgeo.org/grass-stable/manuals/libpython/grass.jupyter.html#module-grass.jupyter.map)
+for changing the map size and geographic extent.
 
 ## Interactive map
 

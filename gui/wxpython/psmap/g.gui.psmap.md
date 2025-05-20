@@ -97,7 +97,7 @@ Shows a dialog to add or change current vector maps and their
 properties:
 
 - *Data selection*:
-Select data to draw:
+  Select data to draw:
 
   - *Feature type*:
     Select which data type to draw. In case of point data, points or
@@ -111,7 +111,7 @@ Select data to draw:
     Whether to use mask or not.
 
 - *Colors*:
-Color settings:
+  Color settings:
 
   - *Outline*:
     Select outline color and width in points. In case of lines, outline
@@ -122,7 +122,7 @@ Color settings:
     column.
 
 - *Size and style*:
-Sets size, style, symbols, pattern; depends on data type:
+  Sets size, style, symbols, pattern; depends on data type:
 
   - *Symbology*:
     Available for point data. Choose symbol or EPS file to draw points with.
@@ -152,23 +152,23 @@ Sets size, style, symbols, pattern; depends on data type:
 Add overlays: vector labels, grid (not yet implemented)
 
 - ![icon](icons/layer-label-add.png)  *Add labels*:
-Add vector labels created beforehand by v.label module.
+  Add vector labels created beforehand by v.label module.
 
 ![icon](icons/overlay-add.png)  *Add map elements*:
 Add map elements: legend, scalebar, map info, text
 
 - ![icon](icons/legend-add.png)  *Add legend*:
-Add raster or vector legend or edit their properties.
+  Add raster or vector legend or edit their properties.
 
 - ![icon](icons/map-info.png)  *Add map info*:
-Add information about region, grid and scale or edit map info
-properties.
+  Add information about region, grid and scale or edit map info
+  properties.
 
 - ![icon](icons/scalebar-add.png)  *Add scalebar*:
-Add scalebar or edit its properties.
+  Add scalebar or edit its properties.
 
 - ![icon](icons/text-add.png)  *Add text*:
-Add text label.
+  Add text label.
 
 ![icon](icons/layer-remove.png)  *Remove selected element*:
 Select an object and remove it. Pressing Delete key does the same.

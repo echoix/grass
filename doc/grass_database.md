@@ -16,7 +16,7 @@ contains metadata related to the project such as the coordinate
 reference system. When GRASS is started it connects to a database,
 project and mapset specified by the user.
 
-![example: nc_spm - highway - elevation](grass_database.png)  
+![example: nc_spm - highway - elevation](grass_database.png)\
 *Fig. 1: GRASS Database structure as visible to the user*
 
 ## GRASS Database Directory
@@ -154,7 +154,7 @@ will be created as standard maps.
 After launching GRASS for the first time, the GUI opens in a default
 project `world_latlong_wgs84`. From there a new project can be created.
 
-![GRASS GUI after first start](grass_start.png)  
+![GRASS GUI after first start](grass_start.png)
 
 GRASS can be also started with a given database, project and mapset
 from the command line. For example, the following will start in a given

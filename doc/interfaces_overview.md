@@ -1,7 +1,7 @@
 ---
 authors:
-    - Corey T. White
-    - GRASS Development Team
+  - Corey T. White
+  - GRASS Development Team
 ---
 
 # Interfaces overview

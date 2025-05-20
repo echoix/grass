@@ -14,7 +14,7 @@ grass --tmp-project XY --exec g.version -rge \
 
 ## Requirements
 
-* docker or podman
+- docker or podman
 
 ## Installation
 

@@ -44,7 +44,7 @@ follow these steps:
   animate (e.g. color_map)
 
 ![Animation Tool screenshot](wxGUI_animation_tool.jpg)
-  
+
 ## NOTE
 
 The Animation Tool follows the computational region settings, so please

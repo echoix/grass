@@ -58,8 +58,9 @@ CLT will typically install SDKs in `/Library/Developer/CommandLineTools/SDKs/`,
 while finding Xcode's default SDK can be achieved with e.g.
 `xcrun --show-sdk-path`. (See `man xcrun` for more functions.)
 
-**Note**: Compiling GRASS (C/C++ based) addon extensions with the resulting
-GRASS.app requires CLT installation too.
+> [!NOTE]
+> Compiling GRASS (C/C++ based) addon extensions with the resulting
+> GRASS.app requires CLT installation too.
 
 ## Instructions
 

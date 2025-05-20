@@ -32,7 +32,7 @@ An example for project **imagery60**:
 g.gui.photo2image group=aerial@PERMANENT raster=gs13.1@PERMANENT camera=gscamera order=2 extension=try --o
 ```
 
-![Screenshot of g.gui.photo2image](wxGUI_iphoto2image_frame.jpg)  
+![Screenshot of g.gui.photo2image](wxGUI_iphoto2image_frame.jpg)\
 *Figure: Screenshot of g.gui.photo2image*
 
 ## SEE ALSO
@@ -50,7 +50,7 @@ on GRASS Wiki.
 
 ## AUTHORS
 
-Markus Metz  
-  
-*Based on the Georectifier (GRASS 6.4.0)* by Michael Barton  
+Markus Metz
+
+*Based on the Georectifier (GRASS 6.4.0)* by Michael Barton\
 Martin Landa, Czech Technical University in Prague, Czech Republic

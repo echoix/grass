@@ -2,7 +2,6 @@
 description: wxGUI 3D View Mode
 index: wxGUI
 keywords: [display, GUI, visualization, graphics, raster, vector, raster3d]
-
 ---
 
 # wxGUI 3D View Mode
@@ -235,7 +234,7 @@ attributes:
   opaque. Range from 0 (opaque) to 100 (transparent).
 - **shininess** - raster map or constant value that controls the
   shininess (reflectivity) of the current 3D raster. Range from 0 to
-  100.
+  100\.
 
 In case of 3D raster slice the bottom part of the panel controls the
 slice attributes (which axis is slice parallel to, position of slice
@@ -319,7 +318,7 @@ Please note that with wxGTK port of wxPython (Linux systems), a problem
 might appear during wxNviz initialization (nothing is rendered at all)
 or when rendering vectors (bad order of rendering surfaces and vectors).
 If you encounter such problems, try to change a depth buffer number in
-*wxGUI Settings \> Preferences \> Map Display \> Advanced* (possible
+*wxGUI Settings > Preferences > Map Display > Advanced* (possible
 numbers are 0, 16, 24, 32). It is currently not possible to
 automatically determine the right number which is working for your
 computer.
@@ -342,7 +341,7 @@ Command-line module *[m.nviz.image](m.nviz.image.md)*.
 Code 2008](https://grasswiki.osgeo.org/wiki/WxNviz_GSoC_2008) (mentor:
 Michael Barton) and
 [2010](https://grasswiki.osgeo.org/wiki/WxNviz_GSoC_2010) (mentor:
-Helena Mitasova)  
+Helena Mitasova)\
 Anna Kratochvilova, [Google Summer of Code
 2011](https://grasswiki.osgeo.org/wiki/WxNviz_GSoC_2011) (mentor: Martin
 Landa)

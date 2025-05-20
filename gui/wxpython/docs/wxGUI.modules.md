@@ -37,7 +37,7 @@ depends on the platform and some styles might be more suitable for
 different platforms.
 
 ![dialog style left](wxGUI_modules_style_left.png)
-![dialog style top](wxGUI_modules_style_top.png)  
+![dialog style top](wxGUI_modules_style_top.png)\
 *Figure: Example of style "left" and "top" on Ubuntu.*
 
 ### Flags
@@ -90,7 +90,7 @@ For raster, vector or 3D raster input, there is a special widget which
 after clicking on the arrow to the right pops up a list of existing maps
 from different mapsets. Selecting a map from the popup list will add it
 to the entry field. In case multiple maps can be specified (denoted by
-*\[multiple\]* label), selecting a map from the popup list will append
+*[multiple]* label), selecting a map from the popup list will append
 the map names with comma in between.
 
 ![widget for selecting maps](wxGUI_modules_widget_selection.png)
@@ -170,8 +170,8 @@ count,variance,diversity,interspersion,quart1,quart3,
 
 ## AUTHORS
 
-GRASS Development Team  
+GRASS Development Team\
 manual by Anna Petrasova, OSGeoREL, Faculty of Civil Engineering, Czech
-Technical University in Prague  
+Technical University in Prague\
 Vaclav Petras, OSGeoREL, Faculty of Civil Engineering, Czech Technical
 University in Prague

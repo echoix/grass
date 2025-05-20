@@ -47,7 +47,7 @@ and [v.unpack](v.unpack.md) modules.
 
 The naming convention for vector maps requires that map names start with
 a character, not a number (map name scheme:
-\[A-Za-z\]\[A-Za-z0-9\_\]\*).
+[A-Za-z][A-Za-z0-9\_]\*).
 
 ## Metadata
 
@@ -136,11 +136,11 @@ GRASS vectors can be linked to one or many database management systems
 attribute management, while the *v.db.\** set of commands operates on a
 table linked to a vector map.
 
-- **Categories**  
+- **Categories**\
   Categories are used to categorize vector objects and link attribute(s)
   to each category. Each vector object can have zero, one or several
   categories. Category numbers do not have to be unique for each vector
-  object, several vector objects can share the same category.  
+  object, several vector objects can share the same category.\
   Category numbers are stored both within the geometry file for each
   vector object and within the (optional) attribute table(s) (usually
   the "cat" column). It is not required that attribute table(s) hold an
@@ -149,9 +149,9 @@ table linked to a vector map.
   that e.g. an attribute table can be populated first and then vector
   objects can be added to the geometry file with category numbers. Using
   [v.category](v.category.md), category numbers can be printed or
-  maintained.  
+  maintained.
 
-- **Layers**  
+- **Layers**\
   Layers are a characteristic of the vector feature (geometries) file.
   As mentioned above, categories allow the user to give either a unique
   id to each feature or to group similar features by giving them all the
@@ -159,7 +159,7 @@ table linked to a vector map.
   features in a same map. The practical benefit of this system is that
   it allows placement of thematically distinct but topologically related
   objects into a single map, or for linking time series attribute data
-  to a series of locations that did not change over time.  
+  to a series of locations that did not change over time.\
   For example, one can have roads with one layer containing the unique
   id of each road and another layer with ids for specific routes that
   one might take, combining several roads by assigning the same id.
@@ -174,22 +174,23 @@ table linked to a vector map.
   paths will always depend on the field boundaries (and might change if
   these boundaries change) then keeping them in the same map can be
   helpful. Trying to reproduce the same functionality through attributes
-  is much more complicated.  
+  is much more complicated.\
   If a vector object has zero categories in a layer, then it does not
   appear in that layer. In this fashion some vector objects may appear
   in some layers but not in others. Taking the example of the fields and
   paths, only some boundaries, but not all, might have a category value
   in layer 2. With *option=report*, [v.category](v.category.md) lists
-  available categories in each layer.  
+  available categories in each layer.\
   Optionally, each layer can (but does not have to) be linked to an
   attribute table. The link is made by the category values of the
   features in that layer which have to have corresponding entries in the
   specified key column of the table. Using
   [v.db.connect](v.db.connect.md) connections between layers and
-  attribute tables can be listed or maintained.  
+  attribute tables can be listed or maintained.\
   In most modules, the first layer (*layer=1*) is active by default.
   Using *layer=-1* one can access all layers.
-- **SQL support**  
+
+- **SQL support**\
   By default, SQLite is used as the attribute database. Also other
   supported DBMS backends (such as SQLite, PostgreSQL, MySQL etc.)
   provide full SQL support as the SQL statements are sent directly to
@@ -303,7 +304,7 @@ algorithms are implemented:
   [v.net.timetable](v.net.timetable.md)
 - Traveling salesman (round trip): [v.net.salesman](v.net.salesman.md)
 
-Vector directions are defined by the digitizing direction (a--\>--b).
+Vector directions are defined by the digitizing direction (a-->--b).
 Both directions are supported, most network modules provide parameters
 to assign attribute columns to the forward and backward direction.
 
@@ -340,7 +341,7 @@ data are post-processed with
 [v.lidar.correction](v.lidar.correction.md). Finally, the DTM and DSM
 are generated with [v.surf.bspline](v.surf.bspline.md) (DTM: uses the
 'v.lidar.correction' output; DSM: uses last return output from outlier
-detection).  
+detection).\
 In addition, [v.decimate](v.decimate.md) can be used to decimates a
 point cloud.
 

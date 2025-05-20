@@ -2,7 +2,6 @@
 description: wxGUI Supervised Classification Tool
 index: topic_GUI|GUI
 keywords: [display, GUI, imagery, classification, supervised classification]
-
 ---
 
 # wxGUI Supervised Classification Tool
@@ -73,6 +72,6 @@ page.
 ## AUTHORS
 
 Anna Kratochvilova, [Czech Technical University in
-Prague](https://www.cvut.cz), Czech Republic  
+Prague](https://www.cvut.cz), Czech Republic\
 Vaclav Petras, [Czech Technical University in
 Prague](https://www.cvut.cz), Czech Republic

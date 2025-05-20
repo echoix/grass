@@ -28,7 +28,7 @@ Map Swipe allows you to:
 - change the appearance of cursor in 'mirror' mode (available in Map
   Swipe settings)
 
-![Map swipe screenshot](mapswipe_tsunami.jpg)  
+![Map swipe screenshot](mapswipe_tsunami.jpg)\
 *Figure: Pre and post disaster images of the tsunami in Japan in 2011. The upper
 MODIS image taken on February 26, 2011, shows the coastline under normal
 conditions while the lower MODIS image on March 13, 2011, shows a clear
