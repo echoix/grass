@@ -1,5 +1,5 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
-* text=auto
+* text=lf
 
 # TODO: Enable the following with a related change in .editorconfig:
 # *.csv      text eol=crlf
