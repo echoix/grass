@@ -28,8 +28,15 @@ jobs:
         os:
           - windows-2019
       fail-fast: false
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
+      - name: Create URL to the run output
+        shell: bash
+        id: vars
+        run: echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> $GITHUB_OUTPUT
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
@@ -105,6 +112,35 @@ jobs:
         shell: msys2 {0}
         run: |
           .github/workflows/build_osgeo4w.sh
+
+      - name: Create .pot files (containing original messages)
+        shell: msys2 {0}
+        run: cd locale && make pot
+      - name: Merge new messages
+        shell: msys2 {0}
+        run: cd locale && make update-po
+      - name: Verify the .po files
+        shell: msys2 {0}
+        run: cd locale && make verify
+      - name: Double check if files are modified
+        run: git status --ignored
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          commit-message: "locale: Update translation files (windows)"
+          branch: periodic/update-i18n-windows
+          title: "locale: Update translation files"
+          body: |
+            This updates the .pot template files, as well as all language-specific .po files.
+            [Workflow run summary](${{ steps.vars.outputs.run-url }})
+
+            Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
       - name: Print installed versions
         if: always()
