@@ -90,6 +90,37 @@ jobs:
         shell: micromamba-shell {0}
         run: source ./.github/workflows/print_versions.sh
 
+      - name: Create .pot files (containing original messages)
+        shell: micromamba-shell {0}
+        run: cd locale && make pot
+      - name: Merge new messages
+        shell: micromamba-shell {0}
+        run: cd locale && make update-po
+      - name: Verify the .po files
+        shell: micromamba-shell {0}
+        run: cd locale && make verify
+      - name: Double check if files are modified
+        shell: micromamba-shell {0}
+        run: git status --ignored
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          commit-message: "locale: Update translation files (macOS)"
+          branch: periodic/update-i18n-macOS
+          title: "locale: Update translation files"
+          body: |
+            This updates the .pot template files, as well as all language-specific .po files.
+            [Workflow run summary](${{ steps.vars.outputs.run-url }})
+
+            Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
+      - name: Check outputs
+        shell: micromamba-shell {0}
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
         run: |
