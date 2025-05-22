@@ -82,6 +82,7 @@ jobs:
             --without-opengl \
             --without-fftw \
             --without-cairo \
+            --without-freetype \
           && echo "" 
       - name: Create .pot files (containing original messages)
         run: cd locale && make pot
