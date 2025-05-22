@@ -37,19 +37,11 @@ WXPY_POTFILES = find ../gui/wxpython -name '*.py' | xargs grep -l "_(\"\|n_(\""
 #For Python script module messages
 MOD_PYFILES = find ../scripts -name '*.py' | xargs grep -l "_(\"\|n_(\""
 
-# XGETTEXT_ARGS = --copyright-holder='GRASS Development Team' --no-wrap --sort-by-file --package-name='GRASS' --package-version='$(GRASS_VERSION_MAJOR)'
 XGETTEXT_ARGS = --no-wrap --sort-by-file
-# MSGMERGE_ARGS = --no-wrap --sort-by-file --previous --update
 MSGMERGE_ARGS = --no-wrap --sort-by-file --previous
 MSGCONV_ARGS = --no-wrap --sort-by-file
-# MSGCONV_ARGS = --sort-by-file
-# MSGUNIQ_ARGS = --repeated
-# MSGUNIQ_ARGS = --sort-by-file 
-# MSGUNIQ_ARGS = --no-wrap
 MSGUNIQ_ARGS = --no-wrap --sort-by-file
-# MSGUNIQ_PO_ARGS = --no-wrap --sort-by-file
 MSGUNIQ_PO_ARGS = --no-wrap --sort-by-file
-# MSGUNIQ_PO_ARGS = --unique
 
 define po_stats
 GISBASE="$(RUN_GISBASE)" $(PYTHON) ./grass_po_stats.py
