@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grasslibs_ru\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 19:39+0000\n"
+"POT-Creation-Date: 2025-05-22 22:07+0000\n"
 "PO-Revision-Date: 2023-06-28 19:08+0000\n"
 "Last-Translator: Sergey Kazorin <kazorin@basealt.ru>\n"
 "Language-Team: Russian <https://weblate.osgeo.org/projects/grass-gis/grasslibs/ru/>\n"
@@ -6724,9 +6724,11 @@ msgstr[3] "Один примитив зарегистрирован"
 
 #: ../lib/vector/Vlib/build_nat.c:122 ../lib/vector/Vlib/build_sfa.c:381
 #: ../lib/vector/Vlib/build_sfa.c:668
-#, c-format
+#, fuzzy, c-format
+#| msgid "One vertex registered"
+#| msgid_plural "%<PRId64> vertices registered"
 msgid "One vertex registered"
-msgid_plural "%<PRId64> vertices registered"
+msgid_plural "%d vertices registered"
 msgstr[0] "%<PRId64> вершина зарегистрирована"
 msgstr[1] "%<PRId64> вершины зарегистрировано"
 msgstr[2] "%<PRId64> вершин зарегистрировано"
