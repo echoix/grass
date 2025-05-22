@@ -133,7 +133,7 @@ jobs:
         with:
           commit-message: "locale: Update translation files (windows)"
           branch: periodic/update-i18n-windows
-          title: "locale: Update translation files"
+          title: "locale: Update translation files (windows)"
           body: |
             This updates the .pot template files, as well as all language-specific .po files.
             [Workflow run summary](${{ steps.vars.outputs.run-url }})
