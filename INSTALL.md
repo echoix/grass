@@ -29,10 +29,10 @@ directory.
 Installation order:
 
 1. PROJ
-2. GDAL/OGR (compiled without GRASS support)
-3. optionally: databases such as PostgreSQL, MySQL, SQLite
-4. GRASS GIS
-5. optionally: GDAL-OGR-GRASS plugin
+1. GDAL/OGR (compiled without GRASS support)
+1. optionally: databases such as PostgreSQL, MySQL, SQLite
+1. GRASS GIS
+1. optionally: GDAL-OGR-GRASS plugin
 
 ## (A) SOURCE CODE DISTRIBUTION
 

@@ -24,7 +24,7 @@ Data Catalog allows you to:
 Note that projects are called *locations* at some places and in old
 documentation.
 
-![data catalog screenshot](datacatalog.png)  
+![data catalog screenshot](datacatalog.png)\
 *Figure: Data Catalog integrated in wxGUI.*
 
 ## NOTES
@@ -49,6 +49,6 @@ currently not synchronized.
 
 ## AUTHORS
 
-Anna Petrasova, NCSU GeoForAll Laboratory  
+Anna Petrasova, NCSU GeoForAll Laboratory\
 Tereza Fiedlerova, OSGeoREL, Czech Technical University in Prague, Czech
 Republic

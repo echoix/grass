@@ -76,10 +76,10 @@ along the edge of the map itself.
 As a general rule in GRASS:
 
 1. Raster/imagery output maps have their bounds and resolution equal to
-    those of the current region.
-2. Raster/imagery input maps are automatically cropped/padded and
-    rescaled (using nearest-neighbor resampling) to match the current
-    region.
+   those of the current region.
+1. Raster/imagery input maps are automatically cropped/padded and
+   rescaled (using nearest-neighbor resampling) to match the current
+   region.
 
 ## Imagery import
 
@@ -109,7 +109,7 @@ signature files of imagery classification tools. Therefore, signature
 files of one imagery or raster group can be used to classify a different
 group with identical semantic labels.
 
-![GRASS GIS band references scheme](band_references_scheme.png)  
+![GRASS GIS band references scheme](band_references_scheme.png)\
 *New enhanced classification workflow involving semantic labels.*
 
 With [r.support](r.support.md) any sort of semantic label the user

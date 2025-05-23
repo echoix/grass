@@ -135,7 +135,7 @@ SGI IRIX users may go here to download precompiled libraries etc.:
 MacOSX users may go here to download precompiled libraries etc.:
 [https://fink.sourceforge.net](https://fink.sourceforge.net)
 
----
+______________________________________________________________________
 
 © _GRASS Development Team 1997-2025_
 

@@ -196,6 +196,6 @@ should not be edited.
 ## AUTHORS
 
 Anna Petrasova, OSGeoREL, Faculty of Civil Engineering, Czech Technical
-University in Prague  
+University in Prague\
 Vaclav Petras, OSGeoREL, Faculty of Civil Engineering, Czech Technical
 University in Prague

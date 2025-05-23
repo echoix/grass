@@ -15,7 +15,7 @@ Supported features:
 
 - temporal datasets with interval/point and absolute/relative time
 - 2D plots - temporal extent
-- 3D plots - spatio-temporal extent (matplotlib \>= 1.0.0)
+- 3D plots - spatio-temporal extent (matplotlib >= 1.0.0)
 - pop-up annotations with basic metadata
 
 ![Timeline Tool screenshot](timeline_2D.jpg)

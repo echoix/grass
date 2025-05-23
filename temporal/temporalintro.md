@@ -67,7 +67,7 @@ or intervals) for each map in the input file. With
 [t.unregister](t.unregister.md) maps can be unregistered from space-time
 datasets and from the temporal database.
 
-**Important**  
+**Important**\
 *Use only temporal commands like [t.register](t.register.md) to attach a
 time stamp to raster, 3D raster and vector maps. The commands
 r.timestamp, r3.timestamp and v.timestamp should not be used because
@@ -251,7 +251,7 @@ their raster pendants, but with 3D raster map layers:
   processing](https://grasswiki.osgeo.org/wiki/Temporal_data_processing)
   (Wiki)
 - Vaclav Petras, Anna Petrasova, Helena Mitasova, Markus Neteler,
-  **FOSS4G 2014 workshop**:  
+  **FOSS4G 2014 workshop**:\
   [Spatio-temporal data handling and visualization in GRASS
   GIS](http://fatra.cnr.ncsu.edu/temporal-grass-workshop/)
 - [GEOSTAT 2012 GRASS

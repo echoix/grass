@@ -22,11 +22,11 @@ bounds of all cells within the map.
 As a general rule in GRASS GIS:
 
 1. Raster output maps have their bounds and resolution equal to those
-    of the current computational region.
-2. Raster input maps are automatically cropped/padded and rescaled
-    (using nearest-neighbour resampling) to match the current region.
-3. Processing NULL (no data) values produces NULL values.
-4. Input raster maps are automatically masked if a raster mask is active,
+   of the current computational region.
+1. Raster input maps are automatically cropped/padded and rescaled
+   (using nearest-neighbour resampling) to match the current region.
+1. Processing NULL (no data) values produces NULL values.
+1. Input raster maps are automatically masked if a raster mask is active,
    The mask is managed by the [r.mask](r.mask.md) tool, and
    it is represented by a raster map called `MASK` by default.
    Unless specified otherwise, the raster mask is only applied
@@ -120,7 +120,7 @@ raster maps (continuous data) to a different resolution:
   neighbor, bilinear, and bicubic method: **method=nearest** uses the
   same algorithm as [r.resample](r.resample.md), but not the same code,
   so it may not produce identical results in cases which are decided by
-  the rounding of floating-point numbers.  
+  the rounding of floating-point numbers.\
   For [r.resamp.interp](r.resamp.interp.md) **method=bilinear** and
   **method=bicubic**, the raster values are treated as samples at each
   raster cell's centre, defining a piecewise-continuous surface. The
@@ -138,7 +138,7 @@ raster maps (continuous data) to a different resolution:
 - For [r.resamp.stats](r.resamp.stats.md) without **-w**, the value of
   each region cell is the chosen aggregate of the values from all of the
   raster cells whose centres fall within the bounds of the region
-  cell.  
+  cell.\
   With **-w**, the samples are weighted according to the proportion of
   the raster cell which falls within the bounds of the region cell, so
   the result is normally unaffected by rounding error (a minuscule
@@ -289,29 +289,29 @@ Floating point (FCELL, DCELL) raster maps never use RLE compression;
 they are either compressed with ZLIB, LZ4, BZIP2, ZSTD or are
 uncompressed.
 
-**RLE**  
+**RLE**\
 **DEPRECATED** Run-Length Encoding, poor compression ratio but fast. It
 is kept for backwards compatibility to read raster maps created with
 GRASS 6. It is only used for raster maps of type CELL. FCELL and DCELL
 maps are never and have never been compressed with RLE.
 
-**ZLIB**  
+**ZLIB**\
 ZLIB's deflate is the default compression method for all raster maps, if
 ZSTD is not available. GRASS GIS 8 uses by default 1 as ZLIB compression
 level which is the best compromise between speed and compression ratio,
 also when compared to other available compression methods. Valid levels
-are in the range \[1, 9\] and can be set with the environment variable
+are in the range [1, 9] and can be set with the environment variable
 `GRASS_ZLIB_LEVEL`.
 
-**LZ4**  
+**LZ4**\
 LZ4 is a very fast compression method, about as fast as no compression.
 Decompression is also very fast. The compression ratio is generally
 higher than for RLE but worse than for ZLIB. LZ4 is recommended if disk
 space is not a limiting factor.
 
-**BZIP2**  
+**BZIP2**\
 BZIP2 can provide compression ratios much higher than the other methods,
-but only for large raster maps (\> 10000 columns). For large raster
+but only for large raster maps (> 10000 columns). For large raster
 maps, disk space consumption can be reduced by 30 - 50% when using BZIP2
 instead of ZLIB's deflate. BZIP2 is the slowest compression and
 decompression method. However, if reading from / writing to a storage
@@ -319,7 +319,7 @@ device is the limiting factor, BZIP2 compression can speed up raster map
 processing. Be aware that for smaller raster maps, BZIP2 compression
 ratio can be worse than other compression methods.
 
-**ZSTD**  
+**ZSTD**\
 ZSTD (Zstandard) provides compression ratios higher than ZLIB but lower
 than BZIP2 (for large data). ZSTD compresses up to 4x faster than ZLIB,
 and usually decompresses 6x faster than ZLIB. ZSTD is the default

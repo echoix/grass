@@ -9,7 +9,7 @@ index: topic_GUI|GUI
 
 The **GCP Manager** is a *[wxGUI](wxGUI.md)* extension which allows the
 user to create, edit, and manage Ground Control Points. It is available
-from the menu "File \| Manage Ground Control Points".
+from the menu "File | Manage Ground Control Points".
 
 The **GCP Manager** provides an interactive graphical interface to
 manage and analyze Ground Control Points. A backup copy of the initial
@@ -35,7 +35,7 @@ The GCP Manager is structured into three panels:
 ### Components of the GCP Manager
 
 ![GCP Manager](wxGUI_gcp_frame.jpg)
-  
+
 #### Toolbars
 
 Two toolbars are provided with the GCP Manager, one for managing the map
@@ -117,15 +117,15 @@ display region extents (both size and location of area displayed).
 
 ![icon](icons/zoom-more.png)  *Adjust display zoom*:
 Source and target display are adjusted by using the current GCPs for
-coordinate transformation:  
-  
+coordinate transformation:
+
 - *Adjust source display to target display*:
-The extents of the source display are adjusted to the current extents of
-the target display.
+  The extents of the source display are adjusted to the current extents of
+  the target display.
 
 - *Adjust target display to source display*:
-The extents of the source display are adjusted to the current extents of
-the target display.
+  The extents of the source display are adjusted to the current extents of
+  the target display.
 
 *Set active map canvas*:
 Sets the currently active map canvas (source or target). Click to set
@@ -142,65 +142,65 @@ Zoom to the extent of the currently displayed map in the active map
 canvas (source or target).
 
 ![icon](icons/settings.png)  *Settings*:
-Shows a settings dialog for GCP management and display:  
-  
-- *Symbology*:
-Settings for map and GCP display:  
-  
-  - *Highlight highest RMS error only*:
-Only the GCP with the highest RMS error will be displayed in a different
-colour, both in the list of GCPs and the GCP Map Display.
+Shows a settings dialog for GCP management and display:
 
-  - *Factor for RMS error threshold = M + SD \* factor:*
-All GCPs with an RMS error larger than mean RMS + RMS standard deviation
-\* this factor will be displayed in a different colour, both in the list
-of GCPs and the GCP Map Display. As a rule of thumb, GCPs with an RMS
-error larger than *M + SD \* 2* are most probably wrong. GCPs with an
-RMS error larger than *M + SD \* 1* are worth closer inspection. This
-option is only available if *Highlight highest RMS error only* is
-unchecked.
+- *Symbology*:
+  Settings for map and GCP display:
+
+  - *Highlight highest RMS error only*:
+    Only the GCP with the highest RMS error will be displayed in a different
+    colour, both in the list of GCPs and the GCP Map Display.
+
+  - *Factor for RMS error threshold = M + SD * factor:*
+    All GCPs with an RMS error larger than mean RMS + RMS standard deviation
+    \* this factor will be displayed in a different colour, both in the list
+    of GCPs and the GCP Map Display. As a rule of thumb, GCPs with an RMS
+    error larger than *M + SD * 2* are most probably wrong. GCPs with an
+    RMS error larger than *M + SD * 1* are worth closer inspection. This
+    option is only available if *Highlight highest RMS error only* is
+    unchecked.
 
   - *Color*:
-Set the color for GCPs on the GCP Map Display.
+    Set the color for GCPs on the GCP Map Display.
 
   - *Color for high RMS error*:
-Set the color for GCPs with a high RMS error on the GCP Map Display.
+    Set the color for GCPs with a high RMS error on the GCP Map Display.
 
   - *Color for selected GCP*:
-Set the color for the currently selected GCP on the GCP Map Display.
+    Set the color for the currently selected GCP on the GCP Map Display.
 
   - *Show unused GCPs*:
-If unchecked, unused GCPs will not be shown on the GCP Map Display.
+    If unchecked, unused GCPs will not be shown on the GCP Map Display.
 
   - *Color for unused GCPs*:
-Set the color for unused GCPs on the GCP Map Display.
+    Set the color for unused GCPs on the GCP Map Display.
 
   - *Symbol size*:
-Set the symbol size for GCPs on the GCP Map Display.
+    Set the symbol size for GCPs on the GCP Map Display.
 
   - *Line width*:
-Set the line width for GCPs on the GCP Map Display.
+    Set the line width for GCPs on the GCP Map Display.
 
   - *Select source map to display*:
-Select a source map for the left pane of the GCP Map Display.
+    Select a source map for the left pane of the GCP Map Display.
 
   - *Select target map to display*:
-Select a target map for the right pane of the GCP Map Display.
+    Select a target map for the right pane of the GCP Map Display.
 
 - *Rectification*:
-Settings for georectification:  
-  
+  Settings for georectification:
+
   - *Select rectification method*:
-Set the polynomial order for georectification. This order will also be
-used for RMS error calculation.
+    Set the polynomial order for georectification. This order will also be
+    used for RMS error calculation.
 
   - *Clip to computational region in target project*:
-Clip raster maps to the current computational region in the target
-project when georectifying.
+    Clip raster maps to the current computational region in the target
+    project when georectifying.
 
   - *Extension for output maps*:
-Change the extension for output map names when doing the actual
-georectification.
+    Change the extension for output map names when doing the actual
+    georectification.
 
 ![icon](icons/help.png)  *Show Help*:
 Show help page for the GCP Manager.
@@ -262,7 +262,7 @@ on GRASS Wiki.
 
 ## AUTHORS
 
-Markus Metz  
-  
-*Based on the Georectifier (GRASS 6.4.0)* by Michael Barton  
+Markus Metz
+
+*Based on the Georectifier (GRASS 6.4.0)* by Michael Barton\
 Martin Landa, Czech Technical University in Prague, Czech Republic

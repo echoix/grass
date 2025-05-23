@@ -15,7 +15,7 @@ launched from Layer Manager menu *Vector → Network analysis → Vector
 network analysis tool* or from Map Display toolbar *Analyse map → Vector
 network analysis tool* ![icon](icons/vector-tools.png).
 
-![Vector Network Analysis Tool](wxGUI_vnet.jpg)  
+![Vector Network Analysis Tool](wxGUI_vnet.jpg)\
 *Subsets for nearest centers ([v.net.alloc](v.net.alloc.md))*
 
 Vector Network Analysis Tool currently allows you to:
@@ -39,19 +39,19 @@ Vector Network Analysis Tool currently allows you to:
 
 The tool is split into tabs. Every tab represents some functionality:
 
-**Parameters** tab  
+**Parameters** tab\
 It is used for setting vector map and it's layer on which analysis will
 be done. Also it is possible to set columns with cost values from
 attribute table connected to particular layer.
 
-**Points** tab  
+**Points** tab\
 It manages points, which are used for analysis.
 
-**Output** tab  
+**Output** tab\
 There is a output console, which shows information about running
 analysis.
 
-**Input tables** tab  
+**Input tables** tab\
 When existing vector map and it's existing layers are set in
 *Parameters* tab, this tab is dynamically added. It shows attribute
 tables of node and arc layers, which were chosen for analysis. It is
@@ -61,7 +61,7 @@ right mouse button click on column label. Then from pop-up menu choose
 that by right mouse button click on the added column label can be chosen
 item *Field calculator*. This tool computes cost values.
 
-**Result tables** tab  
+**Result tables** tab\
 The result of vector network analysis is always a vector map. Some
 vector network analysis results can also include attribute tables. If
 such a table is connected to the result map, this tab is shown and with

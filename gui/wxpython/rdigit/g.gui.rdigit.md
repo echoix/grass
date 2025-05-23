@@ -24,19 +24,19 @@ the Map Display toolbar (from the combo box on the right).
 The typical workflow includes these steps:
 
 1. Set computational region as needed.
-2. Switch to Raster Digitizer and select a map to create. Select either
-    a new raster or create a new raster from existing raster, also
-    select raster type (CELL, FCELL, DCELL)
-3. Specify category value and width *before* drawing a feature
-4. Specify digitizing tool (area, line, point)
-5. Start digitizing and when you want to finish area or line, *use
-    right click*
-6. Change color of temporary overlay depending on your needs
-7. Set different category and repeat
-8. At any point you can use *Undo* or *Save*
-9. If existing raster is used for the new raster, digitized areas will
-    respect the color table, but you can always set different color
-    table.
+1. Switch to Raster Digitizer and select a map to create. Select either
+   a new raster or create a new raster from existing raster, also
+   select raster type (CELL, FCELL, DCELL)
+1. Specify category value and width *before* drawing a feature
+1. Specify digitizing tool (area, line, point)
+1. Start digitizing and when you want to finish area or line, *use
+   right click*
+1. Change color of temporary overlay depending on your needs
+1. Set different category and repeat
+1. At any point you can use *Undo* or *Save*
+1. If existing raster is used for the new raster, digitized areas will
+   respect the color table, but you can always set different color
+   table.
 
 ## NOTES
 
@@ -64,7 +64,7 @@ r.sun elevation=elev_edited aspect=aspect slope=slope beam_rad=beam day=172 time
 ![Raster digitizer example step 2](wxGUI_rdigit_step2.png)
 ![Raster digitizer example step 3](wxGUI_rdigit_step3.png)
 ![Raster digitizer example step 4](wxGUI_rdigit_step4.png)
-![Raster digitizer example step 5](wxGUI_rdigit_step5.png)  
+![Raster digitizer example step 5](wxGUI_rdigit_step5.png)\
 *Figure: Steps to digitize new buildings on elev_lid792_1m raster map.*
 
 ## SEE ALSO
@@ -75,5 +75,5 @@ r.sun elevation=elev_edited aspect=aspect slope=slope beam_rad=beam day=172 time
 
 ## AUTHORS
 
-Anna Petrasova, NCSU GeoForALL Laboratory  
+Anna Petrasova, NCSU GeoForALL Laboratory\
 Tomas Zigo (standalone module)

@@ -36,7 +36,7 @@ menu bar with a set of pull-down menus for all GRASS functions
 (analysis, file I/O, GIS configuration and management); on a Mac, the
 GRASS functions menu is at the top of the screen.
 
-![Layer Manager Window](wxGUI_layer_manager.png)  
+![Layer Manager Window](wxGUI_layer_manager.png)\
 *Figure: Layer Manager screenshot on Ubuntu*
 
 The top left button of the toolbar opens a new *Map Display Window*.
@@ -96,29 +96,29 @@ Adds raster map to layer tree, see *[d.rast](d.rast.md)*.
 Opens a dropdown menu that allows user to select to:
 
 - ![icon](icons/layer-raster3d-add.png)  *Add 3D raster map layer*:
-Adds 3D raster map to layer tree.
+  Adds 3D raster map to layer tree.
 
 - ![icon](icons/layer-rgb-add.png)  *Add RGB raster layer*:
-Combines and displays three raster maps defined as red, green, and blue
-channels to create an RGB color map, see *[d.rgb](d.rgb.md)*.
+  Combines and displays three raster maps defined as red, green, and blue
+  channels to create an RGB color map, see *[d.rgb](d.rgb.md)*.
 
 - ![icon](icons/layer-his-add.png)  *Add HIS raster layer*:
-Combines and displays two or three raster maps defined as hue,
-intensity, and (optionally) saturation channels to create a color map,
-see *[d.his](d.his.md)*.
+  Combines and displays two or three raster maps defined as hue,
+  intensity, and (optionally) saturation channels to create a color map,
+  see *[d.his](d.his.md)*.
 
 - ![icon](icons/layer-shaded-relief-add.png)  *Add shaded relief raster map layer*:
-Adds shaded relief raster map layer, see *[r.relief](r.relief.md)* and
-*[d.shade](d.shade.md)*.
+  Adds shaded relief raster map layer, see *[r.relief](r.relief.md)* and
+  *[d.shade](d.shade.md)*.
 
 - ![icon](icons/layer-aspect-arrow-add.png)  *Add raster arrows layer*:
-Adds map of raster cells with directional arrows drawn. Arrow direction
-and length are determined by separate aspect/directional map and
-(optional) slope/intensity map, see *[d.rast.arrow](d.rast.arrow.md)*.
+  Adds map of raster cells with directional arrows drawn. Arrow direction
+  and length are determined by separate aspect/directional map and
+  (optional) slope/intensity map, see *[d.rast.arrow](d.rast.arrow.md)*.
 
 - ![icon](icons/layer-cell-cats-add.png)  *Add raster numbers layer*:
-Adds map of raster cells with numbers representing the cell values, see
-*[d.rast.num](d.rast.num.md)*.
+  Adds map of raster cells with numbers representing the cell values, see
+  *[d.rast.num](d.rast.num.md)*.
 
 ![icon](icons/layer-vector-add.png)  *Add vector map layer*:
 Adds a vector map layer, see *[d.vect](d.vect.md)*.
@@ -128,23 +128,23 @@ Adds a vector map layer, see *[d.vect](d.vect.md)*.
 Opens a dropdown menu that allows user to select to:
 
 - ![icon](icons/layer-vector-thematic-add.png)  *Add thematic area
-(choropleth) map layer (for all vector types)*:
-Adds layer for thematic display values from a numeric attribute column
-associated with a vector map. Options include: thematic display type
-(graduated colors or point sizes), methods for creating display
-intervals, SQL query of attribute column to limit vector objects to
-display, control of point icon types and sizes, control of thematic
-color schemes, creation of legend for thematic map, and saving the
-results of thematic mapping to a ps.map instructions file for later
-printing, see *[d.vect.thematic](d.vect.thematic.md)*.
+  (choropleth) map layer (for all vector types)*:
+  Adds layer for thematic display values from a numeric attribute column
+  associated with a vector map. Options include: thematic display type
+  (graduated colors or point sizes), methods for creating display
+  intervals, SQL query of attribute column to limit vector objects to
+  display, control of point icon types and sizes, control of thematic
+  color schemes, creation of legend for thematic map, and saving the
+  results of thematic mapping to a ps.map instructions file for later
+  printing, see *[d.vect.thematic](d.vect.thematic.md)*.
 
 - ![icon](icons/layer-vector-chart-add.png)  *Add thematic chart layer
-(for vector points)*:
-Adds layer in which pie or bar charts can be automatically created at
-vector point locations. Charts display values from selected columns in
-the associated attribute table. Options include: chart type, layer and
-attributes to chart, chart colors, and chart size (fixed or based on
-attribute column), see *[d.vect.chart](d.vect.chart.md)*.
+  (for vector points)*:
+  Adds layer in which pie or bar charts can be automatically created at
+  vector point locations. Charts display values from selected columns in
+  the associated attribute table. Options include: chart type, layer and
+  attributes to chart, chart colors, and chart size (fixed or based on
+  attribute column), see *[d.vect.chart](d.vect.chart.md)*.
 
 ![icon](icons/layer-group-add.png)  *Add group*:
 Adds an empty group. Layers can then be added to the group.
@@ -153,33 +153,33 @@ Adds an empty group. Layers can then be added to the group.
 Opens a dropdown menu that allows user to select to:
 
 - ![icon](icons/layer-grid-add.png)  *Add overlay grids and lines*:
-Adds layer to display regular grid see *[d.grid](d.grid.md)*
+  Adds layer to display regular grid see *[d.grid](d.grid.md)*
 
 - ![icon](icons/layer-label-add.png)  *Add labels layer for vector
-objects (from existing labels file)*:
-Add a layer of text from a labels file for vector objects created with
-the *[v.label](v.label.md)* module. A labels file can also be created
-with a text editor, see *[d.labels](d.labels.md)*.
+  objects (from existing labels file)*:
+  Add a layer of text from a labels file for vector objects created with
+  the *[v.label](v.label.md)* module. A labels file can also be created
+  with a text editor, see *[d.labels](d.labels.md)*.
 
 - ![icon](icons/shortest-distance.png)  *Add geodesic line layer*:
-Add layer to display geodesic line for latitude/longitude projects only,
-see *[d.geodesic](d.geodesic.md)*
+  Add layer to display geodesic line for latitude/longitude projects only,
+  see *[d.geodesic](d.geodesic.md)*
 
 - ![icon](icons/shortest-distance.png)  *Add rhumbline layer*:
-Add layer to display rhumblines (for latitude/longitude projects only),
-see *[d.rhumbline](d.rhumbline.md)*.
+  Add layer to display rhumblines (for latitude/longitude projects only),
+  see *[d.rhumbline](d.rhumbline.md)*.
 
 - ![icon](icons/layer-command-add.png)  *Add command layer*:
-Adds a layer in which a GRASS command or command list can be
-entered. For a command list use the semi-colon (";") symbol as a
-separator. For example:
+  Adds a layer in which a GRASS command or command list can be
+  entered. For a command list use the semi-colon (";") symbol as a
+  separator. For example:
 
   ```sh
   d.rast soils;d.rast -o roads;d.vect streams col=blue
   ```
 
   Note that when an option of the command contains spaces, you need to
-"escape" them with the backslash ('\\') character, for example:
+  "escape" them with the backslash ('\\') character, for example:
 
   ```sh
   d.text text=Population\ density
@@ -199,28 +199,28 @@ map.
 ![icon](icons/layer-open.png)  *Import raster or vector data*:
 
 - ![icon](icons/layer-import.png)  *Import raster data*:
-Import selected raster data into GRASS using *[r.in.gdal](r.in.gdal.md)*
-and load them into current layer tree.
+  Import selected raster data into GRASS using *[r.in.gdal](r.in.gdal.md)*
+  and load them into current layer tree.
 
 - ![icon](icons/layer-import.png)  *Link external raster data*:
-Link selected external raster data as GRASS raster maps (using
-*[r.external](r.external.md)*) and load them into current layer tree.
+  Link selected external raster data as GRASS raster maps (using
+  *[r.external](r.external.md)*) and load them into current layer tree.
 
 - ![icon](icons/layer-export.png)  *Set raster output format*:
-Define external format for newly created raster maps (see
-*[r.external.out](r.external.out.md)* for details)
+  Define external format for newly created raster maps (see
+  *[r.external.out](r.external.out.md)* for details)
 
 - ![icon](icons/layer-import.png)  *Import vector data*:
-Import selected vector data into GRASS using *[v.in.ogr](v.in.ogr.md)*
-and load them into current layer tree.
+  Import selected vector data into GRASS using *[v.in.ogr](v.in.ogr.md)*
+  and load them into current layer tree.
 
 - ![icon](icons/layer-import.png)  *Link external vector data*:
-Link selected external vector data as GRASS vector maps (using
-*[v.external](v.external.md)*) and load them into current layer tree.
+  Link selected external vector data as GRASS vector maps (using
+  *[v.external](v.external.md)*) and load them into current layer tree.
 
 - ![icon](icons/layer-export.png)  *Set vector output format*:
-Define external format for newly created vector maps (see
-*[v.external.out](v.external.out.md)* for details)
+  Define external format for newly created vector maps (see
+  *[v.external.out](v.external.out.md)* for details)
 
 ![icon](icons/raster-calculator.png)  *Raster Map Calculator*:
 Launches Raster Calculator GUI front-end for
@@ -251,7 +251,7 @@ from the window, a map canvas where a map composition of one or more
 layers is displayed, and a statusbar with information about the
 geographic region of the maps displayed.
 
-![Map Display Window](wxGUI_map_display.jpg)  
+![Map Display Window](wxGUI_map_display.jpg)\
 *Figure: Map Display screenshot on Ubuntu*
 
 Each Map Display Window has a unique layer tree (in the layer manager)
@@ -367,57 +367,57 @@ Opens a dropdown menu that allows user to:
 Opens a dropdown menu with:
 
 - ![icon](icons/measure-length.png)  *Measure distance*:
-Interactive measurement of lengths defined with the mouse. The length of
-each segment and the cumulative length of all segments measuered is
-displayed in the command output window frame. Lengths are measured in
-the current measurement unit. Double-click to switch off measuring.
+  Interactive measurement of lengths defined with the mouse. The length of
+  each segment and the cumulative length of all segments measuered is
+  displayed in the command output window frame. Lengths are measured in
+  the current measurement unit. Double-click to switch off measuring.
 
 - ![icon](icons/area-measure.png)  *Measure area*:
-Interactive measurement of area defined with the mouse. Area is measured
-in the current measurement unit. Double-click to switch off measuring.
+  Interactive measurement of area defined with the mouse. Area is measured
+  in the current measurement unit. Double-click to switch off measuring.
 
 - ![icon](icons/layer-raster-profile.png)  *Profile surface map*:
-Interactively create profile of a raster map. Profile transect is drawn
-with the mouse in map display. The profile may be of the displayed map
-or a different map. Up to three maps can be profiled simultaneously.
+  Interactively create profile of a raster map. Profile transect is drawn
+  with the mouse in map display. The profile may be of the displayed map
+  or a different map. Up to three maps can be profiled simultaneously.
 
 - ![icon](icons/layer-raster-profile.png)
-*Create bivariate scatterplot of raster maps*:
-Interactively create bivariate scatterplot of raster maps.
+  *Create bivariate scatterplot of raster maps*:
+  Interactively create bivariate scatterplot of raster maps.
 
 - ![icon](icons/layer-raster-histogram.png)
-*Create histogram of raster map*:
-Displays histogram of selected raster map or image in new window.
+  *Create histogram of raster map*:
+  Displays histogram of selected raster map or image in new window.
 
 - ![icon](icons/layer-raster-histogram.png)  *Create histogram with d.histogram*:
-Displays histogram of selected raster map or image in new window, see
-*[d.histogram](d.histogram.md)*.
+  Displays histogram of selected raster map or image in new window, see
+  *[d.histogram](d.histogram.md)*.
 
 - ![icon](icons/vector-tools.png)  *Vector network analysis tool*:
-See tool's [manual page](wxGUI.vnet.md).
+  See tool's [manual page](wxGUI.vnet.md).
 
 ![icon](icons/overlay-add.png)  *Add overlay*:
 opens a dropdown menu that allows user to
 
 - ![icon](icons/legend-add.png)  *Add raster map legend*:
-Adds layer to display with legend of selected raster map, see
-*[d.legend](d.legend.md)*.
+  Adds layer to display with legend of selected raster map, see
+  *[d.legend](d.legend.md)*.
 
 - ![icon](icons/scalebar-add.png)  *Add scalebar*:
-Adds layer to display a scalebar. Options include scalebar placement
-(using screen coordinates or a mouse), scalebar format, and scalebar
-colors, see *[d.barscale](d.barscale.md)*.
+  Adds layer to display a scalebar. Options include scalebar placement
+  (using screen coordinates or a mouse), scalebar format, and scalebar
+  colors, see *[d.barscale](d.barscale.md)*.
 
 - ![icon](icons/north-arrow-add.png)  *Add north arrow*:
-Adds layer to display a north arrow. Options include north arrow
-placement (using screen coordinates or a mouse), north arrow style and
-color, see *[d.northarrow](d.northarrow.md)*.
+  Adds layer to display a north arrow. Options include north arrow
+  placement (using screen coordinates or a mouse), north arrow style and
+  color, see *[d.northarrow](d.northarrow.md)*.
 
 - ![icon](icons/text-add.png)  *Add text layer*:
-Adds layer to display a line of text using default GRASS font (selected
-with *[d.font](d.font.md)*). Options include: text placement (screen
-coordinates); and text size, bolding, and color, see
-*[d.text](d.text.md)*.
+  Adds layer to display a line of text using default GRASS font (selected
+  with *[d.font](d.font.md)*). Options include: text placement (screen
+  coordinates); and text size, bolding, and color, see
+  *[d.text](d.text.md)*.
 
 ![icon](icons/map-export.png)  *Save display to graphic file*:
 Save the visible image in map display to different raster graphic
@@ -431,23 +431,23 @@ map display (including PostScript text and labels) to PDF or EPS file.
 Opens a dropdown menu for selecting different display mode
 
 - *2D view*:
-Normal GIS display. All active layers are composited and displayed in 2D
-mode.
+  Normal GIS display. All active layers are composited and displayed in 2D
+  mode.
 
 - *3D view*:
-Experimental replacement for NVIZ. Displays all active layers in 3D
-perspective using OpenGL. A new control panel opens to manage the 3D
-view. 3D view can be zoomed, panned, rotated, and tilted. The vertical
-exaggeration of rasters and 3D vectors can be set. Various color and
-lighten settings are possible. Not yet functional for Windows platforms
+  Experimental replacement for NVIZ. Displays all active layers in 3D
+  perspective using OpenGL. A new control panel opens to manage the 3D
+  view. 3D view can be zoomed, panned, rotated, and tilted. The vertical
+  exaggeration of rasters and 3D vectors can be set. Various color and
+  lighten settings are possible. Not yet functional for Windows platforms
 
 - *Vector digitizer*:
-Puts display into vector digitizing mode and opens a new digitizing
-toolbar. The user can digitize a new vector map or edit an existing map.
+  Puts display into vector digitizing mode and opens a new digitizing
+  toolbar. The user can digitize a new vector map or edit an existing map.
 
 - *Raster digitizer*:
-Puts display into raster digitizing mode and opens a new digitizing
-toolbar. The user can digitize a new raster map or edit an existing map.
+  Puts display into raster digitizing mode and opens a new digitizing
+  toolbar. The user can digitize a new raster map or edit an existing map.
 
 ### Keyboard short-cuts
 
@@ -563,7 +563,7 @@ specifying the `--gui` switch:
 grass --gui
 ```
 
-The GUI can be quit by selecting the 'File \> Quit GRASS' menu item
+The GUI can be quit by selecting the 'File > Quit GRASS' menu item
 which gives options to close only GUI or to quit GRASS entirely if
 GRASS is running with a command line (a shell in a terminal
 application). Exiting the shell (typically by the `exit` command) ends
@@ -590,21 +590,21 @@ Tutorial](https://grasswiki.osgeo.org/wiki/Quick_wxGUI_tutorial).
 ## AUTHORS
 
 Martin Landa, FBK-irst (2007-2008), Trento, Italy, and Czech Technical
-University in Prague, Czech Republic  
-Michael Barton, Arizona State University, USA  
-Daniel Calvelo Aros  
-Jachym Cepicky  
-Markus Metz, Germany  
+University in Prague, Czech Republic\
+Michael Barton, Arizona State University, USA\
+Daniel Calvelo Aros\
+Jachym Cepicky\
+Markus Metz, Germany\
 Anna Kratochvilova, OSGeoREL, Czech Technical University in Prague,
-Czech Republic  
+Czech Republic\
 Vaclav Petras, OSGeoREL, Czech Technical University in Prague, Czech
-Republic  
+Republic\
 Stepan Turek, OSGeoREL, Czech Technical University in Prague, Czech
-Republic  
+Republic\
 Tereza Fiedlerova, OSGeoREL, Czech Technical University in Prague, Czech
-Republic  
+Republic\
 Matej Krejci, OSGeoREL, Czech Technical University in Prague, Czech
-Republic  
-  
+Republic
+
 Icons created by [Robert Szczepanek](http://robert.szczepanek.pl),
 Poland ([Git repository](https://github.com/Cracert/GIS-icons))

@@ -470,6 +470,7 @@ on the main page:
 - Wiki: <https://grasswiki.osgeo.org/wiki/GRASS-Wiki>
 
 - For major release only:
+
   - {{cmd|xxxx}} macro: <https://grasswiki.osgeo.org/wiki/Template:Cmd>
 
 ### Trac wiki

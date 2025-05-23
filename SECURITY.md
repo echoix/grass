@@ -9,19 +9,19 @@ vulnerability, please follow these steps:
 1. **Privately disclose the issue** by submitting a Security Advisory through
    [GitHub Security](https://github.com/OSGeo/grass/security). Please do not
    create publicly viewable issues for security vulnerabilities.
-2. **Provide detailed information** regarding the vulnerability, including:
-    - Description of the vulnerability
-    - Steps to reproduce
-    - Versions affected
-    - Any mitigating factors
-3. **Our Response**:
-    - Our security team will acknowledge receiving your report within 48 hours.
-    - We will work to validate and reproduce the issue.
-    - Once confirmed, we will work on a fix and release schedule.
-4. **Public Disclosure**:
-    - We aim to release patches for vulnerabilities as soon as possible.
-    - We will coordinate with you regarding public disclosure, ensuring a
-      reasonable timeline for users to update before the details are made public.
+1. **Provide detailed information** regarding the vulnerability, including:
+   - Description of the vulnerability
+   - Steps to reproduce
+   - Versions affected
+   - Any mitigating factors
+1. **Our Response**:
+   - Our security team will acknowledge receiving your report within 48 hours.
+   - We will work to validate and reproduce the issue.
+   - Once confirmed, we will work on a fix and release schedule.
+1. **Public Disclosure**:
+   - We aim to release patches for vulnerabilities as soon as possible.
+   - We will coordinate with you regarding public disclosure, ensuring a
+     reasonable timeline for users to update before the details are made public.
 
 ## Supported Versions
 

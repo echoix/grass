@@ -16,7 +16,7 @@ map (see [Vector introduction](vectorintro.md)).
 
 Available drivers are listed in [SQL support in GRASS GIS](sql.md).
 
-**Notes**:  
+**Notes**:\
 The DBF driver provides only very limited SQL support (as DBF is not an
 SQL DB) while the other DBMS backends (such as SQLite, PostgreSQL, MySQL
 etc) provide full SQL support since the SQL commands are sent directly

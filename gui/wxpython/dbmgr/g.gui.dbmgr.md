@@ -24,12 +24,12 @@ stand-alone module *g.gui.dbmgr*.
 - modify vector map DB connection settings - add, remove or modify
   layers.
 
-![Attribute Table Manager](dbmgr_frame.png)  
+![Attribute Table Manager](dbmgr_frame.png)\
 *Figure: Simple attribute filtering using Attribute Table Manager.*
 
 ### SQL Builder
 
-![Attribute Table Manager and SQL Builder](dbmgr_sql_builder.png)  
+![Attribute Table Manager and SQL Builder](dbmgr_sql_builder.png)\
 *Figure: Attribute filtering using Attribute Table Manager and SQL
 Builder.*
 
@@ -55,6 +55,6 @@ tutorials](https://grasswiki.osgeo.org/wiki/WxGUI_Attribute_Table_Manager#Video_
 
 Martin Landa, [FBK-irst](https://www.fbk.eu) (2007-2008), Trento, Italy,
 and OSGeoREL at the Czech Technical University in Prague, Czech
-Republic  
-Michael Barton, Arizona State University, USA  
+Republic\
+Michael Barton, Arizona State University, USA\
 Jachym Cepicky
