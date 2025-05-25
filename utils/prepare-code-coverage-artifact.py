@@ -15,6 +15,7 @@ import glob
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 
 def merge_raw_profiles(host_llvm_profdata, profile_data_dir, preserve_profiles):
@@ -23,8 +24,7 @@ def merge_raw_profiles(host_llvm_profdata, profile_data_dir, preserve_profiles):
     raw_profiles = glob.glob(os.path.join(profile_data_dir, "*.profraw"))
     manifest_path = os.path.join(profile_data_dir, "profiles.manifest")
     profdata_path = os.path.join(profile_data_dir, "Coverage.profdata")
-    with open(manifest_path, "w") as manifest:
-        manifest.write("\n".join(raw_profiles))
+    Path(manifest_path).write_text("\n".join(raw_profiles), encoding="utf-8")
     subprocess.check_call(
         [
             host_llvm_profdata,
@@ -47,7 +47,7 @@ def merge_raw_profiles(host_llvm_profdata, profile_data_dir, preserve_profiles):
 def prepare_html_report(
     host_llvm_cov, profile, report_dir, binaries, restricted_dirs, compilation_dir
 ):
-    print(":: Preparing html report for {0}...".format(binaries), end="")
+    print(f":: Preparing html report for {binaries}...", end="")
     sys.stdout.flush()
     objects = []
     for i, binary in enumerate(binaries):
@@ -77,13 +77,13 @@ def prepare_html_report(
     if compilation_dir:
         invocation += ["-compilation-dir=" + compilation_dir]
     subprocess.check_call(invocation)
-    with open(os.path.join(report_dir, "summary.txt"), "wb") as Summary:
+    with Path(report_dir, "summary.txt").open("wb") as summary:
         subprocess.check_call(
             [host_llvm_cov, "report"]
             + objects
             + ["-instr-profile", profile]
             + restricted_dirs,
-            stdout=Summary,
+            stdout=summary,
         )
     print("Done!")
 
