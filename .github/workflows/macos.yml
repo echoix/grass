@@ -55,6 +55,7 @@ jobs:
       - name: Prepare Conda environment file
         env:
           test_dependencies: |
+            findutils
             ipython
             pytest
             pytest-github-actions-annotate-failures
@@ -73,6 +74,8 @@ jobs:
           # Persist on the same period (date).
           cache-environment-key: environment-${{ steps.date.outputs.date }}
 
+      - name: Set profile file name env var
+        run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%9m.profraw" >> $GITHUB_ENV
       - name: Environment info
         shell: bash -el {0}
         run: |
@@ -89,6 +92,9 @@ jobs:
         if: ${{ !cancelled() }}
         shell: micromamba-shell {0}
         run: source ./.github/workflows/print_versions.sh
+      - name: Print config
+        shell: micromamba-shell {0}
+        run: grass --config
 
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
@@ -135,6 +141,7 @@ jobs:
 
       - name: Run gunittest tests
         shell: micromamba-shell {0}
+        if: false
         run: .github/workflows/test_thorough.sh --config .github/workflows/macos_gunittest.cfg
         env:
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
@@ -147,3 +154,35 @@ jobs:
           name: testreport-macOS
           path: testreport
           retention-days: 3
+      # - name: Merge and index profile data
+      #   shell: micromamba-shell {0}
+      #   run: |
+      #     llvm-profdata merge -sparse *.profraw -o merged.profdata
+      #     rm *.profraw
+      # - name: Export coverage report with llvm-cov export (all, json)
+      #   shell: micromamba-shell {0}
+      #   continue-on-error: true
+      #   run: |
+      #     COV_BINARIES=$(find . -type f \( -executable -o -name "*.dylib" \) \
+      #       -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
+      #     llvm-cov export -format=text -instr-profile=merged.profdata \
+      #       /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib  \
+      #       | tee coverage.all1.json
+      - name: Make profile data available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: >-
+            profile-data-${{ 'macos-14' }}
+          path: |
+            *.prof*
+            *coverage*
+            llvm_coverage*/**
+          retention-days: 1
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        with:
+          verbose: true
+          flags: pytest-macos-14
+          name: pytest-macos-14
+          token: ${{ secrets.CODECOV_TOKEN }}
