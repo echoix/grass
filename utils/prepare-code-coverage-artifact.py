@@ -44,6 +44,40 @@ def merge_raw_profiles(host_llvm_profdata, profile_data_dir, preserve_profiles):
     return profdata_path
 
 
+def prepare_json_report(
+    host_llvm_cov, profile, report_file, binaries, restricted_dirs, compilation_dir
+):
+    print(f":: Preparing json report for {binaries}...", end="")
+    sys.stdout.flush()
+    objects = []
+    for i, binary in enumerate(binaries):
+        if i == 0:
+            objects.append(binary)
+        else:
+            objects.extend(("-object", binary))
+    invocation = (
+        [host_llvm_cov, "show"]
+        + objects
+        + [
+            "-format",
+            "text",
+            "-instr-profile",
+            profile,
+            "-o",
+            report_file,
+        ]
+        + restricted_dirs
+    )
+    if compilation_dir:
+        invocation += ["-compilation-dir=" + compilation_dir]
+    with Path(report_file).open("wb") as summary:
+        subprocess.check_call(
+            invocation,
+            stdout=summary,
+        )
+    print("Done!")
+
+
 def prepare_html_report(
     host_llvm_cov, profile, report_dir, binaries, restricted_dirs, compilation_dir
 ):
@@ -153,6 +187,9 @@ if __name__ == "__main__":
         help="Emit a unified report for all binaries",
     )
     parser.add_argument(
+        "--json", help="If specified, export the coverage data to this file"
+    )
+    parser.add_argument(
         "--restrict",
         metavar="R",
         type=str,
@@ -195,3 +232,12 @@ if __name__ == "__main__":
             args.restrict,
             args.compilation_dir,
         )
+        if args.json:
+            prepare_json_report(
+                args.host_llvm_cov,
+                profdata_path,
+                args.json,
+                args.binaries,
+                args.restrict,
+                args.compilation_dir,
+            )
