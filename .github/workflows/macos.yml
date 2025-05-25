@@ -189,6 +189,8 @@ jobs:
 
           COV_BINARIES=$(find . -type f \( -executable -o -name "*.dylib" \) \
             -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
+          COV_BINARIES=$(find . -type f \( -name "*.dylib" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
 
           rm -rf $REPORT_DIR
           mkdir -p $REPORT_DIR
