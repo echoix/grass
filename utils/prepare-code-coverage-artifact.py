@@ -56,7 +56,7 @@ def prepare_json_report(
         else:
             objects.extend(("-object", binary))
     invocation = (
-        [host_llvm_cov, "show"]
+        [host_llvm_cov, "export"]
         + [
             "-format",
             "text",
