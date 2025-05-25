@@ -1,0 +1,3682 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-24 21:28+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gui/wxpython/xml/main_menu.xml:4
+msgid "Default GRASS GIS main menu bar"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:4
+#: ../gui/wxpython/xml/menudata_psmap.xml:4
+#: ../gui/wxpython/xml/menudata_pyedit.xml:4
+#: ../gui/wxpython/xml/toolboxes.xml:5
+msgid "&amp;File"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:7
+msgid "New"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:8
+msgid "Create new model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:10
+msgid "Ctrl+Alt+N"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:13
+#: ../gui/wxpython/xml/menudata_pyedit.xml:7
+msgid "Open"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:14
+#: ../gui/wxpython/xml/menudata_pyedit.xml:8
+msgid "Load model from file"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:16
+msgid "Ctrl+Alt+O"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:19
+#: ../gui/wxpython/xml/menudata_pyedit.xml:13
+msgid "Save"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:20
+#: ../gui/wxpython/xml/menudata_pyedit.xml:14
+msgid "Save model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:22
+msgid "Ctrl+Alt+S"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:25
+msgid "Save as"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:26
+msgid "Save model to file"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:30
+msgid "Close"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:31
+msgid "Close model file"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:36
+msgid "Export to image"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:37
+msgid "Export model to image"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:41
+msgid "Export to Python"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:42
+msgid "Export model to Python script"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:44
+msgid "Ctrl+Alt+P"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:47
+msgid "Export to PyWPS"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:48
+msgid "Export model to PyWPS script"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:52
+msgid "Export to actinia"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:53
+msgid "Export model to actinia script"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:58
+msgid "Quit modeler"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:59
+msgid "Close modeler window"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:61
+msgid "Ctrl+Alt+W"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:66
+#: ../gui/wxpython/xml/toolboxes.xml:50
+msgid "&amp;Settings"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:69
+msgid "Preferences"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:70
+msgid "Modeler settings"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:76
+msgid "&amp;Model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:79
+msgid "Add command"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:80
+msgid "Add action (GRASS command) to model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:82
+msgid "Ctrl+Alt+A"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:85
+msgid "Add data"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:86
+msgid "Add data item to model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:88
+msgid "Ctrl+Alt+D"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:91
+msgid "Define relation"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:92
+msgid "Define relation between data and action items"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:96
+msgid "Add loop / series"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:97
+msgid "Adds loop (series) to model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:99
+msgid "Ctrl+Alt+L"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:102
+msgid "Add condition"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:103
+msgid "Adds condition (if/else) to model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:105
+msgid "Ctrl+Alt+I"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:108
+msgid "Add comment"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:109
+msgid "Adds comment to model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:111
+msgid "Ctrl+Alt+#"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:114
+msgid "Remove item"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:115
+msgid "Remove action/data from model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:120
+msgid "Model properties"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:121
+msgid "Model properties (name, purpose, etc.)"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:126
+msgid "Delete intermediate data"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:127
+msgid "Delete intermediate data defined in the model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:132
+msgid "Run model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:133
+msgid "Run entire model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:135
+msgid "Ctrl+Alt+R"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:138
+msgid "Validate model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:139
+msgid "Validate entire model"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:145
+#: ../gui/wxpython/xml/menudata_psmap.xml:119
+#: ../gui/wxpython/xml/menudata_pyedit.xml:78
+#: ../gui/wxpython/xml/toolboxes.xml:213
+msgid "&amp;Help"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:148
+#: ../gui/wxpython/xml/menudata_psmap.xml:122
+msgid "Help"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:149
+msgid "Display the HTML man pages of Graphical modeler"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:154
+msgid "About Graphical Modeler"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_modeler.xml:155
+msgid "Display information about Graphical Modeler"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:7
+msgid "Page setup"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:8
+msgid "Specify paper size, margins and orientation"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:10
+msgid "Ctrl+P"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:14
+msgid "Load instruction file"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:15
+msgid "Load text file with mapping instructions"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:17
+#: ../gui/wxpython/xml/menudata_pyedit.xml:10
+#: ../gui/wxpython/xml/wxgui_items.xml:135
+msgid "Ctrl+O"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:20
+msgid "Export instruction file"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:21
+msgid "Generate text file with mapping instructions"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:23
+msgid "Ctrl+Shift+E"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:26
+msgid "Export to PostScript"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:27
+msgid "Generate PostScript output"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:29
+msgid "Ctrl+E"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:32
+msgid "Export to PDF"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:33
+msgid "Generate PDF output"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:35
+msgid "Ctrl+F"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:39
+#: ../gui/wxpython/xml/menudata_psmap.xml:40
+msgid "Launch ps.map dialog"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:45
+msgid "Quit"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:46
+msgid "Close Cartographic Composer"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:48
+#: ../gui/wxpython/xml/menudata_pyedit.xml:22
+#: ../gui/wxpython/xml/wxgui_items.xml:200
+msgid "Ctrl+W"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:53
+msgid "&amp;Insert"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:56
+msgid "Map frame"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:57
+msgid "Add or edit map frame"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:59
+msgid "Ctrl+M"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:62
+msgid "Raster map"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:63
+msgid "Add or edit raster map"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:65
+#: ../gui/wxpython/xml/menudata_pyedit.xml:33
+#: ../gui/wxpython/xml/wxgui_items.xml:194
+msgid "Ctrl+R"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:68
+msgid "Vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:69
+msgid "Add or edit vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:71
+msgid "Ctrl+V"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:74
+msgid "Map legend"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:75
+msgid "Add or edit raster and vector legend"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:77
+msgid "Ctrl+L"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:80
+msgid "Map info"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:81
+msgid "Add or edit map info"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:83
+msgid "Ctrl+I"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:86
+msgid "Scale bar"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:87
+msgid "Add or edit scale bar"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:89
+msgid "Ctrl+B"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:92
+msgid "Text"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:93
+msgid "Add text"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:95
+msgid "Ctrl+T"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:98
+msgid "Image"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:99
+msgid "Add image"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:104
+msgid "North Arrow"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:105
+msgid "Add north arrow"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:111
+#: ../gui/wxpython/xml/menudata_psmap.xml:114
+msgid "Delete"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:112
+msgid "Delete selected object"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:123
+msgid "Display the HTML man pages of Cartographic Composer"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:128
+msgid "About Cartographic Composer"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_psmap.xml:129
+msgid "Display information about Cartographic Composer"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:16
+#: ../gui/wxpython/xml/wxgui_items.xml:142
+msgid "Ctrl+S"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:19
+msgid "Quit editor"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:20
+msgid "Close editor window"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:27
+msgid "&amp;Run"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:30
+msgid "Run"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:31
+msgid "Run Python script"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:36
+msgid "Set parameters"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:37
+msgid "Set command line parameters for the script"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:43
+msgid "&amp;Templates"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:46
+msgid "Load script &amp;template"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:47
+msgid "Load simple script template"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:51
+msgid "Load GRASS &amp;tool template"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:52
+msgid "Load full GRASS tool template"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:58
+msgid "&amp;Examples"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:61
+msgid "Load script &amp;example"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:62
+msgid "Load simple script example"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:66
+msgid "Load GRASS &amp;tool example"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:67
+msgid "Load full GRASS tool example"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:71
+msgid "Load GRASS tool error &amp;handling example"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:72
+msgid "Load full GRASS tool with error handling example"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:81
+msgid "GRASS Python Help"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:82
+msgid "Display documentation for writing Python code in GRASS GIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:86
+msgid "Python help"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:87
+msgid "Display documentation for writing Python code in general"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:91
+msgid "GRASS Tools help"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:92
+msgid "Display the HTML man page index for all GRASS tools"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:96
+msgid "GRASS Python code guidelines"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:97
+msgid "Display guidelines for submitting Python code to GRASS GIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:101
+msgid "Getting your code to GRASS Addons"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:102
+msgid "Display instructions for submitting you code to GRASS GIS Addons repository"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:106
+msgid "Get support"
+msgstr ""
+
+#: ../gui/wxpython/xml/menudata_pyedit.xml:107
+msgid "Display information about getting support for writing Python code in GRASS GIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/module_tree.xml:4
+msgid "Default GRASS GIS module tree"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:31
+msgctxt "m.nviz.image"
+msgid "3D image rendering"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:36
+msgctxt "m.cogo"
+msgid "Bearing/distance to coordinates"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:62
+msgid "&amp;Raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:71
+msgctxt "r.mask"
+msgid "Mask"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:95
+msgid "&amp;Vector"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:105
+msgctxt "v.buffer"
+msgid "Buffer vectors"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:111
+msgctxt "v.distance"
+msgid "Nearest features"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:120
+msgctxt "v.in.region"
+msgid "Generate area for current region"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:124
+msgctxt "v.mkgrid"
+msgid "Generate grid"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:132
+msgid "&amp;Imagery"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:138
+msgctxt "i.rectify"
+msgid "Rectify image or raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:142
+msgctxt "i.spectral"
+msgid "Spectral response"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:146
+msgctxt "i.pansharpen"
+msgid "Pan sharpening"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:161
+msgid "Orthophoto tools"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:164
+msgctxt "Command: , Name: ManagingGCPsfor3DCorrection, Handler: "
+msgid "Manage GCPs for 3D correction"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:167
+msgctxt "Command: , Name: CorrectsScanningDistortions, Handler: "
+msgid "Corrects scanning distortions"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:172
+msgid "3D r&amp;aster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:178
+msgctxt "r3.colors"
+msgid "3D color tables"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:181
+msgctxt "r3.colors.out"
+msgid "Export 3D color table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:185
+msgctxt "r3.mask"
+msgid "3D mask"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:189
+msgctxt "r3.cross.rast"
+msgid "Cross section"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:192
+msgctxt "r3.gwflow"
+msgid "Groundwater modeling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:195
+msgctxt "v.vol.rst"
+msgid "Interpolate 3D raster from points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:202
+msgid "&amp;Database"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:223
+msgid "Workspace"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:233
+msgid "Map display"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:248
+msgid "Import, export and link data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:264
+msgid "Import raster data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:268
+msgctxt "r.in.gdal"
+msgid "Import of common raster formats"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:272
+msgctxt "r.in.xyz"
+msgid "ASCII x,y,z point import and gridding"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:275
+msgctxt "r.in.ascii"
+msgid "ASCII grid import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:278
+msgctxt "r.in.poly"
+msgid "ASCII polygons, lines, and point import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:282
+msgctxt "r.in.bin"
+msgid "Raw binary array import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:285
+msgctxt "r.in.gridatb"
+msgid "GRIDATB.FOR import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:288
+msgctxt "r.in.mat"
+msgid "Matlab 2D array import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:291
+msgctxt "r.in.png"
+msgid "PNG import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:294
+msgctxt "i.in.spotvgt"
+msgid "SPOT NDVI import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:297
+msgctxt "r.in.srtm"
+msgid "SRTM HGT import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:300
+msgctxt "r.in.aster"
+msgid "Terra ASTER HDF import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:303
+msgctxt "r.in.lidar"
+msgid "LAS LiDAR points import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:306
+msgctxt "r.in.pdal"
+msgid "Point cloud (LAS LiDAR) import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:310
+msgctxt "r.in.wms"
+msgid "WMS/WMTS import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:314
+msgctxt "r.unpack"
+msgid "Unpack raster map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:318 ../gui/wxpython/xml/toolboxes.xml:689
+msgctxt "r.proj"
+msgid "Reproject raster map from different GRASS project"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:323
+msgid "Import vector data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:327
+msgctxt "v.in.ogr"
+msgid "Import of common vector formats"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:331
+msgctxt "v.in.ascii"
+msgid "ASCII points or GRASS ASCII format"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:334
+msgctxt "v.in.lines"
+msgid "ASCII points as a vector lines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:340
+msgctxt "v.in.wfs"
+msgid "WFS"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:344
+msgctxt "v.in.e00"
+msgid "ESRI e00 import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:347
+msgctxt "v.in.geonames"
+msgid "Geonames import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:350
+msgctxt "v.in.mapgen"
+msgid "Matlab array or Mapgen format import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:353
+msgctxt "v.in.lidar"
+msgid "LAS LiDAR points import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:356
+msgctxt "v.in.pdal"
+msgid "Point cloud (LAS LiDAR) import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:360
+msgctxt "v.unpack"
+msgid "Unpack vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:364 ../gui/wxpython/xml/toolboxes.xml:1186
+msgctxt "v.proj"
+msgid "Reproject vector map from different GRASS project"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:369
+msgid "Import 3D raster data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:372
+msgctxt "r3.in.ascii"
+msgid "ASCII 3D import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:375
+msgctxt "r3.in.bin"
+msgid "Raw binary array 3D import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:378
+msgctxt "r3.in.v5d"
+msgid "Vis5D import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:383
+msgid "Import database table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:386
+msgctxt "db.in.ogr"
+msgid "Common import formats"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:391
+msgid "Export raster map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:394
+msgctxt "r.out.gdal"
+msgid "Common export formats"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:398
+msgctxt "r.out.ascii"
+msgid "ASCII grid export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:401
+msgctxt "r.out.xyz"
+msgid "ASCII x,y,z points export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:405
+msgctxt "r.out.gridatb"
+msgid "GRIDATB.FOR export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:408
+msgctxt "r.out.mat"
+msgid "Matlab 2D array export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:412
+msgctxt "r.out.bin"
+msgid "Raw binary array export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:416
+msgctxt "r.out.mpeg"
+msgid "MPEG-1 export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:419
+msgctxt "r.out.png"
+msgid "PNG export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:422
+msgctxt "r.out.ppm"
+msgid "PPM export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:425
+msgctxt "r.out.ppm3"
+msgid "PPM from RGB export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:428
+msgctxt "r.out.pov"
+msgid "POV-Ray export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:431
+msgctxt "r.out.vrml"
+msgid "VRML export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:434
+msgctxt "r.out.vtk"
+msgid "VTK export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:438
+msgctxt "r.pack"
+msgid "Pack raster map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:443
+msgid "Export vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:446
+msgctxt "v.out.ogr"
+msgid "Common export formats"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:450
+msgctxt "v.out.ascii"
+msgid "ASCII points or GRASS ASCII vector export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:453
+msgctxt "v.out.dxf"
+msgid "DXF export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:456
+msgctxt "v.out.postgis"
+msgid "PostGIS export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:459
+msgctxt "v.out.pov"
+msgid "POV-Ray export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:462
+msgctxt "v.out.svg"
+msgid "SVG export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:465
+msgctxt "v.out.vtk"
+msgid "VTK export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:469
+msgctxt "v.pack"
+msgid "Pack vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:474
+msgid "Export 3D raster maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:477
+msgctxt "r3.out.ascii"
+msgid "ASCII 3D export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:480
+msgctxt "r3.out.bin"
+msgid "Raw binary array 3D export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:483
+msgctxt "r3.out.v5d"
+msgid "Vis5D export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:486
+msgctxt "r3.out.vtk"
+msgid "VTK export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:491
+msgid "Export database table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:494
+msgctxt "db.out.ogr"
+msgid "Common export formats"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:499
+msgid "Link external data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:505
+msgctxt "r.external.out"
+msgid "Output format for raster data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:511
+msgid "Manage maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:514
+msgctxt "g.copy"
+msgid "Copy"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:517
+msgctxt "g.list"
+msgid "List"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:520
+msgctxt "g.rename"
+msgid "Rename"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:523
+msgctxt "g.remove"
+msgid "Delete"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:528 ../gui/wxpython/xml/toolboxes.xml:736
+#: ../gui/wxpython/xml/toolboxes.xml:1263
+#: ../gui/wxpython/xml/toolboxes.xml:1713
+msgid "Map type conversions"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:531 ../gui/wxpython/xml/toolboxes.xml:739
+msgctxt "r.to.vect"
+msgid "Raster to vector"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:534 ../gui/wxpython/xml/toolboxes.xml:742
+msgctxt "r.to.rast3"
+msgid "Raster series to 3D raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:537 ../gui/wxpython/xml/toolboxes.xml:745
+msgctxt "r.to.rast3elev"
+msgid "Raster 2.5D to 3D raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:541 ../gui/wxpython/xml/toolboxes.xml:1266
+msgctxt "v.to.rast"
+msgid "Vector to raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:544 ../gui/wxpython/xml/toolboxes.xml:1269
+msgctxt "v.to.rast3"
+msgid "Vector to 3D raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:547 ../gui/wxpython/xml/toolboxes.xml:1272
+msgctxt "v.to.3d"
+msgid "2D vector to 3D vector"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:551
+msgctxt "r3.to.rast"
+msgid "3D raster to raster series"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:556
+msgid "Computational region"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:562
+msgctxt "g.region"
+msgid "Set region"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:567
+msgid "Raster buffers and distance"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:570
+msgctxt "r.buffer"
+msgid "Buffer rasters"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:573
+msgctxt "r.circle"
+msgid "Concentric circles"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:576
+msgctxt "r.distance"
+msgid "Closest points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:579
+msgctxt "r.grow"
+msgid "Grow by one cell"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:582 ../gui/wxpython/xml/toolboxes.xml:844
+msgctxt "r.grow.distance"
+msgid "Distance to features"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:587
+msgid "Raster map calculator"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:590
+msgctxt "r.mapcalc.simple"
+msgid "Simplified raster map calculator"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:593
+msgctxt "r.mapcalc"
+msgid "Raster map calculator"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:594
+msgid "OnMapCalculator"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:599
+msgid "GRASS working environment"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:603
+msgctxt "g.access"
+msgid "User access"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:607
+msgctxt "g.mapset"
+msgid "Change working environment"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:615
+msgctxt "g.gisenv"
+msgid "Change settings"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:623
+msgid "Map projections"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:627
+msgctxt "g.proj"
+msgid "Manage projections"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:631
+msgctxt "m.proj"
+msgid "Convert coordinates"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:636
+msgid "Addons extensions"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:643
+msgid "Develop raster map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:646
+msgctxt "r.compress"
+msgid "Compress/decompress"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:650
+msgctxt "r.region"
+msgid "Region boundaries"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:653
+msgctxt "r.null"
+msgid "Manage NULL values"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:656
+msgctxt "r.quant"
+msgid "Quantization"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:659
+msgctxt "r.timestamp"
+msgid "Timestamp"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:663
+msgctxt "r.resamp.stats"
+msgid "Resample using aggregate statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:666
+msgctxt "r.resamp.interp"
+msgid "Resample using multiple methods"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:669
+msgctxt "r.resample"
+msgid "Resample using nearest neighbor"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:672
+msgctxt "r.resamp.rst"
+msgid "Resample using spline tension"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:675
+msgctxt "r.resamp.bspline"
+msgid "Resample using bspline"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:678
+msgctxt "r.resamp.filter"
+msgid "Resample using analytic kernel"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:682
+msgctxt "r.support"
+msgid "Support file maintenance"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:685
+msgctxt "r.support.stats"
+msgid "Update map statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:692
+msgctxt "r.tileset"
+msgid "Tiling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:695
+msgctxt "r.buildvrt"
+msgid "Build a VRT (Virtual Raster)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:700 ../gui/wxpython/xml/toolboxes.xml:1229
+msgid "Manage colors"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:703
+msgctxt "r.colors"
+msgid "Color tables"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:706
+msgctxt "r.colors.stddev"
+msgid "Color tables (stddev)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:710
+msgctxt "r.colors.out"
+msgid "Export color table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:714
+msgctxt "r.blend"
+msgid "Blend 2 color rasters"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:717
+msgctxt "r.composite"
+msgid "Create RGB"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:720
+msgctxt "r.his"
+msgid "RGB to HIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:725
+msgid "Query raster maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:728
+msgctxt "r.what"
+msgid "Query values by coordinates"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:731
+msgctxt "r.what.color"
+msgid "Query colors by value"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:750
+msgid "Neighborhood analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:753
+msgctxt "r.neighbors"
+msgid "Moving window"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:756
+msgctxt "v.neighbors"
+msgid "Neighborhood points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:761
+msgid "Overlay rasters"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:764
+msgctxt "r.cross"
+msgid "Cross product"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:767
+msgctxt "r.patch"
+msgid "Patch raster maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:770
+msgctxt "r.series"
+msgid "Raster series aggregation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:773
+msgctxt "r.series.accumulate"
+msgid "Raster series accumulation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:777
+msgctxt "r.stats.zonal"
+msgid "Statistical overlay"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:780
+msgctxt "r.stats.quantile"
+msgid "Quantiles overlay"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:785
+msgid "Solar radiance and shadows"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:788
+msgctxt "r.latlong"
+msgid "LatLong map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:791
+msgctxt "r.sun"
+msgid "Solar irradiance and irradiation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:794
+msgctxt "r.sunmask"
+msgid "Shadows map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:797
+msgctxt "r.sunhours"
+msgid "Sunshine hours and solar angles"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:802
+msgid "Terrain analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:805
+msgctxt "r.contour"
+msgid "Generate contour lines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:808
+msgctxt "r.cost"
+msgid "Cost surface"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:811
+msgctxt "r.path"
+msgid "Trace a path"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:814
+msgctxt "r.walk"
+msgid "Cumulative movement costs"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:817
+msgctxt "r.drain"
+msgid "Least cost route or flow"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:821
+msgctxt "r.relief"
+msgid "Compute shaded relief"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:824
+msgctxt "r.shade"
+msgid "Apply shade to raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:828
+msgctxt "r.slope.aspect"
+msgid "Slope and aspect"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:831
+msgctxt "r.geomorphon"
+msgid "Landforms"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:834
+msgctxt "r.param.scale"
+msgid "Terrain parameters"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:837
+msgctxt "r.texture"
+msgid "Textural features"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:841
+msgctxt "r.viewshed"
+msgid "Visibility"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:848
+msgctxt "r.horizon"
+msgid "Horizon angle"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:853
+msgid "Transform features"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:856
+msgctxt "r.clump"
+msgid "Clump"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:859
+msgctxt "r.grow"
+msgid "Grow"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:862
+msgctxt "r.thin"
+msgid "Thin"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:867
+msgid "Hydrologic modeling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:870
+msgctxt "r.carve"
+msgid "Carve stream channels"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:873
+msgctxt "r.lake"
+msgid "Fill lake"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:877
+msgctxt "r.fill.dir"
+msgid "Depressionless map and flowlines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:880
+msgctxt "r.terraflow"
+msgid "Flow accumulation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:883
+msgctxt "r.flow"
+msgid "Flow lines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:886
+msgctxt "r.watershed"
+msgid "Watershed analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:889
+msgctxt "r.basins.fill"
+msgid "Watershed subbasins"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:892
+msgctxt "r.water.outlet"
+msgid "Watershed basin creation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:896
+msgctxt "r.stream.extract"
+msgid "Extraction of stream networks"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:900
+msgctxt "r.sim.water"
+msgid "SIMWE Overland flow modeling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:903
+msgctxt "r.sim.sediment"
+msgid "SIMWE Sediment flux modeling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:907
+msgctxt "r.topidx"
+msgid "Topographic index map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:910
+msgctxt "r.topmodel"
+msgid "TOPMODEL simulation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:914
+msgctxt "r.uslek"
+msgid "USLE K-factor"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:917
+msgctxt "r.usler"
+msgid "USLE R-factor"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:922
+msgid "Groundwater modeling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:925
+msgctxt "r.gwflow"
+msgid "Groundwater flow"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:928
+msgctxt "r.solute.transport"
+msgid "Groundwater solute transport"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:933
+msgid "Landscape patch analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:938
+msgctxt "r.li.edgedensity"
+msgid "Edge density"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:941
+msgctxt "r.li.cwed"
+msgid "Contrast weighted edge density"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:945
+msgctxt "r.li.mps"
+msgid "Patch area mean"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:948
+msgctxt "r.li.padrange"
+msgid "Patch area range"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:951
+msgctxt "r.li.padsd"
+msgid "Patch area Std Dev"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:954
+msgctxt "r.li.padcv"
+msgid "Patch area Coeff Var"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:957
+msgctxt "r.li.patchdensity"
+msgid "Patch density"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:960
+msgctxt "r.li.patchnum"
+msgid "Patch number"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:964
+msgctxt "r.li.dominance"
+msgid "Dominance's diversity"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:967
+msgctxt "r.li.shannon"
+msgid "Shannon's diversity"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:970
+msgctxt "r.li.simpson"
+msgid "Simpson's diversity"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:974
+msgctxt "r.li.richness"
+msgid "Richness"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:977
+msgctxt "r.li.shape"
+msgid "Shape index"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:982
+msgid "Wildfire modeling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:985
+msgctxt "r.ros"
+msgid "Rate of spread"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:988
+msgctxt "r.spreadpath"
+msgid "Least-cost spread paths"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:991
+msgctxt "r.spread"
+msgid "Anisotropic spread simulation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:996
+msgid "Change category values and labels"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:999 ../gui/wxpython/xml/toolboxes.xml:1102
+msgctxt "r.category"
+msgid "Manage category information"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1002
+msgctxt "d.rast.edit"
+msgid "Interactively edit category values"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1006
+msgctxt "r.reclass.area"
+msgid "Reclassify by size"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1009
+msgctxt "r.reclass"
+msgid "Reclassify"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1013
+msgctxt "r.recode"
+msgid "Recode"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1017
+msgctxt "r.rescale"
+msgid "Rescale"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1020
+msgctxt "r.rescale.eq"
+msgid "Rescale with histogram"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1025
+msgid "Generate random cells"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1028
+msgctxt "r.random.cells"
+msgid "Random cells"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1031
+msgctxt "r.random"
+msgid "Random cells and vector points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1036
+msgid "Generate surfaces"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1039
+msgctxt "r.surf.fractal"
+msgid "Fractal surface"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1043
+msgctxt "v.kernel"
+msgid "Gaussian kernel density surface"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1046
+msgctxt "r.surf.gauss"
+msgid "Gaussian deviates surface"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1050
+msgctxt "r.plane"
+msgid "Plane"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1054
+msgctxt "r.surf.random"
+msgid "Random deviates surface"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1057
+msgctxt "r.random.surface"
+msgid "Random surface with spatial dependence"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1062
+msgid "Interpolate surfaces"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1065
+msgctxt "v.surf.bspline"
+msgid "Bilinear and bicubic from vector points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1069
+msgctxt "r.surf.idw"
+msgid "IDW from raster points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1072
+msgctxt "v.surf.idw"
+msgid "IDW from vector points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1076
+msgctxt "r.surf.contour"
+msgid "Raster contours"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1079
+msgctxt "v.surf.rst"
+msgid "Regularized spline tension"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1083
+msgctxt "r.series.interp"
+msgid "Raster series interpolation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1087
+msgctxt "r.fillnulls"
+msgid "Fill NULL cells"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1091
+msgctxt "r.fill.stats"
+msgid "Fill NULL cells using IDW"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1096
+#: ../gui/wxpython/xml/toolboxes.xml:1480
+#: ../gui/wxpython/xml/toolboxes.xml:1691
+#: ../gui/wxpython/xml/toolboxes.xml:1721
+#: ../gui/wxpython/xml/toolboxes.xml:1932
+msgid "Reports and statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1099
+msgctxt "r.info"
+msgid "Basic raster metadata"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1106
+msgctxt "r.stats"
+msgid "General statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1109
+msgctxt "r.quantile"
+msgid "Quantiles for large data sets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1112
+msgctxt "r.describe"
+msgid "Range of category values"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1115
+msgctxt "r.report"
+msgid "Sum area by raster map and category"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1118
+msgctxt "r.volume"
+msgid "Statistics for clumped cells"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1121
+msgctxt "r.surf.area"
+msgid "Total corrected area"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1124
+msgctxt "r.univar"
+msgid "Univariate raster statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1128
+msgctxt "r.profile"
+msgid "Sample transects"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1131
+msgctxt "r.transect"
+msgid "Sample transects (bearing/distance)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1135
+msgctxt "r.covar"
+msgid "Covariance/correlation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1138
+msgctxt "r.regression.line"
+msgid "Linear regression"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1141
+msgctxt "r.regression.multi"
+msgid "Multiple regression"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1144
+msgctxt "r.coin"
+msgid "Mutual category occurrences"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1149
+msgid "Develop vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1153
+msgctxt "v.edit"
+msgid "Edit vector map (non-interactively)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1157
+msgctxt "v.type"
+msgid "Convert object types"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1161
+msgctxt "v.parallel"
+msgid "Parallel lines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1165
+msgctxt "v.dissolve"
+msgid "Dissolve boundaries"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1169
+msgctxt "v.drape"
+msgid "Create 3D vector over raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1172
+msgctxt "v.extrude"
+msgid "Extrude 3D vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1176
+msgctxt "v.label"
+msgid "Create labels"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1180
+msgctxt "v.transform"
+msgid "Reposition vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1183
+msgctxt "v.rectify"
+msgid "Rectify vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1190
+msgctxt "v.support"
+msgid "Support file maintenance"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1195
+msgid "Topology maintenance"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1198
+msgctxt "v.build"
+msgid "Create or rebuild topology"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1201
+msgctxt "v.build.all"
+msgid "Rebuild topology on all vector maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1205
+msgctxt "v.build.polylines"
+msgid "Build polylines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1208
+msgctxt "v.split"
+msgid "Split lines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1211
+msgctxt "v.segment"
+msgid "Split polylines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1215
+msgctxt "v.clean"
+msgid "Clean vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1218
+msgctxt "v.fill.holes"
+msgid "Fill holes in areas"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1221
+msgctxt "v.generalize"
+msgid "Smooth or simplify"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1224
+msgctxt "v.centroids"
+msgid "Add centroids"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1232
+msgctxt "v.colors"
+msgid "Color tables"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1236
+msgctxt "v.colors.out"
+msgid "Export color table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1241
+msgid "Query vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1244
+msgctxt "v.what"
+msgid "Query with coordinate(s)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1247
+#: ../gui/wxpython/xml/toolboxes.xml:1794
+msgctxt "v.db.select"
+msgid "Query vector attribute data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1252
+msgid "Feature selection"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1255
+msgctxt "v.extract"
+msgid "Select by attributes"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1258
+msgctxt "v.select"
+msgid "Select by another map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1277
+msgid "Point analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1280
+#: ../gui/wxpython/xml/toolboxes.xml:1303
+msgctxt "v.outlier"
+msgid "Identify and remove outliers"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1283
+msgctxt "v.cluster"
+msgid "Identify point clusters"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1286
+msgctxt "v.qcount"
+msgid "Indices for quadrat counts of vector point lists"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1289
+#: ../gui/wxpython/xml/toolboxes.xml:1468
+msgctxt "v.perturb"
+msgid "Perturb points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1292
+#: ../gui/wxpython/xml/toolboxes.xml:1475
+msgctxt "v.kcv"
+msgid "Test/training point sets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1295
+msgctxt "v.normal"
+msgid "Tests for normality for vector points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1300
+msgid "Lidar analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1306
+msgctxt "v.lidar.edgedetection"
+msgid "Detect edges"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1309
+msgctxt "v.lidar.growing"
+msgid "Detect interiors"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1312
+msgctxt "v.lidar.correction"
+msgid "Correct and reclassify objects"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1317
+msgid "Linear referencing"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1320
+msgctxt "v.lrs.create"
+msgid "Create LRS"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1323
+msgctxt "v.lrs.label"
+msgid "Create stationing"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1326
+msgctxt "v.lrs.segment"
+msgid "Create points/segments"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1329
+msgctxt "v.lrs.where"
+msgid "Find line id and offset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1334
+msgid "Network analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1339
+msgctxt "v.net"
+msgid "Network preparation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1343
+msgctxt "v.net.alloc"
+msgid "Allocate subnets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1346
+msgctxt "v.net.iso"
+msgid "Split net"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1350
+msgctxt "v.net.path"
+msgid "Shortest path"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1353
+msgctxt "v.net.distance"
+msgid "Shortest path for sets of features"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1356
+msgctxt "v.net.timetable"
+msgid "Shortest path using timetables"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1359
+msgctxt "v.net.allpairs"
+msgid "Shortest path for all pairs"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1363
+msgctxt "v.net.visibility"
+msgid "Visibility network"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1366
+msgctxt "v.net.bridge"
+msgid "Bridges and articulation points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1369
+msgctxt "v.net.flow"
+msgid "Maximum flow"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1372
+msgctxt "v.net.connectivity"
+msgid "Vertex connectivity"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1375
+msgctxt "v.net.components"
+msgid "Components"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1378
+msgctxt "v.net.centrality"
+msgid "Centrality"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1382
+msgctxt "v.net.steiner"
+msgid "Steiner tree"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1385
+msgctxt "v.net.spanningtree"
+msgid "Minimum spanning tree"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1388
+msgctxt "v.net.salesman"
+msgid "Traveling salesman analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1393
+msgid "Overlay vector maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1396
+msgctxt "v.clip"
+msgid "Clip vector maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1399
+msgctxt "v.overlay"
+msgid "Overlay vector maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1402
+msgctxt "v.patch"
+msgid "Patch vector maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1407
+msgid "Manage categories"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1410
+msgctxt "v.category"
+msgid "Change or report categories"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1413
+msgctxt "v.reclass"
+msgid "Reclassify"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1418
+msgid "Update attributes"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1421
+msgctxt "v.rast.stats"
+msgid "Update area attributes from raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1424
+msgctxt "v.vect.stats"
+msgid "Update area attributes from vector"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1427
+msgctxt "v.what.vect"
+msgid "Update point attributes from areas"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1430
+msgctxt "v.to.db"
+msgid "Update database values from vector"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1434
+msgctxt "v.what.rast"
+msgid "Sample raster maps at point locations"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1437
+msgctxt "v.sample"
+msgid "Sample raster neighborhood around points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1442
+msgid "Generate areas from points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1445
+msgctxt "v.hull"
+msgid "Convex hull"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1448
+msgctxt "v.delaunay"
+msgid "Delaunay triangles"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1451
+msgctxt "v.voronoi"
+msgid "Voronoi diagram/Thiessen polygons"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1456
+msgid "Generate points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1459
+msgctxt "v.in.db"
+msgid "Generate from database"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1462
+msgctxt "v.to.points"
+msgid "Generate points along lines"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1465
+msgctxt "v.random"
+msgid "Generate random points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1472
+msgctxt "v.outlier"
+msgid "Remove outliers in point sets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1483
+msgctxt "v.info"
+msgid "Basic vector metadata"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1486
+msgctxt "v.class"
+msgid "Classify attribute data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1490
+msgctxt "v.report"
+msgid "Report topology by category"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1494
+msgctxt "v.univar"
+msgid "Univariate attribute statistics for points"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1497
+msgctxt "v.db.univar"
+msgid "Univariate statistics for attribute columns"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1501
+msgctxt "v.profile"
+msgid "Sample transects"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1505
+msgctxt "v.qcount"
+msgid "Quadrat indices"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1508
+msgctxt "v.normal"
+msgid "Test normality"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1513
+msgid "Develop images and groups"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1517
+msgctxt "i.target"
+msgid "Target group"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1521
+msgctxt "i.image.mosaic"
+msgid "Mosaic images"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1526
+msgid "Manage image colors"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1529
+msgctxt "i.colors.enhance"
+msgid "Color balance for RGB"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1532
+msgctxt "i.his.rgb"
+msgid "HIS to RGB"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1535
+msgctxt "i.rgb.his"
+msgid "RGB to HIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1540
+msgid "Classify image"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1543
+msgctxt "i.cluster"
+msgid "Clustering input for unsupervised classification"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1547
+msgctxt "i.gensig"
+msgid "Input for supervised MLC"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1550
+msgctxt "i.maxlik"
+msgid "Maximum likelihood classification (MLC)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1556
+msgctxt "i.gensigset"
+msgid "Input for supervised SMAP"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1559
+msgctxt "i.smap"
+msgid "Sequential maximum a posteriori classification (SMAP)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1563
+msgctxt "i.svm.train"
+msgid "Input for supervised SVM"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1566
+msgctxt "i.svm.predict"
+msgid "Support Vector Machines classification (SVM)"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1570
+msgctxt "i.signatures"
+msgid "Manage signature files"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1574
+msgctxt "i.segment"
+msgid "Object segmentation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1579
+msgid "Filter image"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1582
+msgctxt "i.zc"
+msgid "Edge detection"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1585
+msgctxt "r.mfilter"
+msgid "Matrix/convolving filter"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1588
+msgctxt "r.smooth.edgepreserve"
+msgid "Edge preserving smoothing"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1593
+msgid "Transform image"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1596
+msgctxt "i.cca"
+msgid "Canonical correlation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1599
+msgctxt "i.pca"
+msgid "Principal components"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1602
+msgctxt "i.fft"
+msgid "Fast Fourier"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1605
+msgctxt "i.ifft"
+msgid "Inverse Fast Fourier"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1610
+msgid "Satellite images tools"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1613
+msgctxt "i.aster.toar"
+msgid "Aster DN to radiance/reflectance"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1616
+msgctxt "i.landsat.toar"
+msgid "Landsat DN to radiance/reflectance"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1620
+msgctxt "i.landsat.acca"
+msgid "Landsat cloud cover assessment"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1623
+msgctxt "i.modis.qc"
+msgid "Modis quality control"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1627
+msgctxt "i.atcorr"
+msgid "Atmospheric correction"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1630
+msgctxt "i.topo.corr"
+msgid "Topographic correction"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1635
+msgid "Satellite images products"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1638
+msgctxt "i.vi"
+msgid "Vegetation indices"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1641
+msgctxt "i.tasscap"
+msgid "Tasseled cap vegetation index"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1645
+msgctxt "i.albedo"
+msgid "Albedo"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1648
+msgctxt "i.emissivity"
+msgid "Emissivity"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1652
+msgctxt "i.biomass"
+msgid "Biomass growth"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1657
+msgid "Evapotranspiration calculation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1660
+msgctxt "i.eb.netrad"
+msgid "Instantaneaous Net Radiation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1663
+msgctxt "i.eb.soilheatflux"
+msgid "Soil heat flux"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1666
+msgctxt "i.eb.hsebal01"
+msgid "Sensible heat flux"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1670
+msgctxt "i.eb.evapfr"
+msgid "Evaporative fraction"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1673
+msgctxt "i.eb.eta"
+msgid "Actual Evapotranspiration"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1676
+msgctxt "i.evapo.time"
+msgid "Temporal integration of ETa"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1680
+msgctxt "i.evapo.mh"
+msgid "Hargreaves methods Evapotranspiration"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1683
+msgctxt "i.evapo.pm"
+msgid "Penman-Monteith Evapotranspiration"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1686
+msgctxt "i.evapo.pt"
+msgid "Priestley-Taylor Evapotranspiration"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1694
+msgctxt "r.kappa"
+msgid "Kappa analysis"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1697
+msgctxt "i.oif"
+msgid "OIF for LandSat TM"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1702
+msgid "Develop 3D raster map"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1705
+msgctxt "r3.null"
+msgid "Manage 3D NULL values"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1708
+msgctxt "r3.timestamp"
+msgid "Manage timestamp"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1716
+msgctxt "r3.to.rast"
+msgid "3D rasters to raster series"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1724
+msgctxt "r3.info"
+msgid "Basic 3D raster metadata"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1727
+msgctxt "r3.stats"
+msgid "3D raster statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1730
+msgctxt "r3.univar"
+msgid "Univariate statistics for 3D rasters"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1735
+msgid "Database information"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1738
+msgctxt "db.databases"
+msgid "List databases"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1741
+msgctxt "db.drivers"
+msgid "List drivers"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1744
+msgctxt "db.tables"
+msgid "List tables"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1747
+msgctxt "db.describe"
+msgid "Describe table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1750
+msgctxt "db.columns"
+msgid "List columns"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1755
+msgid "Manage databases"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1758
+msgctxt "db.connect"
+msgid "Connect"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1761
+msgctxt "db.login"
+msgid "Login"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1765
+msgctxt "db.createdb"
+msgid "Create database"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1768
+msgctxt "db.dropdb"
+msgid "Drop database"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1772
+msgctxt "db.droptable"
+msgid "Drop table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1775
+msgctxt "db.copy"
+msgid "Copy table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1779
+msgctxt "db.dropcolumn"
+msgid "Drop column"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1783
+msgctxt "db.test"
+msgid "Test"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1788
+msgid "Query"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1791
+msgctxt "db.select"
+msgid "Query any table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1797
+msgctxt "db.execute"
+msgid "SQL statement"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1802
+msgid "Vector database connections"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1805
+msgctxt "v.db.addtable"
+msgid "New table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1808
+msgctxt "v.db.droptable"
+msgid "Remove table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1811
+msgctxt "v.db.join"
+msgid "Join table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1815
+msgctxt "v.db.addcolumn"
+msgid "Add columns"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1818
+msgctxt "v.db.dropcolumn"
+msgid "Drop column"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1821
+msgctxt "v.db.renamecolumn"
+msgid "Rename column"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1825
+msgctxt "v.db.update"
+msgid "Change values"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1828
+msgctxt "v.db.droprow"
+msgid "Drop row"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1832
+msgctxt "v.db.reconnect.all"
+msgid "Reconnect vectors to database"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1835
+msgctxt "v.db.connect"
+msgid "Set vector map - database connection"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1840
+msgid "&amp;Temporal"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1848
+msgctxt "t.rast.to.rast3"
+msgid "Convert raster dataset to 3D raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1853
+msgctxt "t.vect.db.select"
+msgid "Query vector dataset attribute data"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1857
+msgctxt "t.rast.colors"
+msgid "Raster dataset color table"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1861
+msgctxt "t.rast.mapcalc"
+msgid "Raster calculations"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1864
+msgctxt "t.rast3d.mapcalc"
+msgid "3D raster calculations"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1868
+msgctxt "t.rast.gapfill"
+msgid "Interpolate gaps in raster datasets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1877
+msgid "Manage datasets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1880
+msgctxt "t.connect"
+msgid "Connect temporal database"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1883
+msgctxt "t.create"
+msgid "Create"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1886
+msgctxt "t.rename"
+msgid "Rename"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1889
+msgctxt "t.remove"
+msgid "Remove"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1892
+msgctxt "t.support"
+msgid "Update metadata"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1896
+msgctxt "t.merge"
+msgid "Merge"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1899
+msgctxt "t.shift"
+msgid "Temporally shift"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1902
+msgctxt "t.snap"
+msgid "Snap maps of dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1906
+msgctxt "t.list"
+msgid "List"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1911
+msgid "Manage maps in datasets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1914
+msgctxt "t.register"
+msgid "Register maps in datasets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1917
+msgctxt "t.unregister"
+msgid "Unregister maps from datasets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1921
+msgctxt "t.rast.list"
+msgid "List raster dataset maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1924
+msgctxt "t.vect.list"
+msgid "List vector dataset maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1927
+msgctxt "t.rast3d.list"
+msgid "List 3D raster dataset maps"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1935
+msgctxt "t.info"
+msgid "Space time datasets metadata"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1939
+msgctxt "t.rast.univar"
+msgid "Univariate raster dataset statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1942
+msgctxt "t.vect.univar"
+msgid "Univariate vector dataset statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1945
+msgctxt "t.rast3d.univar"
+msgid "Univariate 3D raster dataset statistics"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1949
+msgctxt "t.topology"
+msgid "Report temporal topology"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1954
+msgid "Import"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1957
+msgctxt "t.rast.import"
+msgid "Import raster dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1960
+msgctxt "t.vect.import"
+msgid "Import vector dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1965
+msgid "Export"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1968
+msgctxt "t.rast.export"
+msgid "Export raster dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1971
+msgctxt "t.rast.out.vtk"
+msgid "Export raster dataset as VTK time series"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1975
+msgctxt "t.vect.export"
+msgid "Export vector dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1980
+msgid "Extraction"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1983
+msgctxt "t.rast.extract"
+msgid "Extract subset of raster dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1986
+msgctxt "t.vect.extract"
+msgid "Extract subset of vector dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1989
+msgctxt "t.rast3d.extract"
+msgid "Extract subset of 3D raster dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1994
+msgid "Aggregation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:1997
+msgctxt "t.rast.neighbors"
+msgid "Neighborhood analysis in raster dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2000
+msgctxt "t.rast.series"
+msgid "Aggregation in raster datasets"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2004
+msgctxt "t.rast.aggregate"
+msgid "Temporal aggregation"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2007
+msgctxt "t.rast.aggregate.ds"
+msgid "Temporal aggregation by dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2012
+msgid "Sampling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2015
+msgctxt "t.rast.what"
+msgid "Sample a space time raster dataset at point coordinates"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2018
+msgctxt "t.vect.what.strds"
+msgid "Query raster dataset by vector points dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2021
+msgctxt "t.vect.observe.strds"
+msgid "Observe specific locations in raster dataset"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2024
+msgctxt "t.sample"
+msgid "Temporal sampling"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2029
+#: ../gui/wxpython/xml/toolboxes.xml:2037
+msgid "GUI tools"
+msgstr ""
+
+#: ../gui/wxpython/xml/toolboxes.xml:2041
+msgctxt "g.gui.dbmgr"
+msgid "Attribute table manager"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:5
+msgctxt "Command: , Name: Georectify, Handler: OnGCPManager"
+msgid "Georectify"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:8
+msgid "Manage Ground Control Points for Georectification"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:9
+msgid "georectify"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:12
+msgctxt "Command: , Name: GraphicalModeler, Handler: OnGModeler"
+msgid "Graphical modeler"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:15
+msgid "Launch Graphical modeler"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:17
+msgid "modeler-main"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:20
+msgctxt "Command: , Name: RunModel, Handler: OnRunModel"
+msgid "Run model"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:22
+msgid "Run model prepared by Graphical modeler"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:25
+msgctxt "Command: , Name: AnimationTool, Handler: OnAnimationTool"
+msgid "Animation tool"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:28
+msgid "Launch animation tool."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:32
+msgctxt "Command: , Name: TimelineTool, Handler: OnTimelineTool"
+msgid "Timeline tool"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:35
+msgid "Plot temporal extents."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:39
+msgctxt "Command: , Name: TplotTool, Handler: OnTplotTool"
+msgid "Temporal plot tool"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:42
+msgid "Plot temporal values."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:46
+msgctxt "Command: , Name: CartographicComposer, Handler: OnPsMap"
+msgid "Cartographic Composer"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:49
+msgid "Launch Cartographic Composer"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:51
+msgid "print-compose"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:54
+msgctxt "Command: , Name: MapSwipe, Handler: OnMapSwipe"
+msgid "Map Swipe"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:57
+msgid "Launch Map Swipe"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:61
+msgctxt "Command: , Name: LaunchScript, Handler: OnRunScript"
+msgid "Launch script"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:63
+msgid "Launches script file."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:66
+msgctxt "Command: , Name: PyEdit, Handler: OnSimpleEditor"
+msgid "Simple Python Editor"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:68
+msgid "Launches Simple Python Editor."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:71
+msgctxt "Command: , Name: CloseGUI, Handler: OnCloseWindow"
+msgid "Close GUI"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:73
+msgid "Close graphical user interface."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:76
+msgctxt "Command: , Name: Quit, Handler: OnCloseWindowOrExit"
+msgid "Quit GRASS GIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:78
+msgid "Close GUI and exit GRASS GIS shell."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:79
+msgid "Ctrl+Q"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:80
+msgid "ID_EXIT"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:83
+msgctxt "Command: , Name: Preferences, Handler: OnPreferences"
+msgid "Preferences"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:85
+msgid "User GUI preferences (display font, commands, digitizer, etc.)"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:86
+msgid "ID_PREFERENCES"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:89
+msgctxt "Command: , Name: Histogram, Handler: OnHistogram"
+msgid "Histogram"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:91
+msgid "Generate histogram of image"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:94
+msgctxt "Command: , Name: VolumeCalculator, Handler: OnMapCalculator"
+msgid "3D raster map calculator"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:97
+msgid "3D raster map calculator"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:101
+msgctxt "Command: g.manual -i, Name: GRASSHelp, Handler: "
+msgid "GRASS help"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:103
+#: ../gui/wxpython/xml/wxgui_items.xml:110
+msgid "Display the HTML man pages of GRASS GIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:105
+msgid "ID_HELP"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:108
+msgctxt "Command: g.manual entry=wxGUI, Name: GUIHelp, Handler: "
+msgid "GUI help"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:114
+msgctxt "Command: , Name: AboutSystem, Handler: OnSystemInfo"
+msgid "About system"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:116
+msgid "Prints system information"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:119
+msgctxt "Command: , Name: AboutGRASSGIS, Handler: OnAboutGRASS"
+msgid "About GRASS GIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:121
+msgid "About GRASS GIS"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:122
+msgid "ID_ABOUT"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:125
+msgctxt "Command: , Name: New, Handler: OnWorkspaceNew"
+msgid "New"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:127
+msgid "Create new workspace"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:128
+msgid "Ctrl+N"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:129
+msgid "ID_NEW"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:132
+msgctxt "Command: , Name: Open, Handler: OnWorkspaceOpen"
+msgid "Open"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:134
+msgid "Load workspace from file"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:136
+msgid "ID_OPEN"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:139
+msgctxt "Command: , Name: Save, Handler: OnWorkspaceSave"
+msgid "Save"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:141
+msgid "Save workspace"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:143
+msgid "ID_SAVE"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:146
+msgctxt "Command: , Name: SaveAs, Handler: OnWorkspaceSaveAs"
+msgid "Save as"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:148
+msgid "Save workspace to file"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:149
+msgid "ID_SAVEAS"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:152
+msgctxt "Command: , Name: Close, Handler: OnWorkspaceClose"
+msgid "Close"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:154
+msgid "Close workspace file"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:155
+msgid "ID_CLOSE"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:158
+msgctxt "Command: , Name: AddRaster, Handler: OnAddRaster"
+msgid "Add raster"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:160
+msgid "Add raster map layer to current display"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:161
+msgid "Ctrl+Shift+R"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:164
+msgctxt "Command: , Name: AddVector, Handler: OnAddVector"
+msgid "Add vector"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:166
+msgid "Add vector map layer to current display"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:167
+msgid "Ctrl+Shift+V"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:170
+msgctxt "Command: , Name: AddMultipleRastersOrVectors, Handler: OnAddMaps"
+msgid "Add multiple rasters or vectors"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:172
+msgid "Add multiple raster or vector map layers to current display"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:173
+msgid "Ctrl+Shift+L"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:176
+msgctxt "Command: , Name: AddRGB, Handler: OnAddRasterRGB"
+msgid "Add RGB raster layer"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:178
+msgid "Add RGB raster map layer to current display"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:181
+msgctxt "Command: , Name: AddWebServiceLayer, Handler: OnAddWS"
+msgid "Add web service layer"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:183
+msgid "Add web service layer"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:186
+msgctxt "Command: , Name: NewMapDisplayWindow, Handler: OnNewDisplay"
+msgid "New map display window"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:188
+msgid "Open new map display window"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:191
+msgctxt "Command: , Name: RenderAllMapDisplays, Handler: OnRenderAllMapDisplays"
+msgid "Render all map displays"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:193
+msgid "Re-render maps in all open map display windows"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:197
+msgctxt "Command: , Name: CloseCurrentMapDisplayWindow, Handler: OnDisplayClose"
+msgid "Close current map display window"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:199
+msgid "Close current map display window"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:203
+msgctxt "Command: , Name: CloseAllOpenMapDisplayWindows, Handler: OnDisplayCloseAll"
+msgid "Close all open map display windows"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:205
+msgid "Close all open map display windows"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:208
+msgctxt "Command: , Name: CommonRasterFormats, Handler: OnImportGdalLayers"
+msgid "Simplified raster import with reprojection"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:211
+msgid "Imports raster data into a GRASS raster map using GDAL library."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:215
+msgctxt "Command: , Name: CommonVectorFormats, Handler: OnImportOgrLayers"
+msgid "Simplified vector import with reprojection"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:218
+msgid "Imports vector data into a GRASS vector map using OGR library."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:222
+msgctxt "Command: , Name: DXFImport, Handler: OnImportDxfFile"
+msgid "DXF import"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:225
+msgid "Converts files in DXF format to GRASS vector map format."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:229
+msgctxt "Command: , Name: LinkExternalRasterData, Handler: OnLinkGdalLayers"
+msgid "Link external raster data"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:232
+msgid "Link GDAL supported raster data as a pseudo GRASS raster map layer."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:236
+msgctxt "Command: , Name: LinkExternalVectorData, Handler: OnLinkOgrLayers"
+msgid "Link external vector data"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:239
+msgid "Creates a new pseudo-vector map as a link to an OGR-supported layer."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:243
+msgctxt "Command: , Name: OutputFormatForVectorData, Handler: OnVectorOutputFormat"
+msgid "Output format for vector data"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:246
+msgid "Defines vector output format utilizing OGR library."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:250
+msgctxt "Command: g.region -p, Name: ShowRegion, Handler: "
+msgid "Show current region"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:252
+#: ../gui/wxpython/xml/wxgui_items.xml:258
+msgid "Shows the extent and resolution of the computational region."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:256
+msgctxt "Command: g.region -pl, Name: ShowRegionLL, Handler: "
+msgid "Show region using latitude and longitude"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:262
+msgctxt "Command: , Name: ShowRegionExtent, Handler: OnShowRegionExtent"
+msgid "Show current region extent in Map Display"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:264
+msgid "Shows the extent of the computational region in Map Display."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:268
+msgctxt "Command: , Name: MapsetAccess, Handler: OnMapsets"
+msgid "Mapset access"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:271
+msgid "Set/unset access to other mapsets in current project"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:275
+msgctxt "Command: , Name: ChangeLocationAndMapset, Handler: OnChangeLocation"
+msgid "Change project (location) and mapset"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:277
+msgid "Change current project and mapset."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:281
+msgctxt "Command: , Name: ChangeMapset, Handler: OnChangeMapset"
+msgid "Change mapset"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:283
+msgid "Change current mapset."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:287
+msgctxt "Command: , Name: ChangeWorkingDirectory, Handler: OnChangeCWD"
+msgid "Change working directory"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:289
+msgid "Change working directory"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:292
+msgctxt "Command: g.gisenv -n, Name: ShowSettings, Handler: "
+msgid "Show settings"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:294
+msgid "Outputs and modifies the user's current GRASS variable settings."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:298
+msgctxt "Command: , Name: CreateNewLocation, Handler: OnLocationWizard"
+msgid "Create new project (location)"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:300
+msgid "Launches project wizard to create a new GRASS project (also known as location)."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:304
+msgctxt "Command: , Name: CreateNewMapset, Handler: OnCreateMapset"
+msgid "Create new mapset"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:306
+msgid "Creates new mapset in the current project, changes current mapset."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:310
+msgctxt "Command: g.proj -p, Name: DisplayMapProjection, Handler: "
+msgid "Display map projection"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:312
+msgid "Converts co-ordinate system descriptions (i.e. projection information) between various formats (including GRASS format)."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:316
+msgctxt "Command: , Name: InstallExtensionFromAddons, Handler: OnInstallExtension"
+msgid "Install extension from addons"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:319
+msgid "Installs new extension from GRASS AddOns repository."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:323
+msgctxt "Command: , Name: ManageExtension, Handler: OnManageExtension"
+msgid "Manage installed extension"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:326
+msgid "Updates or removes installed GRASS AddOns extension(s)."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:330
+msgctxt "Command: , Name: ManageRasterColorRulesInteractively, Handler: OnRasterRules"
+msgid "Manage color rules interactively"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:332
+msgid "Interactive management of raster color tables."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:336
+msgctxt "Command: , Name: SetUpSamplingAndAnalysisFramework, Handler: OnRLiSetup"
+msgid "Set up sampling and analysis framework"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:339
+msgid "Configuration editor for r.li.'index'"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:343
+msgctxt "Command: , Name: CreateNewVectorMap, Handler: OnNewVector"
+msgid "Create new vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:345
+msgid "Create new empty vector map"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:348
+msgctxt "Command: , Name: ManageVectorColorRulesInteractively, Handler: OnVectorRules"
+msgid "Manage color rules interactively"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:350
+msgid "Interactive management of vector color tables."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:354
+msgctxt "Command: , Name: VectorNetworkAnalysisTool, Handler: OnVNet"
+msgid "Vector network analysis tool"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:356
+msgid "Tool for interactive vector network analysis."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:360
+msgctxt "Command: , Name: CreateOrEditGroup, Handler: OnEditImageryGroups"
+msgid "Create/edit group"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:363
+msgid "Creates, edits, and lists groups of imagery files."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:367
+msgctxt "Command: , Name: InteractiveInputForSupervisedClassification, Handler: OnIClass"
+msgid "Interactive input for supervised classification"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:370
+msgid "Generates spectral signatures by allowing the user to outline training areas."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:374
+msgctxt "Command: g.gui.image2target, Name: ManagingGCPsfor3DCorrection, Handler: "
+msgid "Managing GCPs for 3D correction"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:376
+msgid "Georectifies a map and allows managing GCP for 3D correction."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:380
+msgctxt "Command: g.gui.photo2image, Name: CorrectsScanningDistortions, Handler: "
+msgid "Corrects scanning distortions"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:382
+msgid "Corrects scanning distortions of a scanned aerial photo."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:386
+msgctxt "Command: , Name: DataCatalog, Handler: OnDataCatalog"
+msgid "Data Catalog"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:389
+msgid "Launch Data Catalog."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:393
+msgctxt "Command: g.gui.vdigit, Name: VDigit, Handler: "
+msgid "Vector digitizer"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:395
+msgid "Interactive editing and digitization of vector maps."
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:399
+msgctxt "Command: g.gui.rdigit, Name: RDigit, Handler: "
+msgid "Raster digitizer"
+msgstr ""
+
+#: ../gui/wxpython/xml/wxgui_items.xml:401
+msgid "Interactive editing and digitization of raster maps."
+msgstr ""
