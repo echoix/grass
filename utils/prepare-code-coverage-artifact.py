@@ -62,8 +62,6 @@ def prepare_json_report(
             "text",
             "-instr-profile",
             profile,
-            "-o",
-            report_file,
         ]
         + objects
         + restricted_dirs
