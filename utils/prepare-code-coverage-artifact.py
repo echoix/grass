@@ -44,10 +44,19 @@ def merge_raw_profiles(host_llvm_profdata, profile_data_dir, preserve_profiles):
     return profdata_path
 
 
-def prepare_json_report(
-    host_llvm_cov, profile, report_file, binaries, restricted_dirs, compilation_dir
+def prepare_export_file(
+    host_llvm_cov,
+    profile,
+    report_file,
+    binaries,
+    restricted_dirs,
+    compilation_dir,
+    export_format,
 ):
-    print(f":: Preparing json report for {binaries}...", end="")
+    export_format_label = export_format
+    if export_format == "text":
+        export_format_label = "json"
+    print(f":: Preparing {export_format_label} report for {binaries}...", end="")
     sys.stdout.flush()
     objects = []
     for i, binary in enumerate(binaries):
@@ -59,7 +68,7 @@ def prepare_json_report(
         [host_llvm_cov, "export"]
         + [
             "-format",
-            "text",
+            export_format,
             "-instr-profile",
             profile,
             "-skip-functions",
@@ -186,7 +195,10 @@ if __name__ == "__main__":
         help="Emit a unified report for all binaries",
     )
     parser.add_argument(
-        "--json", help="If specified, export the coverage data to this file"
+        "--json", help="If specified, export the coverage data to this json file"
+    )
+    parser.add_argument(
+        "--lcov", help="If specified, export the coverage data to this lcov file"
     )
     parser.add_argument(
         "--restrict",
@@ -232,11 +244,22 @@ if __name__ == "__main__":
             args.compilation_dir,
         )
         if args.json:
-            prepare_json_report(
+            prepare_export_file(
                 args.host_llvm_cov,
                 profdata_path,
                 args.json,
                 args.binaries,
                 args.restrict,
                 args.compilation_dir,
+                export_format="text",
+            )
+        if args.lcov:
+            prepare_export_file(
+                args.host_llvm_cov,
+                profdata_path,
+                args.json,
+                args.binaries,
+                args.restrict,
+                args.compilation_dir,
+                export_format="lcov",
             )

@@ -195,8 +195,10 @@ jobs:
           python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV \
             $PROFILES_DIR $REPORT_DIR $COV_BINARIES \
             --unified-report \
-            --json=grass.llvm-source.coverage.json \
-            --restrict $WORKSPACE
+            --json=grass.llvm-source.coverage.lcov \
+          && echo "Done running python script"
+          # --json=grass.llvm-source.coverage.json \
+          # --restrict $WORKSPACE
       - name: Make profile data available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -215,5 +217,6 @@ jobs:
           flags: pytest-macos-14
           name: pytest-macos-14
           disable_search: true
-          files: ./grass.llvm-source.coverage.json
+          # files: ./grass.llvm-source.coverage.json
+          files: ./grass.llvm-source.coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
