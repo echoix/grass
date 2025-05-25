@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
 
 """Prepare a code coverage artifact.
 
@@ -140,7 +139,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--only-merge",
         action="store_true",
-        help="Only merge raw profiles together, skip report " "generation",
+        help="Only merge raw profiles together, skip report generation",
     )
     parser.add_argument(
         "--preserve-profiles", help="Do not delete raw profiles", action="store_true"
