@@ -20,7 +20,7 @@ permissions: {}
 jobs:
   macos_build:
     name: macOS build
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       PYTHONWARNINGS: always
       # LLVM_PROFILE_FILE: "grass-prof-%9m.profraw"
@@ -338,7 +338,7 @@ jobs:
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
           name: >-
-            profile-data-${{ 'macos-14' }}
+            profile-data-${{ 'macos-15' }}
           path: |
             *.prof*
             *coverage*
@@ -357,6 +357,6 @@ jobs:
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
         with:
           verbose: true
-          flags: pytest-macos-14
-          name: pytest-macos-14
+          flags: pytest-macos-15
+          name: pytest-macos-15
           token: ${{ secrets.CODECOV_TOKEN }}
