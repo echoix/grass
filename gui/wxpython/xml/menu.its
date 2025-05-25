@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- <its:rules xmlns:its="http://www.w3.org/2005/11/its" xmlns:itsx="http://www.w3.org/2008/12/its-extensions" xmlns:okp="okapi-framework:xmlfilter-options" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0"> -->
+<its:rules xmlns:its="http://www.w3.org/2005/11/its"
+    xmlns:itsx="http://www.w3.org/2008/12/its-extensions" version="2.0">
+    <!-- <its:rules xmlns:its="http://www.w3.org/2005/11/its" xmlns:itsx="http://www.w3.org/2008/12/its-extensions" xmlns:okp="okapi-framework:xmlfilter-options" version="2.0"> -->
+    <!-- <its:rules xmlns:its="http://www.w3.org/2005/11/its" xmlns:itsx="http://www.w3.org/2008/12/its-extensions" xmlns:okp="okapi-framework:xmlfilter-options" version="1.0"> -->
+    <!-- <its:rules xmlns:its="http://www.w3.org/2005/11/its"> -->
+    <!-- <its:translateRule translate="no" selector="//its:param | //its:locNote"/> -->
+    <!-- <its:translateRules selector="//*[translate='no']" translate="no"/> -->
+    <!-- <its:translateRules selector="//*[translate='yes']" translate="yes"/> -->
+    <!-- See ITS specification at: http://www.w3.org/TR/its/ -->
+    <!-- /menudata/menubar/menu[1]/items/menu[2]/items/menuitem[2]/label -->
+
+    <!-- <its:translateRule selector="//menuitem/label/text()" translate="yes" /> -->
+    <!-- <its:translateRule selector="//menuitem/label/text()" translate="yes" /> -->
+    <!-- <its:translateRule selector="//menuitem/label/text()" translate="no" /> -->
+    <!-- <its:translateRule selector="//menuitem/label/text()" translate="no" /> -->
+    <its:translateRule selector="//menuitem/label" translate="yes" />
+    <!-- <its:translateRule selector="//menuitem/help" translate="yes" /> -->
+    <!-- <its:translateRule selector="//toolbox/label" translate="yes" /> -->
+    <!-- <its:translateRule selector="//module-item/label" translate="yes" />
+    <its:translateRule selector="//module-item/description" translate="yes" />
+    <its:translateRule selector="//wxgui-item/label" translate="yes" /> -->
+    <!-- <its:translateRule selector="//(menuitem|toolbox|module-item|wxgui-item)/label" translate="yes"/> -->
+    <!-- <its:translateRule selector="//wxgui-item/description" translate="yes" /> -->
+    <!-- <its:translateRule selector="//wxgui-item/shortcut" translate="yes" /> -->
+    <its:translateRule selector="//wxgui-item/keywords" translate="no" />
+    <its:translateRule selector="//wxgui-item/command" translate="no" />
+    <!-- <its:translateRule selector="//menuitem/command|//wxgui-item/command" translate="no" /> -->
+    <its:translateRule selector="//wxgui-item/handler|//menuitem/handler" translate="no" />
+    <its:translateRule selector="//wxgui-item/related-module" translate="no" />
+    <!-- <itsx:contextRule selector="//wxgui-item/*"  contextPointer ="../@name" translate="no" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item/label|//wxgui-item/description"  contextPointer ="../@name" translate="no" /> -->
+    <itsx:contextRule selector="//module-item[@name]/label"  contextPointer ="../@name"/>
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="../@name" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="../command| ../@name " /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="concat(../command, ' ', ../@name) " /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="concat('Command: ', ../command)" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="concat(concat('Command: ', ../command , ', '), concat('Name: ',../@name, ', ', 'Handler: ', ../handler))" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="concat(concat('Command: ', ../command , ', '), concat('Name: ',../@name, ', ', 'Handler: ', ../handler))" /> -->
+    <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="concat(concat('Command: ',../command| ../related-module, ', '), concat('Name: ',../@name, ', ', 'Handler: ', ../handler))" />
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="concat('Name: ',../@name, ', Command: ', ../command | ../related-module, ', '), concat('Name: ',../@name, ', ', 'Handler: ', ../handler))" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="string-join(../(concat(command/text(), '.', )), '&#10;'))" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="string-join(../(concat(command/text(), '.', @name/text())), '&#10;')" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="string-join('hello', 'w')" /> -->
+    <!-- <itsx:contextRule selector="//wxgui-item[@name]/label"  contextPointer ="../command" /> -->
+
+    <!-- <module-item name="m.nviz.image">
+        <label>3D image rendering</label>
+      </module-item> -->
+
+</its:rules>
+
+<!-- <its:documentRules xmlns:its="http://www.w3.org/2005/11/its">
+  <its:documentRule its:translateScope="//*[@translate='yes']" its:translate="yes" />
+  <its:documentRule its:translateScope="//*[@translate='no']" its:translate="no" />
+  <its:documentRule its:termScope="//term" its:term="yes" />
+  <its:documentRule its:termScope="//dt" its:term="yes" />
+ </its:documentRules> -->
