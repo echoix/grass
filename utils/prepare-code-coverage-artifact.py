@@ -57,7 +57,6 @@ def prepare_json_report(
             objects.extend(("-object", binary))
     invocation = (
         [host_llvm_cov, "show"]
-        + objects
         + [
             "-format",
             "text",
@@ -66,6 +65,7 @@ def prepare_json_report(
             "-o",
             report_file,
         ]
+        + objects
         + restricted_dirs
     )
     if compilation_dir:
