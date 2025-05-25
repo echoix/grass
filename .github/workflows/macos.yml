@@ -218,7 +218,7 @@ jobs:
           rm -rf ./dist.*
           find . -type f \( -name '*.html' -o -name '*.md' -o -name '*.png' -o -name '*.jpg' \) -delete
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5.4.2 # v5.4.3
+        uses: codecov/codecov-action@v5.4.0 # v5.4.3
         with:
           verbose: true
           flags: pytest-macos-14
