@@ -73,6 +73,7 @@ LDFLAGS="-fprofile-instr-generate -fcoverage-mapping $LDFLAGS" ./configure $CONF
 
 EXEMPT=""
 make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
-  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT" LDFLAGS=" $LDFLAGS -fprofile-instr-generate "
+  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
+  # LDFLAGS=" $LDFLAGS -fprofile-instr-generate "
 
 make install
