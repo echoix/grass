@@ -196,8 +196,8 @@ jobs:
             $PROFILES_DIR $REPORT_DIR $COV_BINARIES \
             --unified-report \
             --json=grass.llvm-source.coverage.lcov \
-            --restrict $WORKSPACE/raster \
           && echo "Done running python script"
+          # --restrict $WORKSPACE/raster \
           # --json=grass.llvm-source.coverage.json \
           # --restrict $WORKSPACE
       - name: Make profile data available
