@@ -78,7 +78,7 @@ def prepare_export_file(
     )
     if compilation_dir:
         invocation += ["-compilation-dir=" + compilation_dir]
-    with Path(report_file).open("w") as summary:
+    with Path(report_file).open("w", encoding="utf-8") as summary:
         subprocess.check_call(
             invocation,
             stdout=summary,
