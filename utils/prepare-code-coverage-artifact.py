@@ -259,7 +259,7 @@ if __name__ == "__main__":
             prepare_export_file(
                 args.host_llvm_cov,
                 profdata_path,
-                args.json,
+                args.lcov,
                 args.binaries,
                 args.restrict,
                 args.compilation_dir,

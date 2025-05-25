@@ -197,7 +197,7 @@ jobs:
           python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV \
             $PROFILES_DIR $REPORT_DIR $COV_BINARIES \
             --unified-report \
-            --json=grass.llvm-source.coverage.lcov \
+            --lcov=grass.llvm-source.coverage.lcov \
           && echo "Done running python script"
           # --restrict $WORKSPACE/raster \
           # --json=grass.llvm-source.coverage.json \
