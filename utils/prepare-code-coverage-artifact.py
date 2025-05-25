@@ -62,6 +62,7 @@ def prepare_json_report(
             "text",
             "-instr-profile",
             profile,
+            "-skip-functions",
         ]
         + objects
         + restricted_dirs
