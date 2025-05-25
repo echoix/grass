@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-24 21:28+0000\n"
+"POT-Creation-Date: 2025-05-24 21:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3044,7 +3044,7 @@ msgid "Attribute table manager"
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:5
-msgctxt "Command: , Name: Georectify, Handler: OnGCPManager"
+msgctxt "Command: g.gui.gcp, Name: Georectify, Handler: OnGCPManager"
 msgid "Georectify"
 msgstr ""
 
@@ -3057,7 +3057,7 @@ msgid "georectify"
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:12
-msgctxt "Command: , Name: GraphicalModeler, Handler: OnGModeler"
+msgctxt "Command: g.gui.gmodeler, Name: GraphicalModeler, Handler: OnGModeler"
 msgid "Graphical modeler"
 msgstr ""
 
@@ -3079,7 +3079,7 @@ msgid "Run model prepared by Graphical modeler"
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:25
-msgctxt "Command: , Name: AnimationTool, Handler: OnAnimationTool"
+msgctxt "Command: g.gui.animation, Name: AnimationTool, Handler: OnAnimationTool"
 msgid "Animation tool"
 msgstr ""
 
@@ -3088,7 +3088,7 @@ msgid "Launch animation tool."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:32
-msgctxt "Command: , Name: TimelineTool, Handler: OnTimelineTool"
+msgctxt "Command: g.gui.timeline, Name: TimelineTool, Handler: OnTimelineTool"
 msgid "Timeline tool"
 msgstr ""
 
@@ -3097,7 +3097,7 @@ msgid "Plot temporal extents."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:39
-msgctxt "Command: , Name: TplotTool, Handler: OnTplotTool"
+msgctxt "Command: g.gui.tplot, Name: TplotTool, Handler: OnTplotTool"
 msgid "Temporal plot tool"
 msgstr ""
 
@@ -3106,7 +3106,7 @@ msgid "Plot temporal values."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:46
-msgctxt "Command: , Name: CartographicComposer, Handler: OnPsMap"
+msgctxt "Command: g.gui.psmap, Name: CartographicComposer, Handler: OnPsMap"
 msgid "Cartographic Composer"
 msgstr ""
 
@@ -3119,7 +3119,7 @@ msgid "print-compose"
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:54
-msgctxt "Command: , Name: MapSwipe, Handler: OnMapSwipe"
+msgctxt "Command: g.gui.mapswipe, Name: MapSwipe, Handler: OnMapSwipe"
 msgid "Map Swipe"
 msgstr ""
 
@@ -3194,7 +3194,7 @@ msgid "Generate histogram of image"
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:94
-msgctxt "Command: , Name: VolumeCalculator, Handler: OnMapCalculator"
+msgctxt "Command: r3.mapcalc, Name: VolumeCalculator, Handler: OnMapCalculator"
 msgid "3D raster map calculator"
 msgstr ""
 
@@ -3406,7 +3406,7 @@ msgid "Close all open map display windows"
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:208
-msgctxt "Command: , Name: CommonRasterFormats, Handler: OnImportGdalLayers"
+msgctxt "Command: r.import, Name: CommonRasterFormats, Handler: OnImportGdalLayers"
 msgid "Simplified raster import with reprojection"
 msgstr ""
 
@@ -3415,7 +3415,7 @@ msgid "Imports raster data into a GRASS raster map using GDAL library."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:215
-msgctxt "Command: , Name: CommonVectorFormats, Handler: OnImportOgrLayers"
+msgctxt "Command: v.import, Name: CommonVectorFormats, Handler: OnImportOgrLayers"
 msgid "Simplified vector import with reprojection"
 msgstr ""
 
@@ -3424,7 +3424,7 @@ msgid "Imports vector data into a GRASS vector map using OGR library."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:222
-msgctxt "Command: , Name: DXFImport, Handler: OnImportDxfFile"
+msgctxt "Command: v.in.dxf, Name: DXFImport, Handler: OnImportDxfFile"
 msgid "DXF import"
 msgstr ""
 
@@ -3433,7 +3433,7 @@ msgid "Converts files in DXF format to GRASS vector map format."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:229
-msgctxt "Command: , Name: LinkExternalRasterData, Handler: OnLinkGdalLayers"
+msgctxt "Command: r.external, Name: LinkExternalRasterData, Handler: OnLinkGdalLayers"
 msgid "Link external raster data"
 msgstr ""
 
@@ -3442,7 +3442,7 @@ msgid "Link GDAL supported raster data as a pseudo GRASS raster map layer."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:236
-msgctxt "Command: , Name: LinkExternalVectorData, Handler: OnLinkOgrLayers"
+msgctxt "Command: v.external, Name: LinkExternalVectorData, Handler: OnLinkOgrLayers"
 msgid "Link external vector data"
 msgstr ""
 
@@ -3451,7 +3451,7 @@ msgid "Creates a new pseudo-vector map as a link to an OGR-supported layer."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:243
-msgctxt "Command: , Name: OutputFormatForVectorData, Handler: OnVectorOutputFormat"
+msgctxt "Command: v.external.out, Name: OutputFormatForVectorData, Handler: OnVectorOutputFormat"
 msgid "Output format for vector data"
 msgstr ""
 
@@ -3484,7 +3484,7 @@ msgid "Shows the extent of the computational region in Map Display."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:268
-msgctxt "Command: , Name: MapsetAccess, Handler: OnMapsets"
+msgctxt "Command: g.mapsets, Name: MapsetAccess, Handler: OnMapsets"
 msgid "Mapset access"
 msgstr ""
 
@@ -3556,7 +3556,7 @@ msgid "Converts co-ordinate system descriptions (i.e. projection information) be
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:316
-msgctxt "Command: , Name: InstallExtensionFromAddons, Handler: OnInstallExtension"
+msgctxt "Command: g.extension, Name: InstallExtensionFromAddons, Handler: OnInstallExtension"
 msgid "Install extension from addons"
 msgstr ""
 
@@ -3565,7 +3565,7 @@ msgid "Installs new extension from GRASS AddOns repository."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:323
-msgctxt "Command: , Name: ManageExtension, Handler: OnManageExtension"
+msgctxt "Command: g.extension, Name: ManageExtension, Handler: OnManageExtension"
 msgid "Manage installed extension"
 msgstr ""
 
@@ -3583,7 +3583,7 @@ msgid "Interactive management of raster color tables."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:336
-msgctxt "Command: , Name: SetUpSamplingAndAnalysisFramework, Handler: OnRLiSetup"
+msgctxt "Command: g.gui.rlisetup, Name: SetUpSamplingAndAnalysisFramework, Handler: OnRLiSetup"
 msgid "Set up sampling and analysis framework"
 msgstr ""
 
@@ -3619,7 +3619,7 @@ msgid "Tool for interactive vector network analysis."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:360
-msgctxt "Command: , Name: CreateOrEditGroup, Handler: OnEditImageryGroups"
+msgctxt "Command: i.group, Name: CreateOrEditGroup, Handler: OnEditImageryGroups"
 msgid "Create/edit group"
 msgstr ""
 
@@ -3628,7 +3628,7 @@ msgid "Creates, edits, and lists groups of imagery files."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:367
-msgctxt "Command: , Name: InteractiveInputForSupervisedClassification, Handler: OnIClass"
+msgctxt "Command: g.gui.iclass, Name: InteractiveInputForSupervisedClassification, Handler: OnIClass"
 msgid "Interactive input for supervised classification"
 msgstr ""
 
@@ -3655,7 +3655,7 @@ msgid "Corrects scanning distortions of a scanned aerial photo."
 msgstr ""
 
 #: ../gui/wxpython/xml/wxgui_items.xml:386
-msgctxt "Command: , Name: DataCatalog, Handler: OnDataCatalog"
+msgctxt "Command: g.gui.datacatalog, Name: DataCatalog, Handler: OnDataCatalog"
 msgid "Data Catalog"
 msgstr ""
 
