@@ -213,7 +213,4 @@ jobs:
           verbose: true
           flags: pytest-macos-14
           name: pytest-macos-14
-          disable_search: true
-          version: "v10.4.0"
-          files: ./grass.llvm-source.coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
