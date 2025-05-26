@@ -141,7 +141,6 @@ jobs:
 
       - name: Run gunittest tests
         shell: micromamba-shell {0}
-        if: false
         run: .github/workflows/test_thorough.sh --config .github/workflows/macos_gunittest.cfg
         env:
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
