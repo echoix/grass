@@ -197,10 +197,10 @@ jobs:
           python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV \
             $PROFILES_DIR $REPORT_DIR $COV_BINARIES \
             --unified-report \
-            --lcov=grass.llvm-source.coverage.lcov \
+            --json=grass.llvm-source.coverage.json \
           && echo "Done running python script"
+          # --lcov=grass.llvm-source.coverage.lcov \
           # --restrict $WORKSPACE/raster \
-          # --json=grass.llvm-source.coverage.json \
           # --restrict $WORKSPACE
       - name: Make profile data available
         if: ${{ !cancelled() }}
