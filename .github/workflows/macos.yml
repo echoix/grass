@@ -189,19 +189,13 @@ jobs:
 
           COV_BINARIES=$(find . -type f \( -executable -o -name "*.dylib" \) \
             -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
-          COV_BINARIES=$(find . -type f \( -name "*.dylib" \) \
-            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
 
           rm -rf $REPORT_DIR
           mkdir -p $REPORT_DIR
           python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV \
             $PROFILES_DIR $REPORT_DIR $COV_BINARIES \
             --unified-report \
-            --json=grass.llvm-source.coverage.json \
-          && echo "Done running python script"
-          # --lcov=grass.llvm-source.coverage.lcov \
-          # --restrict $WORKSPACE/raster \
-          # --restrict $WORKSPACE
+            --lcov=grass.llvm-source.coverage.lcov
       - name: Make profile data available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
