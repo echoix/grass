@@ -203,10 +203,6 @@ jobs:
             *coverage*
             llvm_coverage*/**
           retention-days: 1
-      - name: Remove conflicting files
-        run: |
-          rm -rf ./dist.*
-          find . -type f \( -name '*.html' -o -name '*.md' -o -name '*.png' -o -name '*.jpg' \) -delete
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5.4.3 # v5.4.3
         with:
