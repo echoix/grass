@@ -226,5 +226,5 @@ jobs:
           disable_search: true
           version: "v10.2.1"
           # files: ./grass.llvm-source.coverage.json
-          files: ./grass.llvm-source.coverage.lcov
+          files: ./grass.llvm-source.coverage.lcov,./grass.llvm-source.coverage.json
           token: ${{ secrets.CODECOV_TOKEN }}
