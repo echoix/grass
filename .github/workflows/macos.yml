@@ -183,10 +183,6 @@ jobs:
 
           PROFILES_DIR=$WORKSPACE
 
-          # COV_BINARIES=$(find $BUILD_DIR/bin $BUILD_DIR/lib -depth 1 \
-          # -type f -exec file {} \\; | grep Mach-O | cut -d':' -f1 \
-          # | grep -vE '/(FileCheck|count|not)$' | xargs)
-
           COV_BINARIES=$(find . -type f \( -executable -o -name "*.dylib" \) \
             -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
 
