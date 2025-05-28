@@ -72,8 +72,6 @@ def prepare_export_file(
             "-instr-profile",
             profile,
             "-skip-functions",
-            # "-ignore-filename-regex",
-            # "\\.*/dist\\.*/\\.*",
         ]
         + objects
         + restricted_dirs
