@@ -60,7 +60,7 @@ def prepare_export_file(
     sys.stdout.flush()
     objects = []
     for i, binary in enumerate(binaries):
-        if i == 0 and False:
+        if i == 0:
             objects.append(binary)
         else:
             objects.extend(("-object", binary))
