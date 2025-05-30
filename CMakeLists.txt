@@ -46,6 +46,7 @@ if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD_REQUIRED ON)
 endif()
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate")
 
 set(x11_default_option_enabled ON)
