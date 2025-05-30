@@ -126,7 +126,6 @@ jobs:
 
           rm -rf $REPORT_DIR
           mkdir -p $REPORT_DIR
-          mkdir -p $LLVM_PROFDATA
           python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV \
             $PROFILES_DIR $REPORT_DIR $COV_BINARIES \
             --unified-report \
