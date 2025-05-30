@@ -61,7 +61,8 @@ jobs:
         run: |
           cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build -G Ninja \
             -DCMAKE_INSTALL_PREFIX=$HOME/install -DWITH_NLS=ON -DWITH_GUI=OFF -DWITH_DOCS=OFF \
-            -DWITH_READLINE=ON -DWITH_ODBC=ON -DWITH_NETCDF=ON -DWITH_BZLIB=ON
+            -DWITH_READLINE=ON -DWITH_ODBC=ON -DWITH_NETCDF=ON -DWITH_BZLIB=ON \
+            -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
       - name: Print CMakeCache.txt
         shell: bash -el {0}
         run: |
@@ -75,6 +76,8 @@ jobs:
       - name: Add the bin directory to PATH
         run: |
           echo "$HOME/install/bin" >> $GITHUB_PATH
+      - name: Set profile file name env var
+        run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%p-%4m.profraw" >> $GITHUB_ENV
       - name: Print installed versions
         if: always()
         run: .github/workflows/print_versions.sh
@@ -89,3 +92,47 @@ jobs:
           name: testreport-CMake
           path: testreport
           retention-days: 3
+      - name: Use llvm's coverage script
+        if: ${{ !cancelled() }}
+        run: |
+          WORKSPACE=$GITHUB_WORKSPACE
+
+          BUILD_DIR=$(pwd)/dist*
+          FAST_BUILD_DIR=$(pwd)/clang-build
+          REPORT_DIR=$(pwd)/coverage-reports
+          HOST=
+          LLVM_PROFDATA=llvm-profdata
+          LLVM_COV=llvm-cov
+          ARTIFACT_PREP_SCRIPT=$WORKSPACE/utils/prepare-code-coverage-artifact.py
+
+          PROFILES_DIR=$WORKSPACE
+
+          COV_BINARIES=$(find . -type f \( -executable -o -name "*.dylib" -o -name "*.so*" \) \
+            -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
+
+          rm -rf $REPORT_DIR
+          mkdir -p $REPORT_DIR
+          python $ARTIFACT_PREP_SCRIPT $LLVM_PROFDATA $LLVM_COV \
+            $PROFILES_DIR $REPORT_DIR $COV_BINARIES \
+            --unified-report \
+            --lcov=grass.llvm-source.coverage.lcov
+      - name: Make profile data available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: >-
+            profile-data-${{ 'cmake' }}
+          path: |
+            *.prof*
+            *coverage*
+            llvm_coverage*/**
+          retention-days: 1
+      - name: Upload coverage reports to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        with:
+          verbose: true
+          flags: linux-cmake
+          name: linux-cmake
+          token: ${{ secrets.CODECOV_TOKEN }}
+ 
