@@ -66,6 +66,7 @@ def prepare_export_file(
             objects.extend(("-object", binary))
     invocation = (
         [host_llvm_cov, "export"]
+        + objects
         + [
             "-format",
             export_format,
@@ -73,7 +74,6 @@ def prepare_export_file(
             profile,
             "-skip-functions",
         ]
-        + objects
         + restricted_dirs
     )
     if compilation_dir:
