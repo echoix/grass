@@ -27,6 +27,11 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       CMakeVersion: "3.22.0"
+      CC: clang-${{ matrix.llvm-version }}
+      CXX: clang++-${{ matrix.llvm-version }}
+    strategy:
+      matrix:
+        llvm-version: [19]  
     steps:
       - name: Checkout GRASS
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -41,10 +46,18 @@ jobs:
           echo "$GITHUB_WORKSPACE/cmake-${{ env.CMakeVersion }}-${arch}/bin" >> $GITHUB_PATH
       - run: |
           cmake --version
+      - name: Apt LLVM
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{ matrix.llvm-version }}
+          sudo apt-get update
       - name: Install dependencies
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget git gawk findutils ninja-build libpq-dev \
+            clang-${{ matrix.llvm-version }} clang-tools-${{ matrix.llvm-version }} \
+            libomp-${{ matrix.llvm-version }}-dev lld-${{ matrix.llvm-version }} \
             gettext unixodbc-dev libnetcdf-dev
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
@@ -62,7 +75,7 @@ jobs:
           cmake ${CMAKE_OPTIONS} -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build -G Ninja \
             -DCMAKE_INSTALL_PREFIX=$HOME/install -DWITH_NLS=ON -DWITH_GUI=OFF -DWITH_DOCS=OFF \
             -DWITH_READLINE=ON -DWITH_ODBC=ON -DWITH_NETCDF=ON -DWITH_BZLIB=ON \
-            -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+            -DCMAKE_C_COMPILER=clang-${{ matrix.llvm-version }} -DCMAKE_CXX_COMPILER=clang++-${{ matrix.llvm-version }}
       - name: Print CMakeCache.txt
         shell: bash -el {0}
         run: |
