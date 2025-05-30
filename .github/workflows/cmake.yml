@@ -58,6 +58,7 @@ jobs:
           sudo apt-get install -y wget git gawk findutils ninja-build libpq-dev \
             clang-${{ matrix.llvm-version }} clang-tools-${{ matrix.llvm-version }} \
             libomp-${{ matrix.llvm-version }}-dev lld-${{ matrix.llvm-version }} \
+            llvm-${{ matrix.llvm-version }} \
             gettext unixodbc-dev libnetcdf-dev
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
