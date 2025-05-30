@@ -168,6 +168,7 @@ jobs:
       #       /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib  \
       #       | tee coverage.all1.json
       - name: Use llvm's coverage script
+        if: ${{ !cancelled() }}
         shell: micromamba-shell {0}
         run: |
           WORKSPACE=$GITHUB_WORKSPACE
@@ -203,6 +204,7 @@ jobs:
             llvm_coverage*/**
           retention-days: 1
       - name: Upload coverage reports to Codecov
+        if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5.4.3 # v5.4.3
         with:
           verbose: true
