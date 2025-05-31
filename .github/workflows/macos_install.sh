@@ -59,11 +59,15 @@ CONFIGURE_FLAGS="\
   --without-x \
 "
 
+export EXTRA_COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping"
 export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPRECATION -Wall -Wextra -Wpedantic -Wvla"
 export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic"
 export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
-./configure $CONFIGURE_FLAGS
+export CFLAGS="$EXTRA_COV_FLAGS $CFLAGS"
+export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
+
+LDFLAGS="-fprofile-instr-generate $LDFLAGS" ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
 make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
