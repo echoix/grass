@@ -10,8 +10,10 @@ fi
 CONDA_ARCH=$(uname -m)
 INSTALL_PREFIX=$1
 
+# --disable-shared \
 CONFIGURE_FLAGS="\
   --prefix=${INSTALL_PREFIX} \
+  --enable-static \
   --with-blas=openblas \
   --with-bzlib \
   --with-bzlib-includes=${CONDA_PREFIX}/include \
@@ -70,7 +72,9 @@ export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
 LDFLAGS="-fprofile-instr-generate $LDFLAGS" ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
-make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
+# make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
+#   CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
+make -j1 CFLAGS="$CFLAGS -Werror $EXEMPT" \
   CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
 
 make install
