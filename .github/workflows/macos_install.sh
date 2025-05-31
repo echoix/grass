@@ -12,7 +12,8 @@ INSTALL_PREFIX=$1
 
 CONFIGURE_FLAGS="\
   --prefix=${INSTALL_PREFIX} \
-  --disable-shared --enable-static \
+  --disable-shared \
+  --enable-static \
   --with-blas=openblas \
   --with-bzlib \
   --with-bzlib-includes=${CONDA_PREFIX}/include \
