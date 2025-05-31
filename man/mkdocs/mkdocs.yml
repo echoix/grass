@@ -1,7 +1,7 @@
 ---
 # Project information
 site_author: The GRASS Development Team # Default author to all pages
-site_name: !ENV SITE_NAME
+site_name: !ENV [SITE_NAME, 'GRASS $VERSION Documentation']
 site_url: https://grass.osgeo.org/grass-stable/manuals/
 
 # Repository information
@@ -14,7 +14,7 @@ docs_dir: source
 use_directory_urls: false
 
 # Copyright
-copyright: !ENV COPYRIGHT
+copyright: !ENV [COPYRIGHT, '&copy; 2003-$YEAR GRASS Development Team, GRASS $VERSION Documentation']
 
 # Theme configuration
 theme:
@@ -82,6 +82,37 @@ extra_css:
 plugins:
   - search
   - glightbox
+  - api-autonav:
+      exclude: ["grass.lib", "ctypes", "grass.lib.ctypes_preamble.ctypes", "grass.lib.ctypes_preamble"]
+      modules: [../../etc/python/grass]
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            # allow_inspection: true
+            preload_modules:
+              - grass.script
+              # - grass
+              # - numpy
+            show_if_no_docstring: true
+            summary: true
+            parameter_headings: true
+            show_signature_annotations: true
+          # load_external_modules: true
+          docstring_style: sphinx
+          paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/lib, /home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python, /home/vscode/grass/dist.x86_64-pc-linux-gnu/docs/mkdocs]
+          # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python, .]
+          # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python/grass]
+
+      # modules: [../../etc/python/grass, ., ]
+  # - mkdocs-autoapi
+  # # - mkdocs-autoapi:
+  # #     autoapi_dir: /home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python/grass
+  # - mkdocstrings:
+  #     handlers:
+  #       python:
+  #         paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python]
+
   - tags:
       tags_name_property: keywords
       tags_slugify_format: "{slug}"
