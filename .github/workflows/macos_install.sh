@@ -10,9 +10,9 @@ fi
 CONDA_ARCH=$(uname -m)
 INSTALL_PREFIX=$1
 
+# --disable-shared \
 CONFIGURE_FLAGS="\
   --prefix=${INSTALL_PREFIX} \
-  --disable-shared \
   --enable-static \
   --with-blas=openblas \
   --with-bzlib \
