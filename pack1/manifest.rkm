@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--=================================================================-->
+<!--PLEASE, DO NOT RENAME, MOVE, MODIFY OR ALTER IN ANY WAY THIS FILE-->
+<!--=================================================================-->
+<manifest version="2" libVersion="1.47.0" projectId="P5595BB35" packageId="5700b8f7-249c-435e-b229-9ae3d46521f1" source="en-US" target="fr-CA" originalSubDir="original" skeletonSubDir="" sourceSubDir="work" targetSubDir="work" mergeSubDir="done" tmSubDir="" date="2025-05-24 11:18:48-0400" useApprovedOnly="0" updateApprovedFlag="0">
+<creatorParameters></creatorParameters>
+<doc xml:space="preserve" docId="1" extractionType="po" relativeInputPath="gui/wxpython/xml/menudata.xml" filterId="okf_xml" inputEncoding="UTF-8" relativeTargetPath="gui/wxpython/xml/menudata.out.xml" targetEncoding="UTF-8" selected="1">PD94bWwgdmVyc2lvbj0nMS4wJyA/Pgo8aXRzOnJ1bGVzIHZlcnNpb249JzEuMCcKIHhtbG5zOml0cz0naHR0cDovL3d3dy53My5vcmcvMjAwNS8xMS9pdHMnCiB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycKIHhtbG5zOml0c3g9J2h0dHA6Ly93d3cudzMub3JnLzIwMDgvMTIvaXRzLWV4dGVuc2lvbnMnCiB4bWxuczpva3A9J29rYXBpLWZyYW1ld29yazp4bWxmaWx0ZXItb3B0aW9ucycKPgo8IS0tIFNlZSBJVFMgc3BlY2lmaWNhdGlvbiBhdDogaHR0cDovL3d3dy53My5vcmcvVFIvaXRzLyAtLT4KPC9pdHM6cnVsZXM+Cg==</doc>
+</manifest>

@@ -1,0 +1,2103 @@
+# 
+# This file is intended to be merged back. 
+# Please preserve the msgctxt lines and the order of the entries.
+# 
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgctxt "okpCtx:tu=1"
+msgid "&File"
+msgstr ""
+
+msgctxt "okpCtx:tu=2"
+msgid "3D image rendering"
+msgstr ""
+
+msgctxt "okpCtx:tu=3"
+msgid "Bearing/distance to coordinates"
+msgstr ""
+
+msgctxt "okpCtx:tu=4"
+msgid "&Settings"
+msgstr ""
+
+msgctxt "okpCtx:tu=5"
+msgid "&Raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=6"
+msgid "Mask"
+msgstr ""
+
+msgctxt "okpCtx:tu=7"
+msgid "&Vector"
+msgstr ""
+
+msgctxt "okpCtx:tu=8"
+msgid "Buffer vectors"
+msgstr ""
+
+msgctxt "okpCtx:tu=9"
+msgid "Nearest features"
+msgstr ""
+
+msgctxt "okpCtx:tu=10"
+msgid "Generate area for current region"
+msgstr ""
+
+msgctxt "okpCtx:tu=11"
+msgid "Generate grid"
+msgstr ""
+
+msgctxt "okpCtx:tu=12"
+msgid "&Imagery"
+msgstr ""
+
+msgctxt "okpCtx:tu=13"
+msgid "Rectify image or raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=14"
+msgid "Spectral response"
+msgstr ""
+
+msgctxt "okpCtx:tu=15"
+msgid "Pan sharpening"
+msgstr ""
+
+msgctxt "okpCtx:tu=16"
+msgid "Orthophoto tools"
+msgstr ""
+
+msgctxt "okpCtx:tu=17"
+msgid "Manage GCPs for 3D correction"
+msgstr ""
+
+msgctxt "okpCtx:tu=18"
+msgid "Corrects scanning distortions"
+msgstr ""
+
+msgctxt "okpCtx:tu=19"
+msgid "3D r&aster"
+msgstr ""
+
+msgctxt "okpCtx:tu=20"
+msgid "3D color tables"
+msgstr ""
+
+msgctxt "okpCtx:tu=21"
+msgid "Export 3D color table"
+msgstr ""
+
+msgctxt "okpCtx:tu=22"
+msgid "3D mask"
+msgstr ""
+
+msgctxt "okpCtx:tu=23"
+msgid "Cross section"
+msgstr ""
+
+msgctxt "okpCtx:tu=24"
+msgid "Groundwater modeling"
+msgstr ""
+
+msgctxt "okpCtx:tu=25"
+msgid "Interpolate 3D raster from points"
+msgstr ""
+
+msgctxt "okpCtx:tu=26"
+msgid "&Database"
+msgstr ""
+
+msgctxt "okpCtx:tu=27"
+msgid "&Help"
+msgstr ""
+
+msgctxt "okpCtx:tu=28"
+msgid "Workspace"
+msgstr ""
+
+msgctxt "okpCtx:tu=29"
+msgid "Map display"
+msgstr ""
+
+msgctxt "okpCtx:tu=30"
+msgid "Import, export and link data"
+msgstr ""
+
+msgctxt "okpCtx:tu=31"
+msgid "Import raster data"
+msgstr ""
+
+msgctxt "okpCtx:tu=32"
+msgid "Import of common raster formats"
+msgstr ""
+
+msgctxt "okpCtx:tu=33"
+msgid "ASCII x,y,z point import and gridding"
+msgstr ""
+
+msgctxt "okpCtx:tu=34"
+msgid "ASCII grid import"
+msgstr ""
+
+msgctxt "okpCtx:tu=35"
+msgid "ASCII polygons, lines, and point import"
+msgstr ""
+
+msgctxt "okpCtx:tu=36"
+msgid "Raw binary array import"
+msgstr ""
+
+msgctxt "okpCtx:tu=37"
+msgid "GRIDATB.FOR import"
+msgstr ""
+
+msgctxt "okpCtx:tu=38"
+msgid "Matlab 2D array import"
+msgstr ""
+
+msgctxt "okpCtx:tu=39"
+msgid "PNG import"
+msgstr ""
+
+msgctxt "okpCtx:tu=40"
+msgid "SPOT NDVI import"
+msgstr ""
+
+msgctxt "okpCtx:tu=41"
+msgid "SRTM HGT import"
+msgstr ""
+
+msgctxt "okpCtx:tu=42"
+msgid "Terra ASTER HDF import"
+msgstr ""
+
+msgctxt "okpCtx:tu=43"
+msgid "LAS LiDAR points import"
+msgstr ""
+
+msgctxt "okpCtx:tu=44"
+msgid "Point cloud (LAS LiDAR) import"
+msgstr ""
+
+msgctxt "okpCtx:tu=45"
+msgid "WMS/WMTS import"
+msgstr ""
+
+msgctxt "okpCtx:tu=46"
+msgid "Unpack raster map"
+msgstr ""
+
+msgctxt "okpCtx:tu=47"
+msgid "Reproject raster map from different GRASS project"
+msgstr ""
+
+msgctxt "okpCtx:tu=48"
+msgid "Import vector data"
+msgstr ""
+
+msgctxt "okpCtx:tu=49"
+msgid "Import of common vector formats"
+msgstr ""
+
+msgctxt "okpCtx:tu=50"
+msgid "ASCII points or GRASS ASCII format"
+msgstr ""
+
+msgctxt "okpCtx:tu=51"
+msgid "ASCII points as a vector lines"
+msgstr ""
+
+msgctxt "okpCtx:tu=52"
+msgid "WFS"
+msgstr ""
+
+msgctxt "okpCtx:tu=53"
+msgid "ESRI e00 import"
+msgstr ""
+
+msgctxt "okpCtx:tu=54"
+msgid "Geonames import"
+msgstr ""
+
+msgctxt "okpCtx:tu=55"
+msgid "Matlab array or Mapgen format import"
+msgstr ""
+
+msgctxt "okpCtx:tu=56"
+msgid "LAS LiDAR points import"
+msgstr ""
+
+msgctxt "okpCtx:tu=57"
+msgid "Point cloud (LAS LiDAR) import"
+msgstr ""
+
+msgctxt "okpCtx:tu=58"
+msgid "Unpack vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=59"
+msgid "Reproject vector map from different GRASS project"
+msgstr ""
+
+msgctxt "okpCtx:tu=60"
+msgid "Import 3D raster data"
+msgstr ""
+
+msgctxt "okpCtx:tu=61"
+msgid "ASCII 3D import"
+msgstr ""
+
+msgctxt "okpCtx:tu=62"
+msgid "Raw binary array 3D import"
+msgstr ""
+
+msgctxt "okpCtx:tu=63"
+msgid "Vis5D import"
+msgstr ""
+
+msgctxt "okpCtx:tu=64"
+msgid "Import database table"
+msgstr ""
+
+msgctxt "okpCtx:tu=65"
+msgid "Common import formats"
+msgstr ""
+
+msgctxt "okpCtx:tu=66"
+msgid "Export raster map"
+msgstr ""
+
+msgctxt "okpCtx:tu=67"
+msgid "Common export formats"
+msgstr ""
+
+msgctxt "okpCtx:tu=68"
+msgid "ASCII grid export"
+msgstr ""
+
+msgctxt "okpCtx:tu=69"
+msgid "ASCII x,y,z points export"
+msgstr ""
+
+msgctxt "okpCtx:tu=70"
+msgid "GRIDATB.FOR export"
+msgstr ""
+
+msgctxt "okpCtx:tu=71"
+msgid "Matlab 2D array export"
+msgstr ""
+
+msgctxt "okpCtx:tu=72"
+msgid "Raw binary array export"
+msgstr ""
+
+msgctxt "okpCtx:tu=73"
+msgid "MPEG-1 export"
+msgstr ""
+
+msgctxt "okpCtx:tu=74"
+msgid "PNG export"
+msgstr ""
+
+msgctxt "okpCtx:tu=75"
+msgid "PPM export"
+msgstr ""
+
+msgctxt "okpCtx:tu=76"
+msgid "PPM from RGB export"
+msgstr ""
+
+msgctxt "okpCtx:tu=77"
+msgid "POV-Ray export"
+msgstr ""
+
+msgctxt "okpCtx:tu=78"
+msgid "VRML export"
+msgstr ""
+
+msgctxt "okpCtx:tu=79"
+msgid "VTK export"
+msgstr ""
+
+msgctxt "okpCtx:tu=80"
+msgid "Pack raster map"
+msgstr ""
+
+msgctxt "okpCtx:tu=81"
+msgid "Export vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=82"
+msgid "Common export formats"
+msgstr ""
+
+msgctxt "okpCtx:tu=83"
+msgid "ASCII points or GRASS ASCII vector export"
+msgstr ""
+
+msgctxt "okpCtx:tu=84"
+msgid "DXF export"
+msgstr ""
+
+msgctxt "okpCtx:tu=85"
+msgid "PostGIS export"
+msgstr ""
+
+msgctxt "okpCtx:tu=86"
+msgid "POV-Ray export"
+msgstr ""
+
+msgctxt "okpCtx:tu=87"
+msgid "SVG export"
+msgstr ""
+
+msgctxt "okpCtx:tu=88"
+msgid "VTK export"
+msgstr ""
+
+msgctxt "okpCtx:tu=89"
+msgid "Pack vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=90"
+msgid "Export 3D raster maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=91"
+msgid "ASCII 3D export"
+msgstr ""
+
+msgctxt "okpCtx:tu=92"
+msgid "Raw binary array 3D export"
+msgstr ""
+
+msgctxt "okpCtx:tu=93"
+msgid "Vis5D export"
+msgstr ""
+
+msgctxt "okpCtx:tu=94"
+msgid "VTK export"
+msgstr ""
+
+msgctxt "okpCtx:tu=95"
+msgid "Export database table"
+msgstr ""
+
+msgctxt "okpCtx:tu=96"
+msgid "Common export formats"
+msgstr ""
+
+msgctxt "okpCtx:tu=97"
+msgid "Link external data"
+msgstr ""
+
+msgctxt "okpCtx:tu=98"
+msgid "Output format for raster data"
+msgstr ""
+
+msgctxt "okpCtx:tu=99"
+msgid "Manage maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=100"
+msgid "Copy"
+msgstr ""
+
+msgctxt "okpCtx:tu=101"
+msgid "List"
+msgstr ""
+
+msgctxt "okpCtx:tu=102"
+msgid "Rename"
+msgstr ""
+
+msgctxt "okpCtx:tu=103"
+msgid "Delete"
+msgstr ""
+
+msgctxt "okpCtx:tu=104"
+msgid "Map type conversions"
+msgstr ""
+
+msgctxt "okpCtx:tu=105"
+msgid "Raster to vector"
+msgstr ""
+
+msgctxt "okpCtx:tu=106"
+msgid "Raster series to 3D raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=107"
+msgid "Raster 2.5D to 3D raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=108"
+msgid "Vector to raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=109"
+msgid "Vector to 3D raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=110"
+msgid "2D vector to 3D vector"
+msgstr ""
+
+msgctxt "okpCtx:tu=111"
+msgid "3D raster to raster series"
+msgstr ""
+
+msgctxt "okpCtx:tu=112"
+msgid "Computational region"
+msgstr ""
+
+msgctxt "okpCtx:tu=113"
+msgid "Set region"
+msgstr ""
+
+msgctxt "okpCtx:tu=114"
+msgid "Raster buffers and distance"
+msgstr ""
+
+msgctxt "okpCtx:tu=115"
+msgid "Buffer rasters"
+msgstr ""
+
+msgctxt "okpCtx:tu=116"
+msgid "Concentric circles"
+msgstr ""
+
+msgctxt "okpCtx:tu=117"
+msgid "Closest points"
+msgstr ""
+
+msgctxt "okpCtx:tu=118"
+msgid "Grow by one cell"
+msgstr ""
+
+msgctxt "okpCtx:tu=119"
+msgid "Distance to features"
+msgstr ""
+
+msgctxt "okpCtx:tu=120"
+msgid "Raster map calculator"
+msgstr ""
+
+msgctxt "okpCtx:tu=121"
+msgid "Simplified raster map calculator"
+msgstr ""
+
+msgctxt "okpCtx:tu=122"
+msgid "Raster map calculator"
+msgstr ""
+
+msgctxt "okpCtx:tu=123"
+msgid "OnMapCalculator"
+msgstr ""
+
+msgctxt "okpCtx:tu=124"
+msgid "GRASS working environment"
+msgstr ""
+
+msgctxt "okpCtx:tu=125"
+msgid "User access"
+msgstr ""
+
+msgctxt "okpCtx:tu=126"
+msgid "Change working environment"
+msgstr ""
+
+msgctxt "okpCtx:tu=127"
+msgid "Change settings"
+msgstr ""
+
+msgctxt "okpCtx:tu=128"
+msgid "Map projections"
+msgstr ""
+
+msgctxt "okpCtx:tu=129"
+msgid "Manage projections"
+msgstr ""
+
+msgctxt "okpCtx:tu=130"
+msgid "Convert coordinates"
+msgstr ""
+
+msgctxt "okpCtx:tu=131"
+msgid "Addons extensions"
+msgstr ""
+
+msgctxt "okpCtx:tu=132"
+msgid "Develop raster map"
+msgstr ""
+
+msgctxt "okpCtx:tu=133"
+msgid "Compress/decompress"
+msgstr ""
+
+msgctxt "okpCtx:tu=134"
+msgid "Region boundaries"
+msgstr ""
+
+msgctxt "okpCtx:tu=135"
+msgid "Manage NULL values"
+msgstr ""
+
+msgctxt "okpCtx:tu=136"
+msgid "Quantization"
+msgstr ""
+
+msgctxt "okpCtx:tu=137"
+msgid "Timestamp"
+msgstr ""
+
+msgctxt "okpCtx:tu=138"
+msgid "Resample using aggregate statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=139"
+msgid "Resample using multiple methods"
+msgstr ""
+
+msgctxt "okpCtx:tu=140"
+msgid "Resample using nearest neighbor"
+msgstr ""
+
+msgctxt "okpCtx:tu=141"
+msgid "Resample using spline tension"
+msgstr ""
+
+msgctxt "okpCtx:tu=142"
+msgid "Resample using bspline"
+msgstr ""
+
+msgctxt "okpCtx:tu=143"
+msgid "Resample using analytic kernel"
+msgstr ""
+
+msgctxt "okpCtx:tu=144"
+msgid "Support file maintenance"
+msgstr ""
+
+msgctxt "okpCtx:tu=145"
+msgid "Update map statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=146"
+msgid "Reproject raster map from different GRASS project"
+msgstr ""
+
+msgctxt "okpCtx:tu=147"
+msgid "Tiling"
+msgstr ""
+
+msgctxt "okpCtx:tu=148"
+msgid "Build a VRT (Virtual Raster)"
+msgstr ""
+
+msgctxt "okpCtx:tu=149"
+msgid "Manage colors"
+msgstr ""
+
+msgctxt "okpCtx:tu=150"
+msgid "Color tables"
+msgstr ""
+
+msgctxt "okpCtx:tu=151"
+msgid "Color tables (stddev)"
+msgstr ""
+
+msgctxt "okpCtx:tu=152"
+msgid "Export color table"
+msgstr ""
+
+msgctxt "okpCtx:tu=153"
+msgid "Blend 2 color rasters"
+msgstr ""
+
+msgctxt "okpCtx:tu=154"
+msgid "Create RGB"
+msgstr ""
+
+msgctxt "okpCtx:tu=155"
+msgid "RGB to HIS"
+msgstr ""
+
+msgctxt "okpCtx:tu=156"
+msgid "Query raster maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=157"
+msgid "Query values by coordinates"
+msgstr ""
+
+msgctxt "okpCtx:tu=158"
+msgid "Query colors by value"
+msgstr ""
+
+msgctxt "okpCtx:tu=159"
+msgid "Map type conversions"
+msgstr ""
+
+msgctxt "okpCtx:tu=160"
+msgid "Raster to vector"
+msgstr ""
+
+msgctxt "okpCtx:tu=161"
+msgid "Raster series to 3D raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=162"
+msgid "Raster 2.5D to 3D raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=163"
+msgid "Neighborhood analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=164"
+msgid "Moving window"
+msgstr ""
+
+msgctxt "okpCtx:tu=165"
+msgid "Neighborhood points"
+msgstr ""
+
+msgctxt "okpCtx:tu=166"
+msgid "Overlay rasters"
+msgstr ""
+
+msgctxt "okpCtx:tu=167"
+msgid "Cross product"
+msgstr ""
+
+msgctxt "okpCtx:tu=168"
+msgid "Patch raster maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=169"
+msgid "Raster series aggregation"
+msgstr ""
+
+msgctxt "okpCtx:tu=170"
+msgid "Raster series accumulation"
+msgstr ""
+
+msgctxt "okpCtx:tu=171"
+msgid "Statistical overlay"
+msgstr ""
+
+msgctxt "okpCtx:tu=172"
+msgid "Quantiles overlay"
+msgstr ""
+
+msgctxt "okpCtx:tu=173"
+msgid "Solar radiance and shadows"
+msgstr ""
+
+msgctxt "okpCtx:tu=174"
+msgid "LatLong map"
+msgstr ""
+
+msgctxt "okpCtx:tu=175"
+msgid "Solar irradiance and irradiation"
+msgstr ""
+
+msgctxt "okpCtx:tu=176"
+msgid "Shadows map"
+msgstr ""
+
+msgctxt "okpCtx:tu=177"
+msgid "Sunshine hours and solar angles"
+msgstr ""
+
+msgctxt "okpCtx:tu=178"
+msgid "Terrain analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=179"
+msgid "Generate contour lines"
+msgstr ""
+
+msgctxt "okpCtx:tu=180"
+msgid "Cost surface"
+msgstr ""
+
+msgctxt "okpCtx:tu=181"
+msgid "Trace a path"
+msgstr ""
+
+msgctxt "okpCtx:tu=182"
+msgid "Cumulative movement costs"
+msgstr ""
+
+msgctxt "okpCtx:tu=183"
+msgid "Least cost route or flow"
+msgstr ""
+
+msgctxt "okpCtx:tu=184"
+msgid "Compute shaded relief"
+msgstr ""
+
+msgctxt "okpCtx:tu=185"
+msgid "Apply shade to raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=186"
+msgid "Slope and aspect"
+msgstr ""
+
+msgctxt "okpCtx:tu=187"
+msgid "Landforms"
+msgstr ""
+
+msgctxt "okpCtx:tu=188"
+msgid "Terrain parameters"
+msgstr ""
+
+msgctxt "okpCtx:tu=189"
+msgid "Textural features"
+msgstr ""
+
+msgctxt "okpCtx:tu=190"
+msgid "Visibility"
+msgstr ""
+
+msgctxt "okpCtx:tu=191"
+msgid "Distance to features"
+msgstr ""
+
+msgctxt "okpCtx:tu=192"
+msgid "Horizon angle"
+msgstr ""
+
+msgctxt "okpCtx:tu=193"
+msgid "Transform features"
+msgstr ""
+
+msgctxt "okpCtx:tu=194"
+msgid "Clump"
+msgstr ""
+
+msgctxt "okpCtx:tu=195"
+msgid "Grow"
+msgstr ""
+
+msgctxt "okpCtx:tu=196"
+msgid "Thin"
+msgstr ""
+
+msgctxt "okpCtx:tu=197"
+msgid "Hydrologic modeling"
+msgstr ""
+
+msgctxt "okpCtx:tu=198"
+msgid "Carve stream channels"
+msgstr ""
+
+msgctxt "okpCtx:tu=199"
+msgid "Fill lake"
+msgstr ""
+
+msgctxt "okpCtx:tu=200"
+msgid "Depressionless map and flowlines"
+msgstr ""
+
+msgctxt "okpCtx:tu=201"
+msgid "Flow accumulation"
+msgstr ""
+
+msgctxt "okpCtx:tu=202"
+msgid "Flow lines"
+msgstr ""
+
+msgctxt "okpCtx:tu=203"
+msgid "Watershed analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=204"
+msgid "Watershed subbasins"
+msgstr ""
+
+msgctxt "okpCtx:tu=205"
+msgid "Watershed basin creation"
+msgstr ""
+
+msgctxt "okpCtx:tu=206"
+msgid "Extraction of stream networks"
+msgstr ""
+
+msgctxt "okpCtx:tu=207"
+msgid "SIMWE Overland flow modeling"
+msgstr ""
+
+msgctxt "okpCtx:tu=208"
+msgid "SIMWE Sediment flux modeling"
+msgstr ""
+
+msgctxt "okpCtx:tu=209"
+msgid "Topographic index map"
+msgstr ""
+
+msgctxt "okpCtx:tu=210"
+msgid "TOPMODEL simulation"
+msgstr ""
+
+msgctxt "okpCtx:tu=211"
+msgid "USLE K-factor"
+msgstr ""
+
+msgctxt "okpCtx:tu=212"
+msgid "USLE R-factor"
+msgstr ""
+
+msgctxt "okpCtx:tu=213"
+msgid "Groundwater modeling"
+msgstr ""
+
+msgctxt "okpCtx:tu=214"
+msgid "Groundwater flow"
+msgstr ""
+
+msgctxt "okpCtx:tu=215"
+msgid "Groundwater solute transport"
+msgstr ""
+
+msgctxt "okpCtx:tu=216"
+msgid "Landscape patch analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=217"
+msgid "Edge density"
+msgstr ""
+
+msgctxt "okpCtx:tu=218"
+msgid "Contrast weighted edge density"
+msgstr ""
+
+msgctxt "okpCtx:tu=219"
+msgid "Patch area mean"
+msgstr ""
+
+msgctxt "okpCtx:tu=220"
+msgid "Patch area range"
+msgstr ""
+
+msgctxt "okpCtx:tu=221"
+msgid "Patch area Std Dev"
+msgstr ""
+
+msgctxt "okpCtx:tu=222"
+msgid "Patch area Coeff Var"
+msgstr ""
+
+msgctxt "okpCtx:tu=223"
+msgid "Patch density"
+msgstr ""
+
+msgctxt "okpCtx:tu=224"
+msgid "Patch number"
+msgstr ""
+
+msgctxt "okpCtx:tu=225"
+msgid "Dominance's diversity"
+msgstr ""
+
+msgctxt "okpCtx:tu=226"
+msgid "Shannon's diversity"
+msgstr ""
+
+msgctxt "okpCtx:tu=227"
+msgid "Simpson's diversity"
+msgstr ""
+
+msgctxt "okpCtx:tu=228"
+msgid "Richness"
+msgstr ""
+
+msgctxt "okpCtx:tu=229"
+msgid "Shape index"
+msgstr ""
+
+msgctxt "okpCtx:tu=230"
+msgid "Wildfire modeling"
+msgstr ""
+
+msgctxt "okpCtx:tu=231"
+msgid "Rate of spread"
+msgstr ""
+
+msgctxt "okpCtx:tu=232"
+msgid "Least-cost spread paths"
+msgstr ""
+
+msgctxt "okpCtx:tu=233"
+msgid "Anisotropic spread simulation"
+msgstr ""
+
+msgctxt "okpCtx:tu=234"
+msgid "Change category values and labels"
+msgstr ""
+
+msgctxt "okpCtx:tu=235"
+msgid "Manage category information"
+msgstr ""
+
+msgctxt "okpCtx:tu=236"
+msgid "Interactively edit category values"
+msgstr ""
+
+msgctxt "okpCtx:tu=237"
+msgid "Reclassify by size"
+msgstr ""
+
+msgctxt "okpCtx:tu=238"
+msgid "Reclassify"
+msgstr ""
+
+msgctxt "okpCtx:tu=239"
+msgid "Recode"
+msgstr ""
+
+msgctxt "okpCtx:tu=240"
+msgid "Rescale"
+msgstr ""
+
+msgctxt "okpCtx:tu=241"
+msgid "Rescale with histogram"
+msgstr ""
+
+msgctxt "okpCtx:tu=242"
+msgid "Generate random cells"
+msgstr ""
+
+msgctxt "okpCtx:tu=243"
+msgid "Random cells"
+msgstr ""
+
+msgctxt "okpCtx:tu=244"
+msgid "Random cells and vector points"
+msgstr ""
+
+msgctxt "okpCtx:tu=245"
+msgid "Generate surfaces"
+msgstr ""
+
+msgctxt "okpCtx:tu=246"
+msgid "Fractal surface"
+msgstr ""
+
+msgctxt "okpCtx:tu=247"
+msgid "Gaussian kernel density surface"
+msgstr ""
+
+msgctxt "okpCtx:tu=248"
+msgid "Gaussian deviates surface"
+msgstr ""
+
+msgctxt "okpCtx:tu=249"
+msgid "Plane"
+msgstr ""
+
+msgctxt "okpCtx:tu=250"
+msgid "Random deviates surface"
+msgstr ""
+
+msgctxt "okpCtx:tu=251"
+msgid "Random surface with spatial dependence"
+msgstr ""
+
+msgctxt "okpCtx:tu=252"
+msgid "Interpolate surfaces"
+msgstr ""
+
+msgctxt "okpCtx:tu=253"
+msgid "Bilinear and bicubic from vector points"
+msgstr ""
+
+msgctxt "okpCtx:tu=254"
+msgid "IDW from raster points"
+msgstr ""
+
+msgctxt "okpCtx:tu=255"
+msgid "IDW from vector points"
+msgstr ""
+
+msgctxt "okpCtx:tu=256"
+msgid "Raster contours"
+msgstr ""
+
+msgctxt "okpCtx:tu=257"
+msgid "Regularized spline tension"
+msgstr ""
+
+msgctxt "okpCtx:tu=258"
+msgid "Raster series interpolation"
+msgstr ""
+
+msgctxt "okpCtx:tu=259"
+msgid "Fill NULL cells"
+msgstr ""
+
+msgctxt "okpCtx:tu=260"
+msgid "Fill NULL cells using IDW"
+msgstr ""
+
+msgctxt "okpCtx:tu=261"
+msgid "Reports and statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=262"
+msgid "Basic raster metadata"
+msgstr ""
+
+msgctxt "okpCtx:tu=263"
+msgid "Manage category information"
+msgstr ""
+
+msgctxt "okpCtx:tu=264"
+msgid "General statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=265"
+msgid "Quantiles for large data sets"
+msgstr ""
+
+msgctxt "okpCtx:tu=266"
+msgid "Range of category values"
+msgstr ""
+
+msgctxt "okpCtx:tu=267"
+msgid "Sum area by raster map and category"
+msgstr ""
+
+msgctxt "okpCtx:tu=268"
+msgid "Statistics for clumped cells"
+msgstr ""
+
+msgctxt "okpCtx:tu=269"
+msgid "Total corrected area"
+msgstr ""
+
+msgctxt "okpCtx:tu=270"
+msgid "Univariate raster statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=271"
+msgid "Sample transects"
+msgstr ""
+
+msgctxt "okpCtx:tu=272"
+msgid "Sample transects (bearing/distance)"
+msgstr ""
+
+msgctxt "okpCtx:tu=273"
+msgid "Covariance/correlation"
+msgstr ""
+
+msgctxt "okpCtx:tu=274"
+msgid "Linear regression"
+msgstr ""
+
+msgctxt "okpCtx:tu=275"
+msgid "Multiple regression"
+msgstr ""
+
+msgctxt "okpCtx:tu=276"
+msgid "Mutual category occurrences"
+msgstr ""
+
+msgctxt "okpCtx:tu=277"
+msgid "Develop vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=278"
+msgid "Edit vector map (non-interactively)"
+msgstr ""
+
+msgctxt "okpCtx:tu=279"
+msgid "Convert object types"
+msgstr ""
+
+msgctxt "okpCtx:tu=280"
+msgid "Parallel lines"
+msgstr ""
+
+msgctxt "okpCtx:tu=281"
+msgid "Dissolve boundaries"
+msgstr ""
+
+msgctxt "okpCtx:tu=282"
+msgid "Create 3D vector over raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=283"
+msgid "Extrude 3D vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=284"
+msgid "Create labels"
+msgstr ""
+
+msgctxt "okpCtx:tu=285"
+msgid "Reposition vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=286"
+msgid "Rectify vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=287"
+msgid "Reproject vector map from different GRASS project"
+msgstr ""
+
+msgctxt "okpCtx:tu=288"
+msgid "Support file maintenance"
+msgstr ""
+
+msgctxt "okpCtx:tu=289"
+msgid "Topology maintenance"
+msgstr ""
+
+msgctxt "okpCtx:tu=290"
+msgid "Create or rebuild topology"
+msgstr ""
+
+msgctxt "okpCtx:tu=291"
+msgid "Rebuild topology on all vector maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=292"
+msgid "Build polylines"
+msgstr ""
+
+msgctxt "okpCtx:tu=293"
+msgid "Split lines"
+msgstr ""
+
+msgctxt "okpCtx:tu=294"
+msgid "Split polylines"
+msgstr ""
+
+msgctxt "okpCtx:tu=295"
+msgid "Clean vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=296"
+msgid "Fill holes in areas"
+msgstr ""
+
+msgctxt "okpCtx:tu=297"
+msgid "Smooth or simplify"
+msgstr ""
+
+msgctxt "okpCtx:tu=298"
+msgid "Add centroids"
+msgstr ""
+
+msgctxt "okpCtx:tu=299"
+msgid "Manage colors"
+msgstr ""
+
+msgctxt "okpCtx:tu=300"
+msgid "Color tables"
+msgstr ""
+
+msgctxt "okpCtx:tu=301"
+msgid "Export color table"
+msgstr ""
+
+msgctxt "okpCtx:tu=302"
+msgid "Query vector map"
+msgstr ""
+
+msgctxt "okpCtx:tu=303"
+msgid "Query with coordinate(s)"
+msgstr ""
+
+msgctxt "okpCtx:tu=304"
+msgid "Query vector attribute data"
+msgstr ""
+
+msgctxt "okpCtx:tu=305"
+msgid "Feature selection"
+msgstr ""
+
+msgctxt "okpCtx:tu=306"
+msgid "Select by attributes"
+msgstr ""
+
+msgctxt "okpCtx:tu=307"
+msgid "Select by another map"
+msgstr ""
+
+msgctxt "okpCtx:tu=308"
+msgid "Map type conversions"
+msgstr ""
+
+msgctxt "okpCtx:tu=309"
+msgid "Vector to raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=310"
+msgid "Vector to 3D raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=311"
+msgid "2D vector to 3D vector"
+msgstr ""
+
+msgctxt "okpCtx:tu=312"
+msgid "Point analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=313"
+msgid "Identify and remove outliers"
+msgstr ""
+
+msgctxt "okpCtx:tu=314"
+msgid "Identify point clusters"
+msgstr ""
+
+msgctxt "okpCtx:tu=315"
+msgid "Indices for quadrat counts of vector point lists"
+msgstr ""
+
+msgctxt "okpCtx:tu=316"
+msgid "Perturb points"
+msgstr ""
+
+msgctxt "okpCtx:tu=317"
+msgid "Test/training point sets"
+msgstr ""
+
+msgctxt "okpCtx:tu=318"
+msgid "Tests for normality for vector points"
+msgstr ""
+
+msgctxt "okpCtx:tu=319"
+msgid "Lidar analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=320"
+msgid "Identify and remove outliers"
+msgstr ""
+
+msgctxt "okpCtx:tu=321"
+msgid "Detect edges"
+msgstr ""
+
+msgctxt "okpCtx:tu=322"
+msgid "Detect interiors"
+msgstr ""
+
+msgctxt "okpCtx:tu=323"
+msgid "Correct and reclassify objects"
+msgstr ""
+
+msgctxt "okpCtx:tu=324"
+msgid "Linear referencing"
+msgstr ""
+
+msgctxt "okpCtx:tu=325"
+msgid "Create LRS"
+msgstr ""
+
+msgctxt "okpCtx:tu=326"
+msgid "Create stationing"
+msgstr ""
+
+msgctxt "okpCtx:tu=327"
+msgid "Create points/segments"
+msgstr ""
+
+msgctxt "okpCtx:tu=328"
+msgid "Find line id and offset"
+msgstr ""
+
+msgctxt "okpCtx:tu=329"
+msgid "Network analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=330"
+msgid "Network preparation"
+msgstr ""
+
+msgctxt "okpCtx:tu=331"
+msgid "Allocate subnets"
+msgstr ""
+
+msgctxt "okpCtx:tu=332"
+msgid "Split net"
+msgstr ""
+
+msgctxt "okpCtx:tu=333"
+msgid "Shortest path"
+msgstr ""
+
+msgctxt "okpCtx:tu=334"
+msgid "Shortest path for sets of features"
+msgstr ""
+
+msgctxt "okpCtx:tu=335"
+msgid "Shortest path using timetables"
+msgstr ""
+
+msgctxt "okpCtx:tu=336"
+msgid "Shortest path for all pairs"
+msgstr ""
+
+msgctxt "okpCtx:tu=337"
+msgid "Visibility network"
+msgstr ""
+
+msgctxt "okpCtx:tu=338"
+msgid "Bridges and articulation points"
+msgstr ""
+
+msgctxt "okpCtx:tu=339"
+msgid "Maximum flow"
+msgstr ""
+
+msgctxt "okpCtx:tu=340"
+msgid "Vertex connectivity"
+msgstr ""
+
+msgctxt "okpCtx:tu=341"
+msgid "Components"
+msgstr ""
+
+msgctxt "okpCtx:tu=342"
+msgid "Centrality"
+msgstr ""
+
+msgctxt "okpCtx:tu=343"
+msgid "Steiner tree"
+msgstr ""
+
+msgctxt "okpCtx:tu=344"
+msgid "Minimum spanning tree"
+msgstr ""
+
+msgctxt "okpCtx:tu=345"
+msgid "Traveling salesman analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=346"
+msgid "Overlay vector maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=347"
+msgid "Clip vector maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=348"
+msgid "Overlay vector maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=349"
+msgid "Patch vector maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=350"
+msgid "Manage categories"
+msgstr ""
+
+msgctxt "okpCtx:tu=351"
+msgid "Change or report categories"
+msgstr ""
+
+msgctxt "okpCtx:tu=352"
+msgid "Reclassify"
+msgstr ""
+
+msgctxt "okpCtx:tu=353"
+msgid "Update attributes"
+msgstr ""
+
+msgctxt "okpCtx:tu=354"
+msgid "Update area attributes from raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=355"
+msgid "Update area attributes from vector"
+msgstr ""
+
+msgctxt "okpCtx:tu=356"
+msgid "Update point attributes from areas"
+msgstr ""
+
+msgctxt "okpCtx:tu=357"
+msgid "Update database values from vector"
+msgstr ""
+
+msgctxt "okpCtx:tu=358"
+msgid "Sample raster maps at point locations"
+msgstr ""
+
+msgctxt "okpCtx:tu=359"
+msgid "Sample raster neighborhood around points"
+msgstr ""
+
+msgctxt "okpCtx:tu=360"
+msgid "Generate areas from points"
+msgstr ""
+
+msgctxt "okpCtx:tu=361"
+msgid "Convex hull"
+msgstr ""
+
+msgctxt "okpCtx:tu=362"
+msgid "Delaunay triangles"
+msgstr ""
+
+msgctxt "okpCtx:tu=363"
+msgid "Voronoi diagram/Thiessen polygons"
+msgstr ""
+
+msgctxt "okpCtx:tu=364"
+msgid "Generate points"
+msgstr ""
+
+msgctxt "okpCtx:tu=365"
+msgid "Generate from database"
+msgstr ""
+
+msgctxt "okpCtx:tu=366"
+msgid "Generate points along lines"
+msgstr ""
+
+msgctxt "okpCtx:tu=367"
+msgid "Generate random points"
+msgstr ""
+
+msgctxt "okpCtx:tu=368"
+msgid "Perturb points"
+msgstr ""
+
+msgctxt "okpCtx:tu=369"
+msgid "Remove outliers in point sets"
+msgstr ""
+
+msgctxt "okpCtx:tu=370"
+msgid "Test/training point sets"
+msgstr ""
+
+msgctxt "okpCtx:tu=371"
+msgid "Reports and statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=372"
+msgid "Basic vector metadata"
+msgstr ""
+
+msgctxt "okpCtx:tu=373"
+msgid "Classify attribute data"
+msgstr ""
+
+msgctxt "okpCtx:tu=374"
+msgid "Report topology by category"
+msgstr ""
+
+msgctxt "okpCtx:tu=375"
+msgid "Univariate attribute statistics for points"
+msgstr ""
+
+msgctxt "okpCtx:tu=376"
+msgid "Univariate statistics for attribute columns"
+msgstr ""
+
+msgctxt "okpCtx:tu=377"
+msgid "Sample transects"
+msgstr ""
+
+msgctxt "okpCtx:tu=378"
+msgid "Quadrat indices"
+msgstr ""
+
+msgctxt "okpCtx:tu=379"
+msgid "Test normality"
+msgstr ""
+
+msgctxt "okpCtx:tu=380"
+msgid "Develop images and groups"
+msgstr ""
+
+msgctxt "okpCtx:tu=381"
+msgid "Target group"
+msgstr ""
+
+msgctxt "okpCtx:tu=382"
+msgid "Mosaic images"
+msgstr ""
+
+msgctxt "okpCtx:tu=383"
+msgid "Manage image colors"
+msgstr ""
+
+msgctxt "okpCtx:tu=384"
+msgid "Color balance for RGB"
+msgstr ""
+
+msgctxt "okpCtx:tu=385"
+msgid "HIS to RGB"
+msgstr ""
+
+msgctxt "okpCtx:tu=386"
+msgid "RGB to HIS"
+msgstr ""
+
+msgctxt "okpCtx:tu=387"
+msgid "Classify image"
+msgstr ""
+
+msgctxt "okpCtx:tu=388"
+msgid "Clustering input for unsupervised classification"
+msgstr ""
+
+msgctxt "okpCtx:tu=389"
+msgid "Input for supervised MLC"
+msgstr ""
+
+msgctxt "okpCtx:tu=390"
+msgid "Maximum likelihood classification (MLC)"
+msgstr ""
+
+msgctxt "okpCtx:tu=391"
+msgid "Input for supervised SMAP"
+msgstr ""
+
+msgctxt "okpCtx:tu=392"
+msgid "Sequential maximum a posteriori classification (SMAP)"
+msgstr ""
+
+msgctxt "okpCtx:tu=393"
+msgid "Input for supervised SVM"
+msgstr ""
+
+msgctxt "okpCtx:tu=394"
+msgid "Support Vector Machines classification (SVM)"
+msgstr ""
+
+msgctxt "okpCtx:tu=395"
+msgid "Manage signature files"
+msgstr ""
+
+msgctxt "okpCtx:tu=396"
+msgid "Object segmentation"
+msgstr ""
+
+msgctxt "okpCtx:tu=397"
+msgid "Filter image"
+msgstr ""
+
+msgctxt "okpCtx:tu=398"
+msgid "Edge detection"
+msgstr ""
+
+msgctxt "okpCtx:tu=399"
+msgid "Matrix/convolving filter"
+msgstr ""
+
+msgctxt "okpCtx:tu=400"
+msgid "Edge preserving smoothing"
+msgstr ""
+
+msgctxt "okpCtx:tu=401"
+msgid "Transform image"
+msgstr ""
+
+msgctxt "okpCtx:tu=402"
+msgid "Canonical correlation"
+msgstr ""
+
+msgctxt "okpCtx:tu=403"
+msgid "Principal components"
+msgstr ""
+
+msgctxt "okpCtx:tu=404"
+msgid "Fast Fourier"
+msgstr ""
+
+msgctxt "okpCtx:tu=405"
+msgid "Inverse Fast Fourier"
+msgstr ""
+
+msgctxt "okpCtx:tu=406"
+msgid "Satellite images tools"
+msgstr ""
+
+msgctxt "okpCtx:tu=407"
+msgid "Aster DN to radiance/reflectance"
+msgstr ""
+
+msgctxt "okpCtx:tu=408"
+msgid "Landsat DN to radiance/reflectance"
+msgstr ""
+
+msgctxt "okpCtx:tu=409"
+msgid "Landsat cloud cover assessment"
+msgstr ""
+
+msgctxt "okpCtx:tu=410"
+msgid "Modis quality control"
+msgstr ""
+
+msgctxt "okpCtx:tu=411"
+msgid "Atmospheric correction"
+msgstr ""
+
+msgctxt "okpCtx:tu=412"
+msgid "Topographic correction"
+msgstr ""
+
+msgctxt "okpCtx:tu=413"
+msgid "Satellite images products"
+msgstr ""
+
+msgctxt "okpCtx:tu=414"
+msgid "Vegetation indices"
+msgstr ""
+
+msgctxt "okpCtx:tu=415"
+msgid "Tasseled cap vegetation index"
+msgstr ""
+
+msgctxt "okpCtx:tu=416"
+msgid "Albedo"
+msgstr ""
+
+msgctxt "okpCtx:tu=417"
+msgid "Emissivity"
+msgstr ""
+
+msgctxt "okpCtx:tu=418"
+msgid "Biomass growth"
+msgstr ""
+
+msgctxt "okpCtx:tu=419"
+msgid "Evapotranspiration calculation"
+msgstr ""
+
+msgctxt "okpCtx:tu=420"
+msgid "Instantaneaous Net Radiation"
+msgstr ""
+
+msgctxt "okpCtx:tu=421"
+msgid "Soil heat flux"
+msgstr ""
+
+msgctxt "okpCtx:tu=422"
+msgid "Sensible heat flux"
+msgstr ""
+
+msgctxt "okpCtx:tu=423"
+msgid "Evaporative fraction"
+msgstr ""
+
+msgctxt "okpCtx:tu=424"
+msgid "Actual Evapotranspiration"
+msgstr ""
+
+msgctxt "okpCtx:tu=425"
+msgid "Temporal integration of ETa"
+msgstr ""
+
+msgctxt "okpCtx:tu=426"
+msgid "Hargreaves methods Evapotranspiration"
+msgstr ""
+
+msgctxt "okpCtx:tu=427"
+msgid "Penman-Monteith Evapotranspiration"
+msgstr ""
+
+msgctxt "okpCtx:tu=428"
+msgid "Priestley-Taylor Evapotranspiration"
+msgstr ""
+
+msgctxt "okpCtx:tu=429"
+msgid "Reports and statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=430"
+msgid "Kappa analysis"
+msgstr ""
+
+msgctxt "okpCtx:tu=431"
+msgid "OIF for LandSat TM"
+msgstr ""
+
+msgctxt "okpCtx:tu=432"
+msgid "Develop 3D raster map"
+msgstr ""
+
+msgctxt "okpCtx:tu=433"
+msgid "Manage 3D NULL values"
+msgstr ""
+
+msgctxt "okpCtx:tu=434"
+msgid "Manage timestamp"
+msgstr ""
+
+msgctxt "okpCtx:tu=435"
+msgid "Map type conversions"
+msgstr ""
+
+msgctxt "okpCtx:tu=436"
+msgid "3D rasters to raster series"
+msgstr ""
+
+msgctxt "okpCtx:tu=437"
+msgid "Reports and statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=438"
+msgid "Basic 3D raster metadata"
+msgstr ""
+
+msgctxt "okpCtx:tu=439"
+msgid "3D raster statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=440"
+msgid "Univariate statistics for 3D rasters"
+msgstr ""
+
+msgctxt "okpCtx:tu=441"
+msgid "Database information"
+msgstr ""
+
+msgctxt "okpCtx:tu=442"
+msgid "List databases"
+msgstr ""
+
+msgctxt "okpCtx:tu=443"
+msgid "List drivers"
+msgstr ""
+
+msgctxt "okpCtx:tu=444"
+msgid "List tables"
+msgstr ""
+
+msgctxt "okpCtx:tu=445"
+msgid "Describe table"
+msgstr ""
+
+msgctxt "okpCtx:tu=446"
+msgid "List columns"
+msgstr ""
+
+msgctxt "okpCtx:tu=447"
+msgid "Manage databases"
+msgstr ""
+
+msgctxt "okpCtx:tu=448"
+msgid "Connect"
+msgstr ""
+
+msgctxt "okpCtx:tu=449"
+msgid "Login"
+msgstr ""
+
+msgctxt "okpCtx:tu=450"
+msgid "Create database"
+msgstr ""
+
+msgctxt "okpCtx:tu=451"
+msgid "Drop database"
+msgstr ""
+
+msgctxt "okpCtx:tu=452"
+msgid "Drop table"
+msgstr ""
+
+msgctxt "okpCtx:tu=453"
+msgid "Copy table"
+msgstr ""
+
+msgctxt "okpCtx:tu=454"
+msgid "Drop column"
+msgstr ""
+
+msgctxt "okpCtx:tu=455"
+msgid "Test"
+msgstr ""
+
+msgctxt "okpCtx:tu=456"
+msgid "Query"
+msgstr ""
+
+msgctxt "okpCtx:tu=457"
+msgid "Query any table"
+msgstr ""
+
+msgctxt "okpCtx:tu=458"
+msgid "Query vector attribute data"
+msgstr ""
+
+msgctxt "okpCtx:tu=459"
+msgid "SQL statement"
+msgstr ""
+
+msgctxt "okpCtx:tu=460"
+msgid "Vector database connections"
+msgstr ""
+
+msgctxt "okpCtx:tu=461"
+msgid "New table"
+msgstr ""
+
+msgctxt "okpCtx:tu=462"
+msgid "Remove table"
+msgstr ""
+
+msgctxt "okpCtx:tu=463"
+msgid "Join table"
+msgstr ""
+
+msgctxt "okpCtx:tu=464"
+msgid "Add columns"
+msgstr ""
+
+msgctxt "okpCtx:tu=465"
+msgid "Drop column"
+msgstr ""
+
+msgctxt "okpCtx:tu=466"
+msgid "Rename column"
+msgstr ""
+
+msgctxt "okpCtx:tu=467"
+msgid "Change values"
+msgstr ""
+
+msgctxt "okpCtx:tu=468"
+msgid "Drop row"
+msgstr ""
+
+msgctxt "okpCtx:tu=469"
+msgid "Reconnect vectors to database"
+msgstr ""
+
+msgctxt "okpCtx:tu=470"
+msgid "Set vector map - database connection"
+msgstr ""
+
+msgctxt "okpCtx:tu=471"
+msgid "&Temporal"
+msgstr ""
+
+msgctxt "okpCtx:tu=472"
+msgid "Convert raster dataset to 3D raster"
+msgstr ""
+
+msgctxt "okpCtx:tu=473"
+msgid "Query vector dataset attribute data"
+msgstr ""
+
+msgctxt "okpCtx:tu=474"
+msgid "Raster dataset color table"
+msgstr ""
+
+msgctxt "okpCtx:tu=475"
+msgid "Raster calculations"
+msgstr ""
+
+msgctxt "okpCtx:tu=476"
+msgid "3D raster calculations"
+msgstr ""
+
+msgctxt "okpCtx:tu=477"
+msgid "Interpolate gaps in raster datasets"
+msgstr ""
+
+msgctxt "okpCtx:tu=478"
+msgid "Manage datasets"
+msgstr ""
+
+msgctxt "okpCtx:tu=479"
+msgid "Connect temporal database"
+msgstr ""
+
+msgctxt "okpCtx:tu=480"
+msgid "Create"
+msgstr ""
+
+msgctxt "okpCtx:tu=481"
+msgid "Rename"
+msgstr ""
+
+msgctxt "okpCtx:tu=482"
+msgid "Remove"
+msgstr ""
+
+msgctxt "okpCtx:tu=483"
+msgid "Update metadata"
+msgstr ""
+
+msgctxt "okpCtx:tu=484"
+msgid "Merge"
+msgstr ""
+
+msgctxt "okpCtx:tu=485"
+msgid "Temporally shift"
+msgstr ""
+
+msgctxt "okpCtx:tu=486"
+msgid "Snap maps of dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=487"
+msgid "List"
+msgstr ""
+
+msgctxt "okpCtx:tu=488"
+msgid "Manage maps in datasets"
+msgstr ""
+
+msgctxt "okpCtx:tu=489"
+msgid "Register maps in datasets"
+msgstr ""
+
+msgctxt "okpCtx:tu=490"
+msgid "Unregister maps from datasets"
+msgstr ""
+
+msgctxt "okpCtx:tu=491"
+msgid "List raster dataset maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=492"
+msgid "List vector dataset maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=493"
+msgid "List 3D raster dataset maps"
+msgstr ""
+
+msgctxt "okpCtx:tu=494"
+msgid "Reports and statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=495"
+msgid "Space time datasets metadata"
+msgstr ""
+
+msgctxt "okpCtx:tu=496"
+msgid "Univariate raster dataset statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=497"
+msgid "Univariate vector dataset statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=498"
+msgid "Univariate 3D raster dataset statistics"
+msgstr ""
+
+msgctxt "okpCtx:tu=499"
+msgid "Report temporal topology"
+msgstr ""
+
+msgctxt "okpCtx:tu=500"
+msgid "Import"
+msgstr ""
+
+msgctxt "okpCtx:tu=501"
+msgid "Import raster dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=502"
+msgid "Import vector dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=503"
+msgid "Export"
+msgstr ""
+
+msgctxt "okpCtx:tu=504"
+msgid "Export raster dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=505"
+msgid "Export raster dataset as VTK time series"
+msgstr ""
+
+msgctxt "okpCtx:tu=506"
+msgid "Export vector dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=507"
+msgid "Extraction"
+msgstr ""
+
+msgctxt "okpCtx:tu=508"
+msgid "Extract subset of raster dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=509"
+msgid "Extract subset of vector dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=510"
+msgid "Extract subset of 3D raster dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=511"
+msgid "Aggregation"
+msgstr ""
+
+msgctxt "okpCtx:tu=512"
+msgid "Neighborhood analysis in raster dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=513"
+msgid "Aggregation in raster datasets"
+msgstr ""
+
+msgctxt "okpCtx:tu=514"
+msgid "Temporal aggregation"
+msgstr ""
+
+msgctxt "okpCtx:tu=515"
+msgid "Temporal aggregation by dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=516"
+msgid "Sampling"
+msgstr ""
+
+msgctxt "okpCtx:tu=517"
+msgid "Sample a space time raster dataset at point coordinates"
+msgstr ""
+
+msgctxt "okpCtx:tu=518"
+msgid "Query raster dataset by vector points dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=519"
+msgid "Observe specific locations in raster dataset"
+msgstr ""
+
+msgctxt "okpCtx:tu=520"
+msgid "Temporal sampling"
+msgstr ""
+
+msgctxt "okpCtx:tu=521"
+msgid "GUI tools"
+msgstr ""
+
+msgctxt "okpCtx:tu=522"
+msgid "GUI tools"
+msgstr ""
+
+msgctxt "okpCtx:tu=523"
+msgid "Attribute table manager"
+msgstr ""
+
