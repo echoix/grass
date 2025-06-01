@@ -66,8 +66,8 @@ libpythonapidoc:
 	$(call run_grass,$(SPHINXAPIDOC) --module-first -T -f -t _templates/sphinx/apidoc/ -o src/ ../pydispatch/)
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../pygrass/)
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../script/)
-	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../temporal/)
-	$(call run_grass,$(SPHINXAPIDOC) --module-first -T -f -t _templates/sphinx/apidoc/ -o src/ ../../grass)
+	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../temporal/  ../temporal/unit_tests.py)
+	$(call run_grass,$(SPHINXAPIDOC) --module-first -T -f -t _templates/sphinx/apidoc/ -o src/ ../../grass ../temporal/unit_tests.py ../gunittest/multireport.py ../gunittest/multirunner.py)
 
 libpythonhtml: checksphinx
 	@echo "SPHINXBUILD: Using <$(SPHINXBUILD)>"
