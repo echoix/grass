@@ -303,7 +303,7 @@
   font-family: var(--gs-grass-font--light);
   color: var(--gs-secondary-light-color);
   font-size: 2em;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   line-height: 1.4;
   margin: .64em 0 .64em;
 }
