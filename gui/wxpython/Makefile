@@ -16,8 +16,7 @@ SRCFILES := $(wildcard icons/*.py xml/*) \
 	vnet/*.py web_services/*.py wxplot/*.py iscatt/*.py tplot/*.py photo2image/*.py image2target/*.py) \
 	wxgui.py README.md
 
-DSTFILES := $(patsubst %,$(DSTDIR)/%,$(SRCFILES)) \
-	$(patsubst %.py,$(DSTDIR)/%.pyc,$(filter %.py,$(SRCFILES)))
+DSTFILES := $(patsubst %,$(DSTDIR)/%,$(SRCFILES))
 
 PYDSTDIRS := $(patsubst %,$(DSTDIR)/%,animation core datacatalog history dbmgr gcp gmodeler \
 	gui_core iclass lmgr location_wizard main_window mapwin mapdisp modules nviz psmap \
