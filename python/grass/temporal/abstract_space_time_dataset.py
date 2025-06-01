@@ -677,6 +677,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  located in the selection granule:
 
                  .. code-block:: output
+
                      map    :        s
                      granule:  s-----------------e
 
@@ -690,6 +691,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  during the selection granule:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:  s-----------------e
 
@@ -698,6 +700,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  overlapped:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:        s-----------------e
 
@@ -708,6 +711,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------------e
                      granule:     s-----------e
 
@@ -715,6 +719,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  to the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:  s-----------e
 
@@ -722,6 +727,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :              s-----------e
                      granule:  s-----------e
 
@@ -729,6 +735,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:              s-----------e
 
@@ -899,6 +906,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  located in the selection granule:
 
                  .. code-block:: output
+
                      map    :        s
                      granule:  s-----------------e
 
@@ -912,6 +920,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  during the selection granule:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:  s-----------------e
 
@@ -920,6 +929,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  overlapped:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:        s-----------------e
 
@@ -930,6 +940,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------------e
                      granule:     s-----------e
 
@@ -937,6 +948,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  to the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:  s-----------e
 
@@ -944,6 +956,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :              s-----------e
                      granule:  s-----------e
 
@@ -951,6 +964,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:              s-----------e
 
