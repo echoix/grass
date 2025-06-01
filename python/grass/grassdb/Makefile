@@ -8,7 +8,7 @@ DSTDIR = $(ETC)/python/grass/grassdb
 MODULES = checks create data manage config history
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
 
 default: $(PYFILES) $(PYCFILES)
 
