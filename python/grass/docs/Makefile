@@ -63,7 +63,7 @@ libpythonapidoc:
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../imaging/)
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../exceptions/)
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../gunittest/ ../gunittest/multireport.py ../gunittest/multirunner.py ../gunittest/main.py)
-	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../pydispatch/)
+	$(call run_grass,$(SPHINXAPIDOC) --module-first -T -f -t _templates/sphinx/apidoc/ -o src/ ../pydispatch/)
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../pygrass/)
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../script/)
 	$(call run_grass,$(SPHINXAPIDOC) -T -f -t _templates/sphinx/apidoc/ -o src/ ../temporal/)
