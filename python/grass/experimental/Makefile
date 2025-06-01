@@ -10,7 +10,7 @@ MODULES = \
 	mapset
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
 
 default: $(PYFILES) $(PYCFILES)
 

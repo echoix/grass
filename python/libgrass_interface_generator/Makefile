@@ -73,12 +73,12 @@ GDIR = $(PYDIR)/grass
 DSTDIR = $(GDIR)/lib
 
 PYFILES  := $(patsubst %,$(DSTDIR)/%.py,$(MODULES))
-PYCFILES  := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES))
+PYCFILES  := $(patsubst %,$(DSTDIR)/%.py,$(MODULES))
 LPYFILES := $(patsubst %,$(OBJDIR)/%.py,$(MODULES))
 
 COPY_FILES = ctypes_loader ctypes_preamble __init__
 PY_COPY_FILES = $(patsubst %,$(DSTDIR)/%.py,$(COPY_FILES))
-PYC_COPY_FILES = $(patsubst %,$(DSTDIR)/%.pyc,$(COPY_FILES))
+PYC_COPY_FILES = $(patsubst %,$(DSTDIR)/%.py,$(COPY_FILES))
 
 ifeq ($(strip $(GRASS_LIBRARY_TYPE)),shlib)
 default:

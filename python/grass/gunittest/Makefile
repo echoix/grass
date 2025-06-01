@@ -11,9 +11,9 @@ DSTDIR = $(GDIR)/gunittest
 MODULES = case gmodules loader runner checkers gutils invoker main reporters utils
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
 
-default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc
+default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py
 
 $(PYDIR):
 	$(MKDIR) $@
