@@ -14,9 +14,9 @@ MODULES = shortcuts
 CLEAN_SUBDIRS = interface grid
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
 
-default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc
+default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py
 	-$(MAKE) -C interface || echo $(CURDIR)/interface >> $(ERRORLOG)
 	-$(MAKE) -C grid || echo $(CURDIR)/grid >> $(ERRORLOG)
 
