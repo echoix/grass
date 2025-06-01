@@ -62,11 +62,11 @@ def _cleanDir(tempDir):
 def writeAvi(
     filename,
     images,
-    duration=0.1,
+    duration: float = 0.1,
     encoding="mpeg4",
     inputOptions="",
     outputOptions="",
-    bg_task=False,
+    bg_task: bool = False,
 ):
     """Export movie to a AVI file, which is encoded with the given
     encoding. Hint for Windows users: the 'msmpeg4v2' codec is
@@ -83,12 +83,11 @@ def writeAvi(
 
     :param str filename: output filename
     :param images:
-    :param float duration:
+    :param duration:
     :param str encoding: the encoding type
     :param inputOptions:
     :param outputOptions:
-    :param bool bg_task: if thread background task, not raise but
-    return error message
+    :param bg_task: if thread background task, not raise but return error message
 
     :return str: error message
     """
