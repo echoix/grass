@@ -12,9 +12,9 @@ MODULES = errors utils
 CLEAN_SUBDIRS = messages modules raster vector gis shell tests rpc
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
 
-default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc
+default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py
 	-$(MAKE) -C messages || echo $(CURDIR)/messages >> $(ERRORLOG)
 	-$(MAKE) -C modules || echo $(CURDIR)/modules >> $(ERRORLOG)
 	-$(MAKE) -C raster || echo $(CURDIR)/raster >> $(ERRORLOG)

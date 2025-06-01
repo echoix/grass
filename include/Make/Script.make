@@ -11,7 +11,7 @@ HTMLSRC = $(SCRIPT)
 
 ETCDIR = $(ETC)/$(PGM)
 ETCPYFILES := $(patsubst %,$(ETCDIR)/%.py,$(ETCFILES))
-ETCPYCFILES := $(patsubst %,$(ETCDIR)/%.pyc,$(ETCFILES))
+ETCPYCFILES := $(patsubst %,$(ETCDIR)/%.py,$(ETCFILES))
 
 include $(MODULE_TOPDIR)/include/Make/Rules.make
 include $(MODULE_TOPDIR)/include/Make/Html.make
