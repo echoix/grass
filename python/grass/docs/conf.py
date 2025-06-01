@@ -89,7 +89,7 @@ GRASS Development Team</a>, GRASS ${grass_version} Documentation</p>
 )
 
 grass_version = core.version()["version"]
-today = date.today()
+# today = date.today()
 
 copy("_templates/layout.html.template", "_templates/layout.html")
 
