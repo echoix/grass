@@ -126,13 +126,13 @@ def reproject_latlon(coord):
     return east, north, elev
 
 
-def _style_table(html_content):
+def _style_table(html_content) -> str:
     """
     Use to style table displayed in popup.
 
     :param html_content: HTML content to be displayed
 
-    :return str: formatted HTML content
+    :return: formatted HTML content
     """
     css = """
     <style>
@@ -207,16 +207,16 @@ def _format_regular_output(items):
     return regular_output
 
 
-def query_raster(coord, raster_list):
+def query_raster(coord, raster_list: list[str]) -> str:
     """
     Queries raster data at specified coordinates.
 
     :param coord: Coordinates given as a tuple (latitude, longitude).
     :param list raster_list: List of raster names to query.
 
-    :return str: HTML formatted string containing the results of the raster queries.
+    :return: HTML formatted string containing the results of the raster queries.
     """
-    output_list = ["""<table>"""]
+    output_list: list[str] = ["""<table>"""]
 
     for raster in raster_list:
         raster_output = gs.raster.raster_what(map=raster, coord=coord)
@@ -243,7 +243,7 @@ def query_raster(coord, raster_list):
         return ""
 
     output_list.extend(("</table>", "<br>"))
-    final_output = "".join(output_list)
+    final_output: str = "".join(output_list)
     return _style_table(final_output)
 
 
