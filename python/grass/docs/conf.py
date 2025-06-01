@@ -96,7 +96,7 @@ copy("_templates/layout.html.template", "_templates/layout.html")
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-# needs_sphinx = '1.0'
+needs_sphinx = "5.1"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -485,6 +485,13 @@ epub_exclude_files = ["search.html"]
 
 # Where class documentation comes from (class or __init__ docstring).
 autoclass_content = "both"
+
+autodoc_member_order = "groupwise"
+
+autodoc_typehints = "both"
+
+autodoc_typehints_description_target = "documented_params"
+
 
 # sphinx-sitemap extension config
 # https://sphinx-sitemap.readthedocs.io/en/latest/advanced-configuration.html
