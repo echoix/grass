@@ -12,9 +12,9 @@ DSTDIR= $(PGDIR)/shell
 MODULES = conversion show
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
 
-default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py $(GDIR)/__init__.pyc
+default: $(PYFILES) $(PYCFILES) $(GDIR)/__init__.py
 
 $(PYDIR):
 	$(MKDIR) $@
