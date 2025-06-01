@@ -220,19 +220,19 @@ def mapcalc_start(
     return p
 
 
-def raster_what(map, coord, env=None, localized=False):
+def raster_what(map: str | bytes, coord, env=None, localized=False):
     """Interface to r.what
 
     >>> raster_what("elevation", [[640000, 228000]])
     [{'elevation': {'color': '255:214:000', 'label': '', 'value': '102.479'}}]
 
-    :param str map: the map name
+    :param map: the map name
     :param list coord: a list of list containing all the point that you want to query
     :param env:
     """
     map_list = [map] if isinstance(map, (bytes, str)) else map
 
-    coord_list = []
+    coord_list: list[str] = []
     if isinstance(coord, tuple):
         coord_list.append("%f,%f" % (coord[0], coord[1]))
     else:
