@@ -8,7 +8,7 @@ DSTDIR = $(ETC)/python/grass/benchmark
 MODULES = app plots results runners __main__
 
 PYFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
-PYCFILES := $(patsubst %,$(DSTDIR)/%.pyc,$(MODULES) __init__)
+PYCFILES := $(patsubst %,$(DSTDIR)/%.py,$(MODULES) __init__)
 
 default: $(PYFILES) $(PYCFILES)
 
