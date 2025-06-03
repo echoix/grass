@@ -137,7 +137,8 @@ opt_path=${OSGEO4W_ROOT_MSYS}/opt
 grass_path=$opt_path/grass
 
 if [ "$UNITTEST" ]; then
-    msys_path=";D:/msys64/usr/bin;D:/msys64/mingw64/bin"
+    # TODO: Use variable for msys path
+    msys_path=";C:/msys64/usr/bin;C:/msys64/mingw64/bin"
 fi
 
 mkdir -p $opt_path
