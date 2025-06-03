@@ -487,7 +487,8 @@ epub_exclude_files = ["search.html"]
 # Where class documentation comes from (class or __init__ docstring).
 autoclass_content = "both"
 
-autodoc_member_order = "groupwise"
+# autodoc_member_order = "groupwise"
+autodoc_member_order = "bysource"
 
 autodoc_typehints = "both"
 
