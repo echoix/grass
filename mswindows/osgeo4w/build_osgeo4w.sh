@@ -138,7 +138,7 @@ grass_path=$opt_path/grass
 
 if [ "$UNITTEST" ]; then
     # TODO: Use variable for msys path
-    msys_path=";C:/msys64/usr/bin;C:/msys64/mingw64/bin"
+    msys_path=";D:/msys64/usr/bin;D:/msys64/mingw64/bin"
 fi
 
 mkdir -p $opt_path
