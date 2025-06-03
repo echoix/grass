@@ -489,7 +489,8 @@ autoclass_content = "both"
 # Render todo boxes instead of hiding them
 todo_include_todos = True
 
-autodoc_member_order = "groupwise"
+# autodoc_member_order = "groupwise"
+autodoc_member_order = "bysource"
 
 autodoc_typehints = "both"
 
