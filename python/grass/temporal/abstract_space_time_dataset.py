@@ -115,6 +115,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
     @abstractmethod
     def get_map_register(self):
         """Return the name of the map register table
+
         :return: The map register table name
         """
 
@@ -290,6 +291,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
 
     def get_semantic_type(self):
         """Return the semantic type of this dataset
+
         :return: The semantic type
         """
         return self.base.get_semantic_type()
@@ -677,6 +679,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  located in the selection granule:
 
                  .. code-block:: output
+
                      map    :        s
                      granule:  s-----------------e
 
@@ -690,6 +693,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  during the selection granule:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:  s-----------------e
 
@@ -698,6 +702,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  overlapped:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:        s-----------------e
 
@@ -708,6 +713,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------------e
                      granule:     s-----------e
 
@@ -715,6 +721,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  to the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:  s-----------e
 
@@ -722,6 +729,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :              s-----------e
                      granule:  s-----------e
 
@@ -729,6 +737,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:              s-----------e
 
@@ -899,6 +908,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  located in the selection granule:
 
                  .. code-block:: output
+
                      map    :        s
                      granule:  s-----------------e
 
@@ -912,6 +922,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  during the selection granule:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:  s-----------------e
 
@@ -920,6 +931,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  overlapped:
 
                  .. code-block:: output
+
                      map    :     s-----------e
                      granule:        s-----------------e
 
@@ -930,6 +942,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------------e
                      granule:     s-----------e
 
@@ -937,6 +950,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  to the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:  s-----------e
 
@@ -944,6 +958,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :              s-----------e
                      granule:  s-----------e
 
@@ -951,6 +966,7 @@ class AbstractSpaceTimeDataset(AbstractDataset):
                  the selection granule:
 
                  .. code-block:: output
+
                      map    :  s-----------e
                      granule:              s-----------e
 
@@ -1425,10 +1441,11 @@ class AbstractSpaceTimeDataset(AbstractDataset):
             "n", "s", "e", "w", "b", "t", and  "projection".
         :param spatial_relation: Spatial relation to the provided
             spatial extent as a string with one of the following values:
-            "overlaps": maps that spatially overlap ("intersect")
-                        within the provided spatial extent
-            "is_contained": maps that are fully within the provided spatial extent
-            "contains": maps that contain (fully cover) the provided spatial extent
+
+            - "overlaps": maps that spatially overlap ("intersect")
+              within the provided spatial extent
+            - "is_contained": maps that are fully within the provided spatial extent
+            - "contains": maps that contain (fully cover) the provided spatial extent
 
         :return: ordered object list, in case nothing found None is returned
         """
@@ -1500,10 +1517,11 @@ class AbstractSpaceTimeDataset(AbstractDataset):
             "n", "s", "e", "w", "b", "t", and  "projection".
         :param spatial_relation: Spatial relation to the provided
             spatial extent as a string with one of the following values:
-            "overlaps": maps that spatially overlap ("intersect")
-                        within the provided spatial extent
-            "is_contained": maps that are fully within the provided spatial extent
-            "contains": maps that contain (fully cover) the provided spatial extent
+
+            - "overlaps": maps that spatially overlap ("intersect")
+              within the provided spatial extent
+            - "is_contained": maps that are fully within the provided spatial extent
+            - "contains": maps that contain (fully cover) the provided spatial extent
 
         :return: The ordered map object list,
                 In case nothing found None is returned
@@ -1554,10 +1572,11 @@ class AbstractSpaceTimeDataset(AbstractDataset):
             "n", "s", "e", "w", "b", "t", and  "projection".
         :param spatial_relation: Spatial relation to the provided
             spatial extent as a string with one of the following values:
-            "overlaps": maps that spatially overlap ("intersect")
-                        within the provided spatial extent
-            "is_contained": maps that are fully within the provided spatial extent
-            "contains": maps that contain (fully cover) the provided spatial extent
+
+            - "overlaps": maps that spatially overlap ("intersect")
+              within the provided spatial extent
+            - "is_contained": maps that are fully within the provided spatial extent
+            - "contains": maps that contain (fully cover) the provided spatial extent
 
         :return: The ordered map object list,
                 In case nothing is found, an empty list is returned
@@ -1715,10 +1734,11 @@ class AbstractSpaceTimeDataset(AbstractDataset):
             e.g. from g.region -ug3
         :param str spatial_relation: Spatial relation to the provided
             spatial extent as a string with one of the following values:
-            "overlaps": maps that spatially overlap ("intersect")
-                        within the provided spatial extent
-            "is_contained": maps that are fully within the provided spatial extent
-            "contains": maps that contain (fully cover) the provided spatial extent
+
+            - "overlaps": maps that spatially overlap ("intersect")
+              within the provided spatial extent
+            - "is_contained": maps that are fully within the provided spatial extent
+            - "contains": maps that contain (fully cover) the provided spatial extent
 
         :return: updated SQL WHERE statement
 
@@ -1838,10 +1858,11 @@ class AbstractSpaceTimeDataset(AbstractDataset):
             "n", "s", "e", "w", "b", "t", and  "projection".
         :param spatial_relation: Spatial relation to the provided
             spatial extent as a string with one of the following values:
-            "overlaps": maps that spatially overlap ("intersect")
-                        within the provided spatial extent
-            "is_contained": maps that are fully within the provided spatial extent
-            "contains": maps that contain (fully cover) the provided spatial extent
+
+            - "overlaps": maps that spatially overlap ("intersect")
+              within the provided spatial extent
+            - "is_contained": maps that are fully within the provided spatial extent
+            - "contains": maps that contain (fully cover) the provided spatial extent
         :param dbif: The database interface to be used
 
         :return: SQL rows of all registered maps grouped by the columns given in

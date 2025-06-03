@@ -1001,7 +1001,7 @@ class Line(Geo):
                   Point(1.000000, 1.000000),
                   Point(2.000000, 2.000000)])
 
-        .. warning ::
+        .. warning::
 
             prune_thresh is not working yet.
         """
@@ -1286,11 +1286,11 @@ class Node:
         return (x.value, y.value) if self.is2D else (x.value, y.value, z.value)
 
     def to_wkt(self):
-        """Return a "well know text" (WKT) geometry string. ::"""
+        """Return a "well know text" (WKT) geometry string."""
         return "POINT(%s)" % " ".join(["%f" % coord for coord in self.coords()])
 
     def to_wkb(self):
-        """Return a "well know binary" (WKB) geometry array. ::
+        """Return a "well know binary" (WKB) geometry array.
 
         TODO: Must be implemented
         """
@@ -1504,7 +1504,7 @@ class Isle(Geo):
         )
 
     def to_wkb(self):
-        """Return a "well know text" (WKB) geometry array. ::"""
+        """Return a "well know text" (WKB) geometry array"""
         msg = "Not implemented"
         raise Exception(msg)
 
@@ -1760,13 +1760,13 @@ class Area(Geo):
 
     def to_wkt(self):
         """Return a "well know text" (WKT) area string, this method uses
-        the GEOS implementation in the vector library. ::
+        the GEOS implementation in the vector library.
         """
         return decode(libvect.Vect_read_area_to_wkt(self.c_mapinfo, self.id))
 
     def to_wkb(self):
         """Return a "well know binary" (WKB) area byte array, this method uses
-        the GEOS implementation in the vector library. ::
+        the GEOS implementation in the vector library.
         """
         size = ctypes.c_size_t()
         barray = libvect.Vect_read_area_to_wkb(
@@ -1790,7 +1790,7 @@ class Area(Geo):
 
         int Vect_get_area_cat(const struct Map_info \*Map, int area, int field)
 
-        ..warning: Not implemented
+        .. warning:: Not implemented
         """
 
     @mapinfo_must_be_set
