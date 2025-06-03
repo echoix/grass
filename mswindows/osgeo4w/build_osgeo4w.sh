@@ -109,7 +109,8 @@ dist_esc="$src_esc\\\\$dist"
     cat <<EOT
 
 
-set PATH=%PATH%;D:\\msys64\\mingw64\\bin;D:\\msys64\\usr\\bin
+REM TODO: Use variable here
+set PATH=%PATH%;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin
 
 if not exist %GISBASE%\\etc\\fontcap (
 	pushd .
