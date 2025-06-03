@@ -17,7 +17,7 @@ set -e
 
 # compile
 export PATH=${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin
-export C_INCLUDE_PATH=".:${OSGEO4W_ROOT_MSYS}/include:${SRC}/dist.${ARCH}/include:/c/msys64/mingw64/include"
+export C_INCLUDE_PATH=".:${OSGEO4W_ROOT_MSYS}/include:${SRC}/dist.${ARCH}/include:/d/msys64/mingw64/include"
 export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
 export ARCH=x86_64-w64-mingw32
 
@@ -109,7 +109,7 @@ dist_esc="$src_esc\\\\$dist"
     cat <<EOT
 
 
-set PATH=%PATH%;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin
+set PATH=%PATH%;D:\\msys64\\mingw64\\bin;D:\\msys64\\usr\\bin
 
 if not exist %GISBASE%\\etc\\fontcap (
 	pushd .
@@ -136,7 +136,7 @@ opt_path=${OSGEO4W_ROOT_MSYS}/opt
 grass_path=$opt_path/grass
 
 if [ "$UNITTEST" ]; then
-    msys_path=";C:/msys64/usr/bin;C:/msys64/mingw64/bin"
+    msys_path=";D:/msys64/usr/bin;D:/msys64/mingw64/bin"
 fi
 
 mkdir -p $opt_path
