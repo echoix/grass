@@ -495,6 +495,7 @@ autodoc_typehints = "both"
 
 autodoc_typehints_description_target = "documented_params"
 
+todo_include_todos = True
 
 # sphinx-sitemap extension config
 # https://sphinx-sitemap.readthedocs.io/en/latest/advanced-configuration.html
