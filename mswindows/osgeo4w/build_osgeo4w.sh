@@ -21,7 +21,7 @@ export PATH=${OSGEO4W_ROOT_MSYS}/bin:/usr/bin:/mingw64/bin
 export C_INCLUDE_PATH=".:${OSGEO4W_ROOT_MSYS}/include:${SRC}/dist.${ARCH}/include:/c/msys64/mingw64/include"
 export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
 export ARCH=x86_64-w64-mingw32
-
+export MSYS2_LOCATION="${MSYS2_LOCATION:-C:/msys64}"
 
 mkdir -p mswindows/osgeo4w/lib
 rm -f $OSGEO4W_ROOT_MSYS/lib/libpq.a
@@ -139,7 +139,7 @@ grass_path=$opt_path/grass
 
 if [ "$UNITTEST" ]; then
     # TODO: Use variable for msys path
-    msys_path=";D:/msys64/usr/bin;D:/msys64/mingw64/bin"
+    msys_path=";$(cygpath -m ${MSYS2_LOCATION})/usr/bin;$(cygpath -m ${MSYS2_LOCATION})/mingw64/bin"
 fi
 
 mkdir -p $opt_path
