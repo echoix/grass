@@ -70,7 +70,9 @@ export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
 LDFLAGS="-fprofile-instr-generate $LDFLAGS" ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
-make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
-  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
+# make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
+#   CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
+make -j1 CFLAGS="$CFLAGS -Werror $EXEMPT" \
+  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT" 
 
 make install
