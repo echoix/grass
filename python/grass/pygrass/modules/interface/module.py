@@ -482,11 +482,13 @@ class Module:
     Often in the Module class you can find ``*args`` and ``kwargs`` annotation
     in methods, like in the __call__ method.
     Python allow developers to not specify all the arguments and
-    keyword arguments of a method or function. ::
+    keyword arguments of a method or function.
+
+    .. code-block:: python
 
         def f(*args):
             for arg in args:
-                print arg
+                print(arg)
 
     therefore if we call the function like:
 
@@ -503,13 +505,15 @@ class Module:
     gis
     modules
 
-    we can do the same with keyword arguments, rewrite the above function: ::
+    we can do the same with keyword arguments, rewrite the above function
+
+    .. code-block:: python
 
         def f(*args, **kargs):
             for arg in args:
-                print arg
+                print(arg)
             for key, value in kargs.items():
-                print "%s = %r" % (key, value)
+                print("%s = %r" % (key, value))
 
     now we can use the new function, with:
 
@@ -872,7 +876,7 @@ class MultiModule:
                       region environment, hence invoking g.region will not alter the
                       current region or the region of other MultiModule runs.
 
-                      Note:
+                      .. note::
 
                           Modules run in asynchronous mode can only be accessed via the
                           wait() method. The wait() method will return all finished
@@ -882,79 +886,87 @@ class MultiModule:
     of modules in parallel. This is meaningful if region settings must be applied
     to each parallel module run.
 
-    >>> from grass.pygrass.modules import Module
-    >>> from grass.pygrass.modules import MultiModule
-    >>> from multiprocessing import Process
-    >>> import copy
+    .. code-block:: pycon
+
+        >>> from grass.pygrass.modules import Module
+        >>> from grass.pygrass.modules import MultiModule
+        >>> from multiprocessing import Process
+        >>> import copy
 
     Synchronous module run
 
-    >>> region_1 = Module("g.region", run_=False)
-    >>> region_1.flags.p = True
-    >>> region_2 = copy.deepcopy(region_1)
-    >>> region_2.flags.p = True
-    >>> mm = MultiModule(module_list=[region_1, region_2])
-    >>> mm.run()
-    >>> m_list = mm.get_modules()
-    >>> m_list[0].returncode
-    0
-    >>> m_list[1].returncode
-    0
+    .. code-block:: pycon
+
+        >>> region_1 = Module("g.region", run_=False)
+        >>> region_1.flags.p = True
+        >>> region_2 = copy.deepcopy(region_1)
+        >>> region_2.flags.p = True
+        >>> mm = MultiModule(module_list=[region_1, region_2])
+        >>> mm.run()
+        >>> m_list = mm.get_modules()
+        >>> m_list[0].returncode
+        0
+        >>> m_list[1].returncode
+        0
 
     Asynchronous module run, setting finish = False
 
-    >>> region_1 = Module("g.region", run_=False)
-    >>> region_1.flags.p = True
-    >>> region_2 = copy.deepcopy(region_1)
-    >>> region_2.flags.p = True
-    >>> region_3 = copy.deepcopy(region_1)
-    >>> region_3.flags.p = True
-    >>> region_4 = copy.deepcopy(region_1)
-    >>> region_4.flags.p = True
-    >>> region_5 = copy.deepcopy(region_1)
-    >>> region_5.flags.p = True
-    >>> mm = MultiModule(
-    ...     module_list=[region_1, region_2, region_3, region_4, region_5], sync=False
-    ... )
-    >>> t = mm.run()
-    >>> isinstance(t, Process)
-    True
-    >>> m_list = mm.wait()
-    >>> m_list[0].returncode
-    0
-    >>> m_list[1].returncode
-    0
-    >>> m_list[2].returncode
-    0
-    >>> m_list[3].returncode
-    0
-    >>> m_list[4].returncode
-    0
+    .. code-block::
+
+        >>> region_1 = Module("g.region", run_=False)
+        >>> region_1.flags.p = True
+        >>> region_2 = copy.deepcopy(region_1)
+        >>> region_2.flags.p = True
+        >>> region_3 = copy.deepcopy(region_1)
+        >>> region_3.flags.p = True
+        >>> region_4 = copy.deepcopy(region_1)
+        >>> region_4.flags.p = True
+        >>> region_5 = copy.deepcopy(region_1)
+        >>> region_5.flags.p = True
+        >>> mm = MultiModule(
+        ...     module_list=[region_1, region_2, region_3, region_4, region_5],
+        ...     sync=False,
+        ... )
+        >>> t = mm.run()
+        >>> isinstance(t, Process)
+        True
+        >>> m_list = mm.wait()
+        >>> m_list[0].returncode
+        0
+        >>> m_list[1].returncode
+        0
+        >>> m_list[2].returncode
+        0
+        >>> m_list[3].returncode
+        0
+        >>> m_list[4].returncode
+        0
 
     Asynchronous module run, setting finish = False and using temporary region
 
-    >>> mm = MultiModule(
-    ...     module_list=[region_1, region_2, region_3, region_4, region_5],
-    ...     sync=False,
-    ...     set_temp_region=True,
-    ... )
-    >>> str(mm)
-    'g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p ; \
-g.region format=plain -p ; g.region format=plain -p'
-    >>> t = mm.run()
-    >>> isinstance(t, Process)
-    True
-    >>> m_list = mm.wait()
-    >>> m_list[0].returncode
-    0
-    >>> m_list[1].returncode
-    0
-    >>> m_list[2].returncode
-    0
-    >>> m_list[3].returncode
-    0
-    >>> m_list[4].returncode
-    0
+    .. code-block:: pycon
+
+        >>> mm = MultiModule(
+        ...     module_list=[region_1, region_2, region_3, region_4, region_5],
+        ...     sync=False,
+        ...     set_temp_region=True,
+        ... )
+        >>> str(mm)
+        'g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p'
+        >>> t = mm.run()
+        >>> isinstance(t, Process)
+        True
+        >>> m_list = mm.wait()
+        >>> m_list[0].returncode
+        0
+        >>> m_list[1].returncode
+        0
+        >>> m_list[2].returncode
+        0
+        >>> m_list[3].returncode
+        0
+        >>> m_list[4].returncode
+        0
 
     """
 
@@ -971,8 +983,7 @@ g.region format=plain -p ; g.region format=plain -p'
                                 run, hence region settings in the process list will not
                                 affect the current computation region.
 
-                                Note:
-
+                                .. note::
                                     This flag is only available in asynchronous mode!
         :return:
         """
@@ -989,7 +1000,7 @@ g.region format=plain -p ; g.region format=plain -p'
     def get_modules(self):
         """Return the list of modules that have been run in synchronous mode
 
-        Note: Asynchronously run module can only be accessed via the wait() method.
+        .. note:: Asynchronously run module can only be accessed via the wait() method.
 
         :return: The list of modules
         """
