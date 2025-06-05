@@ -486,8 +486,8 @@ def run_command(*args, **kwargs):
     The behavior on error can be changed using *errors* parameter
     which is passed to the :func:`handle_errors()` function.
 
-    :param *args: unnamed arguments passed to :func:`start_command()`
-    :param **kwargs: named arguments passed to :func:`start_command()`
+    :param args: unnamed arguments passed to :func:`start_command()`
+    :param kwargs: named arguments passed to :func:`start_command()`
     :param str errors: passed to :func:`handle_errors()`
 
     .. versionchanged:: 8.0
@@ -749,11 +749,12 @@ def debug(msg, debug=1, env=None):
     (with `X` set to the debug level specified in the function call).
 
     :param str msg: debugging message to be displayed
-    :param str debug: debug level (0-5) with the following recommended levels:
-        Use 1 for messages generated once of few times,
-        3 for messages generated for each raster row or vector line,
-        5 for messages generated for each raster cell or vector point.
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param str debug: debug level (0-5) with the following recommended
+        levels:
+        - Use 1 for messages generated once of few times,
+        - 3 for messages generated for each raster row or vector line,
+        - 5 for messages generated for each raster cell or vector point.
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     if debug_level() >= debug:
         # TODO: quite a random hack here, do we need it somewhere else too?
