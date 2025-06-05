@@ -122,7 +122,7 @@ jobs:
 
           PROFILES_DIR=$WORKSPACE
 
-          COV_BINARIES=$(find . -type f \( -executable -o -name "*.dylib" -o -name "*.so*" \) \
+          COV_BINARIES=$(find ./build/output/ -type f \( -executable -o -name "*.dylib" -o -name "*.so*" \) \
             -exec file {} + | grep -E 'Mach-O|ELF' | cut -d':' -f1)
 
           rm -rf $REPORT_DIR
