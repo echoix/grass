@@ -67,7 +67,7 @@ export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 export CFLAGS="$EXTRA_COV_FLAGS $CFLAGS"
 export CXXFLAGS="$EXTRA_COV_FLAGS $CXXFLAGS"
 
-LDFLAGS="-fprofile-instr-generate $LDFLAGS" ./configure $CONFIGURE_FLAGS
+LDFLAGS="-fprofile-instr-generate -femit-all-decls $LDFLAGS" ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
 # make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
