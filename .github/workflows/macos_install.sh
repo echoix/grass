@@ -73,6 +73,6 @@ EXEMPT=""
 # make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
 #   CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
 make -j1 CFLAGS="$CFLAGS -Werror $EXEMPT" \
-  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT" 
+  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
 
 make install
