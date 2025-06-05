@@ -566,7 +566,7 @@ def feed_command(*args, **kwargs):
 
 def read_command(*args, **kwargs):
     """Passes all arguments to pipe_command, then waits for the process to
-    complete, returning its stdout (i.e. similar to shell `backticks`).
+    complete, returning its stdout (i.e. similar to shell ``backticks``).
 
     The behavior on error can be changed using *errors* parameter
     which is passed to the :func:`handle_errors()` function.
@@ -717,7 +717,7 @@ def exec_command(
     :param bool quiet: True to run quietly (<tt>--q</tt>)
     :param bool superquiet: True to run quietly (<tt>--qq</tt>)
     :param bool verbose: True to run verbosely (<tt>--v</tt>)
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     :param list kwargs: module's parameters
 
     """
@@ -736,17 +736,17 @@ def message(msg, flag=None, env=None):
 
     :param str msg: message to be displayed
     :param str flag: flags (given as string)
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     run_command("g.message", flags=flag, message=msg, errors="ignore", env=env)
 
 
 def debug(msg, debug=1, env=None):
-    """Display a debugging message using `g.message -d`.
+    """Display a debugging message using ``g.message -d``.
 
     The visibility of a debug message at runtime is controlled by
-    setting the corresponding DEBUG level with `g.gisenv set="DEBUG=X"`
-    (with `X` set to the debug level specified in the function call).
+    setting the corresponding DEBUG level with ``g.gisenv set="DEBUG=X"``
+    (with ``X`` set to the debug level specified in the function call).
 
     :param str msg: debugging message to be displayed
     :param str debug: debug level (0-5) with the following recommended
@@ -765,25 +765,25 @@ def debug(msg, debug=1, env=None):
 
 
 def verbose(msg, env=None):
-    """Display a verbose message using `g.message -v`
+    """Display a verbose message using ``g.message -v``
 
     :param str msg: verbose message to be displayed
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     message(msg, flag="v", env=env)
 
 
 def info(msg, env=None):
-    """Display an informational message using `g.message -i`
+    """Display an informational message using ``g.message -i``
 
     :param str msg: informational message to be displayed
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     message(msg, flag="i", env=env)
 
 
 def percent(i, n, s, env=None):
-    """Display a progress info message using `g.message -p`
+    """Display a progress info message using ``g.message -p``
 
     .. code-block:: python
 
@@ -796,42 +796,42 @@ def percent(i, n, s, env=None):
     :param int i: current item
     :param int n: total number of items
     :param int s: increment size
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     message("%d %d %d" % (i, n, s), flag="p", env=env)
 
 
 def warning(msg, env=None):
-    """Display a warning message using `g.message -w`
+    """Display a warning message using ``g.message -w``
 
     :param str msg: warning message to be displayed
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     message(msg, flag="w", env=env)
 
 
 def error(msg, env=None):
-    """Display an error message using `g.message -e`
+    """Display an error message using ``g.message -e``
 
     This function does not end the execution of the program.
     The right action after the error is up to the caller.
     For error handling using the standard mechanism use :func:`fatal()`.
 
     :param str msg: error message to be displayed
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     message(msg, flag="e", env=env)
 
 
 def fatal(msg, env=None):
-    """Display an error message using `g.message -e`, then abort or raise
+    """Display an error message using ``g.message -e``, then abort or raise
 
     Raises exception when module global raise_on_error is 'True', abort
     (calls exit) otherwise.
     Use :func:`set_raise_on_error()` to set the behavior.
 
     :param str msg: error message to be displayed
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     """
     global raise_on_error
     if raise_on_error:
@@ -842,7 +842,7 @@ def fatal(msg, env=None):
 
 
 def set_raise_on_error(raise_exp=True):
-    """Define behaviour on fatal error (fatal() called)
+    """Define behavior on fatal error (fatal() called)
 
     :param bool raise_exp: True to raise ScriptError instead of calling
                            sys.exit(1) in fatal()
@@ -1088,7 +1088,7 @@ def _text_to_key_value_dict(
     checkunits: bool = False,
 ) -> KeyValue[list[int | float | str]]:
     """Convert a key-value text file, where entries are separated by newlines
-    and the key and value are separated by `sep', into a key-value dictionary
+    and the key and value are separated by ``sep``, into a key-value dictionary
     and discover/use the correct data types (float, int or string) for values.
 
     :param filename: The name or name and path of the text file to convert
@@ -1236,7 +1236,7 @@ def gisenv(env: _Env | None = None) -> KeyValue[str | None]:
         >>> print(env["GISDBASE"])  # doctest: +SKIP
         /opt/grass-data
 
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     :return: list of GRASS variables
     """
     s = read_command("g.gisenv", flags="n", env=env)
@@ -1263,7 +1263,7 @@ def region(region3d=False, complete=False, env=None):
 
     :param bool region3d: True to get 3D region
     :param bool complete:
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
 
     .. code-block:: pycon
 
@@ -1317,7 +1317,7 @@ def region_env(
 
     :param region3d: True to get 3D region
     :param flags: for example 'a'
-    :param env: dictionary with system environment variables (`os.environ` by default)
+    :param env: dictionary with system environment variables (``os.environ`` by default)
     :param kwargs: g.region's parameters like 'raster', 'vector' or 'region'
 
     .. code-block:: python
