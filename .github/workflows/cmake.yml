@@ -115,8 +115,8 @@ jobs:
           FAST_BUILD_DIR=$(pwd)/clang-build
           REPORT_DIR=$(pwd)/coverage-reports
           HOST=
-          LLVM_PROFDATA=llvm-profdata
-          LLVM_COV=llvm-cov
+          LLVM_PROFDATA=llvm-profdata-${{ matrix.llvm-version }}
+          LLVM_COV=llvm-cov-${{ matrix.llvm-version }}
           ARTIFACT_PREP_SCRIPT=$WORKSPACE/utils/prepare-code-coverage-artifact.py
 
           PROFILES_DIR=$WORKSPACE
