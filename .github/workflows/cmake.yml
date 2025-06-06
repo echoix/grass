@@ -84,6 +84,7 @@ jobs:
         shell: bash -el {0}
         run: |
           cat ${GITHUB_WORKSPACE}/build/CMakeCache.txt
+      - run: cmake --build build --target help 
       - name: Build
         run: |
           cmake --build build --verbose -j$(nproc)
