@@ -330,4 +330,5 @@ if(WITH_X11)
   build_program_in_subdir(visualization/ximgview DEPENDS grass_gis X11::X11)
 endif()
 
+include(code-coverage)
 add_code_coverage()
