@@ -26,10 +26,11 @@ jobs:
     strategy:
       matrix:
         os:
-          - windows-2019
+          - windows-2022
       fail-fast: false
 
     steps:
+      - run: gdr -PSProvider 'FileSystem'
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
