@@ -30,7 +30,7 @@ from grass.exceptions import CalledModuleError
 
 
 def raster3d_info(map, env=None):
-    """Return information about a raster3d map (interface to `r3.info`).
+    """Return information about a raster3d map (interface to ``r3.info``).
 
     :Example:
       .. code-block:: pycon
