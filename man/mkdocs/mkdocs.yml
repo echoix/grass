@@ -53,18 +53,25 @@ extra:
   social:
     - icon: simple/opencollective
       link: https://opencollective.com/grass
+      name: Support us on OpenCollective
     - icon: fontawesome/brands/gitter
       link: https://gitter.im/grassgis/community
+      name: Join our Gitter chatroom
     - icon: fontawesome/brands/mastodon
       link: https://fosstodon.org/@grassgis/
+      name: GRASS on Mastodon
     - icon: fontawesome/brands/discourse
       link: https://discourse.osgeo.org/c/grass/62
+      name: OSGeo Discourse forum for GRASS
     - icon: fontawesome/brands/linkedin
       link: https://linkedin.com/company/grass-gis
+      name: GRASS on LinkedIn
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/GRASSGIS
+      name: GRASS on X
     - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/@grass-gis
+      name: GRASS YouTube Channel
   github:
     repos:
       grass: grass
