@@ -112,6 +112,7 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
     "sphinx_sitemap",
+    "sphinx_immaterial",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -182,28 +183,32 @@ pygments_style = "sphinx"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "sphinx_material"
+html_theme = "sphinx_immaterial"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    "nav_title": "GRASS Python Docs",
+    "icon": {
+        "repo": "fontawesome/brands/github",
+        "edit": "material/file-edit-outline",
+    },
+    # "nav_title": "GRASS Python Docs",
     "repo_url": "https://github.com/OSGeo/grass/",
     "repo_name": "GRASS",
-    "repo_type": "github",
-    "logo": "grass_logo.svg",
-    # Visible levels of the global TOC; -1 means unlimited
-    "globaltoc_depth": 1,
+    # "repo_type": "github",
+    # "logo": "grass_logo.svg",
+    # # Visible levels of the global TOC; -1 means unlimited
+    # "globaltoc_depth": 1,
     # If False, expand all TOC entries
     "globaltoc_collapse": True,
     # If True, show hidden TOC entries
     "globaltoc_includehidden": False,
-    "touch_icon": "grass_logo.png",
-    "color_primary": "grass-green",
-    "color_accent": "grass-green",
+    # "touch_icon": "grass_logo.png",
+    # "color_primary": "grass-green",
+    # "color_accent": "grass-green",
     "version_dropdown": False,
-    "localtoc_label_text": "Table of contents",
+    # "localtoc_label_text": "Table of contents",
     "nav_links": [
         {
             "href": "script_intro",
@@ -236,6 +241,69 @@ html_theme_options = {
             "internal": True,
         },
     ],
+    "features": [
+        "navigation.expand",
+        "navigation.tabs",
+        # "navigation.tabs.sticky",
+        # "toc.integrate",
+        "navigation.sections",
+        # "navigation.instant",
+        # "header.autohide",
+        "navigation.top",
+        "navigation.footer",
+        "navigation.tracking",
+        # "search.highlight",
+        "search.share",
+        "search.suggest",
+        "toc.follow",
+        "toc.sticky",
+        "content.tabs.link",
+        "content.code.copy",
+        "content.action.edit",
+        "content.action.view",
+        "content.tooltips",
+        "announce.dismiss",
+    ],
+    # The "social" section is a 1:1 equivalent to the mkdocs.yml config
+    # BEGIN: social icons
+    "social": [
+        {
+            "icon": "simple/opencollective",
+            "link": "https://opencollective.com/grass",
+            "name": "Support us on OpenCollective",
+        },
+        {
+            "icon": "fontawesome/brands/gitter",
+            "link": "https://gitter.im/grassgis/community",
+            "name": "Join our Gitter chatroom",
+        },
+        {
+            "icon": "fontawesome/brands/mastodon",
+            "link": "https://fosstodon.org/@grassgis/",
+            "name": "GRASS on Mastodon",
+        },
+        {
+            "icon": "fontawesome/brands/discourse",
+            "link": "https://discourse.osgeo.org/c/grass/62",
+            "name": "OSGeo Discourse forum for GRASS",
+        },
+        {
+            "icon": "fontawesome/brands/linkedin",
+            "link": "https://linkedin.com/company/grass-gis",
+            "name": "GRASS on LinkedIn",
+        },
+        {
+            "icon": "fontawesome/brands/x-twitter",
+            "link": "https://x.com/GRASSGIS",
+            "name": "GRASS on X",
+        },
+        {
+            "icon": "fontawesome/brands/youtube",
+            "link": "https://www.youtube.com/@grass-gis",
+            "name": "GRASS YouTube Channel",
+        },
+    ],
+    # END: social icons
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
