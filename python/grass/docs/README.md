@@ -17,7 +17,7 @@ pip install -r python/grass/docs/requirements.txt
 
 ### Build the Documentation
 
-To build the documentation, run the following command in the `python/grass/docs`
+To build the documentation, run the following command in the project's root
 directory:
 
 ```bash

@@ -11,6 +11,10 @@ clean: libpythonclean
 libpythonclean:
 	@$(call run_grass,$(MAKE) clean)
 
+apidoc: libpythonapidoc
+libpythonapidoc:
+	@echo "libpythonapidoc make target was removed is now a no-op"
+
 ## Redirect the targets to the sphinx makefile, inside a grass session,
 ## via the .DEFAULT target.
 ## For example, the target "libpythonhtml" will call the target "html"
