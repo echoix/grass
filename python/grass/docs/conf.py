@@ -69,6 +69,22 @@ sys.path.insert(
         os.path.join(os.environ["GISBASE"], "etc", "python", "grass", "temporal")
     ),
 )
+from grass.script import core  # noqa: E402
+
+footer_tmpl = string.Template(
+    r"""
+{% block footer %}<hr class="header">
+<p><a href="../index.html">Help Index</a>
+ | <a href="../topics.html">Topics Index</a>
+ | <a href="../keywords.html">Keywords Index</a>
+ | <a href="../full_index.html">Full Index</a></p>
+<p>&copy; 2003-${year} <a href="https://grass.osgeo.org">
+GRASS Development Team</a>, GRASS ${grass_version} Documentation</p>
+{% endblock %}
+"""
+)
+
+grass_version = core.version()["version"]
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -76,7 +92,7 @@ sys.path.insert(
 project = "GRASS Python Library"
 copyright = "2025, GRASS Development Team"
 author = "GRASS Development Team"
-release = "8.5.0dev"
+release = grass_version
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
