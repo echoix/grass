@@ -69,7 +69,7 @@ sys.path.insert(
         os.path.join(os.environ["GISBASE"], "etc", "python", "grass", "temporal")
     ),
 )
-from grass.script import core  # noqa: E402
+from grass.script import core  # noqa: E402, C0413
 
 footer_tmpl = string.Template(
     r"""

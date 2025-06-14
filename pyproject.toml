@@ -24,7 +24,7 @@ extend-exclude = ["python/libgrass_interface_generator"]
 
 [tool.ruff.lint]
 # See https://docs.astral.sh/ruff/rules/
-external = ["C2801"]
+external = ["C2801", "C0413"]
 
 select = [
     "A",      # flake8-builtins (A)
