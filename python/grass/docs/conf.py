@@ -90,7 +90,7 @@ grass_version = core.version()["version"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "GRASS Python Library"
-copyright = "%Y, GRASS Development Team"  # %Y is replaced by the year since sphinx 8.1
+project_copyright = "%Y, GRASS Development Team"  # %Y is replaced by the year
 author = "GRASS Development Team"
 release = grass_version
 
