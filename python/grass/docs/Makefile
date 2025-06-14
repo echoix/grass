@@ -16,9 +16,9 @@
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?= --jobs auto
+SPHINXOPTS    ?= --jobs auto --conf-dir .
 SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = .
+SOURCEDIR     = src
 BUILDDIR      = _build
 
 # Put it first so that "make" without argument is like "make help".
