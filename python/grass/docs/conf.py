@@ -103,6 +103,7 @@ version = grass_version  # Used for sitemap
 needs_sphinx = "8.1"
 
 extensions = [
+    "autoapi.extension",
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.ifconfig",
@@ -155,3 +156,13 @@ sitemap_excludes = [
 # https://www.sphinx-doc.org/en/master/usage/extensions/todo.html#configuration
 
 todo_include_todos = True
+
+# -- Options for sphinx-autoapi extension ------------------------------------
+# https://sphinx-autoapi.readthedocs.io/en/stable/reference/config.html
+autoapi_dirs = [
+    os.path.abspath(os.path.join(os.environ["GISBASE"], "etc", "python", "grass")),
+]
+autoapi_ignore = [
+    "grass.temporal.unit_tests",
+    "*grass/temporal/unit_tests*",
+]
