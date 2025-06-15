@@ -91,6 +91,7 @@ plugins:
           options:
             docstring_style: sphinx
             # allow_inspection: true
+            force_inspection: true
             preload_modules:
               - grass.script
               # - grass
