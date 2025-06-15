@@ -83,7 +83,13 @@ plugins:
   - search
   - glightbox
   - api-autonav:
-      exclude: ["grass.lib", "ctypes", "grass.lib.ctypes_preamble.ctypes", "grass.lib.ctypes_preamble"]
+      exclude:
+        - "grass.lib"
+        - "ctypes"
+        - "grass.lib.ctypes_preamble.ctypes"
+        - "grass.lib.ctypes_preamble"
+        - grass.temporal.unit_tests
+        - grass.pygrass.modules.shortcuts
       modules: [../../etc/python/grass]
   - mkdocstrings:
       handlers:
