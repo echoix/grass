@@ -53,12 +53,3 @@ Modules and Packages
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-.. autosummary::
-   :recursive:
-   :toctree:
-
-   grass
-   grass.jupyter
-   imaging
-   exceptions
