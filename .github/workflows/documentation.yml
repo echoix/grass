@@ -159,6 +159,7 @@ jobs:
           mkdocs build
 
       - name: Build Sphinx documentation
+        if: false
         run: |
           pip install -r "grass/python/grass/docs/requirements.txt"
           cd grass
@@ -167,6 +168,7 @@ jobs:
           mv -v dist.$ARCH/docs/html/libpython $MKDOCS_DIR/site
 
       - name: Merge Sphinx and MkDocs Sitemaps
+        if: false
         run: |
           cd grass
           python utils/merge_sitemaps.py \
