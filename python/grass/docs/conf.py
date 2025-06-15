@@ -93,6 +93,7 @@ project = "GRASS Python Library"
 project_copyright = "%Y, GRASS Development Team"  # %Y is replaced by the year
 author = "GRASS Development Team"
 release = grass_version
+version = grass_version  # Used for sitemap
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -109,6 +110,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
+    "sphinx_sitemap",
 ]
 
 templates_path = ["_templates"]
@@ -122,6 +124,10 @@ html_theme = "alabaster"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.ico"
 
+# The base URL which points to the root of the HTML documentation. It is used
+# to indicate the location of document using the Canonical Link Relation.
+html_baseurl = "https://grass.osgeo.org/grass-stable/manuals/libpython/"
+
 # -- Options for intersphinx extension ---------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#configuration
 
@@ -129,6 +135,19 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "python": ("https://docs.python.org/3", None),
 }
+
+# -- Options for sphinx-sitemap extension ------------------------------------
+# https://sphinx-sitemap.readthedocs.io/en/latest/advanced-configuration.html
+
+sitemap_filename = "sitemap.xml"
+# TODO: html_baseurl used here for sphinx_sitemap overwrites and contradicts with the
+# variable html_baseurl set above for creating the canonical links
+html_baseurl = "https://grass.osgeo.org/"
+sitemap_url_scheme = "grass{version}manuals/libpython/{link}"
+sitemap_excludes = [
+    "search.html",
+    "genindex.html",
+]
 
 # -- Options for todo extension ----------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/todo.html#configuration
