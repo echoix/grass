@@ -422,11 +422,13 @@ class RegionManager:
     The original region is saved at the beginning of the context and restored at the end.
 
     Example with explicit region parameters:
+    
+    .. code-block:: pycon
 
-    >>> with gs.RegionManager(n=226000, s=222000, w=634000, e=638000):
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+        >>> with gs.RegionManager(n=226000, s=222000, w=634000, e=638000):
+        ...     gs.parse_command("r.univar", map="elevation", format="json")
 
-    Example matching a raster map's region:
+    Example matching a raster map's region::
 
     >>> with gs.RegionManager(raster="elevation"):
     ...     gs.run_command("r.slope.aspect", elevation="elevation", slope="slope")
@@ -437,6 +439,7 @@ class RegionManager:
     ...     gs.run_command("g.region", n=226000, s=222000, w=634000, e=638000)
     ...     gs.parse_command("r.univar", map="elevation", format="json")
 
+    Example2 using :func:`~grass.script.raster.RegionManager.set_region`:
     Example using :py:func:`~grass.script.raster.RegionManager.set_region`:
 
     >>> with gs.RegionManager() as manager:
