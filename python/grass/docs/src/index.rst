@@ -49,3 +49,7 @@ Modules and Packages
    imaging
    pydispatch
    gunittest_testing
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
