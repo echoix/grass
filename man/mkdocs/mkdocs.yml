@@ -89,6 +89,7 @@ plugins:
       handlers:
         python:
           options:
+            docstring_style: sphinx
             # allow_inspection: true
             preload_modules:
               - grass.script
@@ -99,8 +100,13 @@ plugins:
             parameter_headings: true
             show_signature_annotations: true
           # load_external_modules: true
-          docstring_style: sphinx
-          paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/lib, /home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python, /home/vscode/grass/dist.x86_64-pc-linux-gnu/docs/mkdocs]
+          # docstring_style: sphinx
+          paths: 
+            - !ENV [GRASS_PYTHON_DIR, '.']
+            - '.'
+            - !ENV [LD_LIBRARY_PATH, '.']
+
+          # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/lib, /home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python, /home/vscode/grass/dist.x86_64-pc-linux-gnu/docs/mkdocs]
           # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python, .]
           # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python/grass]
 

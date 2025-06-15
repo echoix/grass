@@ -156,6 +156,7 @@ jobs:
           cd ..
           export SITE_NAME="GRASS $VERSION Documentation"
           export COPYRIGHT="&copy; 2003-$YEAR GRASS Development Team, GRASS $VERSION Documentation"
+          export GRASS_PYTHON_DIR="$(grass --config python_path)"
           cd $MKDOCS_DIR
           mkdocs build
 
