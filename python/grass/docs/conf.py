@@ -122,6 +122,8 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "alabaster"
 html_static_path = ["_static"]
+html_logo = "_static/grass_logo.svg"
+logo_url = "_static/grass_logo.svg"
 html_favicon = "_static/favicon.ico"
 
 # The base URL which points to the root of the HTML documentation. It is used
