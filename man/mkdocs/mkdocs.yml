@@ -94,6 +94,9 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
+          inventories:
+            - https://numpy.org/doc/stable/objects.inv
+            - https://docs.python.org/3/objects.inv 
           options:
             docstring_style: sphinx
             # allow_inspection: true
