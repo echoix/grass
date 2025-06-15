@@ -104,6 +104,7 @@ needs_sphinx = "8.1"
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
     "sphinx.ext.ifconfig",
     "sphinx.ext.intersphinx",
