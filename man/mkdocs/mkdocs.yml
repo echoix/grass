@@ -106,6 +106,9 @@ plugins:
             summary: true
             parameter_headings: true
             show_signature_annotations: true
+            filters:
+              - "!^_[^_]"
+              - "!^unit_tests"
           # load_external_modules: true
           # docstring_style: sphinx
           paths: 
