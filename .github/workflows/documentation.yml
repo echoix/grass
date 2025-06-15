@@ -158,7 +158,7 @@ jobs:
           export COPYRIGHT="&copy; 2003-$YEAR GRASS Development Team, GRASS $VERSION Documentation"
           export GRASS_PYTHON_DIR="$(grass --config python_path)"
           cd $MKDOCS_DIR
-          mkdocs build
+          grass --tmp-project XY --exec mkdocs build
 
       - name: Build Sphinx documentation
         if: false
