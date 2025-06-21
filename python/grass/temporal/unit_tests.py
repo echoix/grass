@@ -21,12 +21,11 @@ from .abstract_dataset import (
     AbstractDatasetComparisonKeyStartTime,
 )
 from .core import init
-from .datetime_math import increment_datetime_by_string
+from .datetime_math import adjust_datetime_to_granularity, increment_datetime_by_string
 from .space_time_datasets import RasterDataset
 from .spatial_extent import SpatialExtent
 from .spatio_temporal_relationships import SpatioTemporalTopologyBuilder
 from .temporal_granularity import (
-    adjust_datetime_to_granularity,
     compute_absolute_time_granularity,
 )
 
