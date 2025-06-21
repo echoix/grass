@@ -2,5 +2,6 @@
 # Since apidoc used as an extension removes all other files by default,
 # use sphinx version from https://github.com/sphinx-doc/sphinx/pull/13668
 sphinx @ git+https://github.com/echoix/sphinx.git@aac8a283a8500412f8abac42ea59d2b88235113e
-sphinx-sitemap==2.6.0
+sphinx-sitemap==2.7.1
+sphinx-last-updated-by-git==0.3.8
 sphinx-material==0.0.36

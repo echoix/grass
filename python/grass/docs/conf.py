@@ -103,6 +103,7 @@ version = grass_version  # Used for sitemap
 needs_sphinx = "8.1"
 
 extensions = [
+    "sphinx_last_updated_by_git",  # Included in sphinx_sitemap 2.7.0
     "sphinx.ext.apidoc",
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
@@ -130,6 +131,8 @@ html_favicon = "_static/favicon.ico"
 # The base URL which points to the root of the HTML documentation. It is used
 # to indicate the location of document using the Canonical Link Relation.
 html_baseurl = "https://grass.osgeo.org/grass-stable/manuals/libpython/"
+html_show_sourcelink = True
+html_copy_source = True
 
 # -- Options for intersphinx extension ---------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#configuration
@@ -176,3 +179,8 @@ apidoc_remove_old = False  # See https://github.com/sphinx-doc/sphinx/pull/13668
 apidoc_exclude_patterns = [
     "../../grass/temporal/unit_tests.py",
 ]
+
+# -- Options for sphinx-last-updated-by-git extension ------------------------
+# https://github.com/mgeier/sphinx-last-updated-by-git
+
+git_untracked_show_sourcelink = True
