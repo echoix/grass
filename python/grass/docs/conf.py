@@ -171,22 +171,9 @@ apidoc_modules = [
     {"path": "../pygrass/", "destination": "."},
     {"path": "../script/", "destination": "."},
     {"path": "../temporal/", "destination": "."},
-    {
-        "path": "../../grass/",
-        "destination": ".",
-        "module_first": True,
-        "exclude_patterns": [
-            "../../grass/temporal/unit_tests.py",
-            "../../grass/gunittest/multireport.py",
-            "../../grass/gunittest/multirunner.py",
-            "../../grass/gunittest/main.py",
-        ],
-    },
+    {"path": "../../grass/", "destination": ".", "module_first": True},
 ]
 apidoc_remove_old = False  # See https://github.com/sphinx-doc/sphinx/pull/13668
 apidoc_exclude_patterns = [
     "../../grass/temporal/unit_tests.py",
-    "../../grass/gunittest/multireport.py",
-    "../../grass/gunittest/multirunner.py",
-    "../../grass/gunittest/main.py",
 ]
