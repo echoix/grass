@@ -28,6 +28,8 @@ jobs:
         os:
           - windows-2022
       fail-fast: false
+    permissions:
+      actions: write # remove stale ccache cache
 
     steps:
       - name: Set git to use LF
@@ -35,6 +37,21 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "date=$(/bin/date -u "+%Y%m%d%H%M%S")" >> $GITHUB_OUTPUT
+        shell: bash
+      - name: Caching .sccache
+        id: cache-sccache
+        uses: actions/cache@v4.2.3
+        with:
+          path: .sccache
+          key: sccache-${{ github.job }}-${{ matrix.os }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}-${{ steps.get-date.outputs.date }}
+          restore-keys: |
+            sccache-${{ github.job }}-${{ matrix.os }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+            sccache-${{ github.job }}-${{ matrix.os }}-main
+
       - uses: msys2/setup-msys2@61f9e5e925871ba6c9e3e8da24ede83ea27fa91f # v2.27.0
         id: msys2
         with:
@@ -65,9 +82,45 @@ jobs:
             openblas
             pcre
             pkgconf
+            sccache
             toolchain
             zlib
 
+      - run: |
+            which sccache
+            echo $GITHUB_WORKSPACE
+            echo $(cygpath -u $GITHUB_WORKSPACE)
+            echo $(cygpath -u $GITHUB_WORKSPACE)/.sccache
+            env SCCACHE_IDLE_TIMEOUT=0 SCCACHE_DIR=$(cygpath -u $GITHUB_WORKSPACE)/.sccache SCCACHE_CACHE_SIZE=${{ env.MAX_SIZE }} sccache --start-server
+            sccache --help
+            sccache --version
+            sccache --show-stats
+            sccache -z
+            sccache --show-stats
+        # sccache --stop-server
+        shell: msys2 {0}
+        env:
+          MAX_SIZE: 500M
+ 
+      # - name: Ccache for gh actions
+      #   uses: hendrikmuhs/ccache-action@v1.2.13
+      #   with:
+      #     verbose: 2
+      #     variant: sccache
+      #     restore: ${{ github.ref_type != 'tag' && github.event_name != 'release' }}
+      #     create-symlink: false
+      #     # key: |
+      #     #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+      #     # restore-keys: |
+      #     #   ${{ github.job }}-${{ matrix.os }}-${{ github.ref }}
+      #     #   ${{ github.job }}-${{ matrix.os }}-/refs/heads/main
+      # - name: Setup ccache action
+      #   uses: Chocobo1/setup-ccache-action@v1.4.2
+      #   with:
+      #     windows_compile_environment: msys2
+      #     install_ccache: false
+      #     update_packager_index: false
+ 
       - name: Setup OSGeo4W environment
         uses: echoix/setup-OSGeo4W@f4311523e39f2c8b10e34ebbc3f2ff437ecfb9ed # v0.2.0
         id: osgeo4w
@@ -101,9 +154,54 @@ jobs:
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
         shell: msys2 {0}
+      # - run: |
+      #     env SCCACHE_IDLE_TIMEOUT=0 SCCACHE_DIR=${{ github.workspace }}/.sccache SCCACHE_CACHE_SIZE=${{ env.MAX_SIZE }} sccache --start-server
+      #   env:
+      #     MAX_SIZE: 500M
+      #   shell: msys2 {0}
+      - name: Compile GRASS GIS
+        run: SRC=$(pwd) ./mswindows/osgeo4w/build_osgeo4w.sh
+        shell: msys2 {0}
+        env:
+          SRC2: ${{ github.workspace }}
+          # OSGEO4W_ROOT_MSYS: /c/OSGeo4W
+          OSGEO4W_ROOT_MSYS: /d/OSGeo4W
+          UNITTEST: 1
+          CC: sccache gcc
+          CXX: sccache g++
+          # CC: ccache gcc
+          # CXX: ccache g++
+          
+      # - name: Compile GRASS GIS
+      #   run: ./.github/workflows/build_osgeo4w.sh ${{ github.workspace }}
+      #   shell: msys2 {0}
+      #   env:
+      #     CC: ccache gcc
+      #     CXX: ccache g++
+      #   # env:
+      #   #   CC: sccache.exe gcc
+      #   #   CXX: sccache.exe gcc
+        
+      - run: sccache --show-stats
+        shell: msys2 {0}
+      - run: sccache --stop-server
+        shell: msys2 {0}
+      
+      - name: Test executing of the grass command
+        run: .github/workflows/test_simple.bat 'D:\OSGeo4W\opt\grass\grass85.bat'
+        # run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
 
+      - name: Test executing of the grass command in bash
+        run: .github/workflows/test_simple.sh
+        shell: msys2 {0}
+
+      # - name: Run tests
+      #   run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
       - name: Compile GRASS GIS
         shell: msys2 {0}
+        env:
+          CC: sccache gcc
+          CXX: sccache g++
         run: |
           .github/workflows/build_osgeo4w.sh
         env:
