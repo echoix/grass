@@ -87,8 +87,7 @@ def writeAvi(
     :param str encoding: the encoding type
     :param inputOptions:
     :param outputOptions:
-    :param bool bg_task: if thread background task, not raise but
-    return error message
+    :param bool bg_task: if thread background task, not raise but return error message
 
     :return str: error message
     """
