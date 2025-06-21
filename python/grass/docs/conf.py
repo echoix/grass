@@ -103,6 +103,7 @@ version = grass_version  # Used for sitemap
 needs_sphinx = "8.1"
 
 extensions = [
+    "sphinx.ext.apidoc",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
@@ -156,3 +157,36 @@ sitemap_excludes = [
 # https://www.sphinx-doc.org/en/master/usage/extensions/todo.html#configuration
 
 todo_include_todos = True
+
+# -- Options for apidoc extension --------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/extensions/apidoc.html
+
+apidoc_max_depth = 4
+apidoc_separate_modules = False
+apidoc_modules = [
+    {"path": "../imaging/", "destination": "."},
+    {"path": "../exceptions/", "destination": "."},
+    {"path": "../gunittest/", "destination": "."},
+    {"path": "../pydispatch/", "destination": "."},
+    {"path": "../pygrass/", "destination": "."},
+    {"path": "../script/", "destination": "."},
+    {"path": "../temporal/", "destination": "."},
+    {
+        "path": "../../grass/",
+        "destination": ".",
+        "module_first": True,
+        "exclude_patterns": [
+            "../../grass/temporal/unit_tests.py",
+            "../../grass/gunittest/multireport.py",
+            "../../grass/gunittest/multirunner.py",
+            "../../grass/gunittest/main.py",
+        ],
+    },
+]
+apidoc_remove_old = False  # See https://github.com/sphinx-doc/sphinx/pull/13668
+apidoc_exclude_patterns = [
+    "../../grass/temporal/unit_tests.py",
+    "../../grass/gunittest/multireport.py",
+    "../../grass/gunittest/multirunner.py",
+    "../../grass/gunittest/main.py",
+]

@@ -40,6 +40,7 @@ Modules and Packages
 --------------------
 .. toctree::
    :maxdepth: 1
+   :caption: Contents:
 
    script_intro
    pygrass_index
@@ -49,6 +50,7 @@ Modules and Packages
    imaging
    pydispatch
    gunittest_testing
+   modules
 
 * :ref:`genindex`
 * :ref:`modindex`
