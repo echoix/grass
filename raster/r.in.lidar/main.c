@@ -71,7 +71,8 @@ int main(int argc, char *argv[])
     double iscale = 1.0;
     double res = 0.0;
 
-    struct BinIndex bin_index_nodes = {.num_nodes = 0,.max_nodes=0,.nodes=0};
+    struct BinIndex bin_index_nodes = {
+        .num_nodes = 0, .max_nodes = 0, .nodes = 0};
 
     bin_index_nodes.num_nodes = 0;
     bin_index_nodes.max_nodes = 0;
@@ -473,7 +474,7 @@ int main(int argc, char *argv[])
         else
             G_fatal_error(_("Unknown filter option <%s>"), filter_opt->answer);
     }
-    struct ReturnFilter return_filter_struct;
+    struct ReturnFilter return_filter_struct = {.filter = return_filter};
 
     return_filter_struct.filter = return_filter;
     struct ClassFilter class_filter;
