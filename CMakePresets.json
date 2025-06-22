@@ -59,6 +59,8 @@
         "WITH_DOCS": "OFF",
         "WITH_CBLAS": "OFF",
         "WITH_LAPACKE": "OFF",
+        "WITH_LIBLAS": "ON",
+        "WITH_NETCDF": "ON",
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe",
         ////"CAIRO_INCLUDE_DIRS": "$env{OSGEO4W_ROOT}\\include;$env{OSGEO4W_ROOT}\\bin;$CAIRO_INCLUDE_DIRS",
