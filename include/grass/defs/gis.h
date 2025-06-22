@@ -193,7 +193,7 @@ char *G_compressor_name(int);
 int G_default_compressor(void);
 int G_check_compressor(int);
 int G_write_compressed(int, unsigned char *, int, int);
-int G_write_unompressed(int, unsigned char *, int);
+int G_write_uncompressed(int, unsigned char *, int);
 int G_read_compressed(int, int, unsigned char *, int, int);
 int G_compress_bound(int, int);
 int G_compress(unsigned char *, int, unsigned char *, int, int);
