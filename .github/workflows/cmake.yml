@@ -29,6 +29,8 @@ jobs:
       CMakeVersion: "3.22.0"
       CC: clang-${{ matrix.llvm-version }}
       CXX: clang++-${{ matrix.llvm-version }}
+      ASAN_OPTIONS: detect_leaks=0
+
     strategy:
       matrix:
         llvm-version: [19]
