@@ -45,4 +45,4 @@ void spot(struct costHa *, int);
 /* spread.c */
 void spread(void);
 int cumulative(struct costHa *, struct cell_ptrHa *, int, int, int, float *);
-void update(struct costHa *, int, int, double, float);
+void update(struct costHa *, int, int, float, float);

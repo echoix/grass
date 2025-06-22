@@ -128,5 +128,5 @@ void spot(struct costHa *pres_cell, int dir /* direction of forward ROS */)
     G_debug(1, "                min_cost=%.2f: pres=%.2f spot=%.2f Te=%.2f",
             min_cost, pres_cell->min_cost, spot_cost, Te);
 
-    update(pres_cell, row, col, (double)dir, min_cost);
+    update(pres_cell, row, col, (float)dir, min_cost);
 }

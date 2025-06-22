@@ -239,7 +239,7 @@ int cumulative(struct costHa *pres_cell, struct cell_ptrHa *to_cell,
 /****** function for updating the cumulative cost/time, possibaly     ********
  ****** back path x,y coordinates, both in the output(s) and the heap ********/
 
-void update(struct costHa *pres_cell, int row, int col, double angle,
+void update(struct costHa *pres_cell, int row, int col, float angle,
             float min_cost)
 {
     if (DATA(map_out, row, col) < -1.0) {
