@@ -41,7 +41,6 @@ Modules and Packages
 .. toctree::
    :maxdepth: 1
 
-   index
    script_intro
    pygrass_index
    grass.jupyter

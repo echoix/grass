@@ -96,19 +96,20 @@ copy("_templates/layout.html.template", "_templates/layout.html")
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-# needs_sphinx = '1.0'
+needs_sphinx = "8.2"  # apidoc available as extension sphinx.ext.apidoc in 8.2
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.apidoc",
     "sphinx.ext.autodoc",
-    "sphinx.ext.doctest",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.todo",
     "sphinx.ext.coverage",
-    "sphinx.ext.mathjax",
+    "sphinx.ext.doctest",
     "sphinx.ext.ifconfig",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinx_sitemap",
 ]
@@ -505,3 +506,54 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "python": ("https://docs.python.org/3", None),
 }
+
+apidoc_modules = [
+    {"path": "../imaging/", "destination": "imaging"},
+    {"path": "../exceptions/", "destination": "exceptions"},
+    {
+        "path": "../gunittest/",
+        "destination": "gunittest",
+    },
+    {"path": "../pydispatch/", "destination": "pydispatch"},
+    {"path": "../pygrass/", "destination": "pygrass"},
+    {"path": "../script/", "destination": "script"},
+    {"path": "../temporal/", "destination": "temporal"},
+    {
+        "path": "../../grass/",
+        "destination": "grass",
+        "module_first": True,
+    },
+    # {"path": "../imaging/", "destination": "."},
+    # {"path": "../exceptions/", "destination": "."},
+    # {
+    #     "path": "../gunittest/",
+    #     "destination": ".",
+    # },
+    # {"path": "../pydispatch/", "destination": "."},
+    # {"path": "../pygrass/", "destination": "."},
+    # {"path": "../script/", "destination": "."},
+    # {"path": "../temporal/", "destination": "."},
+    # {
+    #     "path": "../../grass/",
+    #     "destination": ".",
+    #     "module_first": True,
+    # },
+    # {
+    #     "path": "path/to/another_module",
+    #     "destination": "source/",
+    #     "exclude_patterns": ["**/test*"],
+    #     "max_depth": 4,
+    #     "follow_links": False,
+    #     "separate_modules": False,
+    #     "include_private": False,
+    #     "no_headings": False,
+    #     "module_first": False,
+    #     "implicit_namespaces": False,
+    #     "automodule_options": {"members", "show-inheritance", "undoc-members"},
+    # },
+]
+apidoc_exclude_patterns = [
+    "../gunittest/multireport.py",
+    "../gunittest/multirunner.py",
+    "../gunittest/main.py",
+]
