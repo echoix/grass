@@ -319,7 +319,8 @@ void G_message(const char *, ...) __attribute__((format(printf, 1, 2)));
 void G_verbose_message(const char *, ...) __attribute__((format(printf, 1, 2)));
 void G_important_message(const char *, ...)
     __attribute__((format(printf, 1, 2)));
-void G_fatal_error(const char *, ...) __attribute__((format(printf, 1, 2))) G_NORETURN;
+void G_fatal_error(const char *, ...)
+    __attribute__((format(printf, 1, 2))) G_NORETURN;
 void G_warning(const char *, ...) __attribute__((format(printf, 1, 2)));
 int G_suppress_warnings(int);
 int G_sleep_on_error(int);
