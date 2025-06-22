@@ -64,7 +64,8 @@ build_program_in_subdir(
   grass_dbmibase
   grass_dbmidriver
   grass_sqlp
-  GDAL
+  PRIMARY_DEPENDS
+  GDAL::GDAL
   DEFS
   "${grass_dbstubs_DEFS}"
   HTML_FILE_NAME
@@ -79,12 +80,13 @@ build_program_in_subdir(
   DEPENDS
   grass_gis
   grass_dbstubs
+  grass_dbmibase
   grass_dbmidriver
   grass_sqlp
   DEFS
   "${grass_dbstubs_DEFS}"
   PRIMARY_DEPENDS
-  ODBC
+  ODBC::ODBC
   HTML_FILE_NAME
   grass-odbc
   RUNTIME_OUTPUT_DIR
@@ -104,7 +106,6 @@ build_program_in_subdir(
   DEFS
   "${grass_dbstubs_DEFS}"
   PRIMARY_DEPENDS
-  #SQLITE
   SQLite::SQLite3
   HTML_FILE_NAME
   grass-sqlite
@@ -131,13 +132,13 @@ build_program_in_subdir(
   DEFS
   "${grass_dbstubs_DEFS}"
   PRIMARY_DEPENDS
-  POSTGRES
+  PostgreSQL::PostgreSQL
   HTML_FILE_NAME
   grass-pg
   RUNTIME_OUTPUT_DIR
   "${GRASS_INSTALL_DRIVERDIR}/db")
 
-if(TARGET POSTGRES)
+if(TARGET PostgreSQL::PostgreSQL)
   list(APPEND db_drivers pg)
 endif()
 

@@ -422,7 +422,7 @@ class Nviz:
         """Change view settings
         :param x,y: position
         :param height:
-        :param persp: perpective
+        :param persp: perspective
         :param twist:
         """
         Nviz_set_viewpoint_height(height)
@@ -940,7 +940,7 @@ class Nviz:
     ) -> Literal[1, -1, -2]:
         """Set surface mask
 
-        ..todo::
+        .. todo::
             invert
 
         :param id: surface id
