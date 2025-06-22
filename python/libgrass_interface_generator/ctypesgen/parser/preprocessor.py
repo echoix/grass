@@ -129,6 +129,7 @@ class PreprocessorParser(object):
             universal_newlines=False,  # binary
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            encoding="utf-8",
         )
         ppout_data, pperr_data = pp.communicate()
 
