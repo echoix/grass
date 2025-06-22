@@ -32,7 +32,7 @@ from .core import (
 from grass.exceptions import CalledModuleError, ScriptError
 
 
-def vector_db(map, env=None, **kwargs):
+def vector_db(map, env=None, **kwargs) -> dict[int, dict]:
     """Return the database connection details for a vector map
     (interface to `v.db.connect -g`).
 
@@ -51,7 +51,7 @@ def vector_db(map, env=None, **kwargs):
     s = read_command(
         "v.db.connect", quiet=True, flags="g", map=map, sep=";", env=env, **kwargs
     )
-    result = {}
+    result: dict[int, dict] = {}
 
     for line in s.splitlines():
         f = line.split(";")
