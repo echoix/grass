@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     double iscale = 1.0;
     double res = 0.0;
 
-    struct BinIndex bin_index_nodes;
+    struct BinIndex bin_index_nodes = {.num_nodes = 0,.max_nodes=0,.nodes=0};
 
     bin_index_nodes.num_nodes = 0;
     bin_index_nodes.max_nodes = 0;
