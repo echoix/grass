@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     const char *projstr;
     struct Cell_head cellhd = {0}, loc_wind = {0};
 
-    unsigned int n_filtered;
+    unsigned int n_filtered = 0;
 
     G_gisinit(argv[0]);
 
