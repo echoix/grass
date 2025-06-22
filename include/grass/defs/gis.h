@@ -72,6 +72,16 @@
 #define RELDIR "?"
 #endif
 
+#if __STDC_VERSION__ < 202311L
+#if defined(_MSC_VER)
+#define G_NORETURN __declspec(noreturn)
+#else
+#define G_NORETURN __attribute__((noreturn))
+#endif
+#else
+#define G_NORETURN [[noreturn]]
+#endif
+
 /* adj_cellhd.c */
 void G_adjust_Cell_head(struct Cell_head *, int, int);
 void G_adjust_Cell_head3(struct Cell_head *, int, int, int);
@@ -309,8 +319,7 @@ void G_message(const char *, ...) __attribute__((format(printf, 1, 2)));
 void G_verbose_message(const char *, ...) __attribute__((format(printf, 1, 2)));
 void G_important_message(const char *, ...)
     __attribute__((format(printf, 1, 2)));
-void G_fatal_error(const char *, ...) __attribute__((format(printf, 1, 2)))
-__attribute__((noreturn));
+void G_fatal_error(const char *, ...) __attribute__((format(printf, 1, 2))) G_NORETURN;
 void G_warning(const char *, ...) __attribute__((format(printf, 1, 2)));
 int G_suppress_warnings(int);
 int G_sleep_on_error(int);
