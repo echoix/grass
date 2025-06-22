@@ -57,6 +57,8 @@
         //"Python_ROOT_DIR": "C:\\Program Files\\Python313",
         "WITH_OPENGL": "OFF",
         "WITH_DOCS": "OFF",
+        "WITH_CBLAS": "OFF",
+        "WITH_LAPACKE": "OFF",
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe",
         ////"CAIRO_INCLUDE_DIRS": "$env{OSGEO4W_ROOT}\\include;$env{OSGEO4W_ROOT}\\bin;$CAIRO_INCLUDE_DIRS",

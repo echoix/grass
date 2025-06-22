@@ -1,11 +1,8 @@
 {
   "dependencies": [
-    "blas",
-    "cblas",
     "fftw3",
     "fontconfig",
     "pcre",
-    "pkgconf",
-    "lapack"
+    "pkgconf"
   ]
 }
