@@ -183,9 +183,9 @@ static void parallel_line(struct line_pnts *Points, double da, double db,
 {
     int i, j, res, np;
     double *x, *y;
-    double tx, ty, vx, vy, wx, wy, nx, ny, mx, my, rx, ry;
-    double vx1, vy1, wx1, wy1;
-    double a0, b0, c0, a1, b1, c1;
+    double tx, ty, vx, vy, wx, wy, nx, ny, mx, my, rx, ry = 0;
+    double vx1, vy1, wx1, wy1 = 0;
+    double a0, b0, c0, a1, b1, c1 = 0;
     double phi1, phi2, delta_phi;
     double nsegments, angular_tol, angular_step;
     int inner_corner, turns360;
