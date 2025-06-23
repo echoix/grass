@@ -90,6 +90,7 @@ jobs:
             -fsanitize=address
             -fsanitize-recover=address
             -fsanitize-recover=all
+            -Werror=no-deprecated-declaration
           G_LDFLAGS_APPEND: >-
             -g
             -fno-omit-frame-pointer
