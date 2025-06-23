@@ -99,6 +99,7 @@ jobs:
             -fsanitize-recover=address
             -fsanitize-recover=all
           ASAN_OPTIONS: detect_leaks=0
+          MAKEFLAGS: --no-keep-going
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
       - name: Check installed version
