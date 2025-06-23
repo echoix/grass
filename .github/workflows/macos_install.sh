@@ -71,7 +71,7 @@ EXEMPT=""
 # an old version of configure, which issues compiler warnings and
 # errors out. This may be removed with upgraded configure.in file.
 makecmd="make"
-echo "before extra argd"
+echo "before extra args"
 if [[ "$#" -ge 2 ]]; then
     ARGS=("$@")
     echo "in extra args"
