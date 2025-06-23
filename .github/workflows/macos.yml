@@ -98,6 +98,7 @@ jobs:
             -fsanitize=address
             -fsanitize-recover=address
             -fsanitize-recover=all
+            -static-libasan
           ASAN_OPTIONS: detect_leaks=0
           MAKEFLAGS: --no-keep-going
       - name: Add the bin directory to PATH
