@@ -20,7 +20,13 @@
  *                  1          2          3
  *****************************************************************************/
 #ifdef __MINGW32__
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
 #include <windows.h>
+#undef NOMINMAX
+#undef WIN32_LEAN_AND_MEAN
+#undef VC_EXTRALEAN
 #endif
 
 #include <stdlib.h>
