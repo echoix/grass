@@ -84,17 +84,17 @@ jobs:
         shell: micromamba-shell {0}
         run: source ./.github/workflows/macos_install.sh $HOME/install $G_CFLAGS_APPEND
         env:
-          G_CFLAGS_APPEND: |-
-            -g \
-            -fno-omit-frame-pointer \
-            -fsanitize=address \
-            -fsanitize-recover=address \
+          G_CFLAGS_APPEND: >-
+            -g
+            -fno-omit-frame-pointer
+            -fsanitize=address
+            -fsanitize-recover=address
             -fsanitize-recover=all
-          G_LDFLAGS_APPEND: |-
-            -g \
-            -fno-omit-frame-pointer \
-            -fsanitize=address \
-            -fsanitize-recover=address \
+          G_LDFLAGS_APPEND: >-
+            -g
+            -fno-omit-frame-pointer
+            -fsanitize=address
+            -fsanitize-recover=address
             -fsanitize-recover=all
           ASAN_OPTIONS: detect_leaks=0
       - name: Add the bin directory to PATH
