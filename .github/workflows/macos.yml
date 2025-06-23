@@ -91,6 +91,7 @@ jobs:
             -fsanitize-recover=address
             -fsanitize-recover=all
             -Wno-error=deprecated-declarations
+            -Wdeprecated-declarations
           G_LDFLAGS_APPEND: >-
             -g
             -fno-omit-frame-pointer
