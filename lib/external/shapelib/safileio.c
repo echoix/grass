@@ -23,7 +23,9 @@
 
 #ifdef SHPAPI_UTF8_HOOKS
 #ifdef SHPAPI_WINDOWS
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif // !NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
 #include <windows.h>
