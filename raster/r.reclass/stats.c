@@ -6,7 +6,9 @@
 
 void new_stats(const char *name, struct Reclass *reclass)
 {
-    struct Histogram histo, histo2;
+    struct Histogram histo;
+    struct Histogram histo2 = {.num = 0,
+                               (LIST *)G_calloc(histo2.num, sizeof(LIST))};
     struct Range range;
     CELL cat, cat2;
     int i;
