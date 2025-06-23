@@ -82,7 +82,7 @@ jobs:
         run: mkdir $HOME/install
       - name: Build and install
         shell: micromamba-shell {0}
-        run: ./.github/workflows/macos_install.sh $HOME/install $G_CFLAGS_APPEND
+        run: bash ./.github/workflows/macos_install.sh $HOME/install $G_CFLAGS_APPEND
         env:
           G_CFLAGS_APPEND: >-
             -g
