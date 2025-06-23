@@ -86,6 +86,7 @@ jobs:
         env:
           G_CFLAGS_APPEND: >-
             -g
+            -fcolor-diagnostics
             -fno-omit-frame-pointer
             -fsanitize=address
             -fsanitize-recover=address,all
