@@ -121,7 +121,7 @@ class PreprocessorParser(object):
         self.cparser.handle_status(cmd)
 
         if IS_WINDOWS:
-            cmd = ["sh.exe", "-c", cmd]
+            cmd = ["pwsh.exe", "-c", cmd]
 
         pp = subprocess.Popen(
             cmd,
