@@ -73,6 +73,7 @@ EXEMPT=""
 makecmd="make"
 if [[ "$#" -ge 2 ]]; then
     ARGS=("$@")
+    echo "in extra args"
     makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror ${ARGS[@]:1} $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror ${ARGS[@]:1} $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
 fi
 
