@@ -66,7 +66,15 @@ export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
-make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
-  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
 
+# Adding -Werror to make's CFLAGS is a workaround for configuring with
+# an old version of configure, which issues compiler warnings and
+# errors out. This may be removed with upgraded configure.in file.
+makecmd="make"
+if [[ "$#" -ge 2 ]]; then
+    ARGS=("$@")
+    makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror ${ARGS[@]:1} $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror ${ARGS[@]:1} $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
+fi
+
+eval $makecmd
 make install
