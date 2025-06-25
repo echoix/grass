@@ -264,9 +264,13 @@ def make_command(
         >>> make_command("g.message", flags="w", message="this is a warning")
         ['g.message', '-w', 'message=this is a warning']
 
+    The single-character flags are supplied as a string, *flags*, containing
+    individual flag characters. While an integer for a single flag and a leading dash
+    are also accepted, the best practice is to provide the characters as
+    a string without a leading dash.
 
     :param str prog: GRASS module
-    :param str flags: flags to be used (given as a string)
+    :param str flags: flags to be used (given as a string of flag characters)
     :param bool overwrite: True to enable overwriting the output (``--o``)
     :param bool quiet: True to run quietly (``--q``)
     :param bool superquiet: True to run extra quietly (``--qq``)
@@ -274,8 +278,6 @@ def make_command(
     :param options: module's parameters
 
     :return: list of arguments
-
-    :raises ~grass.exceptions.ScriptError: If the invalid flag '``-``' is given.
     """
     args = [_make_val(prog)]
     if overwrite:
@@ -288,10 +290,16 @@ def make_command(
         args.append("--qq")
     if flags:
         flags = _make_val(flags)
-        if "-" in flags:
-            msg = "'-' is not a valid flag"
-            raise ScriptError(msg)
-        args.append("-" + flags)
+        # We allow a leading dash in the flags or add one if it is not provided.
+        # In any case, the rest is passed as is, so any additional dashes will
+        # be processed and rejected by the underlying tool.
+        # While conceptually a dash is not extraneous in a function call,
+        # we allow the dash to align with the command line uses it where a leading dash
+        # is required, and with some of the documentation or messages which use a dash.
+        if not flags.startswith("-"):
+            # In any case, if dash is missing, we need to add it.
+            flags = "-" + flags
+        args.append(flags)
     for opt, val in options.items():
         if opt in _popen_args:
             continue
@@ -315,13 +323,17 @@ def make_command(
     return args
 
 
-def handle_errors(returncode, result, args, kwargs):
+def handle_errors(
+    returncode, result, args, kwargs, handler=None, stderr=None, env=None
+):
     """Error handler for :func:`run_command()` and similar functions
 
     The functions which are using this function to handle errors,
     can be typically called with an *errors* parameter.
     This function can handle one of the following values: raise,
     fatal, status, exit, and ignore. The value raise is a default.
+    Alternatively, when this function is called explicitly, the parameter
+    *handler* can be specified with the same values as *errors*.
 
     If returncode is 0, *result* is returned, unless
     ``errors="status"`` is set.
@@ -332,7 +344,9 @@ def handle_errors(returncode, result, args, kwargs):
     :py:exc:`~grass.exceptions.CalledModuleError` exception is raised.
 
     For ``errors="fatal"``, the function calls :func:`~grass.script.core.fatal()`
-    which has its own rules on what happens next.
+    which has its own rules on what happens next. In this case,
+    *env* parameter should also be provided unless the caller code relies on
+    a global session. Besides the *env* parameter, env can be also provided in kwargs.
 
     For ``errors="status"``, the *returncode* will be returned.
     This is useful, e.g., for cases when the exception-based error
@@ -348,6 +362,16 @@ def handle_errors(returncode, result, args, kwargs):
 
     Finally, for ``errors="ignore"``, the value of *result* will be
     passed in any case regardless of the *returncode*.
+
+    If *stderr* is provided, it is passed to ``CalledModuleError`` to build
+    an error message with ``errors="raise"``. With ``errors="exit"``,
+    it is printed to ``sys.stderr``.
+
+    This function is intended to be used as an error handler or handler of potential
+    errors in code which wraps calling of tools as subprocesses.
+    Typically, this function is not called directly in user code or in a tool code
+    unless the tools are handed directly, e.g., with :class:`Popen` as opposed
+    to :func:`run_command()`.
 
     :raises ~grass.exceptions.CalledModuleError:
       - If there is an error, and the ``errors`` parameter is not given
@@ -365,7 +389,12 @@ def handle_errors(returncode, result, args, kwargs):
         code = " ".join(args)
         return module, code
 
-    handler = kwargs.get("errors", "raise")
+    # If env is not provided, use the one from kwargs (if any).
+    if not env:
+        env = kwargs.get("env")
+
+    if handler is None:
+        handler = kwargs.get("errors", "raise")
     if handler.lower() == "status":
         return returncode
     if returncode == 0:
@@ -377,13 +406,18 @@ def handle_errors(returncode, result, args, kwargs):
         fatal(
             _(
                 "Module {module} ({code}) failed with non-zero return code {returncode}"
-            ).format(module=module, code=code, returncode=returncode)
+            ).format(module=module, code=code, returncode=returncode),
+            env=env,
         )
     elif handler.lower() == "exit":
+        if stderr:
+            print(stderr, file=sys.stderr)
         sys.exit(returncode)
     else:
         module, code = get_module_and_code(args, kwargs)
-        raise CalledModuleError(module=module, code=code, returncode=returncode)
+        raise CalledModuleError(
+            module=module, code=code, returncode=returncode, errors=stderr
+        )
 
 
 def popen_args_command(
