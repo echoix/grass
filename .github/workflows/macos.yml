@@ -103,7 +103,7 @@ jobs:
             -fno-omit-frame-pointer
             -fsanitize=address
 #            -fsanitize-recover=address
-          ASAN_OPTIONS: detect_leaks=0,detect_odr_violation=1
+          ASAN_OPTIONS: detect_leaks=1,detect_odr_violation=1
 #          MAKEFLAGS: --no-keep-going
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
