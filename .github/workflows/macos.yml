@@ -80,9 +80,11 @@ jobs:
           $CC --version
       - name: Create installation directory
         run: mkdir $HOME/install
-      - name: Show llvm-symbolizer path
+      - run: show clang
         shell: micromamba-shell {0}
-        run: which llvm-symboliser-20
+      - name: Show llvm-symbolizer
+        shell: micromamba-shell {0}
+        run: which llvm-symboliser
       - name: Build and install
         shell: micromamba-shell {0}
         run: source ./.github/workflows/macos_install.sh $HOME/install
