@@ -85,7 +85,7 @@ jobs:
         run: bash ./.github/workflows/macos_install.sh $HOME/install $G_CFLAGS_APPEND
         env:
           G_CFLAGS_APPEND: >-
-#            -g
+            -g
             -fcolor-diagnostics
 #            -fno-omit-frame-pointer
 #            -fsanitize=address
