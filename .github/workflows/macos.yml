@@ -87,6 +87,7 @@ jobs:
           G_CFLAGS_APPEND: >-
             -g
             -fcolor-diagnostics
+
 #            -fno-omit-frame-pointer
 #            -fsanitize=address
 #            -fsanitize-recover=address,all
@@ -94,9 +95,8 @@ jobs:
 #            -Wno-error=deprecated-declarations
 #            -Wdeprecated-declarations
           G_LDFLAGS_APPEND: >-
-#            -g
             -v
-            -fno-omit-frame-pointer
+#            -fno-omit-frame-pointer
 #            -fsanitize=address
 #            -fsanitize-recover=all
           ASAN_OPTIONS: detect_leaks=0
