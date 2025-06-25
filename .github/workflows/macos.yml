@@ -94,7 +94,6 @@ jobs:
             -Wno-error=deprecated-declarations
             -Wdeprecated-declarations
           G_LDFLAGS_APPEND: >-
-            -v
             -fno-omit-frame-pointer
             -fsanitize=address
             -fsanitize-recover=all
