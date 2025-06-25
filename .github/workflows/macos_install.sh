@@ -79,11 +79,11 @@ makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS=
 #make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS  -Werror $EXEMPT" CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
 
 echo "before extra args"
-#if [[ "$#" -ge 2 ]]; then
-#    ARGS=("$@")
-#    echo "in extra args"
-#    makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror ${ARGS[@]:1} $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror ${ARGS[@]:1} $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
-#fi
+if [[ "$#" -ge 2 ]]; then
+    ARGS=("$@")
+    echo "in extra args"
+    makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror ${ARGS[@]:1} $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror ${ARGS[@]:1} $EXEMPT'"
+fi
 
 echo "The make command is: $makecmd"
 eval $makecmd
