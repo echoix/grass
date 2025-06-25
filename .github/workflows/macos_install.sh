@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+set -x
 
 if [ -z "$1" ]; then
     echo "Usage: $0 PREFIX"
@@ -70,15 +71,18 @@ EXEMPT=""
 # Adding -Werror to make's CFLAGS is a workaround for configuring with
 # an old version of configure, which issues compiler warnings and
 # errors out. This may be removed with upgraded configure.in file.
-makecmd="make"
-makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
-echo "before extra args"
-if [[ "$#" -ge 2 ]]; then
-    ARGS=("$@")
-    echo "in extra args"
-    makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror ${ARGS[@]:1} $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror ${ARGS[@]:1} $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
-fi
+#makecmd="make"
+#makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
+echo "Running normal make, with flags"
+make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'
 
-echo "The make command is: $makecmd"
-eval $makecmd
+echo "before extra args"
+#if [[ "$#" -ge 2 ]]; then
+#    ARGS=("$@")
+#    echo "in extra args"
+#    makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror ${ARGS[@]:1} $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror ${ARGS[@]:1} $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
+#fi
+
+#echo "The make command is: $makecmd"
+#eval $makecmd
 make install
