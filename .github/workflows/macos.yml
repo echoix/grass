@@ -90,9 +90,9 @@ jobs:
             -fno-omit-frame-pointer
             -fsanitize=address
             -fsanitize-recover=address
-#            -fsanitize-recover=all
             -Wno-error=deprecated-declarations
             -Wdeprecated-declarations
+#            -fsanitize-recover=all
           G_LDFLAGS_APPEND: >-
             -fno-omit-frame-pointer
             -fsanitize=address
