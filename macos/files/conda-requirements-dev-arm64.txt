@@ -29,6 +29,7 @@ libpng
 libsvm
 libtiff
 lld
+llvm
 llvm-openmp
 llvm-tools
 matplotlib
