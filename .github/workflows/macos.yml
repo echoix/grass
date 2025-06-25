@@ -23,6 +23,7 @@ jobs:
     runs-on: macos-14
     env:
       PYTHONWARNINGS: always
+      ASAN_OPTIONS: detect_leaks=1,detect_odr_violation=1
     steps:
       - name: Info
         run: |
