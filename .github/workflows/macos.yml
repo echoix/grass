@@ -89,14 +89,14 @@ jobs:
             -fcolor-diagnostics
             -fno-omit-frame-pointer
             -fsanitize=address
-            -fsanitize-recover=address,all
-            -fsanitize-recover=all
+            -fsanitize-recover=address
+#            -fsanitize-recover=all
             -Wno-error=deprecated-declarations
             -Wdeprecated-declarations
           G_LDFLAGS_APPEND: >-
             -fno-omit-frame-pointer
             -fsanitize=address
-            -fsanitize-recover=all
+            -fsanitize-recover=address
           ASAN_OPTIONS: detect_leaks=0
 #          MAKEFLAGS: --no-keep-going
       - name: Add the bin directory to PATH
