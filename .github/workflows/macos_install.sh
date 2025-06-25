@@ -74,7 +74,7 @@ EXEMPT=""
 #makecmd="make"
 #makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
 echo "Running normal make, with flags"
-make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT'
+make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS  -Werror $EXEMPT" CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
 
 echo "before extra args"
 #if [[ "$#" -ge 2 ]]; then
