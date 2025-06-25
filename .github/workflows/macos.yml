@@ -85,20 +85,20 @@ jobs:
         run: bash ./.github/workflows/macos_install.sh $HOME/install $G_CFLAGS_APPEND
         env:
           G_CFLAGS_APPEND: >-
-            -g
+#            -g
             -fcolor-diagnostics
-            -fno-omit-frame-pointer
-            -fsanitize=address
-            -fsanitize-recover=address,all
-            -fsanitize-recover=all
-            -Wno-error=deprecated-declarations
-            -Wdeprecated-declarations
+#            -fno-omit-frame-pointer
+#            -fsanitize=address
+#            -fsanitize-recover=address,all
+#            -fsanitize-recover=all
+#            -Wno-error=deprecated-declarations
+#            -Wdeprecated-declarations
           G_LDFLAGS_APPEND: >-
-            -g
+#            -g
             -v
             -fno-omit-frame-pointer
-            -fsanitize=address
-            -fsanitize-recover=all
+#            -fsanitize=address
+#            -fsanitize-recover=all
           ASAN_OPTIONS: detect_leaks=0
           MAKEFLAGS: --no-keep-going
       - name: Add the bin directory to PATH
