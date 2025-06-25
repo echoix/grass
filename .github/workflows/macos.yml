@@ -80,6 +80,9 @@ jobs:
           $CC --version
       - name: Create installation directory
         run: mkdir $HOME/install
+      - name: Show llvm-symbolizer path
+        shell: micromamba-shell {0}
+        run: which llvm-symboliser
       - name: Build and install
         shell: micromamba-shell {0}
         run: source ./.github/workflows/macos_install.sh $HOME/install
@@ -97,7 +100,7 @@ jobs:
             -fno-omit-frame-pointer
             -fsanitize=address
 #            -fsanitize-recover=address
-          ASAN_OPTIONS: detect_leaks=0
+          ASAN_OPTIONS: detect_leaks=0,detect_odr_violation=1
 #          MAKEFLAGS: --no-keep-going
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
