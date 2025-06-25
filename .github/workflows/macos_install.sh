@@ -71,6 +71,7 @@ EXEMPT=""
 # an old version of configure, which issues compiler warnings and
 # errors out. This may be removed with upgraded configure.in file.
 makecmd="make"
+makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
 echo "before extra args"
 if [[ "$#" -ge 2 ]]; then
     ARGS=("$@")
