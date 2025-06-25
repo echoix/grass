@@ -64,7 +64,7 @@ export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPR
 export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic"
 export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
-./configure $CONFIGURE_FLAGS
+LDFLAGS="$LDFLAGS $G_LDFLAGS_APPEND" ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
 
@@ -74,7 +74,7 @@ EXEMPT=""
 #makecmd="make"
 #makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
 echo "Running normal make, with flags"
-make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'
+make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT'
 
 echo "before extra args"
 #if [[ "$#" -ge 2 ]]; then
