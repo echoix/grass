@@ -80,7 +80,7 @@ jobs:
           $CC --version
       - name: Create installation directory
         run: mkdir $HOME/install
-      - run: show clang
+      - run: which clang
         shell: micromamba-shell {0}
       - name: Show llvm-symbolizer
         shell: micromamba-shell {0}
