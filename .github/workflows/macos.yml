@@ -108,6 +108,7 @@ jobs:
             -fsanitize=address
 #            -fsanitize-recover=address
           ASAN_OPTIONS: detect_leaks=0,detect_odr_violation=1
+          DYLD_INSERT_LIBRARIES: /Users/runner/micromamba/envs/grass-env/lib/clang/20/lib/darwin/libclang_rt.asan_osx_dynamic.dylib
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
       - name: Check installed version
