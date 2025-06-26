@@ -92,7 +92,7 @@ jobs:
       # Commented below are some possible flags to pass to not exit on failures
       - name: Build and install
         shell: micromamba-shell {0}
-        run: source ./.github/workflows/macos_install.sh $HOME/install
+        run: source ./.github/workflows/macos_install.sh $HOME/install $G_CFLAGS_APPEND
         env:
           G_CFLAGS_APPEND: >-
             -g
