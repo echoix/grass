@@ -81,11 +81,13 @@ jobs:
           $CC --version
       - name: Create installation directory
         run: mkdir $HOME/install
-      - run: which clang
+      - name: Show clang path
         shell: micromamba-shell {0}
+        run: which clang
       - name: Show llvm-symbolizer
         shell: micromamba-shell {0}
         run: which llvm-symbolizer
+      # Commented below are some possible flags to pass to not exit on failures
       - name: Build and install
         shell: micromamba-shell {0}
         run: source ./.github/workflows/macos_install.sh $HOME/install
@@ -104,7 +106,6 @@ jobs:
             -fsanitize=address
 #            -fsanitize-recover=address
           ASAN_OPTIONS: detect_leaks=0,detect_odr_violation=1
-#          MAKEFLAGS: --no-keep-going
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
       - name: Check installed version
