@@ -30,7 +30,7 @@ libsvm
 libtiff
 lld
 llvm-openmp
-llvm-tools
+# llvm-tools
 matplotlib
 numpy<2
 openblas
