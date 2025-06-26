@@ -84,6 +84,8 @@ jobs:
       - name: Show clang path
         shell: micromamba-shell {0}
         run: which clang
+      # llvm-symbolizer, if on path or specified with ASAN_SYMBOLIZER_PATH,
+      # enhances tracebacks with line numbers instead of addresses
       - name: Show llvm-symbolizer
         shell: micromamba-shell {0}
         run: which llvm-symbolizer
