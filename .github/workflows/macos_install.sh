@@ -63,10 +63,27 @@ export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPR
 export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic"
 export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
-./configure $CONFIGURE_FLAGS
+LDFLAGS="$LDFLAGS $G_LDFLAGS_APPEND" ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
-make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS -Werror $EXEMPT" \
-  CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
 
+# Adding -Werror to make's CFLAGS is a workaround for configuring with
+# an old version of configure, which issues compiler warnings and
+# errors out. This may be removed with upgraded configure.in file.
+#makecmd="make"
+#makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT' LDFLAGS='$LDFLAGS $G_LDFLAGS_APPEND'"
+makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror $EXEMPT'"
+
+#echo "Running normal make, with flags"
+#make -j$(sysctl -n hw.ncpu) CFLAGS="$CFLAGS  -Werror $EXEMPT" CXXFLAGS="$CXXFLAGS -Werror $EXEMPT"
+
+echo "before extra args"
+if [[ "$#" -ge 2 ]]; then
+    ARGS=("$@")
+    echo "in extra args"
+    makecmd="make -j$(sysctl -n hw.ncpu) CFLAGS='$CFLAGS  -Werror ${ARGS[@]:1} $EXEMPT' CXXFLAGS='$CXXFLAGS -Werror ${ARGS[@]:1} $EXEMPT'"
+fi
+
+echo "The make command is: $makecmd"
+eval $makecmd
 make install
