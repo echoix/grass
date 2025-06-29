@@ -210,13 +210,14 @@ function(build_module)
     endif()
   endforeach()
 
-
-  add_custom_command(
-    TARGET ${G_NAME}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${G_NAME}> $<TARGET_RUNTIME_DLLS:${G_NAME}>
-    COMMAND_EXPAND_LISTS
-  )
+  if(WIN32)
+    add_custom_command(
+      TARGET ${G_NAME} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_RUNTIME_DLLS:${G_NAME}> $<TARGET_FILE_DIR:${G_NAME}>
+      COMMAND_EXPAND_LISTS
+    )
+  endif()
 
   # To use this property later in build_docs
   set(PGM_EXT "")
