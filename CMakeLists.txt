@@ -296,15 +296,88 @@ if(WITH_DOCS)
   add_subdirectory(man)
 endif()
 
-add_custom_target(
-  r_colors_thumbnails ALL
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-          ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
-  COMMAND ${grass_env_command} ${PYTHON_EXECUTABLE} ${THUMBNAILS_PY}
-          ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
-  BYPRODUCTS ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
-  COMMENT "Creating thumbnails"
-  DEPENDS ALL_MODULES)
+if(WIN32)
+#  set(NULL_DEVICE nul)
+#  set(SEARCH_COMMAND findstr /v)
+#  set(HTML_SEARCH_STR "\"</body>\|</html>\|</div> <!-- end container -->\"")
+#  set(sep "\;")
+#  string(REPLACE ";" "${sep}" env_path "${env_path}")
+#  set(grass_env_command
+#    ${CMAKE_COMMAND} -E env "PATH=${BIN_DIR}${sep}${SCRIPTS_DIR}${sep}${env_path}${sep}${LIB_DIR}"
+#    "PYTHONPATH=${ETC_PYTHON_DIR}${sep}${GUI_WXPYTHON_DIR}${sep}$ENV{PYTHONPATH}"
+#    "GRASS_PYTHON=${PYTHON_EXECUTABLE}" "GISBASE=${RUN_GISBASE_NATIVE}" "GISRC=${GISRC}" "LC_ALL=C" "LANG=C"
+#    "ARCH=${BUILD_ARCH}" "ARCH_DISTDIR=${RUN_GISBASE_NATIVE}"
+#    "LANGUAGE=C" "MODULE_TOPDIR=${MODULE_TOPDIR}" "HTMLDIR=${DOC_DIR}"
+#    "LC_ALL=C" "LANG=C"
+#    "LANGUAGE=C"
+#    "VERSION_NUMBER=\"${GRASS_VERSION_NUMBER}\""
+#    "VERSION_DATE=\"${GRASS_VERSION_DATE}\"")
+#    COMMAND ${CMAKE_COMMAND} -E env --modify PATH=path_list_prepend:${SCRIPTS_DIR}
+#    COMMAND ${CMAKE_COMMAND} -E env --modify PATH=path_list_prepend:${BIN_DIR}
+#    COMMAND ${CMAKE_COMMAND} -E env --modify PATH=path_list_append:${LIB_DIR}
+  add_custom_target(
+    r_colors_thumbnails ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+            ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
+    COMMAND ${CMAKE_COMMAND} -E env
+        --modify PATH=path_list_prepend:${CMAKE_INSTALL_BINDIR}
+        #--modify PATH=path_list_prepend:${ETC_PYTHON_DIR}
+        --modify PATH=path_list_prepend:${LIB_DIR}
+        --modify PATH=path_list_prepend:${SCRIPTS_DIR}
+        --modify PATH=path_list_prepend:${BIN_DIR}
+        # --modify PATH=path_list_prepend:${env_path}
+        #--modify PATH=path_list_append:$ENV{PATH}
+        # --modify PATH=path_list_append:${LIB_DIR}
+        --modify PYTHONPATH=path_list_prepend:${ETC_PYTHON_DIR}
+        --modify PYTHONPATH=path_list_prepend:${GUI_WXPYTHON_DIR}
+        --modify GRASS_PYTHON=set:${PYTHON_EXECUTABLE}
+        --modify GISBASE=set:${RUN_GISBASE_NATIVE}
+        --modify GISRC=set:${GISRC}
+        --modify ARCH=set:${BUILD_ARCH}
+        --modify ARCH_DISTDIR=set:${RUN_GISBASE_NATIVE}
+        --modify MODULE_TOPDIR=set:${MODULE_TOPDIR}
+        --modify HTMLDIR=set:${DOC_DIR}
+        --modify LC_ALL=set:C
+        --modify LANG=set:C
+        --modify LANGUAGE=set:C
+        --modify VERSION_NUMBER=set:${GRASS_VERSION_NUMBER}
+        --modify VERSION_DATE=set:${GRASS_VERSION_DATE}
+        --
+        # cmd.exe /C "echo VERSION_DATE is xx %VERSION_DATE% && set" &&
+        ${PYTHON_EXECUTABLE} ${THUMBNAILS_PY}
+            ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
+# COMMAND ${grass_env_command} ${PYTHON_EXECUTABLE} ${THUMBNAILS_PY}
+#         ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
+BYPRODUCTS ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
+    COMMENT "Creating thumbnails"
+    DEPENDS ALL_MODULES g.remove)
+   add_custom_target(
+     _a_edy_r_colors_thumbnails ALL
+   COMMAND ${CMAKE_COMMAND} -E env "EDY1=hohoho" cmd.exe /C echo %EDY1%
+   COMMAND ${CMAKE_COMMAND} -E env
+        --modify "PATH=path_list_prepend:${SCRIPTS_DIR}"
+        --modify "PATH=path_list_prepend:${BIN_DIR}"
+        --modify "PATH=path_list_append:${LIB_DIR}"
+        --modify VERSION_NUMBER=set:${GRASS_VERSION_NUMBER}
+        --modify "VERSION_DATE=set:${GRASS_VERSION_DATE}"
+        # --modify "VERSION_DATE_two=set:${GRASS_VERSION_DATE};VERSION_DATE_three=set:${GRASS_VERSION_NUMBER}"
+        --modify VERSION_DATE_four=set:${GRASS_VERSION_DATE};"VERSION_DATE_five=set:${GRASS_VERSION_NUMBER}"
+        --
+        cmd.exe /C "echo VERSION_DATE is xx %VERSION_DATE% && set"
+   COMMENT "Creating thumbnails1"
+   )
+else()
+  add_custom_target(
+    r_colors_thumbnails ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+            ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
+    COMMAND ${grass_env_command} ${PYTHON_EXECUTABLE} ${THUMBNAILS_PY}
+            ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
+    BYPRODUCTS ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
+    COMMENT "Creating thumbnails"
+    DEPENDS ALL_MODULES)
+endif()
+
 install(DIRECTORY ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/colortables
         DESTINATION ${GRASS_INSTALL_DOCDIR})
 
