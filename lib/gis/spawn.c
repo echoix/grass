@@ -26,7 +26,15 @@
 #ifndef _WIN32
 #include <sys/wait.h>
 #else
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif // !NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
 #include <windows.h>
+#undef NOMINMAX
+#undef WIN32_LEAN_AND_MEAN
+#undef VC_EXTRALEAN
 #endif
 #include <grass/config.h>
 #include <grass/gis.h>

@@ -13,7 +13,7 @@
  *
  *****************************************************************************/
 #ifdef _MSC_VER
-#include <windows.h>
+#include <winsock2.h>
 #include <time.h>
 #else
 #include <sys/time.h>

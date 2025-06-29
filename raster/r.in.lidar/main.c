@@ -71,7 +71,8 @@ int main(int argc, char *argv[])
     double iscale = 1.0;
     double res = 0.0;
 
-    struct BinIndex bin_index_nodes;
+    struct BinIndex bin_index_nodes = {
+        .num_nodes = 0, .max_nodes = 0, .nodes = 0};
 
     bin_index_nodes.num_nodes = 0;
     bin_index_nodes.max_nodes = 0;
@@ -102,7 +103,7 @@ int main(int argc, char *argv[])
     const char *projstr;
     struct Cell_head cellhd = {0}, loc_wind = {0};
 
-    unsigned int n_filtered;
+    unsigned int n_filtered = 0;
 
     G_gisinit(argv[0]);
 
@@ -473,7 +474,7 @@ int main(int argc, char *argv[])
         else
             G_fatal_error(_("Unknown filter option <%s>"), filter_opt->answer);
     }
-    struct ReturnFilter return_filter_struct;
+    struct ReturnFilter return_filter_struct = {.filter = return_filter};
 
     return_filter_struct.filter = return_filter;
     struct ClassFilter class_filter;
@@ -645,7 +646,7 @@ int main(int argc, char *argv[])
             G_debug(2, "filling base raster array");
             for (row = 0; row < rows; row++) {
                 Rast_get_row(base_raster,
-                             base_array +
+                             (char *)base_array +
                                  ((size_t)row * cols *
                                   Rast_cell_size(base_raster_data_type)),
                              row, base_raster_data_type);

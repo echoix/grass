@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     struct Key_Value *proj_info, *proj_units;
     const char *projstr;
     struct Cell_head cellhd, loc_wind, cur_wind;
-    char error_msg[8192];
+    char error_msg[8192] = "";
 
     /* Vector */
     struct Map_info Map;

@@ -5,9 +5,13 @@
 
 /*** Windows headers ***/
 #if defined(OPENGL_WINDOWS)
+#define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
 #include <windows.h>
+#undef NOMINMAX
 #undef WIN32_LEAN_AND_MEAN
+#undef VC_EXTRALEAN
 #include <winnt.h>
 #include <GL/gl.h>
 #include <GL/glext.h>

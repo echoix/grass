@@ -115,6 +115,9 @@ build_program_in_subdir(
 if(TARGET SQLite::SQLite3)
   list(APPEND db_drivers sqlite)
 endif()
+#if(TARGET SQLITE)
+#  list(APPEND db_drivers sqlite)
+#endif()
 
 build_program_in_subdir(
   postgres
