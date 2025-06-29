@@ -211,12 +211,19 @@ function(build_module)
   endforeach()
 
   if(WIN32)
-    add_custom_command(
-      TARGET ${G_NAME} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    if(G_EXE)
+    if($<TARGET_RUNTIME_DLLS:${G_NAME}>)
+      message("before copy of dll of ${G_NAME}")
+      add_custom_command(
+        TARGET ${G_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 $<TARGET_RUNTIME_DLLS:${G_NAME}> $<TARGET_FILE_DIR:${G_NAME}>
-      COMMAND_EXPAND_LISTS
-    )
+        COMMAND_EXPAND_LISTS
+      )
+      else()
+       message("in else of copy of dll of ${G_NAME}")
+    endif()
+    endif()
   endif()
 
   # To use this property later in build_docs
