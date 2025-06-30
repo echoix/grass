@@ -168,6 +168,7 @@ static void parse_command_line(int argc, char **argv)
     i = G_define_flag();
     i->key = 'i';
     i->description = _("Ignore SQL errors and continue");
+    // GTC guisection
     i->guisection = _("Errors");
 
     if (G_parser(argc, argv))

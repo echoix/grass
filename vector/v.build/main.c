@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
     err_opt->description = _("Name for output vector map where erroneous "
                              "vector features are written to");
     err_opt->required = NO;
+    // GTC guisection
     err_opt->guisection = _("Errors");
 
     opt = G_define_option();
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
     chk->label = _("Extensive checks for topological errors");
     chk->description = _("Perform in-depth checks for topological errors when "
                          "building topology");
+    // GTC guisection
     chk->guisection = _("Errors");
 
     if (G_parser(argc, argv))
