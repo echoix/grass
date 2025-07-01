@@ -1,8 +1,10 @@
 {
-    "dependencies": [
-        "fftw3",
-        "fontconfig",
-        "pcre",
-        "pkgconf"
-    ]
+  "dependencies": [
+    "fftw3",
+    "fontconfig",
+    "libiconv",
+    "pcre",
+    "pkgconf",
+    "zlib"
+  ]
 }
