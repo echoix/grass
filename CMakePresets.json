@@ -80,7 +80,7 @@
                     //"Cairo_INCLUDE_DIRS": "$env{OSGEO4W_ROOT}\\include;$env{OSGEO4W_ROOT}\\bin;$CAIRO_INCLUDE_DIRS",
                     ////"CAIRO_LIBRARIES": "$env{OSGEO4W_ROOT}\\lib;$env{OSGEO4W_ROOT}\\bin;$CAIRO_LIBRARIES",
                     //"Cairo_LIBRARIES": "$env{OSGEO4W_ROOT}\\lib;$env{OSGEO4W_ROOT}\\bin;$CAIRO_LIBRARIES",
-                    "ZLIB_INCLUDE_DIR": "C:\\OSGeo4W\\include",
+                    //"ZLIB_INCLUDE_DIR": "C:\\OSGeo4W\\include",
                     "CMAKE_LIBRARY_PATH": "$env{OSGEO4W_ROOT}\\lib",
                     "SQLite3_LIBRARY": "$env{OSGEO4W_ROOT}\\lib\\sqlite3_i.lib",
                     "CMAKE_PREFIX_PATH": "C:\\Program Files\\Python313;$env{OSGEO4W_ROOT};$env{OSGEO4W_ROOT}\\lib;$env{OSGEO4W_ROOT}\\apps;$env{OSGEO4W_PWD}/osgeo4w/cmake;$env{OSGEO4W_PWD}/osgeo4w/lib;$env{OSGEO4W_PWD}/osgeo4w/lib/cmake;$env{OSGEO4W_PWD}/osgeo4w/share/cmake;$env{OSGEO4W_PWD}/osgeo4w/share;$CMAKE_PREFIX_PATH"
