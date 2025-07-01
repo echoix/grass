@@ -49,24 +49,28 @@ int main(int argc, char *argv[])
     print->key = 'p';
     print->label = _("Print current connection parameters and exit");
     print->description = _("Substitute variables in database settings");
+    // GTC guisection
     print->guisection = _("Print");
 
     shell = G_define_flag();
     shell->key = 'g';
     shell->description =
         _("Print current connection parameters using shell style and exit");
+    // GTC guisection
     shell->guisection = _("Print");
 
     check_set_default = G_define_flag();
     check_set_default->key = 'c';
     check_set_default->description =
         _("Check connection parameters, set if uninitialized, and exit");
+    // GTC guisection
     check_set_default->guisection = _("Set");
 
     def = G_define_flag();
     def->key = 'd';
     def->label = _("Set from default settings and exit");
     def->description = _("Overwrite current settings if already initialized");
+    // GTC guisection
     def->guisection = _("Set");
 
     /* the default answers below are GRASS default settings,
@@ -79,6 +83,7 @@ int main(int argc, char *argv[])
     else {
         driver->answer = "dbf";
     }
+    // GTC guisection
     driver->guisection = _("Set");
 
     database = G_define_standard_option(G_OPT_DB_DATABASE);
@@ -88,9 +93,11 @@ int main(int argc, char *argv[])
     else {
         database->answer = "$GISDBASE/$LOCATION_NAME/$MAPSET/dbf/";
     }
+    // GTC guisection
     database->guisection = _("Set");
 
     schema = G_define_standard_option(G_OPT_DB_SCHEMA);
+    // GTC guisection
     schema->guisection = _("Set");
 
     group = G_define_option();
@@ -100,6 +107,7 @@ int main(int argc, char *argv[])
     group->multiple = NO;
     group->description = _("Default group of database users to which "
                            "select privilege is granted");
+    // GTC guisection
     group->guisection = _("Set");
 
     /* commented due to new mechanism - see db.login

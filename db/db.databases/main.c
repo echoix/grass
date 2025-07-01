@@ -76,6 +76,7 @@ static void parse_command_line(int argc, char **argv)
     driver = G_define_standard_option(G_OPT_DB_DRIVER);
     driver->options = db_list_drivers();
     driver->answer = (char *)db_get_default_driver_name();
+    // GTC guisection
     driver->guisection = _("Connection");
 
     location = G_define_option();
@@ -83,10 +84,12 @@ static void parse_command_line(int argc, char **argv)
     location->type = TYPE_STRING;
     location->required = NO;
     /* location->multiple = YES; ? */
+    // GTC guisection
     location->label = _("Location");
     location->description = _("Path for SQLite driver, or connection string "
                               "for PostgreSQL driver");
     location->key_desc = "name";
+    // GTC guisection
     location->guisection = _("Connection");
 
     /* Set description */

@@ -79,6 +79,7 @@ int main(int argc, char **argv)
     direction->options = "both,east-west,north-south";
     direction->description =
         _("Draw only east-west lines, north-south lines, or both ");
+    // GTC guisection
     direction->guisection = _("Disable");
 
     lwidth = G_define_option();
@@ -95,18 +96,21 @@ int main(int argc, char **argv)
     opt4 = G_define_standard_option(G_OPT_C);
     opt4->key = "border_color";
     opt4->label = _("Border color");
+    // GTC guisection
     opt4->guisection = _("Color");
 
     tcolor = G_define_standard_option(G_OPT_C);
     tcolor->key = "text_color";
     tcolor->answer = "gray";
     tcolor->label = _("Text color");
+    // GTC guisection
     tcolor->guisection = _("Color");
 
     bgcolor = G_define_standard_option(G_OPT_CN);
     bgcolor->key = "bgcolor";
     bgcolor->answer = "none";
     bgcolor->label = _("Background color");
+    // GTC guisection
     bgcolor->guisection = _("Color");
 
     fsize = G_define_option();
@@ -126,42 +130,50 @@ int main(int argc, char **argv)
     geogrid->key = 'g';
     geogrid->description =
         _("Draw geographic grid (referenced to current ellipsoid)");
+    // GTC guisection
     geogrid->guisection = _("Draw");
 
     wgs84 = G_define_flag();
     wgs84->key = 'w';
     wgs84->description =
         _("Draw geographic grid (referenced to WGS84 ellipsoid)");
+    // GTC guisection
     wgs84->guisection = _("Draw");
 
     cross = G_define_flag();
     cross->key = 'c';
     cross->description = _("Draw '+' marks instead of grid lines");
+    // GTC guisection
     cross->guisection = _("Draw");
 
     dot = G_define_flag();
     dot->key = 'd';
     dot->description = _("Draw '.' marks instead of grid lines");
+    // GTC guisection
     dot->guisection = _("Draw");
 
     fiducial = G_define_flag();
     fiducial->key = 'f';
     fiducial->description = _("Draw fiducial marks instead of grid lines");
+    // GTC guisection
     fiducial->guisection = _("Draw");
 
     nogrid = G_define_flag();
     nogrid->key = 'n';
     nogrid->description = _("Disable grid drawing");
+    // GTC guisection
     nogrid->guisection = _("Disable");
 
     noborder = G_define_flag();
     noborder->key = 'b';
     noborder->description = _("Disable border drawing");
+    // GTC guisection
     noborder->guisection = _("Disable");
 
     notext = G_define_flag();
     notext->key = 't';
     notext->description = _("Disable text drawing");
+    // GTC guisection
     notext->guisection = _("Disable");
 
     /* Check command line */

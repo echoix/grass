@@ -70,11 +70,13 @@ int main(int argc, char **argv)
     no_text = G_define_flag();
     no_text->key = 't';
     no_text->description = _("Draw the scale bar without text");
+    // GTC guisection
     no_text->guisection = _("Text");
 
     n_symbol = G_define_flag();
     n_symbol->key = 'n';
     n_symbol->description = _("Display north-arrow symbol.");
+    // GTC guisection
     n_symbol->guisection = _("Style");
 
     barstyle = G_define_option();
@@ -85,6 +87,7 @@ int main(int argc, char **argv)
         "tail_checker,up_ticks,down_ticks,both_ticks,arrow_ends";
     barstyle->answer = "classic";
     barstyle->gisprompt = "old,barscale,barscale";
+    // GTC guisection
     barstyle->guisection = _("Style");
     G_asprintf(
         (char **)&(barstyle->descriptions),
@@ -131,6 +134,7 @@ int main(int argc, char **argv)
     label_opt->key = "label";
     label_opt->description = _("Custom label of unit");
     label_opt->type = TYPE_STRING;
+    // GTC guisection
     label_opt->guisection = _("Text");
 
     segm_opt = G_define_option();
@@ -139,16 +143,19 @@ int main(int argc, char **argv)
     segm_opt->answer = "10";
     segm_opt->options = "1-100";
     segm_opt->label = _("Number of segments");
+    // GTC guisection
     segm_opt->guisection = _("Style");
 
     fg_color_opt = G_define_standard_option(G_OPT_C);
     fg_color_opt->label = _("Bar scale and text color");
+    // GTC guisection
     fg_color_opt->guisection = _("Colors");
 
     bg_color_opt = G_define_standard_option(G_OPT_CN);
     bg_color_opt->key = "bgcolor";
     bg_color_opt->answer = "white";
     bg_color_opt->label = _("Background color (drawn behind the bar)");
+    // GTC guisection
     bg_color_opt->guisection = _("Colors");
 
     text_placement = G_define_option();
@@ -156,6 +163,7 @@ int main(int argc, char **argv)
     text_placement->description = _("Text position");
     text_placement->options = "under,over,left,right";
     text_placement->answer = "right";
+    // GTC guisection
     text_placement->guisection = _("Text");
 
     width_scale_opt = G_define_option();
@@ -171,6 +179,7 @@ int main(int argc, char **argv)
     font->type = TYPE_STRING;
     font->required = NO;
     font->description = _("Font name");
+    // GTC guisection
     font->guisection = _("Text");
 
     fsize = G_define_option();
@@ -180,6 +189,7 @@ int main(int argc, char **argv)
     fsize->answer = "12";
     fsize->options = "1-360";
     fsize->description = _("Font size");
+    // GTC guisection
     fsize->guisection = _("Text");
 
     path = G_define_standard_option(G_OPT_F_INPUT);
@@ -187,6 +197,7 @@ int main(int argc, char **argv)
     path->required = NO;
     path->description = _("Path to font file");
     path->gisprompt = "old,font,file";
+    // GTC guisection
     path->guisection = _("Font settings");
 
     charset = G_define_option();
@@ -195,6 +206,7 @@ int main(int argc, char **argv)
     charset->required = NO;
     charset->description =
         _("Text encoding (only applicable to TrueType fonts)");
+    // GTC guisection
     charset->guisection = _("Text");
 
     G_option_exclusive(feet, units_opt, NULL);

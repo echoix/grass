@@ -178,6 +178,7 @@ static void parse_command_line(int argc, char **argv)
         database->answer = (char *)db;
 
     format_opt = G_define_standard_option(G_OPT_F_FORMAT);
+    // GTC guisection
     format_opt->guisection = _("Print");
 
     /* Set description */

@@ -141,26 +141,31 @@ static void parse_command_line(int argc, char **argv)
     sql->label = _("SQL statement");
     sql->description =
         _("Example: update rybniky set kapri = 'hodne' where kapri = 'malo'");
+    // GTC guisection
     sql->guisection = _("SQL");
 
     input = G_define_standard_option(G_OPT_F_INPUT);
     input->required = NO;
     input->label = _("Name of file containing SQL statement(s)");
     input->description = _("'-' for standard input");
+    // GTC guisection
     input->guisection = _("SQL");
 
     driver = G_define_standard_option(G_OPT_DB_DRIVER);
     driver->options = db_list_drivers();
+    // GTC guisection
     driver->guisection = _("Connection");
     if ((drv = db_get_default_driver_name()))
         driver->answer = (char *)drv;
 
     database = G_define_standard_option(G_OPT_DB_DATABASE);
+    // GTC guisection
     database->guisection = _("Connection");
     if ((db = db_get_default_database_name()))
         database->answer = (char *)db;
 
     schema = G_define_standard_option(G_OPT_DB_SCHEMA);
+    // GTC guisection
     schema->guisection = _("Connection");
     if ((schema_name = db_get_default_schema_name()))
         schema->answer = (char *)schema_name;
