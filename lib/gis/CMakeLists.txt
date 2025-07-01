@@ -19,7 +19,8 @@ build_module(
   SOURCES
   "${gislib_SRCS}"
   DEPENDS
-  grass_datetime
+  # grass_datetime
+  GRASS::grass_datetime
   ZLIB::ZLIB
   OPTIONAL_DEPENDS
   BZip2::BZip2
@@ -84,3 +85,4 @@ endif()
 if(MSVC)
   target_link_libraries(grass_gis PRIVATE PCRE)
 endif()
+add_library(GRASS::grass_gis ALIAS grass_gis)
