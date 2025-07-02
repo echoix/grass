@@ -421,7 +421,6 @@ class RegionManager:
     The original region is saved at the beginning of the context and restored at the end.
 
     Example with explicit region parameters:
-    
     .. code-block:: pycon
 
         >>> with gs.RegionManager(n=226000, s=222000, w=634000, e=638000):
