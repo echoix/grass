@@ -92,11 +92,17 @@ void set_params(void)
     param.nprocs = G_define_standard_option(G_OPT_M_NPROCS);
 
     param.separator = G_define_standard_option(G_OPT_F_SEP);
+    param.separator->answer = NULL;
     param.separator->guisection = _("Formatting");
 
     param.shell_style = G_define_flag();
     param.shell_style->key = 'g';
-    param.shell_style->description = _("Print the stats in shell script style");
+    param.shell_style->label =
+        _("Print the stats in shell script style [deprecated]");
+    param.shell_style->description = _(
+        "This flag is deprecated and will be removed in a future release. Use "
+        "format=shell instead.");
+
     param.shell_style->guisection = _("Formatting");
 
     param.extended = G_define_flag();
@@ -106,11 +112,19 @@ void set_params(void)
 
     param.table = G_define_flag();
     param.table->key = 't';
-    param.table->description =
-        _("Table output format instead of standard output format");
+    param.table->label =
+        _("Table output format instead of standard output format [deprecated]");
+    param.table->description = _(
+        "This flag is deprecated and will be removed in a future release. Use "
+        "format=csv instead.");
     param.table->guisection = _("Formatting");
 
     param.format = G_define_standard_option(G_OPT_F_FORMAT);
+    param.format->options = "plain,shell,csv,json";
+    param.format->descriptions = ("plain;Human readable text output;"
+                                  "shell;shell script style text output;"
+                                  "csv;CSV (Comma Separated Values);"
+                                  "json;JSON (JavaScript Object Notation);");
     param.format->guisection = _("Print");
 
     param.use_rast_region = G_define_flag();
@@ -125,7 +139,8 @@ void set_params(void)
 static int open_raster(const char *infile);
 static univar_stat *univar_stat_with_percentiles(int map_type);
 static void process_raster(univar_stat *stats, thread_workspace *tw,
-                           const struct Cell_head *region, int nprocs);
+                           const struct Cell_head *region, int nprocs,
+                           enum OutputFormat format);
 static void kahan_sum(double *sum, double *c, double x);
 
 /* *************************************************************** */
@@ -181,30 +196,58 @@ int main(int argc, char *argv[])
         }
     }
 
+    /* For backward compatibility */
+    if (!param.separator->answer) {
+        if (strcmp(param.format->answer, "csv") == 0)
+            param.separator->answer = "comma";
+        else
+            param.separator->answer = "pipe";
+    }
+
     if (strcmp(param.format->answer, "json") == 0) {
         format = JSON;
+    }
+    else if (strcmp(param.format->answer, "shell") == 0) {
+        format = SHELL;
+    }
+    else if (strcmp(param.format->answer, "csv") == 0) {
+        format = CSV;
     }
     else {
         format = PLAIN;
     }
 
+    if (param.shell_style->answer) {
+        G_verbose_message(
+            _("Flag 'g' is deprecated and will be removed in a future "
+              "release. Please use format=shell instead."));
+        if (format == JSON || format == CSV) {
+            G_fatal_error(
+                _("The -g flag cannot be used with format=json or format=csv. "
+                  "Please select only one output format."));
+        }
+        format = SHELL;
+    }
+
+    if (param.table->answer) {
+        G_verbose_message(
+            _("Flag 't' is deprecated and will be removed in a future "
+              "release. Please use format=csv instead."));
+        if (format == JSON || format == SHELL) {
+            G_fatal_error(_(
+                "The -t flag cannot be used with format=json or format=shell. "
+                "Please select only one output format."));
+        }
+        format = CSV;
+    }
+
     /* set nprocs parameter */
     int nprocs;
-    sscanf(param.nprocs->answer, "%d", &nprocs);
+    nprocs = G_set_omp_num_threads(param.nprocs);
+    nprocs = Rast_disable_omp_on_mask(nprocs);
     if (nprocs < 1)
         G_fatal_error(_("<%d> is not valid number of nprocs."), nprocs);
-    if (nprocs > 1 && Rast_mask_is_present()) {
-        G_warning(_("Parallel processing disabled due to active mask."));
-        nprocs = 1;
-    }
-#if defined(_OPENMP)
-    omp_set_num_threads(nprocs);
-#else
-    if (nprocs != 1)
-        G_warning(_("GRASS is compiled without OpenMP support. Ignoring "
-                    "threads setting."));
-    nprocs = 1;
-#endif
+
     /* table field separator */
     zone_info.sep = G_option_to_separator(param.separator);
 
@@ -230,7 +273,7 @@ int main(int argc, char *argv[])
             G_fatal_error("Can not read range for zoning raster");
         Rast_get_range_min_max(&zone_range, &min, &max);
         if (Rast_read_cats(z, mapset, &(zone_info.cats)))
-            G_warning("no category support for zoning raster");
+            G_warning("No category support for zoning raster");
 
         zone_info.min = min;
         zone_info.max = max;
@@ -279,7 +322,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        process_raster(stats, tw, &region, nprocs);
+        process_raster(stats, tw, &region, nprocs, format);
 
         /* close input raster */
         for (t = 0; t < nprocs; t++)
@@ -293,7 +336,7 @@ int main(int argc, char *argv[])
     }
 
     /* create the output */
-    if (param.table->answer)
+    if (format == CSV)
         print_stats_table(stats);
     else
         print_stats(stats, format);
@@ -343,7 +386,8 @@ static univar_stat *univar_stat_with_percentiles(int map_type)
 }
 
 static void process_raster(univar_stat *stats, thread_workspace *tw,
-                           const struct Cell_head *region, int nprocs)
+                           const struct Cell_head *region, int nprocs,
+                           enum OutputFormat format)
 {
     /* use G_window_rows(), G_window_cols() here? */
     const int rows = region->rows;
@@ -510,7 +554,7 @@ static void process_raster(univar_stat *stats, thread_workspace *tw,
                     zptr++;
                 zd->bucket.n++;
             } /* end column loop */
-            if (!(param.shell_style->answer)) {
+            if (format != SHELL) {
 #pragma omp atomic update
                 computed++;
                 G_percent(computed, rows, 2);
@@ -659,7 +703,7 @@ static void process_raster(univar_stat *stats, thread_workspace *tw,
             G_free(tw[t].zoneraster_row);
         }
     }
-    if (!(param.shell_style->answer))
+    if (format != SHELL)
         G_percent(rows, rows, 2);
 }
 
