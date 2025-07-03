@@ -75,7 +75,7 @@ jobs:
           cache-environment-key: environment-${{ steps.date.outputs.date }}
 
       - name: Set profile file name env var
-        run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%9m.profraw" >> $GITHUB_ENV
+        run: echo "LLVM_PROFILE_FILE=${{ github.workspace }}/grass-prof-%p-%4m.profraw" >> $GITHUB_ENV
       - name: Environment info
         shell: bash -el {0}
         run: |
@@ -168,6 +168,7 @@ jobs:
       #       /Users/runner/install/grass85/lib/libgrass_gis.8.5.dylib  \
       #       | tee coverage.all1.json
       - name: Use llvm's coverage script
+        if: ${{ !cancelled() }}
         shell: micromamba-shell {0}
         run: |
           WORKSPACE=$GITHUB_WORKSPACE
@@ -203,7 +204,8 @@ jobs:
             llvm_coverage*/**
           retention-days: 1
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5.4.3 # v5.4.3
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           verbose: true
           flags: pytest-macos-14
