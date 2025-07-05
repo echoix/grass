@@ -82,6 +82,7 @@ extra_css:
 plugins:
   - search
   - glightbox
+  # - autorefs
   - api-autonav:
       exclude:
         - "grass.lib"
@@ -96,7 +97,9 @@ plugins:
         python:
           inventories:
             - https://numpy.org/doc/stable/objects.inv
-            - https://docs.python.org/3/objects.inv 
+            - url: https://docs.python.org/3/objects.inv
+              domains: [std, py]
+
           options:
             docstring_style: sphinx
             # allow_inspection: true
@@ -104,11 +107,12 @@ plugins:
             preload_modules:
               - grass.script
               # - grass
-              # - numpy
+              - numpy
             show_if_no_docstring: true
             summary: true
             parameter_headings: true
             show_signature_annotations: true
+            signature_crossrefs: true
             filters:
               - "!^_[^_]"
               - "!^__"
