@@ -35,7 +35,7 @@ jobs:
       - name: Get dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y wget git gawk findutils
+          sudo apt-get install -y wget git gawk findutils doxygen
           xargs -a <(awk '! /^ *(#|$)/' "grass/.github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
 
@@ -46,9 +46,11 @@ jobs:
           cache: pip
 
       - name: Set up Homebrew
+        if: false
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@main
       - name: Install newer doxygen with homebrew
+        if: false
         run: brew install doxygen
 
       - name: Set version variables
