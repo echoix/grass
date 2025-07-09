@@ -100,8 +100,8 @@ plugins:
           src-dirs: ../../.. # path to source code (support multiple paths separated by space) => INPUT
           full-doc: True # if you want to generate full documentation
           #doxy-cfg: # standard doxygen configuration (key: value)
-            #FILE_PATTERNS: "*.cpp *.h*" # specify file patterns to filter out
-            #RECURSIVE: True # recursive search in source directories
+          #  FILE_PATTERNS: "*.cpp *.h*" # specify file patterns to filter out
+          #  RECURSIVE: True # recursive search in source directories
 
 # Markdown extensions
 markdown_extensions:
