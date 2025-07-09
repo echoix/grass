@@ -147,6 +147,7 @@ jobs:
       - name: Get mkdocs
         run: |
           pip install -r "grass/man/mkdocs/requirements.txt"
+          pip install mkdoxy
 
       - name: Run mkdocs
         run: |
