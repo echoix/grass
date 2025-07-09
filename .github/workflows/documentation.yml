@@ -45,6 +45,9 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
 
+      - name: Install newer doxygen with homebrew
+        run: brew install doxygen
+
       - name: Set version variables
         run: |
           cd grass
