@@ -106,17 +106,18 @@ plugins:
             FILE_PATTERNS: "*.dox *.c *.h *.cpp *.h*" # specify file patterns to filter out
             RECURSIVE: True # recursive search in source directories
             WARN_LOGFILE: "doxygen.log"
-            EXCLUDE_PATTERNS: "*/test/* \
-                              */tests/* \
-                              */unit_test/* \
-                              */unit_tests/* \
-                              */unit_test* \
-                              */unit_tests* \
-                              */test_suite/* \
-                              */testsuite/* \
-                              */test_* \
-                              */test.* \
-                              */*local_proto.h"
+            EXCLUDE_PATTERNS: >-
+              */test/*
+              */tests/*
+              */unit_test/*
+              */unit_tests/*
+              */unit_test*
+              */unit_tests*
+              */test_suite/*
+              */testsuite/*
+              */test_*
+              */test.*
+              */*local_proto.h
 
 # Markdown extensions
 markdown_extensions:
