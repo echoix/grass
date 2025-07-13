@@ -105,6 +105,7 @@ plugins:
           doxy-cfg: # standard doxygen configuration (key: value)
             FILE_PATTERNS: "*.dox *.c *.h *.cpp *.h*" # specify file patterns to filter out
             RECURSIVE: True # recursive search in source directories
+            WARN_LOGFILE: "doxygen.log"
 
 # Markdown extensions
 markdown_extensions:
