@@ -99,10 +99,11 @@ plugins:
         programming8: # name of project must be alphanumeric + numbers (without spaces)
           #src-dirs: ../../.. # path to source code (support multiple paths separated by space) => INPUT
           src-dirs: /home/runner/work/grass/grass/grass
-          full-doc: False
-          #full-doc: True # if you want to generate full documentation
+          # src-dirs: /home/vscode/grass/lib
+          # full-doc: False
+          full-doc: True # if you want to generate full documentation
           doxy-cfg: # standard doxygen configuration (key: value)
-            FILE_PATTERNS: "*.cpp *.h*" # specify file patterns to filter out
+            FILE_PATTERNS: "*.dox *.c *.h *.cpp *.h*" # specify file patterns to filter out
             RECURSIVE: True # recursive search in source directories
 
 # Markdown extensions
