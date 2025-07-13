@@ -188,7 +188,9 @@ nav:
       - PostScript tools: postscript.md
       - Miscellaneous tools: miscellaneous.md
 
-  - Development: development_intro.md
+  - Development:
+      - Development: development_intro.md
+      - C API reference and developer manual: "programming8/links.md"
 
 not_in_nav: |
   r.*
