@@ -675,6 +675,7 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE                = bin.@ARCH@ \
+                         build \
                          db \
                          debian \
                          demolocation \
@@ -700,6 +701,7 @@ EXCLUDE                = bin.@ARCH@ \
                          man \
                          misc \
                          mswindows \
+                         out \
                          ps \
                          raster \
                          raster3d \
