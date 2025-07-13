@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grasslibs_ko\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-24 17:02+0000\n"
+"POT-Creation-Date: 2025-07-05 18:31+0000\n"
 "PO-Revision-Date: 2025-06-14 21:07+0000\n"
 "Last-Translator: Edouard Choiniere <echoix@users.noreply.weblate.osgeo.org>\n"
 "Language-Team: Korean <https://weblate.osgeo.org/projects/grass-gis/grasslibs/ko/>\n"
@@ -3514,8 +3514,8 @@ msgid "subgroup <%s> of group <%s> references the following raster maps\n"
 msgstr ""
 
 #: ../lib/imagery/manage_signatures.c:85 ../lib/imagery/manage_signatures.c:129
-#: ../lib/imagery/manage_signatures.c:185
-#: ../lib/imagery/manage_signatures.c:194
+#: ../lib/imagery/manage_signatures.c:187
+#: ../lib/imagery/manage_signatures.c:196
 #, c-format
 msgid "%s is not in the current mapset (%s)"
 msgstr ""
@@ -3532,20 +3532,20 @@ msgid "Unable to remove %s signature"
 msgstr ""
 
 #: ../lib/imagery/manage_signatures.c:97 ../lib/imagery/manage_signatures.c:139
-#: ../lib/imagery/manage_signatures.c:204 ../lib/manage/do_copy.c:62
+#: ../lib/imagery/manage_signatures.c:206 ../lib/manage/do_copy.c:62
 #: ../lib/manage/do_remove.c:86 ../lib/manage/do_remove.c:108
 #: ../lib/manage/do_rename.c:84 ../lib/manage/do_rename.c:107
 #, c-format
 msgid "%s is missing"
 msgstr "%s이 없습니다"
 
-#: ../lib/imagery/manage_signatures.c:153 ../lib/manage/do_copy.c:51
+#: ../lib/imagery/manage_signatures.c:154 ../lib/manage/do_copy.c:51
 #: ../lib/manage/do_copy.c:68
 #, c-format
 msgid "Unable to copy <%s> to current mapset as <%s>"
 msgstr "<%s>를 현재 지도 세트의 <%s>로 복사할 수 없습니다"
 
-#: ../lib/imagery/manage_signatures.c:215
+#: ../lib/imagery/manage_signatures.c:217
 #, c-format
 msgid "Unable to rename <%s> to <%s>"
 msgstr ""
@@ -4623,6 +4623,18 @@ msgstr "입력 PNG 파일이 색인된 색상이 아닙니다"
 #: ../lib/pngdriver/read_png.c:105
 msgid "Input PNG file has invalid palette"
 msgstr "입력 PNG 파일이 무효한 팔레트를 가지고 있습니다"
+
+#: ../lib/pngdriver/read_ppm.c:41
+#, fuzzy, c-format
+#| msgid "Cairo: invalid input file <%s>"
+msgid "PNG: invalid input file %s"
+msgstr "Cairo: 무효한 입력 파일 <%s>"
+
+#: ../lib/pngdriver/read_ppm.c:92
+#, fuzzy, c-format
+#| msgid "Cairo: invalid input mask file <%s>"
+msgid "PNG: invalid input mask file %s"
+msgstr "Cairo: 무효한 입력 마스크 파일 <%s>"
 
 #: ../lib/pngdriver/write_png.c:38
 msgid "Unable to write PNG"
@@ -6667,7 +6679,7 @@ msgstr[0] ""
 #: ../lib/vector/Vlib/build_sfa.c:668
 #, c-format
 msgid "One vertex registered"
-msgid_plural "%<PRId64> vertices registered"
+msgid_plural "%d vertices registered"
 msgstr[0] ""
 
 #: ../lib/vector/Vlib/build_nat.c:137
@@ -8201,7 +8213,7 @@ msgstr ""
 msgid "Unable to get number of simple features"
 msgstr ""
 
-#: ../lib/vector/Vlib/simple_features.c:349
+#: ../lib/vector/Vlib/simple_features.c:350
 #, c-format
 msgid "Unable to report simple features for vector map <%s>"
 msgstr "벡터 지도 <%s>를 위한 단순한 피처를 보고할 수 없습니다"

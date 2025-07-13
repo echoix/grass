@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grasslibs_lv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-24 17:02+0000\n"
+"POT-Creation-Date: 2025-07-05 18:31+0000\n"
 "PO-Revision-Date: 2025-06-14 21:04+0000\n"
 "Last-Translator: Edouard Choiniere <echoix@users.noreply.weblate.osgeo.org>\n"
 "Language-Team: Latvian <https://weblate.osgeo.org/projects/grass-gis/grasslibs/lv/>\n"
@@ -3476,8 +3476,8 @@ msgid "subgroup <%s> of group <%s> references the following raster maps\n"
 msgstr ""
 
 #: ../lib/imagery/manage_signatures.c:85 ../lib/imagery/manage_signatures.c:129
-#: ../lib/imagery/manage_signatures.c:185
-#: ../lib/imagery/manage_signatures.c:194
+#: ../lib/imagery/manage_signatures.c:187
+#: ../lib/imagery/manage_signatures.c:196
 #, fuzzy, c-format
 msgid "%s is not in the current mapset (%s)"
 msgstr "karte <%s> neatrodas šī brīža karšu kopā"
@@ -3494,20 +3494,20 @@ msgid "Unable to remove %s signature"
 msgstr "Nevar aizvākt %s"
 
 #: ../lib/imagery/manage_signatures.c:97 ../lib/imagery/manage_signatures.c:139
-#: ../lib/imagery/manage_signatures.c:204 ../lib/manage/do_copy.c:62
+#: ../lib/imagery/manage_signatures.c:206 ../lib/manage/do_copy.c:62
 #: ../lib/manage/do_remove.c:86 ../lib/manage/do_remove.c:108
 #: ../lib/manage/do_rename.c:84 ../lib/manage/do_rename.c:107
 #, c-format
 msgid "%s is missing"
 msgstr ""
 
-#: ../lib/imagery/manage_signatures.c:153 ../lib/manage/do_copy.c:51
+#: ../lib/imagery/manage_signatures.c:154 ../lib/manage/do_copy.c:51
 #: ../lib/manage/do_copy.c:68
 #, c-format
 msgid "Unable to copy <%s> to current mapset as <%s>"
 msgstr ""
 
-#: ../lib/imagery/manage_signatures.c:215
+#: ../lib/imagery/manage_signatures.c:217
 #, fuzzy, c-format
 msgid "Unable to rename <%s> to <%s>"
 msgstr "Nevar pārsaukt %s"
@@ -4582,6 +4582,16 @@ msgstr ""
 
 #: ../lib/pngdriver/read_png.c:105
 msgid "Input PNG file has invalid palette"
+msgstr ""
+
+#: ../lib/pngdriver/read_ppm.c:41
+#, fuzzy, c-format
+msgid "PNG: invalid input file %s"
+msgstr "Nepareizs deskriptors: %d"
+
+#: ../lib/pngdriver/read_ppm.c:92
+#, c-format
+msgid "PNG: invalid input mask file %s"
 msgstr ""
 
 #: ../lib/pngdriver/write_png.c:38
@@ -6630,7 +6640,7 @@ msgstr[2] "Ir reģistrēts %d primitīvu"
 #: ../lib/vector/Vlib/build_sfa.c:668
 #, fuzzy, c-format
 msgid "One vertex registered"
-msgid_plural "%<PRId64> vertices registered"
+msgid_plural "%d vertices registered"
 msgstr[0] "Reģistrēta %d virsotne"
 msgstr[1] "Reģistrētas %d virsotnes"
 msgstr[2] "Reģistrēts %d virsotņu"
@@ -8174,7 +8184,7 @@ msgstr ""
 msgid "Unable to get number of simple features"
 msgstr ""
 
-#: ../lib/vector/Vlib/simple_features.c:349
+#: ../lib/vector/Vlib/simple_features.c:350
 #, c-format
 msgid "Unable to report simple features for vector map <%s>"
 msgstr ""

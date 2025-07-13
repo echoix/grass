@@ -105,7 +105,7 @@ int find_table(char *table)
 
 int load_table_head(int t)
 {
-    int i, ncol, dtype, type, width, decimals;
+    int i, ncol, dtype, type = 0, width, decimals;
     DBFHandle dbf;
     char fname[20];
 
