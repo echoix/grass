@@ -118,6 +118,46 @@ plugins:
               */test_*
               */test.*
               */*local_proto.h
+          EXCLUDE: >-
+            bin.@ARCH@
+            build
+            db
+            debian
+            demolocation
+            display
+            dist.@ARCH@
+            doc
+            general
+            gui
+            imagery
+            include/defs
+            lib/btree/test
+            lib/db/dbmi_base/test
+            lib/db/sqlp/test
+            lib/gmath/test
+            lib/gpde/test
+            lib/linkm/test
+            lib/raster3d/test
+            lib/vector/dglib/examples
+            lib/vector/rtree/docs
+            python
+            locale
+            macosx
+            man
+            misc
+            mswindows
+            out
+            ps
+            raster
+            raster3d
+            rpm
+            scripts
+            sites
+            temporal
+            testsuite
+            utils
+            vector
+            visualization
 
 # Markdown extensions
 markdown_extensions:
