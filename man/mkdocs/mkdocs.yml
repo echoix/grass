@@ -120,13 +120,13 @@ plugins:
               */test.*
               */*local_proto.h
             EXCLUDE: >-
-              bin.*/
+              bin.*
               build
               db
               debian
               demolocation
               display
-              dist.*/
+              dist.*
               doc
               general
               gui
