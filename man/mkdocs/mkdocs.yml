@@ -104,7 +104,7 @@ plugins:
           # full-doc: False
           full-doc: True # if you want to generate full documentation
           doxy-cfg: # standard doxygen configuration (key: value)
-            FILE_PATTERNS: "*.dox *.c *.h *.cpp *.h*" # specify file patterns to filter out
+            FILE_PATTERNS: "*.dox *.c *.h *.cpp *.hpp" # specify file patterns to filter out
             RECURSIVE: True # recursive search in source directories
             WARN_LOGFILE: "doxygen.log"
             EXCLUDE_PATTERNS: >-
