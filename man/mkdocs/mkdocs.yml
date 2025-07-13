@@ -244,6 +244,7 @@ nav:
   - Development:
       - Development: development_intro.md
       - C API reference and developer manual: "programming8/links.md"
+      - C API reference and developer manual files: "programming8/files.md"
 
 not_in_nav: |
   r.*
