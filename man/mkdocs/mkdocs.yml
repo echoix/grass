@@ -96,7 +96,7 @@ plugins:
         background_image: null
   - mkdoxy:
       projects:
-        grassProgrammerManual: # name of project must be alphanumeric + numbers (without spaces)
+        programming8: # name of project must be alphanumeric + numbers (without spaces)
           #src-dirs: ../../.. # path to source code (support multiple paths separated by space) => INPUT
           src-dirs: /home/runner/work/grass/grass/grass
           full-doc: False
