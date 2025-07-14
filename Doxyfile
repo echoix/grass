@@ -61,7 +61,7 @@ PROJECT_BRIEF          = "GRASS is a powerful open-source geospatial processing 
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = python/grass/docs/_static/grass_logo.svg
+PROJECT_LOGO           = doc/grass-dark-light-no-text_50x50.svg
 
 # With the PROJECT_ICON tag one can specify an icon that is included in the tabs
 # when the HTML document is shown. Doxygen will copy the logo to the output
