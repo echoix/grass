@@ -1133,6 +1133,7 @@ EXCLUDE_PATTERNS       = */*_test.* \
                          */*local_proto.h \
                          */test_* \
                          */test.* \
+                         */test/* \
                          */tests/* \
                          */testsuite/*
 
