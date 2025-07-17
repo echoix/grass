@@ -210,6 +210,28 @@ function(build_module)
     endif()
   endforeach()
 
+  # if(WIN32)
+  #   if(G_EXE)
+  #   if($<TARGET_RUNTIME_DLLS:${G_NAME}>)
+  #     message("before copy of dll of ${G_NAME}")
+  #     add_custom_command(
+  #       TARGET ${G_NAME} POST_BUILD
+  #       COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  #               $<TARGET_RUNTIME_DLLS:${G_NAME}> $<TARGET_FILE_DIR:${G_NAME}>
+  #       COMMAND_EXPAND_LISTS
+  #     )
+  #     else()
+  #      message("in else of copy of dll of ${G_NAME}")
+  #   endif()
+  #   endif()
+  # endif()
+  add_custom_command(TARGET ${G_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E echo "$<IF:$<BOOL:$<TARGET_RUNTIME_DLLS:${G_NAME}>>,\"TARGET_RUNTIME_DLLS is not empty copying\",\"TARGET_RUNTIME_DLLS is empty not copying\">"
+    COMMAND ${CMAKE_COMMAND} -E $<IF:$<BOOL:$<TARGET_RUNTIME_DLLS:${G_NAME}>>,copy,true> $<TARGET_RUNTIME_DLLS:${G_NAME}> $<TARGET_FILE_DIR:${G_NAME}>
+    COMMAND_EXPAND_LISTS
+  )
+
+
   # To use this property later in build_docs
   set(PGM_EXT "")
   if(WIN32)
