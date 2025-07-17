@@ -60,7 +60,7 @@ ifneq ($(MINGW),)
 INTLLIB = -lintl-8
 endif
 
-CTYPESGEN = ./run.py
+CTYPESGEN = DYLD_INSERT_LIBRARIES=/Users/runner/micromamba/envs/grass-env/lib/clang/20/lib/darwin/libclang_rt.asan_osx_dynamic.dylib ./run.py
 CTYPESFLAGS = --no-embed-preamble --strip-build-path "$(ARCH_DISTDIR)" \
 	--cpp "$(CC) -E $(CPPFLAGS) $(LFS_CFLAGS) $(EXTRA_CFLAGS) $(NLS_CFLAGS) $(DEFS) $(EXTRA_INC) $(INC) -D__GLIBC_HAVE_LONG_LONG"
 EXTRA_CLEAN_FILES := $(wildcard ctypesgen/*.pyc) $(wildcard ctypesgen/*/*.pyc)
