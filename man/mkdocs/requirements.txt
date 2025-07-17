@@ -4,3 +4,4 @@ mkdocs-material==9.6.15
 pymdown-extensions==10.16
 pyyaml-env-tag==1.1
 mkdocs-material[imaging]==9.6.15
+mkdoxy==1.2.7

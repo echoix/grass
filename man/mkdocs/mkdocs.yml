@@ -94,6 +94,71 @@ plugins:
       cards_layout_options:
         background_color: rgb(76, 176, 91)
         background_image: null
+  - mkdoxy:
+      projects:
+        programming8: # name of project must be alphanumeric + numbers (without spaces)
+          debug: True
+          #src-dirs: ../../.. # path to source code (support multiple paths separated by space) => INPUT
+          src-dirs: /home/runner/work/grass/grass/grass
+          # src-dirs: /home/vscode/grass/lib
+          # full-doc: False
+          full-doc: True # if you want to generate full documentation
+          doxy-cfg: # standard doxygen configuration (key: value)
+            FILE_PATTERNS: "*.dox *.c *.h *.cpp *.hpp" # specify file patterns to filter out
+            RECURSIVE: True # recursive search in source directories
+            WARN_LOGFILE: "doxygen.log"
+            EXCLUDE_PATTERNS: >-
+              */test/*
+              */tests/*
+              */unit_test/*
+              */unit_tests/*
+              */unit_test*
+              */unit_tests*
+              */test_suite/*
+              */testsuite/*
+              */test_*
+              */test.*
+              */*local_proto.h
+            EXCLUDE: >-
+              bin.*
+              build
+              db
+              debian
+              demolocation
+              display
+              dist.*
+              doc
+              general
+              gui
+              imagery
+              include/defs
+              lib/btree/test
+              lib/db/dbmi_base/test
+              lib/db/sqlp/test
+              lib/gmath/test
+              lib/gpde/test
+              lib/linkm/test
+              lib/raster3d/test
+              lib/vector/dglib/examples
+              lib/vector/rtree/docs
+              python
+              locale
+              macosx
+              man
+              misc
+              mswindows
+              out
+              ps
+              raster
+              raster3d
+              rpm
+              scripts
+              sites
+              temporal
+              testsuite
+              utils
+              vector
+              visualization
 
 # Markdown extensions
 markdown_extensions:
@@ -177,7 +242,10 @@ nav:
       - PostScript tools: postscript.md
       - Miscellaneous tools: miscellaneous.md
 
-  - Development: development_intro.md
+  - Development:
+      - Development: development_intro.md
+      - C API reference and developer manual: "programming8/links.md"
+      - C API reference and developer manual files: "programming8/files.md"
 
 not_in_nav: |
   r.*
