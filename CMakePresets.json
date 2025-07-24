@@ -1,0 +1,139 @@
+﻿{
+    "version": 3,
+        "configurePresets": [
+            {
+                "name": "linux-debug",
+                "displayName": "Linux Debug",
+                "description": "Target the Windows Subsystem for Linux (WSL) or a remote Linux system.",
+                "generator": "Ninja",
+                "binaryDir": "${sourceDir}/out/build/${presetName}",
+                "installDir": "${sourceDir}/out/install/${presetName}",
+                "cacheVariables": {
+                    "CMAKE_BUILD_TYPE": "Debug"
+                },
+                "condition": {
+                    "type": "equals",
+                    "lhs": "${hostSystemName}",
+                    "rhs": "Linux"
+                },
+                "vendor": {
+                    "microsoft.com/VisualStudioRemoteSettings/CMake/2.0": {
+                        "remoteSourceRootDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                    }
+                }
+            },
+            {
+                "name": "macos-debug",
+                "displayName": "macOS Debug",
+                "description": "Target a remote macOS system.",
+                "generator": "Ninja",
+                "binaryDir": "${sourceDir}/out/build/${presetName}",
+                "installDir": "${sourceDir}/out/install/${presetName}",
+                "cacheVariables": {
+                    "CMAKE_BUILD_TYPE": "Debug"
+                },
+                "condition": {
+                    "type": "equals",
+                    "lhs": "${hostSystemName}",
+                    "rhs": "Darwin"
+                },
+                "vendor": {
+                    "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                        "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                    }
+                }
+            },
+            {
+                "name": "vcpkg",
+                "generator": "Ninja",
+                "binaryDir": "${sourceDir}/build",
+                "cacheVariables": {
+                    "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                }
+            },
+            {
+                "name": "windows-base",
+                "description": "Target Windows with the Visual Studio development environment.",
+                "hidden": true,
+                "inherits": "vcpkg",
+                //"generator": "Visual Studio 17 2022",
+                "generator": "Ninja",
+                "binaryDir": "${sourceDir}/out/build/${presetName}",
+                "installDir": "${sourceDir}/out/install/${presetName}",
+                "environment": {
+                    "OSGEO4W_PWD": "C:",
+                    "OSGEO4W_ROOT": "C:\\OSGeo4W"
+                },
+                "cacheVariables": {
+                    //"Python_ROOT_DIR": "C:\\Program Files\\Python313",
+                    //"Python_ROOT_DIR": "C:\\Program Files\\Python313",
+                    "WITH_OPENGL": "OFF",
+                    "WITH_DOCS": "OFF",
+                    "WITH_CBLAS": "OFF",
+                    "WITH_LAPACKE": "OFF",
+                    "WITH_LIBLAS": "ON",
+                    "WITH_NETCDF": "ON",
+                    "WITH_GUI": "ON",
+                    "CMAKE_C_COMPILER": "cl.exe;/c",
+                    "CMAKE_CXX_COMPILER": "cl.exe;/c",
+                    ////"CAIRO_INCLUDE_DIRS": "$env{OSGEO4W_ROOT}\\include;$env{OSGEO4W_ROOT}\\bin;$CAIRO_INCLUDE_DIRS",
+                    //"Cairo_INCLUDE_DIRS": "$env{OSGEO4W_ROOT}\\include;$env{OSGEO4W_ROOT}\\bin;$CAIRO_INCLUDE_DIRS",
+                    ////"CAIRO_LIBRARIES": "$env{OSGEO4W_ROOT}\\lib;$env{OSGEO4W_ROOT}\\bin;$CAIRO_LIBRARIES",
+                    //"Cairo_LIBRARIES": "$env{OSGEO4W_ROOT}\\lib;$env{OSGEO4W_ROOT}\\bin;$CAIRO_LIBRARIES",
+                    //"ZLIB_INCLUDE_DIR": "C:\\OSGeo4W\\include",
+                    "CMAKE_LIBRARY_PATH": "$env{OSGEO4W_ROOT}\\lib",
+                    "SQLite3_LIBRARY": "$env{OSGEO4W_ROOT}\\lib\\sqlite3_i.lib",
+                    "CMAKE_PREFIX_PATH": "C:\\Program Files\\Python313;$env{OSGEO4W_ROOT};$env{OSGEO4W_ROOT}\\lib;$env{OSGEO4W_ROOT}\\apps;$env{OSGEO4W_PWD}/osgeo4w/cmake;$env{OSGEO4W_PWD}/osgeo4w/lib;$env{OSGEO4W_PWD}/osgeo4w/lib/cmake;$env{OSGEO4W_PWD}/osgeo4w/share/cmake;$env{OSGEO4W_PWD}/osgeo4w/share;$CMAKE_PREFIX_PATH"
+                },
+                "condition": {
+                    "type": "equals",
+                    "lhs": "${hostSystemName}",
+                    "rhs": "Windows"
+                }
+            },
+            {
+                "name": "x64-debug",
+                "displayName": "x64 Debug",
+                "description": "Target Windows (64-bit) with the Visual Studio development environment. (Debug)",
+                "inherits": "windows-base",
+                "architecture": {
+                    "value": "x64",
+                    "strategy": "external"
+                },
+                "cacheVariables": {
+                    "CMAKE_BUILD_TYPE": "Debug"
+                }
+            },
+            {
+                "name": "x64-release",
+                "displayName": "x64 Release",
+                "description": "Target Windows (64-bit) with the Visual Studio development environment. (RelWithDebInfo)",
+                "inherits": "x64-debug",
+                "cacheVariables": {
+                    "CMAKE_BUILD_TYPE": "Release"
+                }
+            },
+            {
+                "name": "x86-debug",
+                "displayName": "x86 Debug",
+                "description": "Target Windows (32-bit) with the Visual Studio development environment. (Debug)",
+                "inherits": "windows-base",
+                "architecture": {
+                    "value": "x86",
+                    "strategy": "external"
+                },
+                "cacheVariables": {
+                    "CMAKE_BUILD_TYPE": "Debug"
+                }
+            },
+            {
+                "name": "x86-release",
+                "displayName": "x86 Release",
+                "description": "Target Windows (32-bit) with the Visual Studio development environment. (RelWithDebInfo)",
+                "inherits": "x86-debug",
+                "cacheVariables": {
+                    "CMAKE_BUILD_TYPE": "Release"
+                }
+            }
+        ]
+}

@@ -121,7 +121,7 @@ class PreprocessorParser(object):
         self.cparser.handle_status(cmd)
 
         if IS_WINDOWS:
-            cmd = ["sh.exe", "-c", cmd]
+            cmd = ["pwsh.exe", "-c", cmd]
 
         pp = subprocess.Popen(
             cmd,
@@ -129,6 +129,7 @@ class PreprocessorParser(object):
             universal_newlines=False,  # binary
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            # encoding="utf-8",
         )
         ppout_data, pperr_data = pp.communicate()
 

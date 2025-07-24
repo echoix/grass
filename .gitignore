@@ -191,6 +191,19 @@ CMakeUserPresets.json
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake
 
+# Created by https://www.toptal.com/developers/gitignore/api/vcpkg
+# Edit at https://www.toptal.com/developers/gitignore?templates=vcpkg
+
+### vcpkg ###
+# Vcpkg
+
+vcpkg-manifest-install.log
+
+## Manifest Mode
+vcpkg_installed/
+
+# End of https://www.toptal.com/developers/gitignore/api/vcpkg
+
 # Auto-generated sphinx source files for python library docs
 python/grass/docs/_templates/layout.html
 python/grass/docs/src/exceptions.rst

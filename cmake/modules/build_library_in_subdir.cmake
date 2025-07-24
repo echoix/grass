@@ -15,5 +15,6 @@ macro(build_library_in_subdir dir_name)
     # message("dir_name=${dir_name} |g_name= ${g_name}")
     build_module(NAME grass_${g_name} SRC_DIR
                  ${CMAKE_CURRENT_SOURCE_DIR}/${dir_name} ${ARGN})
+    add_library(GRASS::grass_${g_name} ALIAS grass_${g_name})
   endif()
 endmacro()

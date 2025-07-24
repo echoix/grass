@@ -19,6 +19,7 @@ static double do_scale(char *);
 #ifdef __GNUC_MINOR__
 static int OOPS(void) __attribute__((__noreturn__));
 #else
+G_NORETURN
 static int OOPS();
 #endif
 

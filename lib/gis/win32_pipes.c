@@ -27,7 +27,13 @@
 #ifdef __MINGW32__
 
 #include <grass/gis.h>
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
 #include <windows.h>
+#undef NOMINMAX
+#undef WIN32_LEAN_AND_MEAN
+#undef VC_EXTRALEAN
 #include <io.h>
 #include <errno.h>
 #include <string.h>
