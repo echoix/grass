@@ -1,7 +1,7 @@
 [run]
 ; branch = True
 ; dynamic_context = test_function
-patch = subprocess
+patch = subprocess,_exit
 concurrency = multiprocessing,thread
 parallel = True
 data_file = ${INITIAL_PWD-.}/.coverage
