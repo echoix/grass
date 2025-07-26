@@ -23,6 +23,11 @@ jobs:
     runs-on: macos-14
     env:
       PYTHONWARNINGS: always
+
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Info
         run: |
@@ -124,7 +129,7 @@ jobs:
         uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1.1.1
         with:
           flags: macos-pytest-python
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
       - name: Cache GRASS Sample Dataset
         id: cached-data

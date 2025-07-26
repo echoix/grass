@@ -33,6 +33,10 @@ jobs:
       CLICOLOR_FORCE: 1 # for other software including ninja: https://bixense.com/clicolors/
       PYTHONWARNINGS: always
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
@@ -131,14 +135,14 @@ jobs:
         uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1.1.1
         with:
           flags: pytest-python-${{ matrix.python-version }}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           verbose: true
           flags: pytest-python-${{ matrix.python-version }}
           name: pytest-python-${{ matrix.python-version }}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

@@ -29,6 +29,10 @@ jobs:
           - windows-2022
       fail-fast: false
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Set git to use LF
         run: |
@@ -155,7 +159,7 @@ jobs:
         uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1.1.1
         with:
           flags: ${{ matrix.os }}-pytest-python
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
       - name: Run tests
         run: .github/workflows/test_thorough.bat '${{env.O4WROOT}}\opt\grass\grass85.bat' '${{env.O4WROOT}}\bin\python3'
