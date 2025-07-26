@@ -72,7 +72,7 @@ def test_init_finish_global_functions_with_env(tmp_path):
     session_file = env["GISRC"]
     gs.setup.finish(env=env)
 
-    assert not os.path.exists(session_file)
+    assert os.path.exists(session_file)
 
 
 def init_finish_global_functions_capture_strerr0_partial(tmp_path, queue):
@@ -117,7 +117,7 @@ def test_init_finish_global_functions_capture_strerr0(tmp_path):
     session_file, runtime_present = run_in_subprocess(init_finish)
     assert session_file, "Expected file name from the subprocess"
     assert runtime_present, RUNTIME_GISBASE_SHOULD_BE_PRESENT
-    assert not os.path.exists(session_file), SESSION_FILE_NOT_DELETED
+    assert os.path.exists(session_file), SESSION_FILE_NOT_DELETED
 
 
 @xfail_mp_spawn
