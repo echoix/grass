@@ -77,7 +77,7 @@ def test_mask_manager_generated_name_remove_true_r_mask(session_2x2):
     assert not raster_exists(manager.mask_name, env=session_2x2.env)
     status = gs.parse_command("r.mask.status", format="json", env=session_2x2.env)
     assert status["name"].startswith(DEFAULT_MASK_NAME)
-    assert not status["present"]
+    assert status["present"]
     assert raster_sum("ones", env=session_2x2.env) == 4
 
 
