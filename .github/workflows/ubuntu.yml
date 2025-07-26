@@ -228,8 +228,8 @@ jobs:
           PYTHON: >-
             python -m slipcover
             --json
-            --out slipcover.json
-          # --source .
+            --out ${{ github.workspace }}/slipcover.json
+          #--source ${{ github.workspace }}
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2alpha2.tar.gz"
       - run: cat slipcover.json
