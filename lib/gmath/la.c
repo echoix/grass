@@ -215,7 +215,8 @@ mat_struct *G_matrix_subtract(mat_struct *mt1, mat_struct *mt2)
  * Calculates the scalar-matrix multiplication
  *
  * \param scalar
- * \param A
+ * \param matrix
+ * \param out
  * \return mat_struct
  */
 
@@ -1540,7 +1541,7 @@ int G_matrix_read(FILE *fp, mat_struct *out)
  *
  * Resizes a matrix
  *
- * \param A
+ * \param in
  * \param rows
  * \param cols
  * \return mat_struct
