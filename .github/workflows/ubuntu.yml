@@ -169,6 +169,7 @@ jobs:
         run: .github/workflows/test_simple.sh
 
       - name: Place a usercustomize.py file enabling subprocess code coverage
+        if: false
         run: |
           mkdir -p $(python -m site --user-site)
           printf "import coverage\ncoverage.process_startup()" \
