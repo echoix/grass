@@ -204,6 +204,7 @@ jobs:
       - name: Get mkdocs
         run: |
           pip install -r "grass/man/mkdocs/requirements.txt"
+          pip install 'mkdocstrings[python]'
 
       - name: Run mkdocs
         run: |
@@ -212,10 +213,12 @@ jobs:
           cd ..
           export SITE_NAME="GRASS $VERSION Documentation"
           export COPYRIGHT="&copy; 2003-$YEAR GRASS Development Team, GRASS $VERSION Documentation"
+          export GRASS_PYTHON_DIR="$(grass --config python_path)"
           cd $MKDOCS_DIR
-          mkdocs build
+          grass --tmp-project XY --exec mkdocs build
 
       - name: Build Sphinx documentation
+        if: false
         run: |
           pip install -r "grass/python/grass/docs/requirements.txt"
           cd grass
@@ -224,6 +227,7 @@ jobs:
           mv -v dist.$ARCH/docs/html/libpython $MKDOCS_DIR/site
 
       - name: Merge Sphinx and MkDocs Sitemaps
+        if: false
         run: |
           cd grass
           python utils/merge_sitemaps.py \

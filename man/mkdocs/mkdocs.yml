@@ -1,7 +1,7 @@
 ---
 # Project information
 site_author: The GRASS Development Team # Default author to all pages
-site_name: !ENV SITE_NAME
+site_name: !ENV [SITE_NAME, 'GRASS $VERSION Documentation']
 site_url: https://grass.osgeo.org/grass-stable/manuals/
 
 # Repository information
@@ -14,7 +14,7 @@ docs_dir: source
 use_directory_urls: false
 
 # Copyright
-copyright: !ENV COPYRIGHT
+copyright: !ENV [COPYRIGHT, '&copy; 2003-$YEAR GRASS Development Team, GRASS $VERSION Documentation']
 
 # Theme configuration
 theme:
@@ -82,6 +82,61 @@ extra_css:
 plugins:
   - search
   - glightbox
+  # - autorefs
+  - api-autonav:
+      exclude:
+        - "grass.lib"
+        - "ctypes"
+        - "grass.lib.ctypes_preamble.ctypes"
+        - "grass.lib.ctypes_preamble"
+        - grass.temporal.unit_tests
+        - grass.pygrass.modules.shortcuts
+      modules: [../../etc/python/grass]
+  - mkdocstrings:
+      handlers:
+        python:
+          inventories:
+            - https://numpy.org/doc/stable/objects.inv
+            - url: https://docs.python.org/3/objects.inv
+              domains: [std, py]
+
+          options:
+            docstring_style: sphinx
+            # allow_inspection: true
+            force_inspection: true
+            preload_modules:
+              - grass.script
+              # - grass
+              - numpy
+            show_if_no_docstring: true
+            summary: true
+            parameter_headings: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            filters:
+              - "!^_[^_]"
+              - "!^__"
+              - "!^unit_tests"
+          # load_external_modules: true
+          # docstring_style: sphinx
+          paths: 
+            - !ENV [GRASS_PYTHON_DIR, '.']
+            - '.'
+            - !ENV [LD_LIBRARY_PATH, '.']
+
+          # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/lib, /home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python, /home/vscode/grass/dist.x86_64-pc-linux-gnu/docs/mkdocs]
+          # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python, .]
+          # paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python/grass]
+
+      # modules: [../../etc/python/grass, ., ]
+  # - mkdocs-autoapi
+  # # - mkdocs-autoapi:
+  # #     autoapi_dir: /home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python/grass
+  # - mkdocstrings:
+  #     handlers:
+  #       python:
+  #         paths: [/home/vscode/grass/dist.x86_64-pc-linux-gnu/etc/python]
+
   - tags:
       tags_name_property: keywords
       tags_slugify_format: "{slug}"

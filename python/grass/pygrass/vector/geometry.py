@@ -719,7 +719,7 @@ class Line(Geo):
         """Return a Point object on line in the specified distance, using the
         `Vect_point_on_line` C function.
 
-        :raises: Raise a ValueError If the distance exceed the Line length.
+        :raises ValueError: Raise a ValueError if the distance exceeds the Line length.
 
         .. code-block:: pycon
 
@@ -736,7 +736,7 @@ class Line(Geo):
         # instantiate an empty Point object
         maxdist = self.length()
         if distance > maxdist:
-            str_err = "The distance exceed the length of the line, that is: %f"
+            str_err = "The distance exceeds the length of the line, that is: %f"
             raise ValueError(str_err % maxdist)
         pnt = Point(0, 0, -9999)
         if not libvect.Vect_point_on_line(
