@@ -1122,7 +1122,7 @@ class TestCase(unittest.TestCase):
 
         This method should not be used to test v.overlay or v.select.
         """
-        diff = self._compute_xor_vectors(
+        diff = self._compute_vector_xor(
             ainput=reference,
             binput=actual,
             alayer=layer,
