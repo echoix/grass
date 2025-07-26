@@ -5,7 +5,8 @@ import sys
 
 
 def convert_slipcover_json_to_coverage(input_path, output_path):
-    input_json = json.load(Path(input_path).open("r"))
+    with Path(input_path).open("r") as input_fp:
+        input_json = json.load(input_fp)
     data_file = CoverageData(output_path)
     data_file.read()
 
