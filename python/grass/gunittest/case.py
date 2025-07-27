@@ -16,6 +16,7 @@ import subprocess
 import hashlib
 import uuid
 import unittest
+from unittest.util import safe_repr
 
 from grass.pygrass.modules import Module
 from grass.exceptions import CalledModuleError
@@ -31,7 +32,6 @@ from .checkers import (
     text_file_md5,
     files_equal_md5,
 )
-from .utils import safe_repr
 from .gutils import is_map_in_mapset
 
 from io import StringIO
@@ -65,19 +65,14 @@ class TestCase(unittest.TestCase):
         self.addTypeEqualityFunc(str, "assertMultiLineEqual")
 
     def _formatMessage(self, msg, standardMsg):
-        """Honor the longMessage attribute when generating failure messages.
-
+        """Honour the longMessage attribute when generating failure messages.
         If longMessage is False this means:
-
         * Use only an explicit message if it is provided
         * Otherwise use the standard message for the assert
 
         If longMessage is True:
-
         * Use the standard message
-        * If an explicit message is provided, return string with both messages
-
-        Based on Python unittest _formatMessage, formatting changed.
+        * If an explicit message is provided, plus ' : ' and the explicit message
         """
         if not self.longMessage:
             return msg or standardMsg
@@ -86,9 +81,9 @@ class TestCase(unittest.TestCase):
         try:
             # don't switch to '{}' formatting in Python 2.X
             # it changes the way unicode input is handled
-            return "%s \n%s" % (msg, standardMsg)
+            return "%s : %s" % (standardMsg, msg)
         except UnicodeDecodeError:
-            return "%s \n%s" % (safe_repr(msg), safe_repr(standardMsg))
+            return "%s : %s" % (safe_repr(standardMsg), safe_repr(msg))
 
     @classmethod
     def use_temp_region(cls):
@@ -1127,7 +1122,7 @@ class TestCase(unittest.TestCase):
 
         This method should not be used to test v.overlay or v.select.
         """
-        diff = self._compute_xor_vectors(
+        diff = self._compute_vector_xor(
             ainput=reference,
             binput=actual,
             alayer=layer,
