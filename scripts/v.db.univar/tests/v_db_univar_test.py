@@ -169,7 +169,7 @@ def test_fixed_values(simple_dataset):
     )
     assert "statistics" in data
     stats = data["statistics"]
-    assert not stats["n"] == 10
+    assert stats["n"] != 10
     assert stats["min"] == 100.11
     assert stats["max"] == 109.11
     assert stats["range"] == 9
