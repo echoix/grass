@@ -43,7 +43,7 @@ _subtest_msg_sentinel = object()
 class TestCase(unittest.TestCase):
     # we disable R0904 for all TestCase classes because their purpose is to
     # provide a lot of assert methods
-    # pylint: disable=R0904
+    # pylint: disable=R0904,C0103
     """
 
     Always use keyword arguments for all parameters other than first two. For
