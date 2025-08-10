@@ -161,6 +161,7 @@ def get_svn_revision():
     :returns: SVN revision number as string or None if it is
         not possible to get
     """
+    return None
     # TODO: here should be starting directory
     # but now we are using current as starting
     with subprocess.Popen(
@@ -184,15 +185,16 @@ def get_svn_info():
     :returns: SVN info as dictionary or None
         if it is not possible to obtain it
     """
+    return None
     try:
         # TODO: introduce directory, not only current
-        p = subprocess.Popen(
+        with subprocess.Popen(
             ["svn", "info", ".", "--xml"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-        )
-        stdout, stderr = p.communicate()
-        rc = p.poll()
+        ) as p:
+            stdout, stderr = p.communicate()
+            rc = p.poll()
         info = {}
         if not rc:
             root = ET.fromstring(stdout)
@@ -237,17 +239,18 @@ def get_svn_path_authors(path, from_date=None):
 
     :returns: a set of authors
     """
+    return None
     # "BASE:1" is the SVN default for local copies
     revision_range = "BASE:1" if from_date is None else "BASE:{%s}" % from_date
     try:
         # TODO: allow also usage of --limit
-        p = subprocess.Popen(
+        with subprocess.Popen(
             ["svn", "log", "--xml", "--revision", revision_range, path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-        )
-        stdout, stderr = p.communicate()
-        rc = p.poll()
+        ) as p:
+            stdout, stderr = p.communicate()
+            rc = p.poll()
         if not rc:
             root = ET.fromstring(stdout)
             # TODO: get also date if this make sense

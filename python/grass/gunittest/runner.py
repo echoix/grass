@@ -16,6 +16,8 @@ import sys
 import time
 
 import unittest
+import grass.gunittest.result
+from grass.gunittest.case import _SubTest
 
 __unittest = True
 
@@ -37,29 +39,7 @@ class _WritelnDecorator:
         self.write("\n")  # text-mode streams translate to \r\n if needed
 
 
-class TestResult(unittest.TestResult):
-    # descriptions and verbosity unused
-    # included for compatibility with unittest's TestResult
-    # where are also unused, so perhaps we can remove them
-    # stream set to None and not included in interface, it would not make sense
-    def __init__(self, stream=None, descriptions=None, verbosity=None):
-        super().__init__(stream=stream, descriptions=descriptions, verbosity=verbosity)
-        self.successes = []
-
-    def addSuccess(self, test):
-        super().addSuccess(test)
-        self.successes.append(test)
-
-    # TODO: better would be to pass start at the beginning
-    # alternative is to leave counting time on class
-    # TODO: document: we expect all grass classes to have setTimes
-    # TODO: alternatively, be more forgiving for non-unittest methods
-    def setTimes(self, start_time, end_time, time_taken):
-        pass
-        # TODO: implement this
-
-
-class TextTestResult(TestResult):
+class TextTestResult(grass.gunittest.result.TestResult, unittest.TextTestResult):
     """A test result class that can print formatted text results to a stream.
 
     Used by TextTestRunner.
@@ -68,90 +48,46 @@ class TextTestResult(TestResult):
     separator1 = "=" * 70
     separator2 = "-" * 70
 
-    def __init__(self, stream, descriptions, verbosity):
-        super().__init__(stream=stream, descriptions=descriptions, verbosity=verbosity)
-        self.stream = _WritelnDecorator(stream)
-        self.showAll = verbosity > 1
-        self.dots = verbosity == 1
-        self.descriptions = descriptions
+    def __init__(self, stream, descriptions, verbosity, *, durations=None, **kwargs):
+        """Construct a TextTestResult. Subclasses should accept **kwargs
+        to ensure compatibility as the interface changes."""
+        super().__init__(
+            stream=stream, descriptions=descriptions, verbosity=verbosity, **kwargs
+        )
+        self._newline = True
+        self.durations = durations
 
         self.start_time = None
         self.end_time = None
         self.time_taken = None
 
-    def getDescription(self, test):
-        doc_first_line = test.shortDescription()
-        if self.descriptions and doc_first_line:
-            return "\n".join((str(test), doc_first_line))
-        return str(test)
-
-    def startTest(self, test):
-        super().startTest(test)
-        if self.showAll:
+    def _write_status(self, test, status):
+        is_subtest = isinstance(test, _SubTest)
+        if is_subtest or self._newline:
+            if not self._newline:
+                self.stream.writeln()
+            if is_subtest:
+                self.stream.write("  ")
             self.stream.write(self.getDescription(test))
             self.stream.write(" ... ")
-            self.stream.flush()
+        self.stream.writeln(status)
+        self.stream.flush()
+        self._newline = True
 
-    def addSuccess(self, test):
-        super().addSuccess(test)
-        if self.showAll:
-            self.stream.writeln("ok")
-        elif self.dots:
-            self.stream.write(".")
-            self.stream.flush()
-
-    def addError(self, test, err):
-        super().addError(test, err)
-        if self.showAll:
-            self.stream.writeln("ERROR")
-        elif self.dots:
-            self.stream.write("E")
-            self.stream.flush()
-
-    def addFailure(self, test, err):
-        super().addFailure(test, err)
-        if self.showAll:
-            self.stream.writeln("FAIL")
-        elif self.dots:
-            self.stream.write("F")
-            self.stream.flush()
-
-    def addSkip(self, test, reason):
-        super().addSkip(test, reason)
-        if self.showAll:
-            self.stream.writeln("skipped {0!r}".format(reason))
-        elif self.dots:
-            self.stream.write("s")
-            self.stream.flush()
-
-    def addExpectedFailure(self, test, err):
-        super().addExpectedFailure(test, err)
-        if self.showAll:
-            self.stream.writeln("expected failure")
-        elif self.dots:
-            self.stream.write("x")
-            self.stream.flush()
-
-    def addUnexpectedSuccess(self, test):
-        super().addUnexpectedSuccess(test)
-        if self.showAll:
-            self.stream.writeln("unexpected success")
-        elif self.dots:
-            self.stream.write("u")
-            self.stream.flush()
-
-    def printErrors(self):
-        if self.dots or self.showAll:
-            self.stream.writeln()
-        self.printErrorList("ERROR", self.errors)
-        self.printErrorList("FAIL", self.failures)
-
-    def printErrorList(self, flavour, errors):
-        for test, err in errors:
-            self.stream.writeln(self.separator1)
-            self.stream.writeln("%s: %s" % (flavour, self.getDescription(test)))
-            self.stream.writeln(self.separator2)
-            self.stream.writeln("%s" % err)
+    def addSubTest(self, test, subtest, err):
+        if err is not None:
+            if self.showAll:
+                if issubclass(err[0], subtest.failureException):
+                    self._write_status(subtest, "FAIL")
+                else:
+                    self._write_status(subtest, "ERROR")
+            elif self.dots:
+                if issubclass(err[0], subtest.failureException):
+                    self.stream.write("F")
+                else:
+                    self.stream.write("E")
+                self.stream.flush()
+        super().addSubTest(test, subtest, err)
 
     def setTimes(self, start_time, end_time, time_taken):
         self.start_time = start_time
@@ -196,7 +132,7 @@ class TextTestResult(TestResult):
             self.stream.write("\n")
 
 
-class KeyValueTestResult(TestResult):
+class KeyValueTestResult(grass.gunittest.result.TestResult):
     """A test result class that can print formatted text results to a stream.
 
     Used by TextTestRunner.
@@ -296,7 +232,7 @@ class KeyValueTestResult(TestResult):
         self._stream.flush()
 
 
-class MultiTestResult(TestResult):
+class MultiTestResult(grass.gunittest.result.TestResult):
     # descriptions and verbosity unused
     # included for compatibility with unittest's TestResult
     # where are also unused, so perhaps we can remove them
@@ -455,18 +391,30 @@ class MultiTestResult(TestResult):
 class GrassTestRunner:
     def __init__(
         self,
-        stream=sys.stderr,
+        stream=None,
         descriptions=True,
         verbosity=1,
         failfast=False,
         buffer=False,
         result=None,
+        resultclass=None,
+        warnings=None,
+        *,
+        tb_locals=False,
+        **kwargs,
     ):
+        if stream is None:
+            stream = sys.stderr
         self.stream = _WritelnDecorator(stream)
         self.descriptions = descriptions
         self.verbosity = verbosity
         self.failfast = failfast
         self.buffer = buffer
+        self.tb_locals = tb_locals
+        self.warnings = warnings
+        if resultclass is not None:
+            self.resultclass = resultclass
+
         self._result = result
 
     def run(self, test):

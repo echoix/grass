@@ -16,6 +16,8 @@ import subprocess
 import hashlib
 import uuid
 import unittest
+from itertools import starmap
+from unittest.util import safe_repr
 
 from grass.pygrass.modules import Module
 from grass.exceptions import CalledModuleError
@@ -31,16 +33,17 @@ from .checkers import (
     text_file_md5,
     files_equal_md5,
 )
-from .utils import safe_repr
 from .gutils import is_map_in_mapset
 
 from io import StringIO
+
+_subtest_msg_sentinel = object()
 
 
 class TestCase(unittest.TestCase):
     # we disable R0904 for all TestCase classes because their purpose is to
     # provide a lot of assert methods
-    # pylint: disable=R0904
+    # pylint: disable=R0904,C0103
     """
 
     Always use keyword arguments for all parameters other than first two. For
@@ -65,19 +68,14 @@ class TestCase(unittest.TestCase):
         self.addTypeEqualityFunc(str, "assertMultiLineEqual")
 
     def _formatMessage(self, msg, standardMsg):
-        """Honor the longMessage attribute when generating failure messages.
-
+        """Honour the longMessage attribute when generating failure messages.
         If longMessage is False this means:
-
         * Use only an explicit message if it is provided
         * Otherwise use the standard message for the assert
 
         If longMessage is True:
-
         * Use the standard message
-        * If an explicit message is provided, return string with both messages
-
-        Based on Python unittest _formatMessage, formatting changed.
+        * If an explicit message is provided, plus ' : ' and the explicit message
         """
         if not self.longMessage:
             return msg or standardMsg
@@ -86,9 +84,9 @@ class TestCase(unittest.TestCase):
         try:
             # don't switch to '{}' formatting in Python 2.X
             # it changes the way unicode input is handled
-            return "%s \n%s" % (msg, standardMsg)
+            return "%s : %s" % (standardMsg, msg)
         except UnicodeDecodeError:
-            return "%s \n%s" % (safe_repr(msg), safe_repr(standardMsg))
+            return "%s : %s" % (safe_repr(standardMsg), safe_repr(msg))
 
     @classmethod
     def use_temp_region(cls):
@@ -1489,3 +1487,42 @@ def _check_module_run_parameters(module):
         msg = "stderr_ can be only PIPE or None"
         raise ValueError(msg)
         # because we want to capture it
+
+
+class _SubTest(TestCase):
+    """
+    Private class _SubTest copied over from Python unittest to be available
+    when subclassing
+    """
+
+    def __init__(self, test_case, message, params):
+        super().__init__()
+        self._message = message
+        self.test_case = test_case
+        self.params = params
+        self.failureException = test_case.failureException
+
+    def runTest(self):
+        msg = "subtests cannot be run directly"
+        raise NotImplementedError(msg)
+
+    def _subDescription(self):
+        parts = []
+        if self._message is not _subtest_msg_sentinel:
+            parts.append("[{}]".format(self._message))
+        if self.params:
+            params_desc = ", ".join(starmap("{}={!r}".format, self.params.items()))
+            parts.append("({})".format(params_desc))
+        return " ".join(parts) or "(<subtest>)"
+
+    def id(self):
+        return "{} {}".format(self.test_case.id(), self._subDescription())
+
+    def shortDescription(self):
+        """Returns a one-line description of the subtest, or None if no
+        description has been provided.
+        """
+        return self.test_case.shortDescription()
+
+    def __str__(self):
+        return "{} {}".format(self.test_case, self._subDescription())
