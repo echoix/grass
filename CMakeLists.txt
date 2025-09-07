@@ -207,6 +207,8 @@ repo_status("${CMAKE_CURRENT_LIST_DIR}")
 
 enable_testing()
 
+include(code-coverage)
+
 include(build_module)
 include(build_program)
 include(build_program_in_subdir)
@@ -334,3 +336,4 @@ endif()
 if(WITH_X11)
   build_program_in_subdir(visualization/ximgview DEPENDS grass_gis X11::X11)
 endif()
+add_code_coverage()
