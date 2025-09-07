@@ -23,6 +23,7 @@ jobs:
     runs-on: macos-14
     env:
       PYTHONWARNINGS: always
+      ASAN_OPTIONS: detect_leaks=1,detect_odr_violation=1
     steps:
       - name: Info
         run: |
@@ -82,9 +83,34 @@ jobs:
           $CC --version
       - name: Create installation directory
         run: mkdir $HOME/install
+      - name: Show clang path
+        shell: micromamba-shell {0}
+        run: which clang
+      # llvm-symbolizer, if on path or specified with ASAN_SYMBOLIZER_PATH,
+      # enhances tracebacks with line numbers instead of addresses
+      - name: Show llvm-symbolizer
+        shell: micromamba-shell {0}
+        run: which llvm-symbolizer
+      # Commented below are some possible flags to pass to not exit on failures
       - name: Build and install
         shell: micromamba-shell {0}
-        run: source ./.github/workflows/macos_install.sh $HOME/install
+        run: source ./.github/workflows/macos_install.sh $HOME/install $G_CFLAGS_APPEND
+        env:
+          G_CFLAGS_APPEND: >-
+            -g
+            -fcolor-diagnostics
+            -fno-omit-frame-pointer
+            -fsanitize=address
+            -Wno-error=deprecated-declarations
+            -Wdeprecated-declarations
+#            -fsanitize-recover=address
+#            -fsanitize-recover=all
+          G_LDFLAGS_APPEND: >-
+            -fno-omit-frame-pointer
+            -fsanitize=address
+#            -fsanitize-recover=address
+          ASAN_OPTIONS: detect_leaks=0,detect_odr_violation=1
+          DYLD_INSERT_LIBRARIES: /Users/runner/micromamba/envs/grass-env/lib/clang/20/lib/darwin/libclang_rt.asan_osx_dynamic.dylib
       - name: Add the bin directory to PATH
         run: echo "$HOME/install/bin" >> $GITHUB_PATH
       - name: Check installed version
