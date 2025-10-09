@@ -166,7 +166,6 @@ jobs:
           which ./codecov
           ./codecov --verbose upload-process \
             -t ${{ env.CODECOV_TOKEN }} \
-            --auto-load-params-from github \
             --flag pytest-macos-15 \
             -f pytest-macos-15
         env:
