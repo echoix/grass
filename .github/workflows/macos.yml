@@ -156,9 +156,17 @@ jobs:
             python-codecoverage-report-macos
           path: coverage_html_report
           retention-days: 1
+      - name: Pre-download codecov-cli
+        shell: micromamba-shell {0}
+        run: |
+          curl -Os https://cli.codecov.io/latest/macos/codecov
+          sudo chmod +x codecov
+          ./codecov --help
+          which codecov
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:
+          binary: codecov
           verbose: true
           flags: pytest-macos-15
           name: pytest-macos-15
