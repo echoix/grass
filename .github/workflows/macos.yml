@@ -136,8 +136,8 @@ jobs:
       - name: Fix non-standard installed script paths in coverage data
         shell: micromamba-shell {0}
         run: |
-          PYTHONPATH=$(grass --config python_path):$PYTHONPATH
-          LD_LIBRARY_PATH=$(grass --config path)/lib:$LD_LIBRARY_PATH
+          PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
+          LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
           INITIAL_GISBASE="$(grass --config path)"
           INITIAL_PWD="${PWD}"
           export PYTHONPATH
@@ -153,15 +153,15 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: >-
-            python-codecoverage-report-${{ 'macos-14' }}
+            python-codecoverage-report-${{ 'macos-15' }}
           path: coverage_html_report
           retention-days: 1
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:
           verbose: true
-          flags: pytest-macos-14
-          name: pytest-macos-14
+          flags: pytest-macos-15
+          name: pytest-macos-15
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
