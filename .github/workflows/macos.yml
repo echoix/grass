@@ -133,6 +133,13 @@ jobs:
           pytest \
             @.github/workflows/pytest_args_gunittest.txt \
             --junitxml=pytest.gunittest.junit.xml
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1.1.1
+        with:
+          exclude: gui
+          flags: macos-pytest-python
+          token: ${{ secrets.CODECOV_TOKEN }}
       - name: Fix non-standard installed script paths in coverage data
         shell: micromamba-shell {0}
         run: |
@@ -167,14 +174,6 @@ jobs:
             -t ${{ secrets.CODECOV_TOKEN }} \
             --flag pytest-macos \
             -f pytest-macos
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1.1.1
-        with:
-          exclude: gui
-          flags: macos-pytest-python
-          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
