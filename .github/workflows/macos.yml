@@ -23,6 +23,8 @@ jobs:
     runs-on: macos-15
     env:
       PYTHONWARNINGS: always
+      # renovate: datasource=github-tags depName=codecov/codecov-action
+      CODECOV_ACTION_VERSION: "5a1091511ad55cbe89839c7260b706298ca349f7" # v5.5.1
     steps:
       - name: Info
         run: |
@@ -50,6 +52,16 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+          repository: codecov/codecov-action
+          ref: ${{ env.CODECOV_ACTION_VERSION }}
+          path: codecov-action
+          sparse-checkout: |
+            dist/codecov.sh
+          sparse-checkout-cone-mode: false
+
       - name: Get current date cache key segment
         id: date
         # Year and week of year so cache key changes weekly
@@ -163,17 +175,76 @@ jobs:
             python-codecoverage-report-macos
           path: coverage_html_report
           retention-days: 1
+      - name: Set fork
+        shell: bash
+        run: |
+          CC_FORK="false"
+          if [ -n "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" ] && [ "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" != "$GITHUB_REPOSITORY" ];
+          then
+            echo -e "\033[0;32m==>\033[0m Fork detected"
+            CC_FORK="true"
+          fi
+          echo "CC_FORK=$CC_FORK" >> "$GITHUB_ENV"
+        env:
+          GITHUB_EVENT_PULL_REQUEST_HEAD_LABEL: ${{ github.event.pull_request.head.label }}
+          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+      - name: Override branch for forks
+        shell: bash
+        run: |
+          if [ -z "$CC_BRANCH" ] && [ -z "$CC_TOKEN" ] && [ "$CC_FORK" == 'true' ]
+          then
+            echo -e "\033[0;32m==>\033[0m Fork detected, setting branch to $GITHUB_EVENT_PULL_REQUEST_HEAD_LABEL"
+            TOKENLESS="$GITHUB_EVENT_PULL_REQUEST_HEAD_LABEL"
+            CC_BRANCH="$GITHUB_EVENT_PULL_REQUEST_HEAD_LABEL"
+            echo "TOKENLESS=$TOKENLESS" >> "$GITHUB_ENV"
+          fi
+
+          echo "CC_BRANCH=$CC_BRANCH" >> "$GITHUB_ENV"
+        env:
+          CC_BRANCH: #${{ inputs.override_branch }}
+          GITHUB_EVENT_PULL_REQUEST_HEAD_LABEL: ${{ github.event.pull_request.head.label }}
+          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+      - name: Override commits and pr for pull requests
+        shell: bash
+        run: |
+          if [ -z "$CC_SHA" ];
+          then
+            CC_SHA="$GITHUB_EVENT_PULL_REQUEST_HEAD_SHA"
+          fi
+          if [ -z "$CC_PR" ] && [ "$CC_FORK" == 'true' ];
+          then
+            CC_PR="$GITHUB_EVENT_NUMBER"
+          fi
+
+          echo "CC_SHA=$CC_SHA" >> "$GITHUB_ENV"
+          echo "CC_PR=$CC_PR" >> "$GITHUB_ENV"
+        env:
+          CC_PR: #${{ inputs.override_pr }}
+          CC_SHA: #${{ inputs.override_commit }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_NUMBER: ${{ github.event.number }}
+          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       - name: Upload coverage reports to Codecov
         shell: micromamba-shell {0}
         run: |
-          curl -Os https://cli.codecov.io/latest/macos/codecov
-          sudo chmod +x codecov
-          ./codecov --help || true
-          ./codecov --version || true
-          ./codecov --verbose upload-process \
-            -t ${{ secrets.CODECOV_TOKEN }} \
+          ./codecov-action/dist/codecov.sh
             --flag pytest-macos \
             -f pytest-macos
+          #curl -Os https://cli.codecov.io/latest/macos/codecov
+          #sudo chmod +x codecov
+          #./codecov --help || true
+          #./codecov --version || true
+          #./codecov --verbose upload-process \
+          #  -t ${{ secrets.CODECOV_TOKEN }} \
+          #  --flag pytest-macos \
+          #  -f pytest-macos 
+         env:
+           CC_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+           CC_FLAGS: pytest-macos
+           CC_NAME: pytest-macos
+           
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
