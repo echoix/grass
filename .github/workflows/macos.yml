@@ -233,8 +233,6 @@ jobs:
         shell: micromamba-shell {0}
         run: |
           ./codecov-action/dist/codecov.sh
-            --flag pytest-macos \
-            -f pytest-macos
           #curl -Os https://cli.codecov.io/latest/macos/codecov
           #sudo chmod +x codecov
           #./codecov --help || true
