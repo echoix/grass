@@ -222,8 +222,10 @@ jobs:
           echo "CC_SHA=$CC_SHA" >> "$GITHUB_ENV"
           echo "CC_PR=$CC_PR" >> "$GITHUB_ENV"
         env:
-          CC_PR: "" #${{ inputs.override_pr }}
-          CC_SHA: "" #${{ inputs.override_commit }}
+          CC_PR: ""
+          #${{ inputs.override_pr }}
+          CC_SHA: ""
+          #${{ inputs.override_commit }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.number }}
           GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
