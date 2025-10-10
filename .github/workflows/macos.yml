@@ -203,7 +203,7 @@ jobs:
 
           echo "CC_BRANCH=$CC_BRANCH" >> "$GITHUB_ENV"
         env:
-          CC_BRANCH: #${{ inputs.override_branch }}
+          CC_BRANCH: "" #${{ inputs.override_branch }}
           GITHUB_EVENT_PULL_REQUEST_HEAD_LABEL: ${{ github.event.pull_request.head.label }}
           GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
