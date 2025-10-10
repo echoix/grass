@@ -178,6 +178,7 @@ jobs:
           retention-days: 1
       - name: Set fork
         shell: bash
+        # yamllint disable-line rule:line-length
         run: |
           CC_FORK="false"
           if [ -n "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" ] && [ "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" != "$GITHUB_REPOSITORY" ];
@@ -231,14 +232,15 @@ jobs:
         shell: micromamba-shell {0}
         run: |
           ./codecov-action/dist/codecov.sh
-          #curl -Os https://cli.codecov.io/latest/macos/codecov
-          #sudo chmod +x codecov
-          #./codecov --help || true
-          #./codecov --version || true
-          #./codecov --verbose upload-process \
-          #  -t ${{ secrets.CODECOV_TOKEN }} \
-          #  --flag pytest-macos \
-          #  -f pytest-macos
+          # Other approach
+          # curl -Os https://cli.codecov.io/latest/macos/codecov
+          # sudo chmod +x codecov
+          # ./codecov --help || true
+          # ./codecov --version || true
+          # ./codecov --verbose upload-process \
+          #   -t ${{ secrets.CODECOV_TOKEN }} \
+          #   --flag pytest-macos \
+          #   -f pytest-macos
         env:
           CC_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           CC_FLAGS: pytest-macos
