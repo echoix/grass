@@ -176,11 +176,11 @@ jobs:
             python-codecoverage-report-macos
           path: coverage_html_report
           retention-days: 1
+# yamllint disable rule:line-length
       - name: Set fork
-        shell: bash
+        shell: bash 
         run: |
           CC_FORK="false"
-          # yamllint disable-line rule:line-length
           if [ -n "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" ] && [ "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" != "$GITHUB_REPOSITORY" ];
           then
             echo -e "\033[0;32m==>\033[0m Fork detected"
@@ -191,6 +191,7 @@ jobs:
           GITHUB_EVENT_PULL_REQUEST_HEAD_LABEL: ${{ github.event.pull_request.head.label }}
           GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+# yamllint enable rule:line-length
       - name: Override branch for forks
         shell: bash
         run: |
