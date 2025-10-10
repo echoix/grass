@@ -178,9 +178,9 @@ jobs:
           retention-days: 1
       - name: Set fork
         shell: bash
-        # yamllint disable-line rule:line-length
         run: |
           CC_FORK="false"
+          # yamllint disable-line rule:line-length
           if [ -n "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" ] && [ "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" != "$GITHUB_REPOSITORY" ];
           then
             echo -e "\033[0;32m==>\033[0m Fork detected"
