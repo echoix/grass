@@ -69,6 +69,7 @@ jobs:
       - name: Prepare Conda environment file
         env:
           test_dependencies: |
+            gnupg
             ipython
             pytest
             coverage
