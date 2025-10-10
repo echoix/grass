@@ -163,13 +163,10 @@ jobs:
           sudo chmod +x codecov
           ./codecov --help || true
           ./codecov --version || true
-          which ./codecov
           ./codecov --verbose upload-process \
-            -t ${{ env.CODECOV_TOKEN }} \
-            --flag pytest-macos-15 \
-            -f pytest-macos-15
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+            -t ${{ secrets.CODECOV_TOKEN }} \
+            --flag pytest-macos \
+            -f pytest-macos
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
