@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-04 15:55+0000\n"
+"POT-Creation-Date: 2025-10-11 15:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1848,7 +1848,7 @@ msgstr ""
 #: ../raster/r.mask.status/main.c:35 ../raster/r.mfilter/main.c:65
 #: ../raster/r.mode/main.c:53 ../raster/r.neighbors/main.c:181
 #: ../raster/r.null/main.c:58 ../raster/r.object.geometry/main.c:76
-#: ../raster/r.out.ascii/main.c:53 ../raster/r.out.bin/main.c:298
+#: ../raster/r.out.ascii/main.c:54 ../raster/r.out.bin/main.c:298
 #: ../raster/r.out.gdal/main.c:135 ../raster/r.out.gridatb/main.c:66
 #: ../raster/r.out.mat/main.c:62 ../raster/r.out.mpeg/main.c:104
 #: ../raster/r.out.png/main.c:110 ../raster/r.out.pov/main.c:111
@@ -3660,7 +3660,7 @@ msgstr ""
 #: ../imagery/i.ortho.photo/i.ortho.transform/main.c:413
 #: ../misc/m.nviz.script/main.c:198 ../misc/m.transform/main.c:273
 #: ../raster/r.category/main.c:239 ../raster/r.horizon/main.c:430
-#: ../raster/r.in.lidar/main.c:670 ../raster/r.out.ascii/main.c:152
+#: ../raster/r.in.lidar/main.c:670 ../raster/r.out.ascii/main.c:159
 #: ../raster/r.out.ppm3/main.c:134 ../raster/r.profile/main.c:224
 #: ../raster/r.recode/main.c:89 ../raster3d/r3.out.vtk/main.c:422
 #: ../vector/v.edit/main.c:82 ../vector/v.net/main.c:99
@@ -4027,7 +4027,7 @@ msgstr ""
 msgid "Overlays cell category values on a raster map displayed in the active graphics frame."
 msgstr ""
 
-#: ../display/d.rast.num/main.c:103 ../raster/r.out.ascii/main.c:74
+#: ../display/d.rast.num/main.c:103 ../raster/r.out.ascii/main.c:78
 #: ../raster/r.out.vtk/parameters.c:97 ../raster3d/r3.out.vtk/parameters.c:107
 #: ../vector/v.out.ascii/args.c:75
 msgid "Number of significant digits (floating point only)"
@@ -12772,7 +12772,7 @@ msgstr ""
 #: ../locale/scriptstrings/v.pack_to_translate.c:3
 #: ../raster/r.colors.out/raster3d_main.c:48
 #: ../raster/r.colors.out/raster_main.c:47 ../raster/r.external.out/main.c:235
-#: ../raster/r.out.ascii/main.c:54 ../raster/r.out.bin/main.c:299
+#: ../raster/r.out.ascii/main.c:55 ../raster/r.out.bin/main.c:299
 #: ../raster/r.out.gdal/main.c:136 ../raster/r.out.gridatb/main.c:67
 #: ../raster/r.out.mat/main.c:63 ../raster/r.out.mpeg/main.c:105
 #: ../raster/r.out.png/main.c:111 ../raster/r.out.pov/main.c:112
@@ -12793,7 +12793,7 @@ msgstr ""
 #: ../locale/scriptstrings/db.out.ogr_to_translate.c:4
 #: ../locale/scriptstrings/r.out.xyz_to_translate.c:4
 #: ../locale/scriptstrings/t.rast.out.vtk_to_translate.c:4
-#: ../raster/r.external.out/main.c:236 ../raster/r.out.ascii/main.c:55
+#: ../raster/r.external.out/main.c:236 ../raster/r.out.ascii/main.c:56
 #: ../raster/r.out.bin/main.c:300 ../raster/r.out.gdal/main.c:137
 #: ../raster/r.out.gridatb/main.c:68 ../raster/r.out.mat/main.c:64
 #: ../raster/r.out.mpeg/main.c:106 ../raster/r.out.png/main.c:112
@@ -23722,64 +23722,60 @@ msgstr ""
 msgid "Writing output"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:58
+#: ../raster/r.out.ascii/main.c:62
 msgid "Converts a raster map layer into a GRASS ASCII text file."
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:67
+#: ../raster/r.out.ascii/main.c:71
 msgid "Name for output ASCII grid map (use out=- for stdout)"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:80
+#: ../raster/r.out.ascii/main.c:84
 msgid "Number of values printed before wrapping a line (only SURFER or MODFLOW format)"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:86
+#: ../raster/r.out.ascii/main.c:90
 msgid "String to represent null cell (GRASS grid only)"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:90 ../raster3d/r3.out.ascii/main.c:98
+#: ../raster/r.out.ascii/main.c:94 ../raster3d/r3.out.ascii/main.c:98
 msgid "Suppress printing of header information"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:94
+#: ../raster/r.out.ascii/main.c:98
 msgid "Write SURFER (Golden Software) ASCII grid"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:98
+#: ../raster/r.out.ascii/main.c:102
 msgid "Write MODFLOW (USGS) ASCII array"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:102
+#: ../raster/r.out.ascii/main.c:106
+msgid "Write LISFLOOD (EU) ASCII array"
+msgstr ""
+
+#: ../raster/r.out.ascii/main.c:110
 msgid "Force output of integer values"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:109
+#: ../raster/r.out.ascii/main.c:117
 msgid "Failed to interpret dp as an integer"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:111 ../raster3d/r3.out.vtk/main.c:393
+#: ../raster/r.out.ascii/main.c:119 ../raster3d/r3.out.vtk/main.c:393
 msgid "dp has to be from 0 to 20"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:117
+#: ../raster/r.out.ascii/main.c:125
 msgid "Failed to interpret width as an integer"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:123
-msgid "Both -s and -h doesn't make sense"
-msgstr ""
-
-#: ../raster/r.out.ascii/main.c:126
-msgid "Use -M or -s, not both"
-msgstr ""
-
-#: ../raster/r.out.ascii/main.c:161
+#: ../raster/r.out.ascii/main.c:168
 #, c-format
 msgid "Unable to read fp range for <%s>"
 msgstr ""
 
-#: ../raster/r.out.ascii/main.c:177
+#: ../raster/r.out.ascii/main.c:189
 #, c-format
 msgid "Read failed at row %d"
 msgstr ""
@@ -24122,35 +24118,35 @@ msgstr ""
 msgid "Exporting to GDAL data type: %s"
 msgstr ""
 
-#: ../raster/r.out.gdal/main.c:538
+#: ../raster/r.out.gdal/main.c:532
+msgid "Forcing raster export"
+msgstr ""
+
+#: ../raster/r.out.gdal/main.c:541
 msgid "Raster export would result in complete data loss, aborting."
 msgstr ""
 
-#: ../raster/r.out.gdal/main.c:549
+#: ../raster/r.out.gdal/main.c:552
 #, c-format
 msgid "Precision loss: Raster map <%s> of type %s to be exported as %s. This can be avoided by using %s."
 msgstr ""
 
-#: ../raster/r.out.gdal/main.c:562
+#: ../raster/r.out.gdal/main.c:565
 #, c-format
 msgid "Precision loss: The range of <%s> can not be accurately preserved with GDAL datatype Float32. This can be avoided by exporting to Int32 or Float64."
 msgstr ""
 
-#: ../raster/r.out.gdal/main.c:570
+#: ../raster/r.out.gdal/main.c:573
 #, c-format
 msgid "Precision loss: Float32 can not preserve the DCELL precision of raster <%s>. This can be avoided by using Float64"
 msgstr ""
 
-#: ../raster/r.out.gdal/main.c:579
-msgid "Forcing raster export"
-msgstr ""
-
-#: ../raster/r.out.gdal/main.c:582
+#: ../raster/r.out.gdal/main.c:581
 #, c-format
 msgid "Raster export aborted. To override data loss check, use the -%c flag"
 msgstr ""
 
-#: ../raster/r.out.gdal/main.c:599 ../raster/r.out.gdal/main.c:641
+#: ../raster/r.out.gdal/main.c:598 ../raster/r.out.gdal/main.c:641
 #: ../raster/r.out.gdal/main.c:645
 msgid "Raster export aborted."
 msgstr ""
