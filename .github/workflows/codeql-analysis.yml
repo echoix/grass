@@ -52,7 +52,7 @@ jobs:
         with:
           python-version: "3.x"
       - name: Install non-Python dependencies
-        if: ${{ matrix.language == 'c-cpp' }}
+        if: ${{ matrix.language == 'c-cpp' && false }}
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget git gawk findutils
