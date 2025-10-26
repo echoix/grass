@@ -13,6 +13,7 @@ TODO:       Convert to synthetic dataset. It would allow to shorten output sampl
 """
 
 import os
+from pathlib import Path
 
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
@@ -177,7 +178,7 @@ class TestProfiling(TestCase):
             output=self.outfile,
         )
         self.assertFileExists(self.outfile)
-        if os.path.isfile(self.outfile):
+        if Path(self.outfile).is_file():
             os.remove(self.outfile)
 
     def testOutput(self):

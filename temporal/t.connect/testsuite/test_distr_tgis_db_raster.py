@@ -108,12 +108,13 @@ class TestRasterExtraction(TestCase):
         )
         self.assertModule(t_list)
         self.assertFileExists(self.outfile)
-        read_data = Path(self.outfile).read_text()
+        outfile_path = Path(self.outfile)
+        read_data = outfile_path.read_text()
         for a, b in zip(list_string.split("\n"), read_data.split("\n"), strict=False):
             self.assertEqual(a.strip(), b.strip())
         # self.assertLooksLike(reference=read_data, actual=list_string)
-        if os.path.isfile(self.outfile):
-            os.remove(self.outfile)
+        if outfile_path.is_file():
+            outfile_path.unlink()
 
     def test_trast_list(self):
         self.runModule("g.mapset", mapset="test1")
@@ -183,11 +184,12 @@ class TestRasterExtraction(TestCase):
         )
         self.assertModule(trast_list)
         self.assertFileExists(self.outfile)
-        read_data = Path(self.outfile).read_text()
+        outfile_path = Path(self.outfile)
+        read_data = outfile_path.read_text()
         for a, b in zip(list_string.split("\n"), read_data.split("\n"), strict=False):
             self.assertEqual(a.strip(), b.strip())
-        if os.path.isfile(self.outfile):
-            os.remove(self.outfile)
+        if outfile_path.is_file():
+            outfile_path.unlink()
 
     def test_strds_info(self):
         self.runModule("g.mapset", mapset="test4")

@@ -10,6 +10,7 @@ Licence:   This program is free software under the GNU General Public
 """
 
 import os
+from pathlib import Path
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 from grass.gunittest.utils import xfail_windows
@@ -52,7 +53,7 @@ class BasicTest(TestCase):
 
         This is executed after each test run.
         """
-        if os.path.isfile(self.las_file):
+        if Path(self.las_file).is_file():
             os.remove(self.las_file)
         self.runModule("g.remove", flags="f", type="vector", name=self.imported_points)
 

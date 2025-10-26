@@ -4,11 +4,10 @@ Created on Sun Jun 08 23:19:09 2018
 @author: Sanjeet Bhatti
 """
 
+from pathlib import Path
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 from grass.gunittest.gmodules import SimpleModule
-
-import os
 
 
 class TestVPack(TestCase):
@@ -20,8 +19,9 @@ class TestVPack(TestCase):
     @classmethod
     def tearDownClass(cls):
         """Remove output file"""
-        if os.path.isfile(cls.outFile):
-            os.remove(cls.outFile)
+        outFile_path = Path(cls.outFile)
+        if outFile_path.is_file():
+            outFile_path.unlink()
 
     def test_v_pack(self):
         """Create a pack file test"""
