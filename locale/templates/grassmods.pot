@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-25 22:50+0000\n"
+"POT-Creation-Date: 2025-11-01 15:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28662,7 +28662,7 @@ msgid "seg_put_row(): could not write segment file"
 msgstr ""
 
 #: ../raster/r.stream.extract/streams.c:71
-#: ../raster/r.stream.extract/streams.c:656
+#: ../raster/r.stream.extract/streams.c:667
 #, c-format
 msgid "Stream_no %d and n_stream_nodes %<PRId64> out of sync"
 msgstr ""
@@ -28691,11 +28691,11 @@ msgstr ""
 msgid "Bug in stream extraction"
 msgstr ""
 
-#: ../raster/r.stream.extract/streams.c:620
+#: ../raster/r.stream.extract/streams.c:631
 msgid "Can't use Montgomery's method, no stream direction found"
 msgstr ""
 
-#: ../raster/r.stream.extract/streams.c:689
+#: ../raster/r.stream.extract/streams.c:700
 #, c-format
 msgid "MFD: A * path already processed when setting drainage direction: %<PRId64> of %<PRId64> cells"
 msgstr ""
