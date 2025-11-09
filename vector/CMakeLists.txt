@@ -816,7 +816,8 @@ build_program_in_subdir(
   grass_dbmiclient
   grass_dbmidriver
   grass_gis
-  grass_vector)
+  grass_vector
+  grass_parson)
 
 build_program_in_subdir(
   v.what.rast
@@ -847,7 +848,8 @@ build_program_in_subdir(
   grass_dbmidriver
   grass_gis
   grass_stats
-  grass_vector)
+  grass_vector
+  grass_parson)
 
 build_program_in_subdir(
   v.vol.rst

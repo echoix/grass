@@ -9,40 +9,38 @@ Read the file COPYING that comes with GRASS
 for details
 """
 
+import ctypes
 import os
 import shutil
-import ctypes
+from pathlib import Path
 
+import grass.script as gs
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 from grass.gunittest.utils import xfail_windows
-
-from grass.script.core import tempname
-import grass.script as gs
-from grass.pygrass import utils
-from grass.pygrass.gis import Mapset, make_mapset
-from pathlib import Path
-
 from grass.lib.gis import (
-    G_mapset_path,
-    G_make_mapset,
-    G_reset_mapsets,
     GNAME_MAX,
     HOST_DIRSEP,
+    G_make_mapset,
+    G_mapset_path,
+    G_reset_mapsets,
 )
 from grass.lib.imagery import (
+    I_SIGFILE_TYPE_LIBSVM,
     I_SIGFILE_TYPE_SIG,
     I_SIGFILE_TYPE_SIGSET,
-    I_SIGFILE_TYPE_LIBSVM,
     I_find_signature,
-    I_signatures_remove,
-    I_signatures_copy,
-    I_signatures_rename,
-    I_signatures_list_by_type,
     I_free_signatures_list,
     I_get_signatures_dir,
     I_make_signatures_dir,
+    I_signatures_copy,
+    I_signatures_list_by_type,
+    I_signatures_remove,
+    I_signatures_rename,
 )
+from grass.pygrass import utils
+from grass.pygrass.gis import Mapset, make_mapset
+from grass.script.core import tempname
 
 
 class GetSignaturesDirTestCase(TestCase):
@@ -82,36 +80,24 @@ class MakeSignaturesDirTestCase(TestCase):
 
     def test_make_sig(self):
         I_make_signatures_dir(I_SIGFILE_TYPE_SIG)
-        self.assertTrue(
-            os.path.isdir(os.path.join(self.tmp_mapset_path, "signatures", "sig"))
-        )
+        self.assertTrue(Path(self.tmp_mapset_path, "signatures", "sig").is_dir())
         # There should not be any side effects of calling function multiple times
         I_make_signatures_dir(I_SIGFILE_TYPE_SIG)
-        self.assertTrue(
-            os.path.isdir(os.path.join(self.tmp_mapset_path, "signatures", "sig"))
-        )
+        self.assertTrue(Path(self.tmp_mapset_path, "signatures", "sig").is_dir())
 
     def test_make_sigset(self):
         I_make_signatures_dir(I_SIGFILE_TYPE_SIGSET)
-        self.assertTrue(
-            os.path.isdir(os.path.join(self.tmp_mapset_path, "signatures", "sigset"))
-        )
+        self.assertTrue(Path(self.tmp_mapset_path, "signatures", "sigset").is_dir())
         # There should not be any side effects of calling function multiple times
         I_make_signatures_dir(I_SIGFILE_TYPE_SIGSET)
-        self.assertTrue(
-            os.path.isdir(os.path.join(self.tmp_mapset_path, "signatures", "sigset"))
-        )
+        self.assertTrue(Path(self.tmp_mapset_path, "signatures", "sigset").is_dir())
 
     def test_make_libsvm(self):
         I_make_signatures_dir(I_SIGFILE_TYPE_LIBSVM)
-        self.assertTrue(
-            os.path.isdir(os.path.join(self.tmp_mapset_path, "signatures", "libsvm"))
-        )
+        self.assertTrue(Path(self.tmp_mapset_path, "signatures", "libsvm").is_dir())
         # There should not be any side effects of calling function multiple times
         I_make_signatures_dir(I_SIGFILE_TYPE_LIBSVM)
-        self.assertTrue(
-            os.path.isdir(os.path.join(self.tmp_mapset_path, "signatures", "libsvm"))
-        )
+        self.assertTrue(Path(self.tmp_mapset_path, "signatures", "libsvm").is_dir())
 
 
 class SignaturesRemoveTestCase(TestCase):
@@ -470,7 +456,7 @@ class SignaturesCopyTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/sig/{dst}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/sig/{dst}/sig").is_file())
 
     def test_success_fq_sig(self):
         dst_name = tempname(10)
@@ -491,7 +477,7 @@ class SignaturesCopyTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/sig/{dst_name}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/sig/{dst_name}/sig").is_file())
 
     def test_success_unqualified_sigset(self):
         dst = tempname(10)
@@ -510,7 +496,7 @@ class SignaturesCopyTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/sigset/{dst}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/sigset/{dst}/sig").is_file())
 
     def test_success_fq_sigset(self):
         dst_name = tempname(10)
@@ -534,7 +520,7 @@ class SignaturesCopyTestCase(TestCase):
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
         self.assertTrue(
-            os.path.isfile(f"{self.mpath}/signatures/sigset/{dst_name}/sig")
+            Path(f"{self.mpath}/signatures/sigset/{dst_name}/sig").is_file()
         )
 
     def test_success_unqualified_libsvm(self):
@@ -554,7 +540,7 @@ class SignaturesCopyTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/libsvm/{dst}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/libsvm/{dst}/sig").is_file())
 
     def test_success_fq_libsvm(self):
         dst = tempname(10)
@@ -578,7 +564,7 @@ class SignaturesCopyTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{dst_dir}/sig"))
+        self.assertTrue(Path(f"{dst_dir}/sig").is_file())
 
 
 class SignaturesRenameTestCase(TestCase):
@@ -638,7 +624,7 @@ class SignaturesRenameTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/sig/{dst}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/sig/{dst}/sig").is_file())
 
     def test_success_fq_sig(self):
         src_sig = tempname(10)
@@ -663,7 +649,7 @@ class SignaturesRenameTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/sig/{dst_name}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/sig/{dst_name}/sig").is_file())
 
     def test_success_unqualified_sigset(self):
         src_sigset = tempname(10)
@@ -683,7 +669,7 @@ class SignaturesRenameTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/sigset/{dst}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/sigset/{dst}/sig").is_file())
 
     def test_success_fq_sigset(self):
         src_sigset = tempname(10)
@@ -709,7 +695,7 @@ class SignaturesRenameTestCase(TestCase):
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
         self.assertTrue(
-            os.path.isfile(f"{self.mpath}/signatures/sigset/{dst_name}/sig")
+            Path(f"{self.mpath}/signatures/sigset/{dst_name}/sig").is_file()
         )
 
     def test_success_unqualified_libsvm(self):
@@ -730,7 +716,7 @@ class SignaturesRenameTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{self.mpath}/signatures/libsvm/{dst}/sig"))
+        self.assertTrue(Path(f"{self.mpath}/signatures/libsvm/{dst}/sig").is_file())
 
     def test_success_fq_libsvm(self):
         src_sig = tempname(10)
@@ -756,7 +742,7 @@ class SignaturesRenameTestCase(TestCase):
         self.assertTrue(ret)
         ms = utils.decode(ret)
         self.assertEqual(ms, self.mapset_name)
-        self.assertTrue(os.path.isfile(f"{dst_dir}/sig"))
+        self.assertTrue(Path(f"{dst_dir}/sig").is_file())
 
 
 class SignaturesListByTypeTestCase(TestCase):
