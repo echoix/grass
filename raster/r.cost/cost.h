@@ -22,7 +22,7 @@ struct cost {
 /* heap.c */
 struct cost *insert(double, int, int);
 struct cost *get_lowest(void);
-int delete(struct cost *);
+int delete (struct cost *);
 int init_heap(void);
 int free_heap(void);
 
