@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
         G_fatal_error(_("Your installation doesn't include GUI, exiting."));
 
     if (fglaunch->answer) {
-        G_message(_("Launching <%s> GUI, please wait..."), type->answer);
+        G_message(_("Launching <%s> GUI, please wait…"), type->answer);
         if (rc_file->answer) {
             G_spawn_ex(getenv("GRASS_PYTHON"), getenv("GRASS_PYTHON"), progname,
                        "--workspace", rc_file->answer, NULL);
@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
         }
     }
     else {
-        G_message(_("Launching <%s> GUI in the background, please wait..."),
+        G_message(_("Launching <%s> GUI in the background, please wait…"),
                   type->answer);
         if (rc_file->answer) {
             G_spawn_ex(getenv("GRASS_PYTHON"), getenv("GRASS_PYTHON"), progname,

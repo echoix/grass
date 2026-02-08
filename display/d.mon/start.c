@@ -154,7 +154,7 @@ int start_mon(const char *name, const char *output, int select, int width,
         G_fatal_error(_("Monitor <%s> already running"), name);
     }
 
-    G_verbose_message(_("Starting monitor <%s>..."), name);
+    G_verbose_message(_("Starting monitor <%s>…"), name);
 
     /* create .tmp/HOSTNAME/u_name directory */
     mon_path = get_path(name, FALSE);

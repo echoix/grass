@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
         if (no_libgis) {
             G_debug(1, _("GRASS libgis version and date number don't have "
                          "the expected format."
-                         " Trying to print the original strings..."));
+                         " Trying to print the original strings…"));
             G_debug(1, _("GIS_H_VERSION=\"%s\""), GIS_H_VERSION);
             G_debug(1, _("GIS_H_DATE=\"%s\""), GIS_H_DATE);
         }

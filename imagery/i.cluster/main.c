@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
     I_cluster_begin(&C, ref.nfiles);
 
     count = 0;
-    G_message(_("Reading raster maps..."));
+    G_message(_("Reading raster maps…"));
     for (row = sample_rows - 1; row < nrows; row += sample_rows) {
         G_percent(row, nrows, 2);
         for (n = 0; n < ref.nfiles; n++)

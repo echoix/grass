@@ -451,7 +451,7 @@ int main(int argc, char **argv)
         D_setup(0);
 
         if (verbose)
-            G_message(_("Plotting ..."));
+            G_message(_("Plotting…"));
 
         overlap = 1;
         Vect_get_map_box(&Map, &box);

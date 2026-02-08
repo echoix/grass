@@ -19,7 +19,7 @@ int read_data(struct files *files, struct SigSet *S)
     ncols = Rast_window_cols();
     class = (CELL *)G_calloc(ncols, sizeof(CELL));
 
-    G_message(_("Reading raster maps..."));
+    G_message(_("Reading raster maps…"));
 
     for (row = 0; row < nrows; row++) {
         G_percent(row, nrows, 2);

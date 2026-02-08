@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 
     /* Clean temporary directory */
     snprintf(path, sizeof(path), "%s/etc/clean_temp", G_gisbase());
-    G_verbose_message(_("Cleaning up temporary files..."));
+    G_verbose_message(_("Cleaning up temporary files…"));
     G_spawn(path, "clean_temp", NULL);
 
     /* Reset variables */

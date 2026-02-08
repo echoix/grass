@@ -426,7 +426,7 @@ int main(int argc, char **argv)
     D_setup(0);
     D_set_reduction(1.0);
 
-    G_verbose_message(_("Plotting..."));
+    G_verbose_message(_("Plotting…"));
 
     overlap = 1;
     if (level >= 2 && window.proj != PROJECTION_LL) {

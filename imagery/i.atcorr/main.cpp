@@ -659,7 +659,7 @@ int main(int argc, char *argv[])
 
     /* process the input raster and produce our atmospheric corrected output
      * raster. */
-    G_message(_("Atmospheric correction..."));
+    G_message(_("Atmospheric correction…"));
     process_raster(iimg_fd, imask, iscale, ialt_fd, ivis_fd, oimg_fd,
                    opts.oint->answer, oscale);
 

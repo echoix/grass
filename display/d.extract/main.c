@@ -117,7 +117,7 @@ int main(int argc, char **argv)
     R_close_driver();
 
     /* Copy tables */
-    G_message(_("Copying tables..."));
+    G_message(_("Copying tables…"));
     n = Vect_get_num_dblinks(&In);
     tbtype = GV_1TABLE;
     if (n > 1)

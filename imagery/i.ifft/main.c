@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 #define C(i, j) ((i) * cols + (j))
 
     /* Read in cell map values */
-    G_message(_("Reading raster maps..."));
+    G_message(_("Reading raster maps…"));
     for (i = 0; i < rows; i++) {
         Rast_get_d_row(realfd, cell_real, i);
         Rast_get_d_row(imagfd, cell_imag, i);

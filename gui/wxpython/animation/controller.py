@@ -537,7 +537,7 @@ class AnimationController(wx.EvtHandler):
                 animWinIndex.append(i)
 
         images = []
-        busy = wx.BusyInfo(_("Preparing export, please wait..."), parent=self.frame)
+        busy = wx.BusyInfo(_("Preparing export, please wait…"), parent=self.frame)
         wx.GetApp().Yield()
         lastBitmaps = {}
         fgcolor = UserSettings.Get(group="animation", key="font", subkey="fgcolor")
@@ -618,7 +618,7 @@ class AnimationController(wx.EvtHandler):
         # export
         pilImages = [WxImageToPil(image) for image in images]
         self.busy = wx.BusyInfo(
-            _("Exporting animation, please wait..."), parent=self.frame
+            _("Exporting animation, please wait…"), parent=self.frame
         )
         wx.GetApp().Yield()
         try:
