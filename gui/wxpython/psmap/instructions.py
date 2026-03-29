@@ -35,6 +35,7 @@ This program is free software under the GNU General Public License
 import os
 import string
 from math import ceil
+from pathlib import Path
 from time import localtime, strftime
 
 import grass.script as gs
@@ -42,10 +43,9 @@ import wx
 from core.gcmd import GError, GMessage, GWarning
 from core.utils import GetCmdString
 from dbmgr.vinfo import VectorDBInfo
-from grass.script.task import cmdlist_to_tuple
 from grass.exceptions import ScriptError
+from grass.script.task import cmdlist_to_tuple
 from gui_core.wrap import NewId as wxNewId
-
 from psmap.utils import (  # Add any additional required names from psmap.utils here
     BBoxAfterRotation,
     GetMapBounds,
@@ -152,14 +152,14 @@ class Instruction:
         self.filename = filename
         # open file
         try:
-            file = open(filename, encoding="Latin_1", errors="ignore")
+            content = Path(filename).read_text(encoding="Latin_1", errors="ignore")
         except OSError:
             GError(message=_("Unable to open file\n%s") % filename)
             return None
         # first read file to get information about region and scaletype
         isRegionComment = False
         orientation = "Portrait"
-        for line in file:
+        for line in content.splitlines():
             if "# g.region" in line:
                 self.SetRegion(regionInstruction=line)
                 isRegionComment = True
@@ -195,8 +195,7 @@ class Instruction:
         buffer = []
         instruction = None
         vectorMapNumber = 1
-        file.seek(0)
-        for line in file:
+        for line in content.splitlines():
             if not line.strip():
                 continue
             line = line.strip()
@@ -818,7 +817,11 @@ class PageSetup(InstructionObject):
         instr = {}
         self.cats = ["Width", "Height", "Left", "Right", "Top", "Bottom"]
         self.subInstr = dict(
-            zip(["width", "height", "left", "right", "top", "bottom"], self.cats)
+            zip(
+                ["width", "height", "left", "right", "top", "bottom"],
+                self.cats,
+                strict=True,
+            )
         )
 
         if instruction == "paper":  # just for sure
@@ -867,7 +870,7 @@ class PageSetup(InstructionObject):
         sizeDict = {}
         #     cats = self.subInstr[ 'Width', 'Height', 'Left', 'Right', 'Top', 'Bottom']
         for line in paperStr.strip().split("\n"):
-            d = dict(zip(self.cats, line.split()[1:]))
+            d = dict(zip(self.cats, line.split()[1:], strict=False))
             sizeDict[line.split()[0]] = d
 
         return sizeDict
@@ -1132,7 +1135,7 @@ class Image(InstructionObject):
             except (IndexError, ValueError):
                 GError(_("Failed to read instruction %s") % instruction)
                 return False
-        if not os.path.exists(instr["epsfile"]):
+        if not Path(instr["epsfile"]).exists():
             GError(
                 _("Failed to read instruction %(inst)s: file %(file)s not found.")
                 % {"inst": instruction, "file": instr["epsfile"]}

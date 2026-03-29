@@ -27,10 +27,10 @@ the variable is ignored, but it must be set regardless.
 @author Martin Landa - Markdown support
 """
 
+import glob
 import os
 import re
 import sys
-import glob
 
 from build import (
     grass_version,
@@ -166,7 +166,7 @@ def build_keywords(ext, main_path, addons_path):
     with open(os.path.join(main_doc_dir, f"keywords.{ext}"), "w") as keywordsfile:
         keywordsfile.write(
             header1_tmpl.substitute(
-                title=f"GRASS GIS {grass_version} Reference Manual - Keywords index"
+                title=f"GRASS {grass_version} Reference Manual - Keywords index"
             )
         )
         keywordsfile.write(headerkeywords_tmpl)
@@ -230,7 +230,7 @@ def main():
 
     if len(sys.argv) >= 2:
         doc_type = sys.argv[1]
-    if doc_type in ["html", "md"]:
+    if doc_type in {"html", "md"}:
         offset = 1
     else:
         # The original usage according to the build sever scripts.

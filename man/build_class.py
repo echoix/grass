@@ -6,8 +6,8 @@
 #   Markus Neteler
 #   Glynn Clements
 
-import sys
 import os
+import sys
 
 no_intro_page_classes = ["display", "general", "miscellaneous", "postscript"]
 
@@ -15,19 +15,19 @@ no_intro_page_classes = ["display", "general", "miscellaneous", "postscript"]
 def build_class(ext):
     if ext == "html":
         from build_html import (
-            modclass_tmpl,
-            get_desc,
             desc2_tmpl,
-            modclass_intro_tmpl,
+            get_desc,
             man_dir,
+            modclass_intro_tmpl,
+            modclass_tmpl,
         )
     else:
         from build_md import (
-            modclass_tmpl,
-            get_desc,
             desc2_tmpl,
-            modclass_intro_tmpl,
+            get_desc,
             man_dir,
+            modclass_intro_tmpl,
+            modclass_tmpl,
         )
 
     os.chdir(man_dir)
@@ -39,15 +39,13 @@ def build_class(ext):
         modclass_visible = "3D raster" if modclass_lower == "raster3d" else modclass
         write_header(
             f,
-            "{} tools - GRASS GIS {} Reference Manual".format(
-                to_title(modclass_visible), grass_version
-            ),
+            "{} tools".format(to_title(modclass_visible)),
             template=ext,
         )
         if modclass_lower not in no_intro_page_classes:
             f.write(
                 modclass_intro_tmpl.substitute(
-                    modclass=modclass_visible, modclass_lower=modclass_lower
+                    modclass=to_title(modclass_visible), modclass_lower=modclass_lower
                 )
             )
         f.write(modclass_tmpl.substitute(modclass=to_title(modclass_visible)))
@@ -76,13 +74,12 @@ if __name__ == "__main__":
         year = sys.argv[3]
 
     from build import (
-        grass_version,
-        to_title,
         check_for_desc_override,
-        replace_file,
         get_files,
-        write_header,
+        replace_file,
+        to_title,
         write_footer,
+        write_header,
     )
 
     build_class("html")

@@ -13,29 +13,26 @@
 #
 #############################################################################
 
-import sys
-import os
 import fnmatch
-
-from build import (
-    default_year,
-    grass_version,
-    to_title,
-    get_files,
-    check_for_desc_override,
-    write_footer,
-    replace_file,
-)
-
-from build_html import (
-    header1_tmpl,
-    modclass_intro_tmpl,
-    get_desc,
-    man_dir,
-)
+import os
+import sys
 
 import build_md
-
+from build import (
+    check_for_desc_override,
+    default_year,
+    get_files,
+    grass_version,
+    replace_file,
+    to_title,
+    write_footer,
+)
+from build_html import (
+    get_desc,
+    header1_tmpl,
+    man_dir,
+    modclass_intro_tmpl,
+)
 
 graphical_index_style = """\
 <style>
@@ -97,7 +94,7 @@ header_graphical_index_tmpl = f"""\
 
 <a href="index.html"><img src="grass_logo.png" alt="GRASS logo"></a>
 <hr class="header">
-<h2>Graphical index of GRASS GIS modules</h2>
+<h2>Graphical index of GRASS tools</h2>
 """
 
 
@@ -142,7 +139,7 @@ def generate_page_for_category(
     with open(filename + ".tmp", "w") as output:
         output.write(
             header1_tmpl.substitute(
-                title="GRASS GIS %s Reference Manual: Graphical index" % grass_version
+                title="GRASS %s Reference Manual: Graphical index" % grass_version
             )
         )
         output.write(header_graphical_index_tmpl)
@@ -160,9 +157,9 @@ def generate_page_for_category(
         if module_family == "wxGUI":
             output.write("<h3>wxGUI components:</h3>")
         elif module_family == "guimodules":
-            output.write("<h3>g.gui.* modules:</h3>")
+            output.write("<h3>g.gui.* tools:</h3>")
         else:
-            output.write("<h3>{0} modules:</h3>".format(to_title(module_family)))
+            output.write("<h3>{0} tools:</h3>".format(to_title(module_family)))
         output.write('<ul class="img-list">')
 
         # for all modules:

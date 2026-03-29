@@ -17,27 +17,31 @@ is limited to:
 
 When compiled with OGR, functionality is increased and allows output of
 the CRS information in the Well-Known Text (WKT) format popularised by
-proprietary GIS. In addition, if one of the parameters *georef*, *wkt*,
+PROJ and GDAL. In addition, if one of the parameters *georef*, *wkt*,
 *proj4* or *epsg* is specified, rather than being read from the current
 project, the CRS information is imported from an external source as
 follows:
 
-- With **georef**=*filename* g.proj attempts to invoke GDAL and OGR in turn
-to read a georeferenced file *filename*. The CRS information will be read
-from this file. If the file is not georeferenced or cannot be read,
-XY (unprojected) will be used.
+georef=*filename*  
+*g.proj* attempts to invoke GDAL and OGR in turn to read a georeferenced
+file *filename*. The CRS information will be read from this file. If the
+file is not georeferenced or cannot be read, XY (unprojected) will be
+used.
 
-- When using **wkt**=*filename*, the file *filename* should contain a CRS
-description in WKT format with or without line-breaks (e.g. a '.prj' file).
-If **-** is given for the filename, the WKT description will be read from
-stdin rather than a file.
+wkt=*filename* or **-**  
+The file *filename* should contain a CRS description in WKT format with
+or without line-breaks (e.g. a '.prj' file). If **-** is given for the
+filename, the WKT description will be read from stdin rather than a
+file.
 
-- **proj4**=*description* should be a CRS description in [PROJ](https://proj.org/)
+proj4=*description* or **-**  
+*description* should be a CRS description in [PROJ](https://proj.org/)
 format, enclosed in quotation marks if there are any spaces. If **-** is
 given for *description*, the PROJ description will be read from stdin
 rather than as a directly-supplied command-line parameter.
 
-- **epsg**=*number* should correspond to the index number of a valid co-ordinate
+epsg=*number*  
+*number* should correspond to the index number of a valid co-ordinate
 system in the [EPSG database](https://epsg.org/search/by-name). EPSG
 code support is based upon a local copy of the GDAL CSV co-ordinate
 system and datum information files, stored in the directory
@@ -95,13 +99,16 @@ co-ordinate system. This can be useful to change the datum information
 for an existing project.
 
 Output is simply based on the input CRS information. g.proj does **not**
-attempt to verify that the co-ordinate system thus described matches an
-existing system in use in the world. In particular, this means there are
-no EPSG Authority codes in the WKT output.
+attempt to verify that the co-ordinate system thus described matches a
+pre-defined existing system in use in the world. In particular, this
+means there may be no authority names and codes in the WKT output.
 
 WKT format shows the false eastings and northings in the projected unit
 (e.g. meters, feet) but in PROJ format it should always be given in
 meters.
+
+PROJJSON format is a JSON version of the WKT format, see the [PROJJSON
+specification](https://proj.org/en/stable/specifications/projjson.html)
 
 The maximum size of input WKT or PROJ CRS descriptions is limited to
 8000 bytes.
@@ -116,11 +123,28 @@ Print the CRS information for the current project:
 g.proj -p
 ```
 
-List the possible datum transformation parameters for the current
-project:  
+Print the CRS information for the current project in PROJJSON format:
 
 ```sh
-g.proj -t datumtrans=-1
+g.proj -p format=projjson
+```
+
+Print the CRS information for the current project in shell format:
+
+```sh
+g.proj -p format=shell
+```
+
+Print the CRS information for the current project in WKT format:
+
+```sh
+g.proj -p format=wkt
+```
+
+Print the CRS information for the current project in PROJ.4 format (deprecated):
+
+```sh
+g.proj -p format=proj4
 ```
 
 ### Create projection (PRJ) file
@@ -222,7 +246,7 @@ ogr2ogr -t_srs "`g.proj -wf`" polbnda_italy_GB_ovest.shp polbnda_italy_LL.shp
 [GDAL raster library and toolset](https://gdal.org)  
 [OGR vector library and toolset](https://gdal.org/)
 
-Further reading:
+### Further reading
 
 - [ASPRS Grids and
   Datum](https://www.asprs.org/asprs-publications/grids-and-datums)

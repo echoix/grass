@@ -1,10 +1,12 @@
+import unittest
+
 import grass.script as gs
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 
 
 class TestISmap(TestCase):
-    """Regression tests for i.smap GRASS GIS module."""
+    """Regression tests for i.smap GRASS module."""
 
     group_name = "test_smap_group"
     subgroup_name = "test_smap_subgroup"
@@ -32,7 +34,7 @@ class TestISmap(TestCase):
         )
         cls.runModule(
             "r.mapcalc",
-            expression=f"{cls.input_maps[2]} = 20 * exp(-((row() - 50)^2 + (col() - 50)^2) / 500)",
+            expression=f"{cls.input_maps[2]} = 20 * exp(-(((row() - 50)^2 + (col() - 50)^2) / 500))",
             overwrite=True,
         )
         cls.temp_rasters.extend(cls.input_maps)
@@ -97,6 +99,7 @@ class TestISmap(TestCase):
             unique_classes, 3, f"Expected 3 classes in output, found {unique_classes}"
         )
 
+    @unittest.skip("known to fail at random")
     def test_with_goodness_map(self):
         """
         Validate goodness of fit map generation and

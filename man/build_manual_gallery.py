@@ -14,12 +14,12 @@
 #############################################################################
 from __future__ import annotations
 
-import os
-from pathlib import Path
 import fnmatch
-import re
-from typing import TYPE_CHECKING
 import operator
+import os
+import re
+from pathlib import Path
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -90,7 +90,7 @@ header_graphical_index_tmpl = """\
 
 <a href="index.html"><img src="grass_logo.png" alt="GRASS logo"></a>
 <hr class="header">
-<h2>GRASS GIS manual gallery</h2>
+<h2>GRASS manual gallery</h2>
 """
 
 # The recommeded width from style guide.
@@ -103,8 +103,8 @@ def image_width(filename):
         from PIL import Image
     except ImportError:
         return None
-
-    return Image.open(filename).size[0]  # First element is width.
+    with Image.open(filename) as img:
+        return img.size[0]  # First element is width.
 
 
 def img_in_file(filename: str | os.PathLike[str], imagename: str, ext: str) -> bool:
@@ -193,7 +193,7 @@ def main(ext):
 
     with open(Path(man_dir, output_name), "w") as output:
         if ext == "html":
-            title = "GRASS GIS %s Reference Manual: Manual gallery" % grass_version
+            title = "GRASS %s Reference Manual: Manual gallery" % grass_version
         else:
             title = "Manual gallery"
         output.write(header1_tmpl.substitute(title=title))
@@ -225,8 +225,8 @@ def main(ext):
 
 if __name__ == "__main__":
     from build import (
-        write_footer,
         grass_version,
+        write_footer,
     )
 
     img_files_html = main("html")

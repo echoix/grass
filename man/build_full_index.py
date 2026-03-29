@@ -6,25 +6,41 @@
 #   Markus Neteler
 #   Glynn Clements
 
-import sys
 import os
-
+import sys
 from datetime import date
 from operator import itemgetter
 
 from build import (
+    check_for_desc_override,
     get_files,
-    write_footer,
-    write_header,
     grass_version,
     grass_version_major,
     grass_version_minor,
-    check_for_desc_override,
     replace_file,
+    write_footer,
+    write_header,
 )
 
 CORE_TEXT = """\
 # Tools
+
+GRASS offers a comprehensive set of tools for geospatial processing, modeling,
+analysis, and visualization. These tools are categorized by data type,
+with prefixes indicating their respective categories. Use the table below to explore
+the main tool categories:
+
+| Prefix | Category                          | Description                        |
+|--------|-----------------------------------|------------------------------------|
+| `g.`   | [General](general.md)             | General GIS management tools       |
+| `r.`   | [Raster](raster.md)               | Raster data processing tools       |
+| `r3.`  | [3D raster](raster3d.md)          | 3D Raster data processing tools    |
+| `v.`   | [Vector](vector.md)               | Vector data processing tools       |
+| `i.`   | [Imagery](imagery.md)             | Imagery processing tools           |
+| `t.`   | [Temporal](temporal.md)           | Temporal data processing tools     |
+| `db.`  | [Database](database.md)           | Database management tools          |
+| `d.`   | [Display](display.md)             | Display and visualization tools    |
+| `m.`   | [Miscellaneous](miscellaneous.md) | Miscellaneous tools                |
 """
 
 ADDONS_TEXT = """\
@@ -32,8 +48,8 @@ ADDONS_TEXT = """\
 
 GRASS is free and open source software,
 anyone may develop their own extensions (addons).
-The <a href="https://github.com/OSGeo/grass-addons">GRASS GIS
-Addons repository</a> on GitHub contains a growing list of GRASS
+The [GRASS Addons repository](https://github.com/OSGeo/grass-addons)
+on GitHub contains a growing list of GRASS
 tools, which are currently not part of the core software package, but
 can easily be  <b>installed</b> in your local GRASS installation
 through the graphical user interface (<i>Menu - Settings - Addons
@@ -41,10 +57,9 @@ Extension - Install</i>) or via the <a
 href="../g.extension.html">g.extension</a> command.
 
 ## How to contribute?
-<!-- TODO: Link this with development guidelines. -->
-You may propose your Addon to the <a href="https://github.com/OSGeo/grass-addons">GRASS GIS
-Addons repository</a>. Please read the <a href="https://github.com/OSGeo/grass-addons/blob/grass8/CONTRIBUTING.md">Contributing</a>
-document as well as the <a href="https://trac.osgeo.org/grass/wiki/Submitting">GRASS GIS programming best practice</a>.
+You may propose your Addon to the [GRASS Addons repository](https://github.com/OSGeo/grass-addons).
+Please read the [addons contributing file](https://github.com/OSGeo/grass-addons/blob/grass8/CONTRIBUTING.md)
+as well as the [GRASS style guide](style_guide.md)</a>.
 
 These manual pages are updated daily. Last run: {date}.
 If you don't see an addon you know exists, please check the log files of compilation:
@@ -59,19 +74,19 @@ def build_full_index(ext, index_name, source_dir, year, text_type):
     """Generate index with all tools"""
     if ext == "html":
         from build_html import (
-            man_dir,
-            full_index_header,
             cmd2_tmpl,
             desc1_tmpl,
+            full_index_header,
             get_desc,
+            man_dir,
             toc,
         )
     else:
         from build_md import (
-            man_dir,
             cmd2_tmpl,
             desc1_tmpl,
             get_desc,
+            man_dir,
         )
 
     if source_dir is None:
@@ -109,7 +124,7 @@ def build_full_index(ext, index_name, source_dir, year, text_type):
     filename = f"{index_name}.{ext}"
     with open(filename + ".tmp", "w") as f:
         if ext == "html":
-            text = f"GRASS GIS {grass_version} Reference Manual - Full index"
+            text = f"GRASS {grass_version} Reference Manual - Full index"
             write_header(
                 f,
                 text,
@@ -159,7 +174,7 @@ def main():
     source_dir = None
     text_type = "core"
     if len(sys.argv) > 1:
-        if sys.argv[1] in ["html", "md"]:
+        if sys.argv[1] in {"html", "md"}:
             ext = sys.argv[1]
         else:
             year = sys.argv[1]
@@ -180,7 +195,7 @@ def main():
                 source_dir=source_dir,
                 text_type=text_type,
             )
-    elif ext in ["html", "md"]:
+    elif ext in {"html", "md"}:
         build_full_index(
             ext,
             index_name=index_name,

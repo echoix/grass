@@ -43,6 +43,7 @@ typedef struct {
 typedef struct {
     int iterout;    // Number of iterations for creating output maps
     int miter;      // Total number of iterations
+    double chmean;  // Mean Manning's n
     double si0;     // Mean rainfall excess (or sediment concentration?)
     double sisum;   // Sum of rainfall excess (or sediment concentration?)
     double vmean;   // Mean velocity
@@ -140,7 +141,7 @@ void alloc_grids_sediment(const Geometry *geometry, const Outputs *outputs,
 void init_grids_sediment(const Setup *setup, const Geometry *geometry,
                          const Outputs *outputs, Grids *grids);
 
-int input_data(int rows, int cols, Simulation *sim, const Inputs *inputs,
+int input_data(const Geometry *geometry, Simulation *sim, const Inputs *inputs,
                const Outputs *outputs, Grids *grids);
 int grad_check(Setup *setup, const Geometry *geometry, const Settings *settings,
                const Inputs *inputs, const Outputs *outputs, Grids *grids);
@@ -158,6 +159,8 @@ void free_walkers(Simulation *sim, const char *outwalk);
 void erod(double **, const Setup *setup, const Geometry *geometry,
           Grids *grids);
 void create_observation_points(ObservationPoints *points);
+void derivatives(const Geometry *geometry, float **elevation, double **dx,
+                 double **dy);
 
 double simwe_rand(void);
 double gasdev(void);
