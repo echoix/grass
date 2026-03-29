@@ -118,10 +118,16 @@ def mapcalc(
     verbose=False,
     overwrite=False,
     seed=None,
+    nprocs=None,
     env=None,
     **kwargs,
 ):
     """Interface to r.mapcalc.
+
+    The *nprocs* parameter currently defaults to 1
+    which may change in the future to using all cores.
+    Pass a value explicitly if you have specific requirements on the number of cores.
+    Explicit ``nprocs=0`` uses all cores.
 
     :param str exp: expression
     :param bool quiet: True to run quietly (``--q``)
@@ -130,6 +136,7 @@ def mapcalc(
     :param bool overwrite: True to enable overwriting the output (``--o``)
     :param seed: an integer used to seed the random-number generator for the
                  rand() function, or 'auto' to generate a random seed
+    :param nprocs: Number of threads for parallel computing
     :param dict env: dictionary of environment variables for child process
     :param kwargs:
     """
@@ -140,6 +147,11 @@ def mapcalc(
     t = string.Template(exp)
     e = t.substitute(**kwargs)
 
+    # Default to 1 to keep the same behavior in the API even with parallelized r.mapcalc,
+    # but for explicit 0, do pass through.
+    if nprocs is None:
+        nprocs = 1
+
     try:
         write_command(
             "r.mapcalc",
@@ -147,6 +159,7 @@ def mapcalc(
             stdin=e,
             env=env,
             seed=seed,
+            nprocs=nprocs,
             quiet=quiet,
             superquiet=superquiet,
             verbose=verbose,
@@ -166,6 +179,7 @@ def mapcalc_start(
     verbose=False,
     overwrite=False,
     seed=None,
+    nprocs=None,
     env=None,
     **kwargs,
 ):
@@ -185,6 +199,11 @@ def mapcalc_start(
     1
     >>> run_command("g.remove", flags="f", type="raster", name=output)
 
+    The *nprocs* parameter currently defaults to 1
+    which may change in the future to using all cores.
+    Pass a value explicitly if you have specific requirements on the number of cores.
+    Explicit ``nprocs=0`` uses all cores.
+
     :param str exp: expression
     :param bool quiet: True to run quietly (``--q``)
     :param bool superquiet: True to run extra quietly (``--qq``)
@@ -192,6 +211,7 @@ def mapcalc_start(
     :param bool overwrite: True to enable overwriting the output (``--o``)
     :param seed: an integer used to seed the random-number generator for the
                  rand() function, or 'auto' to generate a random seed
+    :param nprocs: Number of threads for parallel computing
     :param dict env: dictionary of environment variables for child process
     :param kwargs:
 
@@ -204,11 +224,17 @@ def mapcalc_start(
     t = string.Template(exp)
     e = t.substitute(**kwargs)
 
+    # Default to 1 to keep the same behavior in the API even with parallelized r.mapcalc,
+    # but for explicit 0, do pass through.
+    if nprocs is None:
+        nprocs = 1
+
     p = feed_command(
         "r.mapcalc",
         file="-",
         env=env,
         seed=seed,
+        nprocs=nprocs,
         quiet=quiet,
         superquiet=superquiet,
         verbose=verbose,
@@ -275,7 +301,7 @@ class MaskManager:
     """Context manager for setting and managing 2D raster mask.
 
     The context manager makes it possible to have custom mask for the current process.
-    In the following example, we set the mask using _r.mask_ which creates a new
+    In the following example, we set the mask using *r.mask* which creates a new
     raster which represents the mask. The mask is deactivated at the end of the
     context by the context manager and the raster is removed.
 
@@ -283,9 +309,9 @@ class MaskManager:
     ...     gs.run_command("r.mask", raster="state_boundary")
     ...     gs.parse_command("r.univar", map="elevation", format="json")
 
-    The _mask_name_ can be a name of an existing raster map and in that case,
+    The *mask_name* can be a name of an existing raster map and in that case,
     that raster map is used directly as is. If the raster map does not exist,
-    the name will be used for the mask once it is created (with _r.mask_).
+    the name will be used for the mask once it is created (with *r.mask*).
 
     The following example uses an existing raster map directly as the mask.
     The mask is disabled at the end of the context, but the raster map is not
@@ -294,23 +320,35 @@ class MaskManager:
     >>> with gs.MaskManager(mask_name="state_boundary"):
     ...     gs.parse_command("r.univar", map="elevation", format="json")
 
+    Example using explicit activate and deactivate:
+
+    >>> manager = gs.MaskManager()
+    >>> manager.activate()
+    >>> try:
+    ...     # Create mask with r.mask
+    ...     gs.run_command("r.mask", raster="state_boundary")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ... finally:
+    ...     manager.deactivate()
+
+
     Note the difference between using the name of an existing raster map directly
     and using *r.mask* to create a new mask. Both zeros and NULL values are used
     to represent mask resulting in NULL cells, while *r.mask*
     by default sets the mask in the way that only NULL values in the original raster
     result in NULL cells.
 
-    If _mask_name_ is not provided, it generates a unique name using node (computer)
+    If *mask_name* is not provided, it generates a unique name using node (computer)
     name, PID (current process ID), and unique ID (UUID).
     In this case, the raster map representing the mask is removed if it exists at the
     end of the context.
     Optionally, the context manager can remove the raster map at the end of the context
-    when _remove_ is set to `True`.
+    when *remove* is set to `True`.
     The defaults for the removal of a mask raster are set to align with the two main use
     cases which is creating the mask within the context and using an existing raster as
     a mask.
 
-    Name of the raster mask is available as the _mask_name_ attribute and can be used to
+    Name of the raster mask is available as the *mask_name* attribute and can be used to
     directly create a mask (without the need to use *r.mask*). The following example
     uses the attribute to create a mask directly by name. This is equivalent to the
     basic case where a raster named `MASK` is created directly by the user in an
@@ -327,11 +365,11 @@ class MaskManager:
     In the background, this class manages the `GRASS_MASK` environment variable.
     It modifies the current system environment or the one provided. It does not
     create a copy internally. However, the modified environment is available as
-    the _env_ attribute for convenience and consistency with other managers
+    the *env* attribute for convenience and consistency with other managers
     which provide this attribute.
 
     The following code creates a copy of the global environment and lets the manager
-    modify it. The copy is then available as the _env_ attribute.
+    modify it. The copy is then available as the *env* attribute.
 
     >>> with gs.MaskManager(env=os.environ.copy()) as manager:
     ...     gs.run_command(
@@ -368,8 +406,9 @@ class MaskManager:
         else:
             self.mask_name = mask_name
             self._remove = False if remove is None else remove
+        self._active = False
 
-    def __enter__(self):
+    def activate(self):
         """Set mask in the given environment.
 
         Sets the `GRASS_MASK` environment variable to the provided or
@@ -377,11 +416,14 @@ class MaskManager:
 
         :return: Returns the MaskManager instance.
         """
+        if self._active:
+            return None
         self._original_value = self.env.get("GRASS_MASK")
         self.env["GRASS_MASK"] = self.mask_name
+        self._active = True
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def deactivate(self):
         """Restore the previous mask state.
 
         Restores the original value of `GRASS_MASK` and optionally removes
@@ -391,6 +433,8 @@ class MaskManager:
         :param exc_val: Exception value, if any.
         :param exc_tb: Traceback, if any.
         """
+        if not self._active:
+            return
         if self._original_value is not None:
             self.env["GRASS_MASK"] = self._original_value
         else:
@@ -405,18 +449,25 @@ class MaskManager:
                 env=self.env,
                 quiet=True,
             )
+        self._active = False
+
+    def __enter__(self):
+        return self.activate()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.deactivate()
 
 
 class RegionManager:
     """Context manager for temporarily setting the computational region.
 
     This context manager makes it possible to safely modify the computational region
-    (for example via `g.region`) within a `with` block. When the context exits, the original region
+    (for example via *g.region*) within a *with* block. When the context exits, the original region
     settings are automatically restored. This is useful in scripts or functions that need to
     work with a specific region without permanently altering the user's working environment.
 
-    The new region can be defined by passing `g.region` parameters when initializing the context,
-    or by calling `g.region` directly within the context.
+    The new region can be defined by passing *g.region* parameters when initializing the context,
+    or by calling *g.region* directly within the context.
 
     The original region is saved at the beginning of the context and restored at the end.
 
@@ -442,10 +493,19 @@ class RegionManager:
     ...     manager.set_region(n=226000, s=222000, w=634000, e=638000)
     ...     gs.parse_command("r.univar", map="elevation", format="json")
 
+    Example using explicit activate and deactivate:
+
+    >>> manager = gs.RegionManager(raster="elevation")
+    >>> manager.activate()
+    >>> try:
+    ...     gs.run_command("r.slope.aspect", elevation="elevation", slope="slope")
+    ... finally:
+    ...     manager.deactivate()
+
     If no environment is provided, the global environment is used. When running parallel
     processes in the same mapset that modify region settings, it is useful to use a copy
     of the global environment. The following code creates the copy of the global environment
-    and lets the manager modify it. The copy is then available as the _env_ attribute.
+    and lets the manager modify it. The copy is then available as the *env* attribute.
 
     >>> with gs.RegionManager(raster="elevation", env=os.environ.copy()) as manager:
     ...     gs.run_command("r.univar", map="elevation", env=manager.env)
@@ -466,6 +526,7 @@ class RegionManager:
         self._original_value = None
         self.region_name = append_uuid(append_node_pid("region"))
         self._region_inputs = kwargs or {}
+        self._active = False
 
     def set_region(self, **kwargs):
         """Sets region.
@@ -474,19 +535,22 @@ class RegionManager:
         """
         run_command("g.region", **kwargs, env=self.env)
 
-    def __enter__(self):
+    def activate(self):
         """Sets the `WIND_OVERRIDE` environment variable to the generated region name.
 
         :return: Returns the :class:`RegionManager` instance.
         """
+        if self._active:
+            return None
         self._original_value = self.env.get("WIND_OVERRIDE")
         run_command(
             "g.region", save=self.region_name, env=self.env, **self._region_inputs
         )
         self.env["WIND_OVERRIDE"] = self.region_name
+        self._active = True
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def deactivate(self):
         """Restore the previous region state.
 
         Restores the original value of `WIND_OVERRIDE`.
@@ -495,6 +559,8 @@ class RegionManager:
         :param exc_val: Exception value, if any.
         :param exc_tb: Traceback, if any.
         """
+        if not self._active:
+            return
         if self._original_value is not None:
             self.env["WIND_OVERRIDE"] = self._original_value
         else:
@@ -507,6 +573,13 @@ class RegionManager:
                 name=self.region_name,
                 env=self.env,
             )
+        self._active = False
+
+    def __enter__(self):
+        return self.activate()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.deactivate()
 
 
 class RegionManagerEnv:
@@ -514,7 +587,7 @@ class RegionManagerEnv:
 
     See :class:`RegionManager`. Unlike :class:`RegionManager`, this class uses
     `GRASS_REGION` instead of `WIND_OVERRIDE`. The advantage is no files are written to disk.
-    The disadvantage is that simply calling `g.region` within the context will not affect
+    The disadvantage is that simply calling *g.region* within the context will not affect
     the temporary region, but the global one, which can be confusing.
 
     Example with explicit region parameters:
@@ -534,9 +607,20 @@ class RegionManagerEnv:
             manager.env["GRASS_REGION"] = gs.region_env()
     ...     gs.parse_command("r.univar", map="elevation", format="json")
 
+
+    Example using explicit activate and deactivate:
+
+    >>> manager = gs.RegionManagerEnv(raster="elevation")
+    >>> manager.activate()
+    >>> try:
+    ...     manager.set_region(n=226000, s=222000, w=634000, e=638000)
+    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ... finally:
+    ...     manager.deactivate()
+
     .. caution::
 
-        To set region within the context, do not call `g.region`,
+        To set region within the context, do not call *g.region*,
         use :py:meth:`.set_region` instead.
     """
 
@@ -551,6 +635,7 @@ class RegionManagerEnv:
         self.env = env if env is not None else os.environ
         self._original_value = None
         self._region_inputs = kwargs or {}
+        self._active = False
 
     def set_region(self, **kwargs):
         """Sets region.
@@ -559,16 +644,19 @@ class RegionManagerEnv:
         """
         self.env["GRASS_REGION"] = region_env(**kwargs, env=self.env)
 
-    def __enter__(self):
+    def activate(self):
         """Sets the `GRASS_REGION` environment variable to the generated region name.
 
         :return: Returns the :class:`RegionManagerEnv` instance.
         """
+        if self._active:
+            return None
         self._original_value = self.env.get("GRASS_REGION")
         self.env["GRASS_REGION"] = region_env(**self._region_inputs, env=self.env)
+        self._active = True
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def deactivate(self):
         """Restore the previous region state.
 
         Restores the original value of `WIND_OVERRIDE`.
@@ -577,7 +665,16 @@ class RegionManagerEnv:
         :param exc_val: Exception value, if any.
         :param exc_tb: Traceback, if any.
         """
+        if not self._active:
+            return
         if self._original_value is not None:
             self.env["GRASS_REGION"] = self._original_value
         else:
             self.env.pop("GRASS_REGION", None)
+        self._active = False
+
+    def __enter__(self):
+        return self.activate()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.deactivate()
