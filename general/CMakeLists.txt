@@ -3,7 +3,7 @@ build_program_in_subdir(g.copy DEPENDS grass_gis grass_manage)
 build_program_in_subdir(g.dirseps DEPENDS grass_gis)
 build_program_in_subdir(g.filename DEPENDS grass_gis)
 build_program_in_subdir(g.findetc DEPENDS grass_gis)
-build_program_in_subdir(g.findfile DEPENDS grass_gis grass_manage)
+build_program_in_subdir(g.findfile DEPENDS grass_gis grass_manage grass_parson)
 build_program_in_subdir(g.gisenv DEPENDS grass_gis)
 build_program_in_subdir(g.mapset DEPENDS grass_gis grass_parson)
 build_program_in_subdir(g.mapsets DEPENDS grass_gis grass_parson)
@@ -11,13 +11,15 @@ build_program_in_subdir(g.message DEPENDS grass_gis)
 build_program_in_subdir(g.mkfontcap DEPENDS grass_gis PRIMARY_DEPENDS
                         Freetype::Freetype)
 add_dependencies(g.mkfontcap fonts)
+
+# TODO(FHS): revert GRASS_INSTALL_ETCBINDIR to GRASS_INSTALL_ETCDIR
 add_custom_command(
   TARGET g.mkfontcap
   POST_BUILD
   COMMAND ${grass_env_command} ${OUTDIR}/${GRASS_INSTALL_BINDIR}/g.mkfontcap -s
-          > ${OUTDIR}/${GRASS_INSTALL_ETCDIR}/fontcap)
-install(FILES ${OUTDIR}/${GRASS_INSTALL_ETCDIR}/fontcap
-        DESTINATION ${GRASS_INSTALL_ETCDIR})
+          > ${OUTDIR}/${GRASS_INSTALL_ETCBINDIR}/fontcap)
+install(FILES ${OUTDIR}/${GRASS_INSTALL_ETCBINDIR}/fontcap
+        DESTINATION ${GRASS_INSTALL_ETCBINDIR})
 build_program_in_subdir(g.parser DEPENDS grass_gis)
 build_program_in_subdir(g.pnmcomp DEPENDS grass_gis)
 build_program_in_subdir(g.ppmtopng DEPENDS grass_gis PRIMARY_DEPENDS PNG::PNG)

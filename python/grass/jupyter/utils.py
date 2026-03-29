@@ -10,7 +10,7 @@
 #            License (>=v2). Read the file COPYING that comes with GRASS
 #            for details.
 
-"""Utility functions warpping existing processes in a suitable way"""
+"""Utility functions wrapping existing processes in a suitable way"""
 
 from collections.abc import Mapping
 import tempfile
@@ -20,25 +20,19 @@ import multiprocessing
 
 from pathlib import Path
 import grass.script as gs
+from grass.tools import Tools
 
 
 def get_region(env=None):
-    """Returns current computational region as dictionary.
-
-    Additionally, it adds long key names.
-    """
-    region = gs.region(env=env)
-    region["east"] = region["e"]
-    region["west"] = region["w"]
-    region["north"] = region["n"]
-    region["south"] = region["s"]
-    return region
+    """Returns current computational region as dictionary."""
+    tools = Tools(env=env)
+    return tools.g_region(flags="p", format="json").json
 
 
 def get_location_proj_string(env=None):
     """Returns projection of environment in PROJ.4 format"""
-    out = gs.read_command("g.proj", flags="fp", format="proj4", env=env)
-    return out.strip()
+    tools = Tools(env=env)
+    return tools.g_proj(flags="fp", format="proj4").text
 
 
 def reproject_region(region, from_proj, to_proj):
@@ -384,7 +378,8 @@ def get_map_name_from_d_command(module, **kwargs):
     """
     special = {"d.his": "hue", "d.legend": "raster", "d.rgb": "red", "d.shade": "shade"}
     parameter = special.get(module, "map")
-    return kwargs.get(parameter, "")
+    value = kwargs.get(parameter, "")
+    return value if isinstance(value, str) else None
 
 
 def get_rendering_size(region, width, height, default_width=600, default_height=400):
@@ -475,13 +470,14 @@ def update_region(region):
     current = gs.region()
     return gs.parse_command(
         "g.region",
-        flags="ga",
+        flags="p" if gs.locn_is_latlong() else "pa",
         n=region["north"],
         s=region["south"],
         e=region["east"],
         w=region["west"],
         nsres=current["nsres"],
         ewres=current["ewres"],
+        format="json",
     )
 
 
