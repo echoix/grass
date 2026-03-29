@@ -105,8 +105,8 @@ jobs:
           STEPS_GET_EXCLUDE_OUTPUTS_EXTRA_EXCLUDE: ${{ steps.get-exclude.outputs.extra-exclude }}
 
       - name: Set up Python
-        if: ${{ matrix.config == 'ubuntu-22.04' }}
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        if: ${{ matrix.config == 'ubuntu-24.04' }}
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: 3.14
           cache: pip
@@ -122,7 +122,7 @@ jobs:
               sudo apt-get install -y --no-install-recommends --no-install-suggests
 
       - name: Install Python dependencies
-        if: ${{ matrix.config == 'ubuntu-22.04' }}
+        if: ${{ matrix.config == 'ubuntu-24.04' }}
         run: |
           python -m pip install --upgrade pip
           pip install -r .github/workflows/python_requirements.txt
