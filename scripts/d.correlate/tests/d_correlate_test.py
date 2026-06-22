@@ -33,6 +33,14 @@ def test_fewer_than_two_maps_is_fatal(xy_raster_dataset_session_mapset, tmp_path
         tools.d_correlate(map="map_a")
 
 
+def test_exactly_two_maps_runs(xy_raster_dataset_session_mapset, tmp_path):
+    """d.correlate handles its primary two-map use case without crashing."""
+    tools = render_tools(xy_raster_dataset_session_mapset, tmp_path)
+    tools.r_mapcalc(expression="map_a = col()")
+    tools.r_mapcalc(expression="map_b = row()")
+    tools.d_correlate(map="map_a,map_b")
+
+
 def test_more_than_two_maps_runs(xy_raster_dataset_session_mapset, tmp_path):
     """d.correlate handles more than two maps without crashing.
 
