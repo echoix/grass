@@ -12,7 +12,7 @@ from grass.tools import Tools, ToolError
 
 def test_pack_input_output_tool_name_function(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name call"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -30,7 +30,7 @@ def test_pack_input_output_tool_name_function(
 @pytest.mark.parametrize("parameter_type", [str, Path])
 def test_pack_input_output_tool_name_function_string_value(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path, parameter_type
-):
+) -> None:
     """Check input and output pack files work string a parameter
 
     We make no assumption about the fixture types and explicitly test all
@@ -53,7 +53,7 @@ def test_pack_input_output_tool_name_function_string_value(
 
 def test_pack_input_output_with_name_and_parameter_call(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name as string"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -70,7 +70,7 @@ def test_pack_input_output_with_name_and_parameter_call(
 
 def test_pack_input_output_with_subprocess_run_like_call(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with command as list"""
     tools = Tools(session=xy_dataset_session)
     assert rows_raster_file3x2.exists()
@@ -90,7 +90,7 @@ def test_pack_input_output_with_subprocess_run_like_call(
     assert not tools.g_list(type="raster", format="json")
 
 
-def test_no_modify_command(xy_dataset_session, rows_raster_file3x2, tmp_path):
+def test_no_modify_command(xy_dataset_session, rows_raster_file3x2, tmp_path) -> None:
     """Check that input command is not modified by the function"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -105,7 +105,9 @@ def test_no_modify_command(xy_dataset_session, rows_raster_file3x2, tmp_path):
     assert original == command
 
 
-def test_io_cleanup_after_function(xy_dataset_session, rows_raster_file3x2, tmp_path):
+def test_io_cleanup_after_function(
+    xy_dataset_session, rows_raster_file3x2, tmp_path
+) -> None:
     """Check input and output rasters are deleted after function call"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -119,7 +121,9 @@ def test_io_cleanup_after_function(xy_dataset_session, rows_raster_file3x2, tmp_
     assert not tools.g_list(type="raster", format="json")
 
 
-def test_io_cleanup_after_context(xy_dataset_session, rows_raster_file3x2, tmp_path):
+def test_io_cleanup_after_context(
+    xy_dataset_session, rows_raster_file3x2, tmp_path
+) -> None:
     """Check input and output rasters are deleted at the end of context"""
     output_file_1 = tmp_path / "file.grass_raster"
     output_file_2 = tmp_path / "file2.grass_raster"
@@ -143,7 +147,7 @@ def test_io_cleanup_after_context(xy_dataset_session, rows_raster_file3x2, tmp_p
     assert not tools.g_list(type="raster", format="json")
 
 
-def test_io_no_cleanup(xy_dataset_session, rows_raster_file3x2, tmp_path):
+def test_io_no_cleanup(xy_dataset_session, rows_raster_file3x2, tmp_path) -> None:
     """Check input and output rasters are deleted only with explicit cleanup call"""
     output_file = tmp_path / "file.grass_raster"
     tools = Tools(session=xy_dataset_session, use_cache=True)
@@ -164,7 +168,9 @@ def test_io_no_cleanup(xy_dataset_session, rows_raster_file3x2, tmp_path):
     assert not tools.g_list(type="raster", format="json")
 
 
-def test_io_no_cleanup_with_context(xy_dataset_session, rows_raster_file3x2, tmp_path):
+def test_io_no_cleanup_with_context(
+    xy_dataset_session, rows_raster_file3x2, tmp_path
+) -> None:
     """Check input and output rasters are kept even with context"""
     file_1 = tmp_path / "file_1.grass_raster"
     file_2 = tmp_path / "file_2.grass_raster"
@@ -206,7 +212,9 @@ def test_io_no_cleanup_with_context(xy_dataset_session, rows_raster_file3x2, tmp
     assert file_2.exists()
 
 
-def test_multiple_input_usages_with_context(xy_dataset_session, rows_raster_file3x2):
+def test_multiple_input_usages_with_context(
+    xy_dataset_session, rows_raster_file3x2
+) -> None:
     """Check multiple usages of the same input raster with context"""
     with Tools(session=xy_dataset_session) as tools:
         tools.g_region(raster=rows_raster_file3x2)
@@ -224,7 +232,9 @@ def test_multiple_input_usages_with_context(xy_dataset_session, rows_raster_file
     )["name"]
 
 
-def test_multiple_input_usages_with_use_cache(xy_dataset_session, rows_raster_file3x2):
+def test_multiple_input_usages_with_use_cache(
+    xy_dataset_session, rows_raster_file3x2
+) -> None:
     """Check input and output rasters are kept even with context"""
     tools = Tools(session=xy_dataset_session, use_cache=True)
     tools.g_region(raster=rows_raster_file3x2)
@@ -241,7 +251,9 @@ def test_multiple_input_usages_with_use_cache(xy_dataset_session, rows_raster_fi
     )["name"]
 
 
-def test_multiple_input_usages_with_defaults(xy_dataset_session, rows_raster_file3x2):
+def test_multiple_input_usages_with_defaults(
+    xy_dataset_session, rows_raster_file3x2
+) -> None:
     """Check input and output rasters are kept even with context"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -259,7 +271,7 @@ def test_multiple_input_usages_with_defaults(xy_dataset_session, rows_raster_fil
 
 def test_creation_and_use_with_context(
     xy_dataset_session, rows_raster_file3x2, tmp_path
-):
+) -> None:
     """Check that we can create an external file and then use the file later"""
     slope = tmp_path / "slope.grass_raster"
     with Tools(session=xy_dataset_session) as tools:
@@ -277,7 +289,7 @@ def test_creation_and_use_with_context(
 
 def test_creation_and_use_with_use_cache(
     xy_dataset_session, rows_raster_file3x2, tmp_path
-):
+) -> None:
     """Check that we can create an external file and then use the file later"""
     slope = tmp_path / "slope.grass_raster"
     tools = Tools(session=xy_dataset_session, use_cache=True)
@@ -290,7 +302,7 @@ def test_creation_and_use_with_use_cache(
 
 def test_creation_and_use_with_defaults(
     xy_dataset_session, rows_raster_file3x2, tmp_path
-):
+) -> None:
     """Check that we can create an external file and then use the file later"""
     slope = tmp_path / "slope.grass_raster"
     tools = Tools(session=xy_dataset_session)
@@ -303,7 +315,9 @@ def test_creation_and_use_with_defaults(
     assert slope.exists()
 
 
-def test_repeated_input_usages_with_context(xy_dataset_session, rows_raster_file3x2):
+def test_repeated_input_usages_with_context(
+    xy_dataset_session, rows_raster_file3x2
+) -> None:
     """Check multiple usages of the same input raster with context"""
     with Tools(session=xy_dataset_session) as tools:
         tools.g_region(rows=3, cols=3)
@@ -323,7 +337,7 @@ def test_repeated_input_usages_with_context(xy_dataset_session, rows_raster_file
     )["name"]
 
 
-def test_repeated_output(xy_dataset_session, rows_raster_file3x2, tmp_path):
+def test_repeated_output(xy_dataset_session, rows_raster_file3x2, tmp_path) -> None:
     """Check behavior when two outputs have the same name
 
     This would ideally result in error or some other clear state, but at least
@@ -342,7 +356,7 @@ def test_repeated_output(xy_dataset_session, rows_raster_file3x2, tmp_path):
 
 def test_output_without_overwrite(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name call"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -356,7 +370,7 @@ def test_output_without_overwrite(
 
 def test_output_with_object_level_overwrite(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name call"""
     tools = Tools(session=xy_dataset_session, overwrite=True)
     tools.g_region(rows=3, cols=3)
@@ -370,7 +384,7 @@ def test_output_with_object_level_overwrite(
 
 def test_output_with_function_level_overwrite(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name call"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -384,7 +398,7 @@ def test_output_with_function_level_overwrite(
     assert output_file.exists()
 
 
-def test_non_existent_pack_input(xy_dataset_session, tmp_path: Path):
+def test_non_existent_pack_input(xy_dataset_session, tmp_path: Path) -> None:
     """Check input and output pack files work with tool name call"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -403,7 +417,7 @@ def test_non_existent_pack_input(xy_dataset_session, tmp_path: Path):
 
 def test_non_existent_output_pack_directory(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name call"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=3, cols=3)
@@ -418,7 +432,9 @@ def test_non_existent_output_pack_directory(
         tools.r_slope_aspect(elevation=rows_raster_file3x2, slope=output_file)
 
 
-def test_wrong_parameter(xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path):
+def test_wrong_parameter(
+    xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
+) -> None:
     """Check wrong parameter causes standard exception
 
     Since the tool is called to process its parameters with pack IO,
@@ -434,7 +450,7 @@ def test_wrong_parameter(xy_dataset_session, rows_raster_file3x2: Path, tmp_path
         )
 
 
-def test_direct_r_unpack_to_data(xy_dataset_session, rows_raster_file3x2: Path):
+def test_direct_r_unpack_to_data(xy_dataset_session, rows_raster_file3x2: Path) -> None:
     """Check that we can r.unpack data as usual"""
     tools = Tools(session=xy_dataset_session, use_cache=True)
     tools.g_region(rows=3, cols=3)
@@ -448,7 +464,7 @@ def test_direct_r_unpack_to_data(xy_dataset_session, rows_raster_file3x2: Path):
 
 def test_direct_r_unpack_to_pack(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check that roundtrip from existing packed raster to new packed raster works"""
     tools = Tools(session=xy_dataset_session, use_cache=True)
     tools.g_region(rows=3, cols=3)
@@ -464,7 +480,7 @@ def test_direct_r_unpack_to_pack(
     )["name"]
 
 
-def test_direct_r_pack_from_data(xy_dataset_session, tmp_path: Path):
+def test_direct_r_pack_from_data(xy_dataset_session, tmp_path: Path) -> None:
     """Check that we can r.pack data as usual"""
     tools = Tools(session=xy_dataset_session, use_cache=True)
     tools.g_region(rows=3, cols=3)
@@ -487,7 +503,7 @@ def test_direct_r_pack_from_data(xy_dataset_session, tmp_path: Path):
 
 def test_direct_r_pack_from_pack(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check that roundtrip from existing packed raster to raster works"""
     tools = Tools(session=xy_dataset_session, use_cache=True)
     tools.g_region(rows=3, cols=3)
@@ -515,7 +531,7 @@ def test_direct_r_pack_from_pack(
 
 def test_clean_after_tool_failure_with_context_and_try(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check we delete imported input when we fail after that import.
 
     A realistic code example with try-finally blocks, but without an explicit check
@@ -538,7 +554,7 @@ def test_clean_after_tool_failure_with_context_and_try(
 
 def test_clean_after_tool_failure_with_context_and_raises(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name call
 
     Checks that the exception was actually raised, but does not show the intention
@@ -559,7 +575,7 @@ def test_clean_after_tool_failure_with_context_and_raises(
 
 def test_clean_after_tool_failure_without_context(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check we delete imported input when we fail after that import.
 
     A single call should clean after itself unless told otherwise.
@@ -577,7 +593,7 @@ def test_clean_after_tool_failure_without_context(
 
 def test_clean_after_tool_failure_without_context_with_use_cache(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check we don't delete imported input even after failure when asked.
 
     When explicitly requested, we wait for explicit request to delete the imported
@@ -600,7 +616,7 @@ def test_clean_after_tool_failure_without_context_with_use_cache(
 
 def test_clean_after_call_failure_with_context_and_try(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check we delete imported input when we fail after that import.
 
     A realistic code example with try-finally blocks, but without an explicit check
@@ -628,7 +644,7 @@ def test_clean_after_call_failure_with_context_and_try(
 
 def test_clean_after_call_failure_with_context_and_raises(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check input and output pack files work with tool name call
 
     Checks that the exception was actually raised, but does not show the intention
@@ -651,7 +667,7 @@ def test_clean_after_call_failure_with_context_and_raises(
 
 def test_clean_after_call_failure_without_context(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check we delete imported input when we fail after that import.
 
     A single call should clean after itself unless told otherwise.
@@ -673,7 +689,7 @@ def test_clean_after_call_failure_without_context(
 
 def test_clean_after_call_failure_without_context_with_use_cache(
     xy_dataset_session, rows_raster_file3x2: Path, tmp_path: Path
-):
+) -> None:
     """Check we don't delete imported input even after failure when asked.
 
     When explicitly requested, we wait for explicit request to delete the imported
@@ -700,7 +716,7 @@ def test_clean_after_call_failure_without_context_with_use_cache(
 
 def test_workflow_create_project_and_run_general_crs(
     tmp_path: Path, ones_raster_file_epsg3358
-):
+) -> None:
     """Check workflow with create project"""
     project = tmp_path / "project"
     raster = tmp_path / "raster.grass_raster"
@@ -730,7 +746,7 @@ def test_workflow_create_project_and_run_general_crs(
 
 def test_workflow_create_project_and_run_ll_crs(
     tmp_path: Path, ones_raster_file_epsg4326
-):
+) -> None:
     """Check workflow with create project"""
     project = tmp_path / "project"
     raster = tmp_path / "raster.grass_raster"
@@ -760,7 +776,7 @@ def test_workflow_create_project_and_run_ll_crs(
 
 def test_workflow_create_project_and_run_xy_crs(
     tmp_path: Path, rows_raster_file4x5: Path
-):
+) -> None:
     """Check workflow with create project"""
     project = tmp_path / "project"
     raster = tmp_path / "raster.grass_raster"

@@ -35,7 +35,7 @@ class ToolError(CalledModuleError):
 
     def __init__(
         self, tool: str, cmd: list, returncode: int, errors: str | None = None
-    ):
+    ) -> None:
         """Create an exception with a full error message based on the parameters.
 
         Best results are provided when *errors* is a single line string, aiming at a
@@ -97,7 +97,7 @@ class ToolError(CalledModuleError):
             (self.tool, self.cmd, self.returncode, self.errors),
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.msg
 
 
@@ -260,7 +260,7 @@ class Tools:
         capture_stderr=None,
         consistent_return_value=False,
         use_cache=None,
-    ):
+    ) -> None:
         """
         If session is provided and has an env attribute, it is used to execute tools.
         If env is provided, it is used to execute tools. If both session and env are
@@ -634,11 +634,11 @@ class Tools:
         self._delete_on_context_exit = True
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         """Exit the context manager context."""
         if not self._use_cache:
             self.cleanup()
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         if self._importer_exporter is not None:
             self._importer_exporter.cleanup(env=self._modified_env_if_needed())

@@ -5,14 +5,14 @@ import grass.script.array as ga
 from grass.tools import Tools
 
 
-def test_numpy_one_input(xy_dataset_session):
+def test_numpy_one_input(xy_dataset_session) -> None:
     """Check that global overwrite is not used when separate env is used"""
     tools = Tools(session=xy_dataset_session)
     tools.r_slope_aspect(elevation=np.ones((1, 1)), slope="slope")
     assert tools.r_info(map="slope", format="json")["datatype"] == "FCELL"
 
 
-def test_numpy_one_input_one_output(xy_dataset_session):
+def test_numpy_one_input_one_output(xy_dataset_session) -> None:
     """Check that a NumPy array works as input and for signaling output
 
     It tests that the np.ndarray class is supported to signal output.
@@ -26,7 +26,7 @@ def test_numpy_one_input_one_output(xy_dataset_session):
     assert np.all(slope == np.full((2, 3), 0))
 
 
-def test_numpy_with_name_and_parameter(xy_dataset_session):
+def test_numpy_with_name_and_parameter(xy_dataset_session) -> None:
     """Check that a NumPy array works as input and for signaling output
 
     It tests that the np.ndarray class is supported to signal output.
@@ -40,7 +40,7 @@ def test_numpy_with_name_and_parameter(xy_dataset_session):
     assert np.all(slope == np.full((2, 3), 0))
 
 
-def test_numpy_one_input_multiple_outputs(xy_dataset_session):
+def test_numpy_one_input_multiple_outputs(xy_dataset_session) -> None:
     """Check that a NumPy array function works for signaling multiple outputs
 
     Besides multiple outputs it tests that np.array is supported to signal output.
@@ -56,7 +56,7 @@ def test_numpy_one_input_multiple_outputs(xy_dataset_session):
     assert np.all(aspect == np.full((2, 3), 0))
 
 
-def test_numpy_multiple_inputs_one_output(xy_dataset_session):
+def test_numpy_multiple_inputs_one_output(xy_dataset_session) -> None:
     """Check that a NumPy array works for multiple inputs"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=2, cols=3)
@@ -67,7 +67,7 @@ def test_numpy_multiple_inputs_one_output(xy_dataset_session):
     assert np.all(result == np.full((2, 3), 7))
 
 
-def test_numpy_grass_array_input_output(xy_dataset_session):
+def test_numpy_grass_array_input_output(xy_dataset_session) -> None:
     """Check that global overwrite is not used when separate env is used
 
     When grass array output is requested, we explicitly test the return value type.
@@ -84,7 +84,7 @@ def test_numpy_grass_array_input_output(xy_dataset_session):
     assert isinstance(result, ga.array)
 
 
-def test_numpy_one_input_multiple_outputs_into_result(xy_dataset_session):
+def test_numpy_one_input_multiple_outputs_into_result(xy_dataset_session) -> None:
     """Check that we can store NumPy arrays in the result object"""
     tools = Tools(session=xy_dataset_session, consistent_return_value=True)
     tools.g_region(rows=2, cols=3)
@@ -107,7 +107,7 @@ def test_numpy_one_input_multiple_outputs_into_result(xy_dataset_session):
     assert len(result.stderr)
 
 
-def test_wrong_region_size(xy_dataset_session):
+def test_wrong_region_size(xy_dataset_session) -> None:
     """Check that a NumPy array shape and computational region mismatch produce error"""
     tools = Tools(session=xy_dataset_session)
     tools.g_region(rows=5, cols=10)
@@ -115,7 +115,7 @@ def test_wrong_region_size(xy_dataset_session):
         tools.r_slope_aspect(elevation=np.ones((2, 3)), slope=np.ndarray)
 
 
-def test_wrong_region_size_with_broadcast(xy_dataset_session):
+def test_wrong_region_size_with_broadcast(xy_dataset_session) -> None:
     """Check an array which can be broadcasted.
 
     While we currently don't promise any specific broadcasting behavior in the
