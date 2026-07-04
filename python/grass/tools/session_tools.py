@@ -360,7 +360,7 @@ class Tools:
         ):
             env = env or self._original_env.copy()
 
-            def set_or_unset(env, variable_value, state):
+            def set_or_unset(env, variable_value: str, state) -> None:
                 """
                 Set the variable the corresponding value if state is True. If it is
                 False and the variable is set to the corresponding value, unset it.
