@@ -422,6 +422,27 @@ additional-builtins = ["_"]
 [tool.pyrefact]
 line_length = 88
 
+[tool.pyrefly]
+project-includes = [
+    "python/grass",
+    "**/tests",
+    "**/testsuite",
+]
+project-excludes = [
+    "**/__pycache__",
+    "**/OBJ.*",
+    "bin.*/**/*",
+    "dist.*/**/*",
+    "python/libgrass_interface_generator/*",
+]
+# python-version = "3.10.0"
+infer-with-first-use = false
+search-path = [
+    "typings",
+    "python/grass",
+    "./build/output/lib/grass86/etc/python",
+]
+
 [tool.pyright]
 exclude = [
     "**/__pycache__",
@@ -914,7 +935,7 @@ known-first-party = ["grass"]
 docstring-code-format = true
 
 [tool.tombi]
-extensions."tombi-toml/pyproject".enabled = false
+# extensions."tombi-toml/pyproject".enabled = false
 
 [tool.tombi.format.rules]
 indent-width = 4
@@ -925,12 +946,22 @@ trailing-comment-space-width = 1
 # [tool.uv]
 # package = false
 
+[tool.ty]
+environment.extra-paths = [
+    "python/grass",
+    "./build/output/lib/grass86/etc/python",
+]
+
 [tool.ty.src]
 include = [
+    "python/",
     "**/tests",
-    # "**/testsuite",
+    "**/testsuite",
 ]
-# exclude = ["src/generated"]
+exclude = [
+    "python/libgrass_interface_generator/*",
+    ".venv",
+]
 
 # [tool.uv.sources]
 # grass = { workspace = true }
