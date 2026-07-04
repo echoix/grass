@@ -52,5 +52,14 @@ export INSTALL_PREFIX=$1
     --with-tiff \
     --with-zstd
 
+
+
+cmake -S "/workspaces/grass" -B "/workspaces/grass/build" -G Ninja \
+            -DCMAKE_INSTALL_PREFIX="${HOME}/install" -DWITH_READLINE=ON -DWITH_ODBC=ON \
+            -DWITH_NETCDF=ON -DWITH_BZLIB=ON -DWITH_ZSTD=ON -DWITH_BLAS=ON -DWITH_PDAL=ON
+
 eval $makecmd
 make install
+
+
+make CFLAGS='-fPIC -Wvla -ffp-contract=off -Werror' CXXFLAGS='-fPIC -ffp-contract=off -Werror' 

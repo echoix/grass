@@ -7,43 +7,43 @@ from grass.exceptions import CalledModuleError
 from grass.tools import ToolError
 
 
-def test_exception_type_for_tools(plain_tools):
+def test_exception_type_for_tools(plain_tools) -> None:
     """Check that the expected type is produced"""
     with pytest.raises(ToolError):
         plain_tools.g_region(raster="does_not_exist")
 
 
-def test_compatibility_with_subprocess(plain_tools):
+def test_compatibility_with_subprocess(plain_tools) -> None:
     """We want tools to work as a smooth replacement of subprocess calls"""
     with pytest.raises(subprocess.CalledProcessError):
         plain_tools.g_region(raster="does_not_exist")
 
 
-def test_compatibility_with_run_command(plain_tools):
+def test_compatibility_with_run_command(plain_tools) -> None:
     """This is for backwards compatibility and may be removed in the future"""
     with pytest.raises(CalledModuleError):
         plain_tools.g_region(raster="does_not_exist")
 
 
-def test_tool_name_in_message(plain_tools):
+def test_tool_name_in_message(plain_tools) -> None:
     """Check tool name appears in the message"""
     with pytest.raises(ToolError, match=r"g\.region"):
         plain_tools.g_region(raster="does_not_exist")
 
 
-def test_parameter_in_message(plain_tools):
+def test_parameter_in_message(plain_tools) -> None:
     """Check parameters apprear in the message"""
     with pytest.raises(ToolError, match=r"raster.*does_not_exist"):
         plain_tools.g_region(raster="does_not_exist")
 
 
-def test_flag_in_message(plain_tools):
+def test_flag_in_message(plain_tools) -> None:
     """Check flags parameter value appears in the message"""
     with pytest.raises(ToolError, match=r"[^a-zA-Z]*p[^a-zA-Z]"):
         plain_tools.g_region(raster="does_not_exist", flags="p")
 
 
-def test_one_line_message_formatting(plain_tools):
+def test_one_line_message_formatting(plain_tools) -> None:
     """Check how one line message is formatted"""
     with pytest.raises(ToolError, match=r"raster.*does_not_exist") as exc_info:
         plain_tools.g_region(raster="does_not_exist")
@@ -66,7 +66,7 @@ def test_one_line_message_formatting(plain_tools):
     assert exc_info.value.cmd == "g.region raster=does_not_exist"
 
 
-def test_mutli_line_message_formatting(plain_tools):
+def test_mutli_line_message_formatting(plain_tools) -> None:
     """Check how multi line message is formatted"""
     with pytest.raises(ToolError, match=r"raster.*does_not_exist") as exc_info:
         plain_tools.g_region(
@@ -87,7 +87,7 @@ def test_mutli_line_message_formatting(plain_tools):
     assert "does_not_exist_3" in remaining_lines
 
 
-def test_attributes_and_str():
+def test_attributes_and_str() -> None:
     """Check error object attributes"""
     returncode = 42
     errors = "error output text"

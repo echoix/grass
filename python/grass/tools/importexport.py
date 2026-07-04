@@ -14,12 +14,12 @@ class ImporterExporter:
     raster_pack_suffixes = (".grass_raster", ".pack", ".rpack", ".grr")
 
     @classmethod
-    def is_recognized_file(cls, value):
+    def is_recognized_file(cls, value) -> bool:
         """Return `True` if file type is a recognized type, `False` otherwise"""
         return cls.is_raster_pack_file(value)
 
     @classmethod
-    def is_raster_pack_file(cls, value):
+    def is_raster_pack_file(cls, value) -> bool:
         """Return `True` if file type is GRASS raster pack, `False` otherwise"""
         if isinstance(value, str):
             return value.endswith(cls.raster_pack_suffixes)
@@ -27,7 +27,7 @@ class ImporterExporter:
             return value.suffix in cls.raster_pack_suffixes
         return False
 
-    def __init__(self, *, run_function, run_cmd_function):
+    def __init__(self, *, run_function, run_cmd_function) -> None:
         self._run_function = run_function
         self._run_cmd_function = run_cmd_function
         # At least for reading purposes, public access to the lists makes sense.
@@ -96,10 +96,10 @@ class ImporterExporter:
         # the intended run, not our special run before the actual run).
         return self._run_cmd_function([*command, "--json"], **popen_options)
 
-    def _to_name(self, value, /):
+    def _to_name(self, value, /) -> str:
         return Path(value).stem
 
-    def import_rasters(self, rasters, *, env):
+    def import_rasters(self, rasters: list[tuple[Path, str]], *, env) -> None:
         for raster_file, in_project_name in rasters:
             # Overwriting here is driven by the run function.
             self._run_function(
@@ -111,8 +111,13 @@ class ImporterExporter:
             )
 
     def export_rasters(
-        self, rasters, *, env, delete_first: bool, overwrite: Literal[True] | None
-    ):
+        self,
+        rasters: list[tuple[Path, str]],
+        *,
+        env,
+        delete_first: bool,
+        overwrite: Literal[True] | None,
+    ) -> None:
         # Pack the output raster
         for raster_file, in_project_name in rasters:
             # Overwriting a file is a warning, so to avoid it, we delete the file first.
@@ -131,7 +136,7 @@ class ImporterExporter:
                 overwrite=overwrite,
             )
 
-    def import_data(self, *, env):
+    def import_data(self, *, env) -> None:
         # We import the data, make records for later, and the clear the current list.
         self.import_rasters(self.current_input_rasters, env=env)
         self.input_rasters.extend(self.current_input_rasters)
@@ -139,7 +144,7 @@ class ImporterExporter:
 
     def export_data(
         self, *, env, delete_first: bool = False, overwrite: Literal[True] | None = None
-    ):
+    ) -> None:
         # We export the data, make records for later, and the clear the current list.
         self.export_rasters(
             self.current_output_rasters,
@@ -150,7 +155,7 @@ class ImporterExporter:
         self.output_rasters.extend(self.current_output_rasters)
         self.current_output_rasters = []
 
-    def cleanup(self, *, env):
+    def cleanup(self, *, env) -> None:
         # We don't track in what mapset the rasters are, and we assume
         # the mapset was not changed in the meantime.
         remove = [name for (unused, name) in self.input_rasters]

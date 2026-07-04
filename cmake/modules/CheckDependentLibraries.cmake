@@ -24,7 +24,7 @@ endif()
 
 find_package(PROJ 9.0.0 REQUIRED)
 
-find_package(GDAL 3.7.0 REQUIRED)
+find_package(GDAL 3.7.0 CONFIG REQUIRED)
 
 find_package(ZLIB REQUIRED)
 

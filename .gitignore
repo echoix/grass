@@ -1,6 +1,7 @@
 /emacs.desktop
 *.lock
 !flake.lock
+!uv.lock
 *.pyc
 OBJ.*
 locale/scriptstrings/*

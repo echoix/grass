@@ -12,7 +12,7 @@ from grass.benchmark import (
 
 
 class TimeMeasurer:
-    def __init__(self):
+    def __init__(self) -> None:
         self._time = None
         self._start = None
 
@@ -20,15 +20,15 @@ class TimeMeasurer:
     def time(self):
         return self._time
 
-    def start(self):
+    def start(self) -> None:
         self._start = time.perf_counter()
 
-    def stop(self):
+    def stop(self) -> None:
         self._time = time.perf_counter() - self._start
 
 
 class PlainNumPyBenchmark(TimeMeasurer):
-    def run(self):
+    def run(self) -> None:
         tools = Tools()
         region = tools.g_region(flags="p", format="json")
         a = np.full((region["rows"], region["cols"]), 1)
@@ -47,7 +47,7 @@ class PlainNumPyBenchmark(TimeMeasurer):
 
 
 class PlainGRASSBenchmark(TimeMeasurer):
-    def run(self):
+    def run(self) -> None:
         tools = Tools(overwrite=True)
         tools.r_mapcalc(expression="a = 1")
         tools.r_mapcalc(expression="b = 1")
@@ -62,7 +62,7 @@ class PlainGRASSBenchmark(TimeMeasurer):
 
 
 class NumPyGRASSBenchmark(TimeMeasurer):
-    def run(self):
+    def run(self) -> None:
         tools = Tools()
         region = tools.g_region(flags="p", format="json")
         a = np.full((region["rows"], region["cols"]), 1)
@@ -86,7 +86,7 @@ class NumPyGRASSBenchmark(TimeMeasurer):
         del c
 
 
-def main():
+def main() -> None:
     resolutions = [5, 2, 1, 0.5]
     repeat = 10
     results = [

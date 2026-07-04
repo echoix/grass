@@ -29,7 +29,7 @@ from collections import namedtuple
 try:
     import numpy as np
 except ImportError:
-    np = None
+    np = None  # ty:ignore[invalid-assignment]
 
 import grass.script as gs
 
@@ -38,7 +38,7 @@ try:
 except ImportError:
     # While np and ga are separate here, later, we will assume that if np is present,
     # ga is present as well because that's the only import-time failure we expect.
-    ga = None
+    ga = None  # ty:ignore[invalid-assignment]
 
 from .importexport import ImporterExporter
 
@@ -46,7 +46,7 @@ from .importexport import ImporterExporter
 class ParameterConverter:
     """Converts parameter values to strings and facilitates flow of the data."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._numpy_inputs = {}
         self._numpy_outputs = []
         self._numpy_inputs_ordered = []
@@ -55,7 +55,7 @@ class ParameterConverter:
         self.temporary_rasters = []
         self.import_export = None
 
-    def process_parameters(self, kwargs):
+    def process_parameters(self, kwargs) -> None:
         """Converts high level parameter values to strings.
 
         Converts io.StringIO to dash and stores the string in the *stdin* attribute.
@@ -91,7 +91,7 @@ class ParameterConverter:
         if self.import_export is None:
             self.import_export = False
 
-    def process_parameter_list(self, command):
+    def process_parameter_list(self, command) -> None:
         """Converts or at least processes parameters passed as list of strings"""
         for item in command:
             split_ = item.split("=", maxsplit=1)
@@ -103,7 +103,7 @@ class ParameterConverter:
         if self.import_export is None:
             self.import_export = False
 
-    def translate_objects_to_data(self, kwargs, env):
+    def translate_objects_to_data(self, kwargs, env) -> None:
         """Convert NumPy arrays to GRASS data"""
         for name, value in self._numpy_inputs.values():
             map2d = ga.array(env=env)
@@ -111,7 +111,7 @@ class ParameterConverter:
             map2d.write(name)
             self.temporary_rasters.append(name)
 
-    def translate_data_to_objects(self, kwargs, env):
+    def translate_data_to_objects(self, kwargs, env) -> bool:
         """Convert GRASS data to NumPy arrays
 
         Returns True if there is one or more output arrays, False otherwise.
@@ -139,7 +139,7 @@ class ParameterConverter:
 
 
 class ToolFunctionResolver:
-    def __init__(self, *, run_function, env, allowed_prefix=None):
+    def __init__(self, *, run_function, env, allowed_prefix=None) -> None:
         self._run_function = run_function
         self._env = env
         self._names = None
@@ -250,7 +250,7 @@ class ToolFunctionResolver:
 class ToolResult:
     """Result returned after executing a tool"""
 
-    def __init__(self, *, name, command, kwargs, returncode, stdout, stderr):
+    def __init__(self, *, name, command, kwargs, returncode, stdout, stderr) -> None:
         self._name = name
         self._command = command
         self._kwargs = kwargs
@@ -314,7 +314,7 @@ class ToolResult:
         """
         return self.text_split(separator=None)
 
-    def text_split(self, separator=None) -> list:
+    def text_split(self, separator: str | None = None) -> list[str]:
         """Parse text output read as list separated by separators
 
         Any leading or trailing newlines are removed prior to parsing.
@@ -377,13 +377,13 @@ class ToolResult:
     def __getitem__(self, name):
         return self._json_or_error()[name]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._json_or_error())
 
     def __iter__(self):
         return iter(self._json_or_error())
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         parameters = []
         parameters.append(f"returncode={self.returncode}")
         if self._stdout is not None:
@@ -396,5 +396,5 @@ class ToolResult:
     def arrays(self) -> dict:
         return self._arrays
 
-    def set_arrays(self, arrays):
+    def set_arrays(self, arrays) -> None:
         self._arrays = arrays
