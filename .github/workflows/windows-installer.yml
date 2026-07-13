@@ -119,6 +119,10 @@ jobs:
         # are not part of the standalone installer).
         run: |
           export PATH=/c/OSGeo4W/bin:/usr/bin:/mingw64/bin
+          export PYTHONHOME=/c/OSGeo4W/apps/Python312
+          # Recreate etc/fontcap in the dist tree; build_osgeo4w.sh removes it
+          # but make install requires it and cannot rebuild it itself.
+          make -C general/g.mkfontcap
           make install
           ver=$(sed -n '/^INST_DIR[ \t]*=/{s/^.*grass//; p}' include/Make/Platform.make)
           echo "GRASS_VER=${ver}" >> "${GITHUB_ENV}"
