@@ -139,6 +139,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
           use_pypi: true
+          skip_validation: true
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
