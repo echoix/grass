@@ -138,6 +138,7 @@ jobs:
           flags: macos-pytest-python
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
+          use_pypi: true
 
       - name: Cache GRASS Sample Dataset
         id: cached-data
