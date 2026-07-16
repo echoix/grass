@@ -82,7 +82,7 @@ jobs:
             --fail-on-no-commits \
             --generate-notes \
             --title "${TITLE}" \
-            --prerelease \
+            ${PRERELEASE_FLAG} \
               ${OUT_DIR}/${GRASS}.tar.gz \
               ${OUT_DIR}/${GRASS}.tar.gz.md5 \
               ${OUT_DIR}/${GRASS}.tar.gz.sha256 \
@@ -93,6 +93,7 @@ jobs:
               ${OUT_DIR}/core_modules_with_last_commit.patch
         env:
           TITLE: GRASS ${{ github.ref_name }}
+          PRERELEASE_FLAG: ${{ contains(github.ref, 'RC') && '--prerelease' || '' }}
 
         # uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
         # with:
