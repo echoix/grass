@@ -94,22 +94,3 @@ jobs:
         env:
           TITLE: GRASS ${{ github.ref_name }}
           PRERELEASE_FLAG: ${{ contains(github.ref, 'RC') && '--prerelease' || '' }}
-
-        # uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
-        # with:
-        #   name: GRASS ${{ github.ref_name }}
-        #   body: |
-        #     Overview of changes
-        #     - First change
-        #     - Second change
-        #   draft: true
-        #   prerelease: ${{ contains(github.ref, 'RC') }}
-        #   files: |
-        #     ${{ env.OUT_DIR }}/${{ env.GRASS }}.tar.gz
-        #     ${{ env.OUT_DIR }}/${{ env.GRASS }}.tar.gz.md5
-        #     ${{ env.OUT_DIR }}/${{ env.GRASS }}.tar.gz.sha256
-        #     ${{ env.OUT_DIR }}/${{ env.GRASS }}.tar.xz
-        #     ${{ env.OUT_DIR }}/${{ env.GRASS }}.tar.xz.md5
-        #     ${{ env.OUT_DIR }}/${{ env.GRASS }}.tar.xz.sha256
-        #     ${{ env.OUT_DIR }}/ChangeLog.gz
-        #     ${{ env.OUT_DIR }}/core_modules_with_last_commit.patch
