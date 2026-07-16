@@ -92,5 +92,6 @@ jobs:
               ${OUT_DIR}/ChangeLog.gz \
               ${OUT_DIR}/core_modules_with_last_commit.patch
         env:
+          GH_TOKEN: ${{ github.token }}
           TITLE: GRASS ${{ github.ref_name }}
           PRERELEASE_FLAG: ${{ contains(github.ref, 'RC') && '--prerelease' || '' }}
