@@ -69,6 +69,8 @@ jobs:
           pip install --break-system-packages pytest pytest-timeout \
               pytest-github-actions-annotate-failures pytest-xdist pytest-cov
 
+      - wait-all:
+
       - name: Create installation directory
         run: |
           mkdir "${HOME}/install"
