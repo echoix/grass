@@ -37,8 +37,9 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
-
       - name: Set up Python
+        id: setup_python
+        background: true
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: ${{ matrix.python-version }}
@@ -46,6 +47,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install non-Python dependencies
+        background: true
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget git gawk findutils
@@ -55,6 +57,9 @@ jobs:
               sudo apt-get install -y --no-install-recommends --no-install-suggests
 
       - uses: rui314/setup-mold@9c9c13bf4c3f1adef0cc596abc155580bcb04444 # v1
+        background: true
+
+      - wait: [setup_python]
 
       - name: Install Python dependencies
         run: |
@@ -63,6 +68,8 @@ jobs:
           pip install --break-system-packages -r .github/workflows/optional_requirements.txt
           pip install --break-system-packages pytest pytest-timeout \
               pytest-github-actions-annotate-failures pytest-xdist pytest-cov
+
+      - wait-all:
 
       - name: Create installation directory
         run: |
