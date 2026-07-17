@@ -30,9 +30,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        background: true
         with:
           persist-credentials: false
       - name: Get dependencies
+        background: true
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget git gawk findutils
@@ -49,6 +51,7 @@ jobs:
       - name: Set LD_LIBRARY_PATH for compilation
         run: |
           echo "LD_LIBRARY_PATH=${HOME}/install/lib" >> "${GITHUB_ENV}"
+      - wait-all:
       - name: Print build environment variables
         shell: bash -el {0}
         run: |
