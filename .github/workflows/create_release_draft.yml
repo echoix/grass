@@ -77,7 +77,7 @@ jobs:
       - name: Publish draft distribution to GitHub (for tags only)
         if: startsWith(github.ref, 'refs/tags/')
         run: |-
-          gh release create ${GITHUB_REF} \
+          gh release create ${GITHUB_REF_NAME} \
             --draft \
             --verify-tag \
             --fail-on-no-commits \
