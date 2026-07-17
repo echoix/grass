@@ -22,7 +22,7 @@ permissions: {}
 jobs:
   additional-checks:
     name: Additional checks
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     permissions:
       contents: read
     env:
