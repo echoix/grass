@@ -84,14 +84,14 @@ jobs:
             --generate-notes \
             --title "${TITLE}" \
             ${PRERELEASE_FLAG} \
-              ${OUT_DIR}/${GRASS}.tar.gz \
-              ${OUT_DIR}/${GRASS}.tar.gz.md5 \
-              ${OUT_DIR}/${GRASS}.tar.gz.sha256 \
-              ${OUT_DIR}/${GRASS}.tar.xz \
-              ${OUT_DIR}/${GRASS}.tar.xz.md5 \
-              ${OUT_DIR}/${GRASS}.tar.xz.sha256 \
-              ${OUT_DIR}/ChangeLog.gz \
-              ${OUT_DIR}/core_modules_with_last_commit.patch
+            ${OUT_DIR}/${GRASS}.tar.gz \
+            ${OUT_DIR}/${GRASS}.tar.gz.md5 \
+            ${OUT_DIR}/${GRASS}.tar.gz.sha256 \
+            ${OUT_DIR}/${GRASS}.tar.xz \
+            ${OUT_DIR}/${GRASS}.tar.xz.md5 \
+            ${OUT_DIR}/${GRASS}.tar.xz.sha256 \
+            ${OUT_DIR}/ChangeLog.gz \
+            ${OUT_DIR}/core_modules_with_last_commit.patch
         env:
           GH_TOKEN: ${{ github.token }}
           TITLE: GRASS ${{ github.ref_name }}
