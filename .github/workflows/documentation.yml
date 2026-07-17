@@ -52,6 +52,17 @@ jobs:
 
       - wait: [checkout_core]
 
+      - name: Checkout addons
+        id: checkout_addons
+        background: true
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: OSGeo/grass-addons
+          ref: grass${{ env.MAJOR }}
+          path: grass-addons
+          fetch-depth: 0
+          persist-credentials: false
+
       - name: Set up Python (with cache)
         id: setup_python_cache
         background: true
@@ -69,7 +80,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - wait: [setup_python_cache, setup_python_nocache]
+      - wait: [setup_python_cache, setup_python_nocache, checkout_addons]
 
       - name: Install Python dependencies
         background: true
@@ -92,15 +103,6 @@ jobs:
             echo "VERSION=${VERSION}"
             echo "YEAR=${YEAR}"
           } >> "${GITHUB_ENV}"
-
-      - name: Checkout addons
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          repository: OSGeo/grass-addons
-          ref: grass${{ env.MAJOR }}
-          path: grass-addons
-          fetch-depth: 0
-          persist-credentials: false
 
       - name: ccache (do not use for release artifacts)
         uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03 # v1.2.23
