@@ -66,7 +66,7 @@ int index;
         norm[0] = norm[2] = 0.0;
         for (t = start; t != stop; t += direction) {
             tmpvt[t][0] = (vertices[t << 1] + xloc) * D_spec->xscale;
-            tmpvt[t][1] = (D_Cap->z) * D_spec->yscale;
+            tmpvt[t][1] = ((double) D_Cap->z) * D_spec->yscale;
             tmpvt[t][2] = (vertices[(t << 1) + 1] + yloc) * D_spec->zscale;
         }
         break;
