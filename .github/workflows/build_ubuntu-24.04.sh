@@ -30,6 +30,9 @@ set -u
 
 export INSTALL_PREFIX=$1
 
+# Extra configure args added under coverage; keep declared under `set -u`.
+OPENMP_ARGS=()
+
 # LLVM source-based coverage instrumentation, opt-in via env var. Requires
 # clang (installed via apt.txt). Kept out of the default O2 path so
 # non-coverage runs are unaffected.
@@ -51,6 +54,13 @@ if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
     export CFLAGS="${CFLAGS:--O2} ${COV_FLAGS}"
     export CXXFLAGS="${CXXFLAGS:--O2} ${COV_FLAGS}"
     export LDFLAGS="${LDFLAGS:-} -fprofile-instr-generate -fcoverage-mapping"
+    # Clang ships omp.h in its resource-dir instead of /usr/include, so
+    # configure's plain omp.h check misses it. Point configure at both
+    # the include and (from apt libomp-dev) the runtime lib.
+    CLANG_RES_DIR="$("${CC}" -print-resource-dir 2>/dev/null || true)"
+    if [ -n "${CLANG_RES_DIR}" ] && [ -d "${CLANG_RES_DIR}/include" ]; then
+        OPENMP_ARGS+=("--with-openmp-includes=${CLANG_RES_DIR}/include")
+    fi
 fi
 
 ./configure \
@@ -73,7 +83,8 @@ fi
     --with-readline \
     --with-sqlite \
     --with-tiff \
-    --with-zstd
+    --with-zstd \
+    ${OPENMP_ARGS[@]+"${OPENMP_ARGS[@]}"}
 
 eval $makecmd
 make install

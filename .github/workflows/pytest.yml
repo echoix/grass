@@ -157,14 +157,20 @@ jobs:
         run: |
           # coverage combine must run before coverage_mapper.py: parallel
           # mode leaves .coverage.<host>.<pid>.<rand> partials and no
-          # .coverage file for the mapper to read.
-          coverage combine
-          python utils/coverage_mapper.py
-          if [ -f .coverage.fixed_scripts ]; then
-              mv .coverage.fixed_scripts .coverage
+          # .coverage file for the mapper to read. Tolerate "no data" so
+          # a build failure earlier in the job does not mask itself as a
+          # later failure here.
+          coverage combine || true
+          if [ -f .coverage ]; then
+              python utils/coverage_mapper.py
+              if [ -f .coverage.fixed_scripts ]; then
+                  mv .coverage.fixed_scripts .coverage
+              fi
+              coverage html
+              coverage xml -o coverage.xml
+          else
+              echo "No .coverage data collected; skipping Python coverage export."
           fi
-          coverage html
-          coverage xml -o coverage.xml
 
       - name: Merge and export LLVM C/C++ coverage
         if: ${{ !cancelled() }}

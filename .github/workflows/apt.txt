@@ -15,6 +15,7 @@ libpdal-dev
 libpng-dev
 libproj-dev
 libreadline-dev
+libomp-dev
 libsvm-dev
 libzstd-dev
 llvm
