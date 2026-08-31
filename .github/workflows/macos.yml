@@ -23,6 +23,7 @@ jobs:
     runs-on: macos-26
     env:
       PYTHONWARNINGS: always
+      GRASS_LLVM_COVERAGE: "1"
     steps:
       - name: Info
         run: |
@@ -57,8 +58,11 @@ jobs:
       - name: Prepare Conda environment file
         env:
           test_dependencies: |
+            coverage
             ipython
+            llvm-tools
             pytest
+            pytest-cov
             pytest-github-actions-annotate-failures
             pytest-timeout
             pytest-xdist
@@ -92,6 +96,18 @@ jobs:
         shell: micromamba-shell {0}
         run: source ./.github/workflows/print_versions.sh
 
+      - name: Prepare coverage directories
+        shell: micromamba-shell {0}
+        run: |
+          mkdir -p "${PWD}/llvm-cov-raw"
+          # %p (process id) separates every subprocess; %9m caps the per-binary
+          # pool at 512 files so long xdist runs don't fill the runner disk.
+          {
+            echo "LLVM_PROFILE_FILE=${PWD}/llvm-cov-raw/grass-%p-%9m.profraw"
+            echo "INITIAL_GISBASE=$(grass --config path)"
+            echo "INITIAL_PWD=${PWD}"
+          } >> "${GITHUB_ENV}"
+
       - name: Run pytest with multiple workers in parallel
         shell: micromamba-shell {0}
         run: |
@@ -101,6 +117,7 @@ jobs:
           export LD_LIBRARY_PATH
           pytest \
             @.github/workflows/pytest_args_ci.txt \
+            @.github/workflows/pytest_args_cov.txt \
             @.github/workflows/pytest_args_parallel.txt \
             --junitxml=pytest.xdist.junit.xml \
             -k 'not testsuite'
@@ -116,6 +133,7 @@ jobs:
           export LD_LIBRARY_PATH
           pytest \
             @.github/workflows/pytest_args_ci.txt \
+            @.github/workflows/pytest_args_cov.txt \
             @.github/workflows/pytest_args_not_parallel.txt \
             --junitxml=pytest.needs_solo_run.junit.xml \
             -k 'not testsuite'
@@ -127,6 +145,7 @@ jobs:
           export PYTHONPATH
           export LD_LIBRARY_PATH
           pytest \
+            @.github/workflows/pytest_args_cov.txt \
             @.github/workflows/pytest_args_gunittest.txt \
             --junitxml=pytest.gunittest.junit.xml
 
@@ -170,6 +189,62 @@ jobs:
         env:
           SAMPLE_DATA_URL: "file://${{ github.workspace }}/sample-data/\
             nc_spm_full_v2beta1.tar.gz"
+
+      - name: Coverage disk usage (before combine)
+        if: ${{ !cancelled() }}
+        shell: micromamba-shell {0}
+        run: utils/coverage_disk_usage.sh
+
+      - name: Combine Python coverage and export XML
+        if: ${{ !cancelled() }}
+        shell: micromamba-shell {0}
+        run: |
+          # coverage combine before coverage_mapper.py: parallel mode leaves
+          # only .coverage.<host>.<pid>.<rand> partials, no .coverage yet.
+          coverage combine || true
+          if [ -f .coverage ]; then
+              python utils/coverage_mapper.py
+              if [ -f .coverage.fixed_scripts ]; then
+                  mv .coverage.fixed_scripts .coverage
+              fi
+              coverage html
+              coverage xml -o coverage.xml
+          else
+              echo "No .coverage data collected; skipping Python coverage export."
+          fi
+
+      - name: Merge and export LLVM C/C++ coverage
+        if: ${{ !cancelled() }}
+        shell: micromamba-shell {0}
+        run: utils/llvm_coverage_export.sh
+
+      - name: Upload Python coverage to Codecov (macOS)
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          verbose: true
+          files: coverage.xml
+          flags: macos-pytest-python
+          name: macos-pytest-python
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload LLVM C/C++ coverage to Codecov (macOS)
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          verbose: true
+          files: coverage-llvm.lcov
+          flags: macos-llvm-c
+          name: macos-llvm-c
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Make python-only code coverage test report available
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: python-codecoverage-report-macOS
+          path: coverage_html_report
+          retention-days: 1
 
       - name: Make HTML test report available
         if: ${{ !cancelled() }}

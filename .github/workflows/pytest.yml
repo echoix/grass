@@ -32,6 +32,9 @@ jobs:
       FORCE_COLOR: 1 # for software including pip: https://force-color.org/
       CLICOLOR_FORCE: 1 # for other software including ninja: https://bixense.com/clicolors/
       PYTHONWARNINGS: always
+      GRASS_LLVM_COVERAGE: "1"
+      CC: clang
+      CXX: clang++
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -90,16 +93,25 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
+      - name: Prepare coverage directories
+        run: |
+          mkdir -p "${PWD}/llvm-cov-raw"
+          # %p (process id) separates every subprocess; %9m caps the per-binary
+          # pool at 512 files so long suites don't create millions of tiny
+          # .profraw. Together they eliminate the write-collision that made
+          # earlier runs non-deterministic.
+          {
+            echo "LLVM_PROFILE_FILE=${PWD}/llvm-cov-raw/grass-%p-%9m.profraw"
+            echo "INITIAL_GISBASE=$(grass --config path)"
+            echo "INITIAL_PWD=${PWD}"
+          } >> "${GITHUB_ENV}"
+
       - name: Run pytest with multiple workers in parallel
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
           export PYTHONPATH
           export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
           pytest \
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_cov.txt \
@@ -113,12 +125,8 @@ jobs:
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
           export PYTHONPATH
           export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
           pytest \
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_cov.txt \
@@ -129,29 +137,34 @@ jobs:
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
           export PYTHONPATH
           export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
           pytest \
             @.github/workflows/pytest_args_cov.txt \
             @.github/workflows/pytest_args_gunittest.txt \
             --junitxml=pytest.gunittest.junit.xml
-      - name: Fix non-standard installed script paths in coverage data
+
+      - name: Coverage disk usage (before combine)
+        if: ${{ !cancelled() }}
+        run: utils/coverage_disk_usage.sh
+
+      - name: Combine Python coverage and export XML
+        if: ${{ !cancelled() }}
         run: |
-          PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
-          LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
-          export PYTHONPATH
-          export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
-          python utils/coverage_mapper.py
+          # coverage combine must run before coverage_mapper.py: parallel
+          # mode leaves .coverage.<host>.<pid>.<rand> partials and no
+          # .coverage file for the mapper to read.
           coverage combine
+          python utils/coverage_mapper.py
+          if [ -f .coverage.fixed_scripts ]; then
+              mv .coverage.fixed_scripts .coverage
+          fi
           coverage html
+          coverage xml -o coverage.xml
+
+      - name: Merge and export LLVM C/C++ coverage
+        if: ${{ !cancelled() }}
+        run: utils/llvm_coverage_export.sh
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
@@ -162,12 +175,23 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload Python coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           verbose: true
+          files: coverage.xml
           flags: pytest-python-${{ matrix.python-version }}
           name: pytest-python-${{ matrix.python-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload LLVM C/C++ coverage to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          verbose: true
+          files: coverage-llvm.lcov
+          flags: ubuntu-llvm-c
+          name: ubuntu-llvm-c-${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}

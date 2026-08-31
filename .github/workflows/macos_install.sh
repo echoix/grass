@@ -64,6 +64,16 @@ export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPR
 export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic"
 export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
+# LLVM source-based coverage instrumentation, opt-in via env var.
+# -O0 keeps region mapping accurate; overhead is small compared to gcov.
+if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
+    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -O0 -g"
+    CFLAGS="${CFLAGS} ${COV_FLAGS}"
+    CXXFLAGS="${CXXFLAGS} ${COV_FLAGS}"
+    LDFLAGS="${LDFLAGS:-} -fprofile-instr-generate -fcoverage-mapping"
+    export CFLAGS CXXFLAGS LDFLAGS
+fi
+
 ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""

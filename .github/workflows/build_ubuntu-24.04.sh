@@ -30,6 +30,18 @@ set -u
 
 export INSTALL_PREFIX=$1
 
+# LLVM source-based coverage instrumentation, opt-in via env var. Requires
+# clang (installed via apt.txt). Kept out of the default O2 path so
+# non-coverage runs are unaffected.
+if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
+    export CC="${CC:-clang}"
+    export CXX="${CXX:-clang++}"
+    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -O0 -g"
+    export CFLAGS="${CFLAGS:-} ${COV_FLAGS}"
+    export CXXFLAGS="${CXXFLAGS:-} ${COV_FLAGS}"
+    export LDFLAGS="${LDFLAGS:-} -fprofile-instr-generate -fcoverage-mapping"
+fi
+
 ./configure \
     --enable-largefile \
     --prefix="$INSTALL_PREFIX/" \
