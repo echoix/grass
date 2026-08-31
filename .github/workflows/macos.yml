@@ -100,6 +100,10 @@ jobs:
         shell: micromamba-shell {0}
         run: |
           mkdir -p "${PWD}/llvm-cov-raw"
+          # Wipe stray default.profraw the build step left behind (Makefiles
+          # run instrumented tools to dump interface XML) before the tests
+          # start writing controlled per-PID files.
+          find . -name 'default.profraw' -type f -delete
           # %p (process id) separates every subprocess; %9m caps the per-binary
           # pool at 512 files so long xdist runs don't fill the runner disk.
           {

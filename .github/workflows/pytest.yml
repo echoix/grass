@@ -96,6 +96,10 @@ jobs:
       - name: Prepare coverage directories
         run: |
           mkdir -p "${PWD}/llvm-cov-raw"
+          # Wipe stray default.profraw the build step left behind (Makefiles
+          # run instrumented tools to dump interface XML), so their build-
+          # time data can't contaminate the test-run coverage.
+          find . -name 'default.profraw' -type f -delete
           # %p (process id) separates every subprocess; %9m caps the per-binary
           # pool at 512 files so long suites don't create millions of tiny
           # .profraw. Together they eliminate the write-collision that made
