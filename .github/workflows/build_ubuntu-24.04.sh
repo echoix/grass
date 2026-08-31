@@ -36,12 +36,20 @@ export INSTALL_PREFIX=$1
 if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
     export CC="${CC:-clang}"
     export CXX="${CXX:-clang++}"
-    # -fprofile-update=atomic makes coverage counter increments atomic;
-    # required for GRASS's OpenMP-parallel regions (e.g. r.univar) so
-    # threads racing on shared counters do not lose updates.
-    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -fprofile-update=atomic -O0 -g"
-    export CFLAGS="${CFLAGS:-} ${COV_FLAGS}"
-    export CXXFLAGS="${CXXFLAGS:-} ${COV_FLAGS}"
+    # LLVM source-based coverage generates its region mapping before the
+    # optimizer runs, so optimization does not affect coverage quality
+    # (clang doc: SourceBasedCodeCoverage, "Impact of llvm optimizations
+    # on coverage reports"). Keep the project's normal -O2 to hold the
+    # runtime impact small. -fprofile-update=atomic makes counter
+    # increments atomic; required for GRASS's OpenMP-parallel regions
+    # (e.g. r.univar) so threads racing on shared counters do not lose
+    # updates.
+    #
+    # Setting CFLAGS explicitly at configure time suppresses autoconf's
+    # default "-g -O2", so pass -O2 here.
+    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -fprofile-update=atomic"
+    export CFLAGS="${CFLAGS:--O2} ${COV_FLAGS}"
+    export CXXFLAGS="${CXXFLAGS:--O2} ${COV_FLAGS}"
     export LDFLAGS="${LDFLAGS:-} -fprofile-instr-generate -fcoverage-mapping"
 fi
 
