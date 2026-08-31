@@ -34,7 +34,14 @@ llvm-profdata merge -sparse -o "${OUT_PROFDATA}" "${RAW_DIR}"/*.profraw
 # On macOS the tools are Mach-O executables plus *.dylib; on Linux ELF plus *.so.
 OBJ_ARGS=()
 while IFS= read -r -d '' obj; do
-    OBJ_ARGS+=(-object "${obj}")
+    # Filter to real binaries (ELF on Linux, Mach-O on macOS). find -perm -u+x
+    # sweeps in executable Python and shell scripts, which llvm-cov rejects.
+    magic=$(head -c4 "${obj}" 2>/dev/null | od -An -tx1 | tr -d ' \n')
+    case "${magic}" in
+        7f454c46)         OBJ_ARGS+=(-object "${obj}") ;;         # ELF
+        cffaedfe|cafebabe|feedface|feedfacf) \
+                          OBJ_ARGS+=(-object "${obj}") ;;         # Mach-O
+    esac
 done < <(
     find "${GISBASE}" \
         \( -type f -perm -u+x \

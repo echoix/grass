@@ -36,7 +36,10 @@ export INSTALL_PREFIX=$1
 if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
     export CC="${CC:-clang}"
     export CXX="${CXX:-clang++}"
-    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -O0 -g"
+    # -fprofile-update=atomic makes coverage counter increments atomic;
+    # required for GRASS's OpenMP-parallel regions (e.g. r.univar) so
+    # threads racing on shared counters do not lose updates.
+    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -fprofile-update=atomic -O0 -g"
     export CFLAGS="${CFLAGS:-} ${COV_FLAGS}"
     export CXXFLAGS="${CXXFLAGS:-} ${COV_FLAGS}"
     export LDFLAGS="${LDFLAGS:-} -fprofile-instr-generate -fcoverage-mapping"

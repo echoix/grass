@@ -66,8 +66,11 @@ export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
 # LLVM source-based coverage instrumentation, opt-in via env var.
 # -O0 keeps region mapping accurate; overhead is small compared to gcov.
+# -fprofile-update=atomic makes coverage counter increments atomic; without
+# it, OpenMP parallel regions (e.g. r.univar's process_raster) lose counter
+# updates across threads and the merged .profdata is non-deterministic.
 if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
-    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -O0 -g"
+    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -fprofile-update=atomic -O0 -g"
     CFLAGS="${CFLAGS} ${COV_FLAGS}"
     CXXFLAGS="${CXXFLAGS} ${COV_FLAGS}"
     LDFLAGS="${LDFLAGS:-} -fprofile-instr-generate -fcoverage-mapping"
