@@ -60,6 +60,16 @@ if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
     CLANG_RES_DIR="$("${CC}" -print-resource-dir 2>/dev/null || true)"
     if [ -n "${CLANG_RES_DIR}" ] && [ -d "${CLANG_RES_DIR}/include" ]; then
         OPENMP_ARGS+=("--with-openmp-includes=${CLANG_RES_DIR}/include")
+        # Debian's libomp-dev installs libomp.so under /usr/lib/llvm-<N>/lib,
+        # not the linker's default search path, so configure's link probe for
+        # omp_get_num_threads fails and it falls back to -lgomp - which clang's
+        # OpenMP-instrumented code (using __kmpc_*) then can't link against.
+        # The resource-dir sits at <llvm-libdir>/clang/<ver>, so its
+        # grandparent is <llvm-libdir>, where libomp.so lives.
+        LLVM_LIB_DIR="$(cd "${CLANG_RES_DIR}/../.." && pwd)"
+        if [ -e "${LLVM_LIB_DIR}/libomp.so" ]; then
+            OPENMP_ARGS+=("--with-openmp-libs=${LLVM_LIB_DIR}")
+        fi
     fi
 fi
 
