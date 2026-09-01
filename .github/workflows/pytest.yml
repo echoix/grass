@@ -32,9 +32,9 @@ jobs:
       FORCE_COLOR: 1 # for software including pip: https://force-color.org/
       CLICOLOR_FORCE: 1 # for other software including ninja: https://bixense.com/clicolors/
       PYTHONWARNINGS: always
-      GRASS_LLVM_COVERAGE: "1"
-      CC: clang
-      CXX: clang++
+      # Only exercise LLVM C coverage on the latest Python; the older one
+      # runs the default gcc/no-instrumentation build for speed.
+      GRASS_LLVM_COVERAGE: ${{ matrix.python-version == '3.13' && '1' || '0' }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -179,7 +179,7 @@ jobs:
           fi
 
       - name: Merge and export LLVM C/C++ coverage
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && env.GRASS_LLVM_COVERAGE == '1' }}
         run: utils/llvm_coverage_export.sh
 
       - name: Upload test results to Codecov
@@ -201,7 +201,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload LLVM C/C++ coverage to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && env.GRASS_LLVM_COVERAGE == '1' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           verbose: true
