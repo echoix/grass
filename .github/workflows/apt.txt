@@ -1,6 +1,5 @@
 bison
 build-essential
-clang
 flex
 libbz2-dev
 libcairo-dev
@@ -15,10 +14,8 @@ libpdal-dev
 libpng-dev
 libproj-dev
 libreadline-dev
-libomp-dev
 libsvm-dev
 libzstd-dev
-llvm
 pdal
 proj-bin
 python3-dateutil

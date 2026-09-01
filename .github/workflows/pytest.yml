@@ -57,6 +57,12 @@ jobs:
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
 
+      - name: Install LLVM coverage toolchain
+        if: env.GRASS_LLVM_COVERAGE == '1'
+        run: |
+          sudo apt-get install -y --no-install-recommends --no-install-suggests \
+              clang llvm libomp-dev
+
       - uses: rui314/setup-mold@9c9c13bf4c3f1adef0cc596abc155580bcb04444 # v1
 
       - name: Install Python dependencies
