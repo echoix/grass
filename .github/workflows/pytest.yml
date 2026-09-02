@@ -24,25 +24,34 @@ jobs:
 
     strategy:
       matrix:
-        os:
-          - ubuntu-24.04
-        python-version:
-          - "3.11"
-          - "3.13"
+        # Deliberately an include-only matrix, each entry a complete,
+        # independent combination: mixing a base os/python-version/coverage
+        # cross product with `include` entries that only partially override
+        # it (e.g. just coverage) is a known GitHub Actions matrix pitfall
+        # -- an entry that does not exactly match an existing combination
+        # on every key it names is added as a *new*, separate combination
+        # instead of overriding the intended one, which silently produced
+        # zero actual "pytest" job instances here (confirmed on a real
+        # workflow_dispatch run: the whole job list came back empty).
+        #
         # No coverage instrumentation on the default cell (kept fast); the
         # clang source-based mechanism is compared here against two
         # SanitizerCoverage prototypes (one per compiler) on the same
         # Python version, see doc/development/
         # sancov_coverage_experiment.md. All three coverage cells reuse
         # 3.13 rather than adding yet more cells on top of 3.11's.
-        coverage:
-          - none
         include:
-          - python-version: "3.13"
+          - os: ubuntu-24.04
+            python-version: "3.11"
+            coverage: none
+          - os: ubuntu-24.04
+            python-version: "3.13"
             coverage: llvm-source
-          - python-version: "3.13"
+          - os: ubuntu-24.04
+            python-version: "3.13"
             coverage: sancov-gcc
-          - python-version: "3.13"
+          - os: ubuntu-24.04
+            python-version: "3.13"
             coverage: sancov-clang
       fail-fast: true
 
