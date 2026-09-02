@@ -60,7 +60,18 @@ jobs:
           - os: ubuntu-24.04
             python-version: "3.13"
             coverage: sancov-clang
-      fail-fast: true
+      # These four cells are independent configurations being compared
+      # against each other, not one build validated four ways, so a
+      # failure specific to one coverage mechanism should not cancel the
+      # others before they finish -- confirmed to matter on a real
+      # workflow_dispatch run, where a sancov-clang build failure
+      # (unrelated: a missing -lm this mold-linked toolchain needed,
+      # see build_ubuntu-24.04.sh) cancelled the other three cells'
+      # still-running pytest steps under the default fail-fast: true,
+      # losing their timing data along with it. Revert to true (matching
+      # every other job in this file) if this ever merges past being a
+      # coverage-mechanism comparison.
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
     env:

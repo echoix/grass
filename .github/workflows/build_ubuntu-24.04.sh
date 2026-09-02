@@ -149,13 +149,29 @@ if [ "${GRASS_SANCOV_COVERAGE:-0}" = "1" ]; then
         -o "${SANCOV_RUNTIME_DIR}/libsancovrt.so" \
         utils/sancov_runtime.c -ldl
 
+    # -lm is appended here too, unconditionally, alongside -lsancovrt:
+    # confirmed on a real CI run (GRASS_SANCOV_CC=clang) that GRASS's own
+    # $(MATHLIB) -- normally "-lm", substituted once by configure's
+    # `AC_CHECK_FUNC(atan, MATHLIB=, [AC_CHECK_LIB(m, atan,
+    # MATHLIB=-lm...)])` probe -- comes out empty on this toolchain: glibc
+    # merged libm into libc (since 2.34; this runs on Ubuntu 24.04's
+    # 2.39), so the plain "does atan link without -lm" check succeeds and
+    # MATHLIB is left blank. GNU ld tolerates this for GRASS binaries
+    # that reference cos/sin/floor by transitively finding them in libc
+    # via an already-linked GRASS shared library; this workflow's `Run
+    # rui314/setup-mold` step makes `mold` the default linker, which does
+    # not, so ps.map's link failed with "undefined symbol: cos/sin/floor"
+    # -- a real, otherwise-unrelated-looking failure this wrapper's own
+    # extra library reference happens to be the natural place to fix,
+    # since GRASS's Make templates offer no more reliable hook for it
+    # than they did for the coverage runtime itself.
     cat > "${SANCOV_RUNTIME_DIR}/cc-wrapper.sh" <<EOF
 #!/usr/bin/env bash
-exec "${REAL_CC}" "\$@" -L"${SANCOV_RUNTIME_DIR}" -lsancovrt -Wl,-rpath,"${SANCOV_RUNTIME_DIR}"
+exec "${REAL_CC}" "\$@" -L"${SANCOV_RUNTIME_DIR}" -lsancovrt -Wl,-rpath,"${SANCOV_RUNTIME_DIR}" -lm
 EOF
     cat > "${SANCOV_RUNTIME_DIR}/cxx-wrapper.sh" <<EOF
 #!/usr/bin/env bash
-exec "${REAL_CXX}" "\$@" -L"${SANCOV_RUNTIME_DIR}" -lsancovrt -Wl,-rpath,"${SANCOV_RUNTIME_DIR}"
+exec "${REAL_CXX}" "\$@" -L"${SANCOV_RUNTIME_DIR}" -lsancovrt -Wl,-rpath,"${SANCOV_RUNTIME_DIR}" -lm
 EOF
     chmod +x "${SANCOV_RUNTIME_DIR}/cc-wrapper.sh" "${SANCOV_RUNTIME_DIR}/cxx-wrapper.sh"
     export CC="${SANCOV_RUNTIME_DIR}/cc-wrapper.sh"
