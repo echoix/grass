@@ -17,9 +17,16 @@ permissions: {}
 jobs:
   pytest:
     concurrency:
+      # matrix.coverage, not just matrix.python-version, disambiguates
+      # this group: three cells (llvm-source, sancov-gcc, sancov-clang)
+      # now share python-version 3.13, and cancel-in-progress cancels
+      # whichever jobs share a group with one that just started -
+      # confirmed on a real workflow_dispatch run, where exactly that
+      # collision cancelled two of the three 3.13 cells within a second
+      # of starting.
       group: >-
         ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.os }}-${{ matrix.python-version }}
+        matrix.os }}-${{ matrix.python-version }}-${{ matrix.coverage }}
       cancel-in-progress: true
 
     strategy:
