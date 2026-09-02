@@ -231,6 +231,7 @@ jobs:
           flags: macos-pytest-python
           name: macos-pytest-python
           token: ${{ secrets.CODECOV_TOKEN }}
+          skip_validation: true
 
       - name: Upload LLVM C/C++ coverage to Codecov (macOS)
         if: ${{ !cancelled() }}
@@ -241,6 +242,7 @@ jobs:
           flags: macos-llvm-c
           name: macos-llvm-c
           token: ${{ secrets.CODECOV_TOKEN }}
+          skip_validation: true
 
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
