@@ -27,8 +27,15 @@ if ! compgen -G "${RAW_DIR}/*.profraw" > /dev/null; then
 fi
 
 # -sparse drops zero-count regions so merges are smaller and deterministic
-# for a given input set.
-llvm-profdata merge -sparse -o "${OUT_PROFDATA}" "${RAW_DIR}"/*.profraw
+# for a given input set. The per-process "%p-%9m" naming can produce
+# hundreds of thousands of .profraw files in a full test run, so pass them
+# via -f (a newline-separated list) rather than shell-globbing them onto
+# argv, which overflows the OS argument-list limit ("Argument list too
+# long").
+PROFRAW_LIST="$(mktemp)"
+trap 'rm -f "${PROFRAW_LIST}"' EXIT
+find "${RAW_DIR}" -name '*.profraw' -print > "${PROFRAW_LIST}"
+llvm-profdata merge -sparse -f "${PROFRAW_LIST}" -o "${OUT_PROFDATA}"
 
 # Enumerate every instrumented binary and shared library the install produced.
 # On macOS the tools are Mach-O executables plus *.dylib; on Linux ELF plus *.so.
