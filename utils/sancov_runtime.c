@@ -50,6 +50,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #define MAX_GUARD_HITS 4000000
@@ -109,8 +110,27 @@ static void write_hit(FILE *f, void *pc)
 
     if (dladdr(pc, &info) && info.dli_fname) {
         uintptr_t off = (uintptr_t)pc - (uintptr_t)info.dli_fbase;
+        const char *path = info.dli_fname;
+        char exe_path[4096];
 
-        fprintf(f, "%s %lx\n", info.dli_fname, (unsigned long)off);
+        /* dladdr() reports the main executable's own path exactly as it
+         * was exec()'d, which for a program found via a PATH search
+         * (e.g. GRASS's db drivers, spawned by bare name) is not
+         * resolvable as a file from an arbitrary later working directory
+         * (confirmed empirically: symbolizing a real db.connect dump
+         * failed on this). Every *shared library* path, in contrast,
+         * always comes from the dynamic linker's own absolute bookkeeping.
+         * So a bare (no '/') name can only be the main executable, and
+         * /proc/self/exe always resolves to its real absolute path. */
+        if (!strchr(path, '/')) {
+            ssize_t n = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+
+            if (n > 0) {
+                exe_path[n] = '\0';
+                path = exe_path;
+            }
+        }
+        fprintf(f, "%s %lx\n", path, (unsigned long)off);
     }
 }
 
