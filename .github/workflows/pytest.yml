@@ -222,7 +222,7 @@ jobs:
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           exclude: gui
-          flags: pytest-python-${{ matrix.python-version }}
+          flags: pytest-python-${{ matrix.python-version }}-${{ matrix.coverage }}
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
 
@@ -231,8 +231,10 @@ jobs:
         with:
           verbose: true
           files: coverage.xml
-          flags: pytest-python-${{ matrix.python-version }}
-          name: pytest-python-${{ matrix.python-version }}
+          # matrix.coverage disambiguates this from the two other cells
+          # now sharing python-version 3.13.
+          flags: pytest-python-${{ matrix.python-version }}-${{ matrix.coverage }}
+          name: pytest-python-${{ matrix.python-version }}-${{ matrix.coverage }}
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload LLVM C/C++ coverage to Codecov
@@ -248,7 +250,11 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.python-version }}
+          # matrix.coverage, not just matrix.python-version, disambiguates
+          # this name: three cells (llvm-source, sancov-gcc, sancov-clang)
+          # now share python-version 3.13, and upload-artifact requires
+          # unique names within a run.
+          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.coverage }}
           path: coverage_html_report
           retention-days: 1
 
