@@ -110,7 +110,7 @@ def main():
             continue
         resolved = addr2line_batch(module, sorted(offsets), args.addr2line)
         for loc in resolved.values():
-            if loc in ("??:0", "??:?"):
+            if loc in {"??:0", "??:?"}:
                 continue
             file_part, _, line_part = loc.rpartition(":")
             if not file_part or not line_part.split()[0].isdigit():
