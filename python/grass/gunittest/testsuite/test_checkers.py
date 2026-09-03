@@ -371,8 +371,10 @@ class TestMd5Sums(TestCase):
         with open(cls.correct_file_name_platform_nl, "w") as f:
             # \n should be converted to platform newline
             f.writelines(line + "\n" for line in CORRECT_LINES)
-        with open(cls.correct_file_name_unix_nl, "w") as f:
-            # binary mode will write pure \n
+        with open(cls.correct_file_name_unix_nl, "w", newline="") as f:
+            # newline="" keeps the \n as-is instead of letting the platform
+            # default translate it to \r\n, so file_md5() (binary mode)
+            # below matches correct_md5sum on every platform
             f.writelines(line + "\n" for line in CORRECT_LINES)
         with open(cls.wrong_file_name, "w") as f:
             # \n should be converted to platform newline

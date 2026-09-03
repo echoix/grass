@@ -351,18 +351,21 @@ class TestFileAssertions(TestCase):
         open(cls.emtpy_file, "w").close()
         cls.file_with_md5 = cls.__name__ + "_this_is_a_file_with_known_md5"
         file_content = "Content of the file with known MD5.\n"
-        Path(cls.file_with_md5).write_text(file_content)
+        # newline="" keeps the \n as-is instead of letting the platform
+        # default translate it to \r\n, so the MD5 matches file_md5 below
+        # on every platform (assertFileMd5 hashes the file in binary mode)
+        Path(cls.file_with_md5).write_text(file_content, newline="")
         # MD5 sum created using:
         # echo 'Content of the file with known MD5.' > some_file.txt
         # md5sum some_file.txt
         cls.file_md5 = "807bba4ffac4bb351bc3f27853009949"
 
         cls.file_with_same_content = cls.__name__ + "_file_with_same_content"
-        Path(cls.file_with_same_content).write_text(file_content)
+        Path(cls.file_with_same_content).write_text(file_content, newline="")
 
         cls.file_with_different_content = cls.__name__ + "_file_with_different_content"
         Path(cls.file_with_different_content).write_text(
-            file_content + " Something else here."
+            file_content + " Something else here.", newline=""
         )
 
     @classmethod
