@@ -96,6 +96,16 @@ def main():
 
     hits_by_file = defaultdict(set)
     for module, offsets in by_module.items():
+        # A module can be gone by the time this runs: e.g. a test that
+        # builds a GRASS addon into a temporary directory via
+        # g.extension cleans that directory up once the test finishes,
+        # well before this post-test symbolization step -- confirmed on
+        # a real CI run, where an addon binary under a pytest tmp_path
+        # was recorded as a module but no longer existed. Skip it rather
+        # than letting one vanished module abort the whole run.
+        if not Path(module).exists():
+            print(f"sancov_symbolize: skipping vanished module {module}", file=sys.stderr)
+            continue
         resolved = addr2line_batch(module, sorted(offsets), args.addr2line)
         for loc in resolved.values():
             if loc in ("??:0", "??:?"):
