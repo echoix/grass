@@ -389,7 +389,6 @@ class TestFileAssertions(TestCase):
             self.failureException, self.assertFileExists, filename=self.emtpy_file
         )
 
-    @xfail_windows
     def test_assertFileMd5(self):
         self.assertFileMd5(filename=self.file_with_md5, md5=self.file_md5)
         self.assertRaises(
