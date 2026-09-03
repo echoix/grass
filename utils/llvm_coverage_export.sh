@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
 # Merge LLVM source-based coverage .profraw files into a single .profdata,
-# then export lcov for Codecov. Invoked from CI after all test steps.
+# then export lcov for Codecov. Run from CI after all test steps, but
+# generic enough to invoke by hand too: build with GRASS_LLVM_COVERAGE=1
+# (see build_ubuntu-24.04.sh), run tests with LLVM_PROFILE_FILE pointed at
+# a raw dir (see pytest.yml's "Prepare coverage directories" step), then
+# run this script from the repository root with a `grass` matching that
+# build on PATH.
 #
-# Inputs (env):
-#   INITIAL_PWD    - repository working directory (must match .coveragerc)
+# Inputs (env), all optional:
+#   INITIAL_PWD    - repository working directory (default: pwd)
 #   RAW_DIR        - directory holding *.profraw (default: $INITIAL_PWD/llvm-cov-raw)
 #   OUT_PROFDATA   - merged profdata output (default: $INITIAL_PWD/grass.profdata)
 #   OUT_LCOV       - lcov output for Codecov (default: $INITIAL_PWD/coverage-llvm.lcov)
