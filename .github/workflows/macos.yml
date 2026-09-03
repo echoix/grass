@@ -124,8 +124,10 @@ jobs:
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
+          GISBASE="$(grass --config path)"
           export PYTHONPATH
           export LD_LIBRARY_PATH
+          export GISBASE
           pytest \
             @.github/workflows/pytest_args_gunittest.txt \
             --junitxml=pytest.gunittest.junit.xml

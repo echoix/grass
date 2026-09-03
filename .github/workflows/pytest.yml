@@ -129,10 +129,12 @@ jobs:
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
+          GISBASE="$(grass --config path)"
           INITIAL_GISBASE="$(grass --config path)"
           INITIAL_PWD="${PWD}"
           export PYTHONPATH
           export LD_LIBRARY_PATH
+          export GISBASE
           export INITIAL_GISBASE
           export INITIAL_PWD
           pytest \

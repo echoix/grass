@@ -10,3 +10,4 @@ python/grass/pygrass/modules/interface/testsuite/test_parameter.py
 python/grass/pygrass/vector/testsuite/test_filters.py
 python/grass/script/testsuite/test_core_make_val.py
 python/grass/script/testsuite/test_utils.py
+utils/g.html2man/testsuite/test_ghtml2man.py
