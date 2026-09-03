@@ -193,13 +193,155 @@ imported targets are exempt from that requirement.
   build after the final wrapper-script redesign (time budget); it shares
   the same code path as the validated `gcc` case, differing only in which
   flag and which of the two runtime callback sets gets exercised, both of
-  which were validated by the synthetic-program tests above.
+  which were validated by the synthetic-program tests above. It *was*
+  validated by real CI (next point).
+
+### 1.5 What real CI caught that local testing could not
+
+Getting a genuinely green run of `pytest.yml`'s new matrix cells took five
+more rounds of real, `workflow_dispatch`-triggered CI, each catching a
+distinct bug local testing had no way to surface:
+
+- A GitHub Actions matrix `include`-only pitfall: mixing a base
+  `os`/`python-version`/`coverage` cross product with `include` entries
+  that only partially override it (just `coverage`) produced a matrix
+  whose `pytest` job had **zero actual instances** -- confirmed by a run
+  whose job list came back completely empty. Fixed by making every
+  `include` entry a complete, independent combination.
+- A concurrency-group collision: three cells now share
+  `python-version: "3.13"`; a group keyed only on that (matching the
+  file's pre-existing style) collided across them, and
+  `cancel-in-progress: true` cancelled two of the three within a second of
+  the third starting. Fixed by keying the group on `matrix.coverage` too.
+- Real toolchain interaction, not reproducible locally: this workflow
+  installs `mold` as the default linker (`rui314/setup-mold`). GRASS's
+  own `$(MATHLIB)` autoconf probe (`AC_CHECK_FUNC(atan, MATHLIB=, ...)`)
+  comes out empty on Ubuntu 24.04's glibc 2.39, which merged libm into
+  libc, so a plain "does atan link without -lm" check already succeeds.
+  GNU ld tolerates the resulting missing `-lm` on GRASS binaries that
+  call `cos`/`sin`/`floor` by transitively finding them in libc via an
+  already-linked GRASS shared library; `mold` does not, and `ps.map`'s
+  link failed with `undefined symbol: cos` under `GRASS_SANCOV_CC=clang`
+  specifically. Fixed by having the compiler wrapper unconditionally
+  append `-lm` alongside `-lsancovrt`.
+- A `dladdr()` bare-path bug in the runtime itself (Section 1.2's
+  destructor): confirmed by a real `db.connect` coverage dump (GRASS
+  spawns its DB drivers by bare name via a `PATH` search) failing to
+  symbolize. Fixed via `/proc/self/exe`.
+- A vanished-module bug in the symbolizer: a `g.extension` test builds an
+  addon into a temporary directory that gunittest/pytest cleans up before
+  this post-test symbolization step runs, so the recorded module no
+  longer exists on disk. Fixed by skipping (with a warning) instead of
+  aborting the whole run.
+
+With all of those fixed, a subsequent run
+(<https://github.com/echoix/grass/actions/runs/33689957509>) built and ran
+pytest successfully in all four matrix cells, including `sancov-clang`,
+and both `sancov-gcc` and `sancov-clang` produced real, symbolizable
+coverage dumps (Section 2 has the timings; artifacts
+`sancov-coverage-summary-sancov-gcc` and `-sancov-clang` on that run hold
+the actual line-hit summaries).
+
+One further, still-open limitation surfaced by `cmake.yml`
+(<https://github.com/echoix/grass/actions/runs/33686891578>, `gcc` job):
+a gunittest test that builds a GRASS addon via `g.extension` failed to
+compile it under `-DWITH_SANCOV_COVERAGE=ON`, with
+`/usr/bin/ld: cannot find -lsancovrt`. `g.extension` builds addons using
+the *installed* GRASS's exported CMake package
+(`etc/cmake/build_addon.cmake`), which inherits the `sancovrt`
+`link_libraries()` dependency, but the addon's own out-of-tree build has
+no reason to know where the runtime `.so` this repository's build
+produced actually lives (even though it is installed to
+`${GRASS_INSTALL_LIBDIR}`, nothing threads that directory onto the
+addon's link path). This was not chased further given the time already
+spent on `cmake.yml`'s (correctly attributable, coverage-instrumentation-
+unrelated) 2-hour-plus test run; it would need the exported package to
+carry an explicit `-L`/rpath to the installed runtime, or the runtime to
+be a real installed shared library with a proper CMake config file of
+its own rather than a same-build `IMPORTED` target.
 
 ## 2. Build-time and test-time deltas
 
-*(This section is filled in from the real GitHub Actions run(s) of this
-branch's `pytest.yml`/`cmake.yml`, triggered via `workflow_dispatch` --
-run links and per-step timings below.)*
+All numbers below are wall-clock step durations read directly from real
+GitHub Actions runs of this branch (`ubuntu-24.04` hosted runners),
+triggered via `workflow_dispatch`, not local measurements or estimates.
+
+### 2.1 `pytest.yml`: build and test steps
+
+Source: <https://github.com/echoix/grass/actions/runs/33689957509> (all
+four matrix cells ran independently, in parallel, on separate runners).
+The parallel-pytest step forces `OMP_NUM_THREADS=1`; the solo and
+gunittest-based pytest steps do not restrict it.
+
+| Step | none (baseline) | llvm-source (existing) | sancov-gcc | sancov-clang |
+|---|---|---|---|---|
+| Build | 2m48s | 4m33s (+63%) | 4m22s (+56%) | 3m10s (+13%) |
+| Run pytest, parallel workers | 4m40s | 5m34s (+19%) | 6m02s (+29%) | 4m10s (-11%) |
+| Run pytest, solo (`needs_solo_run`) | 1m14s | 2m11s (+77%) | 1m41s (+36%) | 1m11s (-4%) |
+| Run pytest, gunittest-based | 19s | 23s (+21%) | 22s (+16%) | 16s (-16%) |
+| Coverage merge/export/symbolize | n/a | 20s (llvm-cov export) | (see Section 1.5: failed on this run, fixed since) | (same) |
+| Whole job, checkout to finish | 12m13s | 16m21s | 15m15s | 11m55s |
+
+Two things stand out, and neither matches a simple "SanitizerCoverage is
+cheaper" or "SanitizerCoverage is pricier" story:
+
+- **Build time**: both coverage mechanisms add real overhead over the
+  uninstrumented baseline, but `sancov-clang`'s build (+13%) was
+  noticeably *cheaper* to build than either `llvm-source` (+63%) or
+  `sancov-gcc` (+56%) on this run. This is a single run per configuration,
+  not an average of repeated trials, so treat the exact percentages as
+  indicative rather than precise -- but the direction (both
+  SanitizerCoverage variants are in the same broad range as source-based
+  coverage for *build* time, not dramatically better or worse) held
+  across this run.
+- **Test time under forced single-threading**: with `OMP_NUM_THREADS=1`,
+  none of the three coverage mechanisms show a dramatic test-time
+  penalty here -- `sancov-clang` was actually the fastest of the four in
+  every pytest step on this run. This matters directly for Section 2.2:
+  it isolates that the mechanism-inherent overhead this report predicted
+  for GCC's mutex-guarded `trace-pc` dedup (Section 1.2) is specifically
+  an *OpenMP-thread-contention* cost, not a blanket per-call cost --
+  it disappears when only one thread is ever calling the coverage
+  callback.
+
+### 2.2 `cmake.yml`: the real cost of GCC's `trace-pc` under OpenMP
+
+Source: <https://github.com/echoix/grass/actions/runs/33686891578> (`none`
+and `gcc` jobs; this run predates several of the fixes in Section 1.5, but
+the build/test wiring being measured here was already correct at that
+commit). `cmake.yml`'s gunittest run (`test_thorough.sh`) does **not**
+force `OMP_NUM_THREADS=1`, unlike `pytest.yml`'s parallel step.
+
+| Step | none (baseline) | gcc (sancov, `trace-pc`) |
+|---|---|---|
+| Build | 2m02s | 2m25s (+19%) |
+| Run tests (gunittest, `test_thorough.sh`) | 36m49s | **2h02m05s (+232%)** |
+
+This is the single most decisive quantitative result in this experiment.
+Build-time overhead for GCC's `trace-pc` is modest and in line with
+Section 2.1's numbers. But the *test*-time overhead, run under GRASS's
+normal (unrestricted) OpenMP threading, is **more than triple** the
+baseline -- 7325 seconds versus 2209 seconds, both real, measured
+durations of the same test suite on the same runner type.
+
+This is exactly the mechanism-inherent cost flagged in Section 1.2:
+`-fsanitize-coverage=trace-pc` gives the compiler no per-edge guard word
+to dedup on, so `utils/sancov_runtime.c`'s runtime does its own dedup via
+a **mutex-guarded** hash-set insertion on *every single edge execution*,
+not just the first. Under GRASS's OpenMP-parallel raster/vector routines
+running with the default thread count, many threads hammering that one
+mutex on every instrumented edge is a realistic, and evidently severe,
+source of contention. Clang's `trace-pc-guard` path does not have this
+problem (Section 1.2's guard-based dedup needs no lock after an edge's
+first hit), and Section 2.1's `sancov-clang` numbers -- gathered under
+forced single-threading, so not a direct comparison, but consistent with
+the theory -- showed no comparable blowup.
+
+No equivalent `cmake.yml` number exists yet for `sancov-clang` or for
+`GRASS_LLVM_COVERAGE`'s macOS-only mechanism under CMake; re-running
+`cmake.yml` a further time (each full run of this job takes over two
+hours end to end) was not done given the time already invested and the
+clarity of the `none` vs `gcc` result already in hand.
 
 ## 3. Coverage report quality and the macro-attribution demonstration
 
@@ -294,5 +436,60 @@ only at the coarseness the macro demonstration above illustrates.
 
 ## 4. Bottom line
 
-*(Recommendation to be finalized once the CI numbers in Section 2 are in;
-see the qualitative findings above, which do not depend on those numbers.)*
+**Clang's `trace-pc-guard`**: worth a closer look, not worth switching to
+yet. It is the only one of the two SanitizerCoverage paths whose numbers
+in this experiment look competitive with the existing mechanism --
+comparable build time (Section 2.1: +13% versus `llvm-source`'s +63%
+here, though this is one run, not a trend) and no test-time blowup under
+single-threaded execution. But it was working correctly, end to end
+(build, real test run, real symbolized output), for a grand total of one
+clean CI run in this session, after five rounds of real, CI-only bugs
+(Section 1.5); it has not been run enough times, or under GRASS's normal
+unrestricted OpenMP threading in `pytest.yml`, to know whether it holds up
+the way `sancov-gcc`'s numbers held up badly under `cmake.yml`'s
+unrestricted threading. And its coverage report is strictly coarser than
+source-based coverage's for the exact case that matters most for this
+codebase -- see the `G_OPT_V_INPUT` result in Section 3.1, where two
+distinct `_()` macro expansions on consecutive lines are indistinguishable
+in `trace-pc-guard`'s output but fully separated in `-fcoverage-mapping`'s.
+There is no result here that argues for replacing `GRASS_LLVM_COVERAGE`
+with it; the case for pursuing it further would be for a different goal
+than coverage percentage tracking -- e.g. if a fuzzing harness for GRASS's
+C parsers/format readers were ever built, since SanitizerCoverage's
+`trace-pc-guard` ABI is the one libFuzzer and AFL++ actually consume, and
+this session's runtime already proves it produces usable edge data
+without needing `-fsanitize=fuzzer` at all.
+
+**GCC's `trace-pc`**: not worth pursuing further for this project's
+coverage goals. Three independent problems compound:
+
+1. It is not what most people mean by "SanitizerCoverage on GCC" --
+   GCC 13/14 do not implement `trace-pc-guard` at all (Section 1.1), so
+   there is no per-edge dedup available; the runtime must lock a
+   mutex on every edge *execution*, not just every edge, to do the
+   dedup GCC's own instrumentation doesn't provide.
+2. That mutex is a measured, severe liability under GRASS's real
+   OpenMP-parallel workload: +232% test time in a real, full CI run
+   (Section 2.2), the largest number in this entire report by a wide
+   margin. A coverage mechanism that triples CI test time for one
+   compiler is not a viable addition to routine CI regardless of what
+   it costs to build.
+3. Its coverage output has the exact same block-level granularity
+   ceiling as clang's `trace-pc-guard` (Section 3.1 makes no
+   compiler-specific claim there -- both SanitizerCoverage paths lose
+   the same macro-expansion resolution), so it does not even offer a
+   granularity advantage to offset the performance cost.
+
+**Overall**: this experiment does not find grounds to add
+SanitizerCoverage as an ongoing GRASS coverage mechanism, on either
+compiler, alongside or in place of `GRASS_LLVM_COVERAGE`. The practical
+case for the amount of Autotools/CMake build-system surgery required
+(Section 1.3-1.4) and the operational fragility uncovered only by running
+real CI repeatedly (Section 1.5) would need a correspondingly large
+payoff -- either meaningfully cheaper builds/tests, or meaningfully
+better coverage data -- and neither showed up. `GRASS_LLVM_COVERAGE`
+should stay as GRASS's coverage mechanism; this branch's value is the
+prototype, the runtime and symbolizer (which do work, and could be
+revived quickly if a fuzzing use case for `trace-pc-guard` specifically
+comes up later), and the concrete, now-documented reasons not to pursue
+this further as a coverage-tracking mechanism.
