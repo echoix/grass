@@ -242,23 +242,33 @@ coverage dumps (Section 2 has the timings; artifacts
 `sancov-coverage-summary-sancov-gcc` and `-sancov-clang` on that run hold
 the actual line-hit summaries).
 
-One further, still-open limitation surfaced by `cmake.yml`
+A further bug surfaced by `cmake.yml`
 (<https://github.com/echoix/grass/actions/runs/33686891578>, `gcc` job):
 a gunittest test that builds a GRASS addon via `g.extension` failed to
 compile it under `-DWITH_SANCOV_COVERAGE=ON`, with
 `/usr/bin/ld: cannot find -lsancovrt`. `g.extension` builds addons using
 the *installed* GRASS's exported CMake package
-(`etc/cmake/build_addon.cmake`), which inherits the `sancovrt`
-`link_libraries()` dependency, but the addon's own out-of-tree build has
-no reason to know where the runtime `.so` this repository's build
-produced actually lives (even though it is installed to
-`${GRASS_INSTALL_LIBDIR}`, nothing threads that directory onto the
-addon's link path). This was not chased further given the time already
-spent on `cmake.yml`'s (correctly attributable, coverage-instrumentation-
-unrelated) 2-hour-plus test run; it would need the exported package to
-carry an explicit `-L`/rpath to the installed runtime, or the runtime to
-be a real installed shared library with a proper CMake config file of
-its own rather than a same-build `IMPORTED` target.
+(`etc/cmake/build_addon.cmake`), and every `GRASS::*` library target it
+exports records `sancovrt` in its `INTERFACE_LINK_LIBRARIES` (each was
+linked against it via this repository's project-wide
+`link_libraries(sancovrt)`). Because `sancovrt` is deliberately an
+`IMPORTED` target rather than an exported one (Section 1.2's reasoning:
+`install(EXPORT ...)` refuses a real dependency that is not itself part
+of the export set), CMake writes that dependency into the exported
+`GRASS_*Targets.cmake` files as a bare, unresolved name, and the addon's
+own separate CMake project has nothing by that name to resolve it to --
+hence the plain `-lsancovrt` on the addon's link line with no `-L` for
+it. Fixed in `GRASSConfig.cmake.in` (loaded by every `find_package(GRASS
+...)`, addon builds included) by defining the same `sancovrt` `IMPORTED`
+target there, pointing at the runtime `.so` this repository's own build
+installed to `${GRASS_INSTALL_LIBDIR}`, guarded by the build's own
+`WITH_SANCOV_COVERAGE` setting (substituted into the generated config,
+so a non-coverage GRASS install defines nothing extra). Verified locally
+end to end: a `WITH_SANCOV_COVERAGE=ON` CMake build, installed, then
+`g.extension extension=r.gdd operation=add` -- the exact command
+`cmake.yml`'s failing test runs -- compiles and installs `r.gdd`
+successfully, `ldd` on the resulting binary shows it linked against the
+installed `libsancovrt.so`, and running it writes a real coverage dump.
 
 ## 2. Build-time and test-time deltas
 
