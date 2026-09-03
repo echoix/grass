@@ -104,7 +104,9 @@ def main():
         # was recorded as a module but no longer existed. Skip it rather
         # than letting one vanished module abort the whole run.
         if not Path(module).exists():
-            print(f"sancov_symbolize: skipping vanished module {module}", file=sys.stderr)
+            print(
+                f"sancov_symbolize: skipping vanished module {module}", file=sys.stderr
+            )
             continue
         resolved = addr2line_batch(module, sorted(offsets), args.addr2line)
         for loc in resolved.values():

@@ -33,7 +33,7 @@ neither compiler links one in automatically unless the rest of
 Both GCC 13.3.0 and 14.2.0 (the versions available in this session) reject
 `-fsanitize-coverage=trace-pc-guard`:
 
-```
+```console
 $ gcc -fsanitize-coverage=trace-pc-guard -c -x c /dev/null -o /dev/null
 gcc: error: unrecognized argument in option '-fsanitize-coverage=trace-pc-guard'
 gcc: note: valid arguments to '-fsanitize-coverage=' are: trace-cmp trace-pc
@@ -274,7 +274,7 @@ The parallel-pytest step forces `OMP_NUM_THREADS=1`; the solo and
 gunittest-based pytest steps do not restrict it.
 
 | Step | none (baseline) | llvm-source (existing) | sancov-gcc | sancov-clang |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Build | 2m48s | 4m33s (+63%) | 4m22s (+56%) | 3m10s (+13%) |
 | Run pytest, parallel workers | 4m40s | 5m34s (+19%) | 6m02s (+29%) | 4m10s (-11%) |
 | Run pytest, solo (`needs_solo_run`) | 1m14s | 2m11s (+77%) | 1m41s (+36%) | 1m11s (-4%) |
@@ -313,7 +313,7 @@ commit). `cmake.yml`'s gunittest run (`test_thorough.sh`) does **not**
 force `OMP_NUM_THREADS=1`, unlike `pytest.yml`'s parallel step.
 
 | Step | none (baseline) | gcc (sancov, `trace-pc`) |
-|---|---|---|
+| --- | --- | --- |
 | Build | 2m02s | 2m25s (+19%) |
 | Run tests (gunittest, `test_thorough.sh`) | 36m49s | **2h02m05s (+232%)** |
 
@@ -370,7 +370,7 @@ the two SanitizerCoverage builds).
 as its own hit-counted line/region, including two on consecutive lines
 within the same case:
 
-```
+```text
 482|      1|    case G_OPT_V_INPUT:
 483|      1|        Opt->key = "input";
 ...
@@ -384,7 +384,7 @@ within the same case:
 cases from each other (clang, `addr2line -f -C -i` on the real
 `libgrass_gis.8.6.so`):
 
-```
+```text
 G_define_standard_option lib/gis/parser_standard_options.c:273   (G_OPT_R_INPUT)
 G_define_standard_option lib/gis/parser_standard_options.c:290   (G_OPT_R_OUTPUT)
 G_define_standard_option lib/gis/parser_standard_options.c:483   (G_OPT_V_INPUT)
@@ -395,7 +395,7 @@ G_define_standard_option lib/gis/parser_standard_options.c:602   (G_OPT_F_INPUT)
 `G_OPT_V_INPUT`'s case, both mechanisms report exactly **one** hit, at line
 483 (the case's first statement) -- never at line 488 or 489 specifically:
 
-```
+```console
 $ addr2line -e libgrass_gis.8.6.so -f -C -i <offsets> | grep -c ':488\|:489'
 0
 ```

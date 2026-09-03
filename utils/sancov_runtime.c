@@ -123,7 +123,8 @@ static void write_hit(FILE *f, void *pc)
          * So a bare (no '/') name can only be the main executable, and
          * /proc/self/exe always resolves to its real absolute path. */
         if (!strchr(path, '/')) {
-            ssize_t n = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+            ssize_t n =
+                readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
 
             if (n > 0) {
                 exe_path[n] = '\0';

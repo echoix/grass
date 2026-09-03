@@ -294,19 +294,23 @@ if(WITH_SANCOV_COVERAGE)
     # export set too, which it has no reason to be part of (confirmed
     # empirically: CMake's install(EXPORT ...) step refuses to generate
     # otherwise). An IMPORTED library is exempt from that requirement.
-    set(SANCOV_RUNTIME_LIB "${CMAKE_BINARY_DIR}/libsancovrt${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(SANCOV_RUNTIME_LIB
+        "${CMAKE_BINARY_DIR}/libsancovrt${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    )
     add_custom_command(
         OUTPUT ${SANCOV_RUNTIME_LIB}
-        COMMAND ${CMAKE_C_COMPILER} -O2 -fPIC -shared -pthread
-                -o ${SANCOV_RUNTIME_LIB}
-                ${CMAKE_SOURCE_DIR}/utils/sancov_runtime.c -l${CMAKE_DL_LIBS}
+        COMMAND
+            ${CMAKE_C_COMPILER} -O2 -fPIC -shared -pthread -o
+            ${SANCOV_RUNTIME_LIB} ${CMAKE_SOURCE_DIR}/utils/sancov_runtime.c
+            -l${CMAKE_DL_LIBS}
         DEPENDS ${CMAKE_SOURCE_DIR}/utils/sancov_runtime.c
         COMMENT "Building SanitizerCoverage runtime"
     )
     add_custom_target(sancovrt_build DEPENDS ${SANCOV_RUNTIME_LIB})
     add_library(sancovrt SHARED IMPORTED GLOBAL)
     set_target_properties(
-        sancovrt PROPERTIES IMPORTED_LOCATION ${SANCOV_RUNTIME_LIB}
+        sancovrt
+        PROPERTIES IMPORTED_LOCATION ${SANCOV_RUNTIME_LIB}
     )
     add_dependencies(sancovrt sancovrt_build)
     install(FILES ${SANCOV_RUNTIME_LIB} DESTINATION ${GRASS_INSTALL_LIBDIR})
