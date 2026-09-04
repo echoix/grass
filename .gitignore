@@ -87,6 +87,14 @@ lib/*/latex/
 .coverage
 .coverage.*
 coverage.xml
+*.profraw
+*.profdata
+coverage-llvm.lcov
+llvm-cov-raw/
+coverage_html_report/
+sancov-runtime/
+sancov-raw/
+sancov-coverage-summary.txt
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos

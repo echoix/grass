@@ -164,6 +164,11 @@ option(
 option(WITH_DOCS "Build documentation" ON)
 option(WITH_GUI "Build GUI" ON)
 option(WITH_FHS "Install with FHS" OFF)
+option(
+    WITH_SANCOV_COVERAGE
+    "Build with SanitizerCoverage instrumentation (opt-in coverage experiment, see doc/development/sancov_coverage_experiment.md)"
+    OFF
+)
 
 include(check_target)
 include(CheckDependentLibraries)
@@ -247,6 +252,70 @@ endif()
 include(set_compiler_flags)
 set_compiler_flags()
 include(Configure)
+
+# SanitizerCoverage instrumentation, opt-in via -DWITH_SANCOV_COVERAGE=ON --
+# see doc/development/sancov_coverage_experiment.md for the pytest.yml
+# equivalent (GRASS_SANCOV_COVERAGE) and the reasoning behind it. Unlike
+# there, this can be added directly through CMake's own dependency-graph
+# link mechanism instead of a hand-built shared library plus a Makefile
+# link-order workaround: link_libraries() below records "every target
+# defined from this point on links against sancovrt", and CMake always
+# places a target_link_libraries dependency after that target's own
+# object files in the generated link command, so ordering is not a
+# concern the way it is for GRASS's own hand-written Make templates. This
+# must run after project() above: passing the instrumentation flag via
+# -DCMAKE_C_FLAGS on the command line instead would break project()'s own
+# internal compiler-works probe the same way it breaks configure's
+# probes in the Autotools build (confirmed empirically), because that
+# probe also can't resolve the coverage callback symbols.
+if(WITH_SANCOV_COVERAGE)
+    if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        # GCC 13/14 implement only trace-cmp and trace-pc for
+        # -fsanitize-coverage=, not trace-pc-guard (confirmed
+        # empirically); trace-pc has no per-edge guard word, so
+        # sancov_runtime.c dedups it itself via a locked hash set.
+        set(SANCOV_COVERAGE_FLAG "-fsanitize-coverage=trace-pc")
+    elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
+        set(SANCOV_COVERAGE_FLAG "-fsanitize-coverage=trace-pc-guard")
+    else()
+        message(
+            FATAL_ERROR
+            "WITH_SANCOV_COVERAGE is only supported with GCC or Clang, got ${CMAKE_C_COMPILER_ID}"
+        )
+    endif()
+    # sancovrt is built directly with the compiler (add_custom_command),
+    # not as a normal add_library() target: GRASS's own libraries are
+    # exported for g.extension's addon-building CMake package (every
+    # install(EXPORT ...) call further down requires each of its
+    # targets' link dependencies to themselves be in an export set), and
+    # a plain add_library(sancovrt SHARED ...) pulled in here as a common
+    # link_libraries() dependency of all of them would have to join that
+    # export set too, which it has no reason to be part of (confirmed
+    # empirically: CMake's install(EXPORT ...) step refuses to generate
+    # otherwise). An IMPORTED library is exempt from that requirement.
+    set(SANCOV_RUNTIME_LIB
+        "${CMAKE_BINARY_DIR}/libsancovrt${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    )
+    add_custom_command(
+        OUTPUT ${SANCOV_RUNTIME_LIB}
+        COMMAND
+            ${CMAKE_C_COMPILER} -O2 -fPIC -shared -pthread -o
+            ${SANCOV_RUNTIME_LIB} ${CMAKE_SOURCE_DIR}/utils/sancov_runtime.c
+            -l${CMAKE_DL_LIBS}
+        DEPENDS ${CMAKE_SOURCE_DIR}/utils/sancov_runtime.c
+        COMMENT "Building SanitizerCoverage runtime"
+    )
+    add_custom_target(sancovrt_build DEPENDS ${SANCOV_RUNTIME_LIB})
+    add_library(sancovrt SHARED IMPORTED GLOBAL)
+    set_target_properties(
+        sancovrt
+        PROPERTIES IMPORTED_LOCATION ${SANCOV_RUNTIME_LIB}
+    )
+    add_dependencies(sancovrt sancovrt_build)
+    install(FILES ${SANCOV_RUNTIME_LIB} DESTINATION ${GRASS_INSTALL_LIBDIR})
+    add_compile_options(-g ${SANCOV_COVERAGE_FLAG})
+    link_libraries(sancovrt)
+endif()
 
 include(repo_status)
 repo_status("${CMAKE_CURRENT_LIST_DIR}")
