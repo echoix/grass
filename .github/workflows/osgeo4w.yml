@@ -7,17 +7,22 @@ on:
       - main
       - releasebranch_*
   pull_request:
+  # TEMPORARY, for the Windows test-order-dependency investigation: lets the
+  # "attempt" matrix dimension below be dispatched manually to fish for
+  # order-dependent failures with many parallel pytest-randomly seeds.
+  # Revert before merging.
+  workflow_dispatch:
 
 permissions: {}
 
 jobs:
   build:
-    name: ${{ matrix.os }} build and tests
+    name: ${{ matrix.os }} build and tests (attempt ${{ matrix.attempt }})
 
     concurrency:
       group: >-
         ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.os }}
+        matrix.os }}-${{ matrix.attempt }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
@@ -27,6 +32,11 @@ jobs:
       matrix:
         os:
           - windows-2022
+        # TEMPORARY: fans out into 15 parallel attempts only when manually
+        # dispatched, each getting its own pytest-randomly seed, to fish for
+        # order-dependent failures. Revert to a single attempt before
+        # merging.
+        attempt: ${{ github.event_name == 'workflow_dispatch' && fromJson('[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]') || fromJson('[1]') }}
       fail-fast: false
 
     steps:
@@ -148,6 +158,10 @@ jobs:
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
       - name: Run pytest with a single worker (for tests marked with needs_solo_run)
+        # TEMPORARY: skip during the fishing dispatch, not relevant to the
+        # investigation and this keeps each attempt fast. Revert before
+        # merging.
+        if: github.event_name != 'workflow_dispatch'
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
           set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
@@ -160,6 +174,9 @@ jobs:
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
       - name: Run pytest with a single worker (for gunittest-based tests)
+        # TEMPORARY: skip during the fishing dispatch, see above.
+        # Revert before merging.
+        if: github.event_name != 'workflow_dispatch'
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
           set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
@@ -173,7 +190,10 @@ jobs:
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
 
       - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
+        # TEMPORARY: skip during the fishing dispatch, to avoid uploading
+        # throwaway duplicate data under the same flag. Revert before
+        # merging.
+        if: ${{ !cancelled() && github.event_name != 'workflow_dispatch' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           exclude: gui
@@ -182,12 +202,15 @@ jobs:
           report_type: test_results
 
       - name: Run tests
+        # TEMPORARY: skip during the fishing dispatch, see above.
+        # Revert before merging.
+        if: github.event_name != 'workflow_dispatch'
         run: .github/workflows/test_thorough.bat '%O4WROOT%\opt\grass\grass86.bat' '%O4WROOT%\bin\python3'
         env:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
 
       - name: Make HTML test report available
-        if: ${{ always() }}
+        if: ${{ always() && github.event_name != 'workflow_dispatch' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: testreport-${{ matrix.os }}
