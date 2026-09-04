@@ -210,17 +210,24 @@ jobs:
           report_type: test_results
 
       - name: Run tests
-        # TEMPORARY: skip during the fishing dispatch, see above.
-        # Revert before merging.
-        if: github.event_name != 'workflow_dispatch'
+        # TEMPORARY: this is now the primary target of the fishing dispatch
+        # (see loader.py's discover_modules) rather than something to skip.
+        # GRASS_GUNITTEST_RANDOM_ORDER is set only on dispatch, so normal
+        # push/PR runs keep today's fixed alphabetical order until the
+        # randomized order has been validated. Revert before merging
+        # (drop the env: block).
         run: .github/workflows/test_thorough.bat '%O4WROOT%\opt\grass\grass86.bat' '%O4WROOT%\bin\python3'
         env:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
+          GRASS_GUNITTEST_RANDOM_ORDER: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
 
       - name: Make HTML test report available
-        if: ${{ always() && github.event_name != 'workflow_dispatch' }}
+        # TEMPORARY: give each attempt's report a distinct artifact name so
+        # the 15 parallel dispatch jobs don't collide. Revert before
+        # merging (drop the "-attempt-..." suffix).
+        if: ${{ always() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: testreport-${{ matrix.os }}
+          name: testreport-${{ matrix.os }}-attempt-${{ matrix.attempt }}
           path: testreport
           retention-days: 3
