@@ -147,7 +147,15 @@ jobs:
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
           set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
-          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          rem TEMPORARY: on a normal push/PR run, prime PATH with GISBASE's
+          rem own lib/bin dirs before pytest starts, same as always. Skipped
+          rem on the fishing dispatch, since real local usage (pytest run
+          rem without going through grass.py's own startup) never does this
+          rem priming either, and doing it anyway would pre-empt the exact
+          rem DLL-search-path race under investigation. Revert before
+          rem merging (drop this conditional, restore the unconditional
+          rem line above the pytest call).
+          if not "%GITHUB_EVENT_NAME%"=="workflow_dispatch" path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           pytest ^
             @.github/workflows/pytest_args_ci.txt ^
             @.github/workflows/pytest_args_parallel.txt ^
