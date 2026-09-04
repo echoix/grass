@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import fnmatch
 import os
+import random
 import re
 import unittest
 from pathlib import PurePath
@@ -97,12 +98,25 @@ def discover_modules(
 
     :returns: a list of GrassTestPythonModule objects
 
+    Discovery order is alphabetical (both directories and files) unless the
+    ``GRASS_GUNITTEST_RANDOM_ORDER`` environment variable is set, in which
+    case both are shuffled instead. Since ``main.py`` runs the whole
+    discovered suite in a single process, a fixed order means whichever
+    test happens to run first in a given testsuite directory never changes,
+    which can hide an order-dependent bug (e.g. one that depends on some
+    state, such as a native library search path, established by an earlier
+    test) behind whatever the alphabetically-first test happens to do.
+
     .. todo::
         Implement import_modules.
     """
+    random_order = bool(os.environ.get("GRASS_GUNITTEST_RANDOM_ORDER"))
     modules = []
     for root, dirs, unused_files in os.walk(start_dir, topdown=True):
-        dirs.sort()
+        if random_order:
+            random.shuffle(dirs)
+        else:
+            dirs.sort()
         for dir_pattern in skip_dirs:
             to_skip = fnmatch.filter(dirs, dir_pattern)
             for skip in to_skip:
@@ -120,7 +134,10 @@ def discover_modules(
             files = [f for f in files if re.match(file_regexp, f)]
         if exclude:
             files = fnmatch_exclude_with_base(files, full, exclude)
-        files = sorted(files)
+        if random_order:
+            random.shuffle(files)
+        else:
+            files = sorted(files)
         # get test/module name without .py
         # expecting all files to end with .py
         # this will not work for invoking bat files but it works fine
