@@ -53,6 +53,8 @@ def test_import_formats(
     )
     info = _stvds_tinfo(tools, output)
     assert info["temporal_type"] == "absolute"
+    assert info["start_time"] == "2001-01-01 00:00:00"
+    assert info["end_time"] == "2001-04-01 00:00:00"
     assert info["number_of_maps"] == 3
 
 
