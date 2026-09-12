@@ -19,15 +19,18 @@ xfail_mp_spawn = pytest.mark.xfail(
 def max_processes() -> int:
     """Get max useful number of parallel processes to run"""
     import os
+
     if "PYTEST_XDIST_WORKER_COUNT" in os.environ:
         n_workers = int(os.environ["PYTEST_XDIST_WORKER_COUNT"])
         allowed_logical_cpus = len(os.sched_getaffinity(0))
         return min(allowed_logical_cpus // n_workers, 4)
     return min(multiprocessing.cpu_count(), 4)
 
+
 def max_processes_result():
     """Get max useful number of parallel processes to run"""
     import os
+
     if "PYTEST_XDIST_WORKER_COUNT" in os.environ:
         n_workers = int(os.environ["PYTEST_XDIST_WORKER_COUNT"])
         allowed_logical_cpus = len(os.sched_getaffinity(0))
@@ -47,7 +50,9 @@ def run_in_subprocess(function):
 
 @xfail_mp_spawn
 @pytest.mark.needs_solo_run
-@pytest.mark.parametrize("processes", list(range(1, max_processes_result() + 1)) + [None])
+@pytest.mark.parametrize(
+    "processes", list(range(1, max_processes_result() + 1)) + [None]
+)
 def test_processes(tmp_path, processes):
     """Check that running with multiple processes works"""
     project = tmp_path / "test"
