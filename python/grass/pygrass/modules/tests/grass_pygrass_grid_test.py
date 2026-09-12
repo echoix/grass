@@ -14,6 +14,7 @@ xfail_mp_spawn = pytest.mark.xfail(
     strict=True,
 )
 
+
 @pytest.fixture(scope="module")
 def max_processes() -> int:
     """Get max useful number of parallel processes to run"""
