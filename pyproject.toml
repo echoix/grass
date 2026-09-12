@@ -526,10 +526,14 @@ addopts = """
     --ignore-glob='dist.*'
     --ignore-glob='bin.*'
     --ignore-glob='*/tests/data/*'
+    --ignore-glob='*/gunittest/testsuite/data/*'
+    --ignore-glob='*/tests/*_test.py'
     --ignore-glob='*/testsuite/data/**'
-    --ignore-glob='*/grass/pygrass/tests/*'
     --doctest-glob='*doctest*.txt'
     --ignore='raster/r.category/test_rcategory_doctest.txt'
+    --continue-on-collection-errors
+    --import-mode=importlib
+    --ignore=gunittest/testsuite/data/
 """
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
