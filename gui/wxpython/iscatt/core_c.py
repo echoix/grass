@@ -3,10 +3,8 @@
 
 @brief Wrappers for scatter plot C backend.
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Stepan Turek <stepan.turek seznam.cz> (mentor: Martin Landa)
 """
@@ -19,7 +17,7 @@ from multiprocessing import Process, Queue
 import numpy as np
 
 try:
-    from grass.lib.gis import G_get_window
+    from grass.lib.gis import G_get_window, struct_Cell_head
     from grass.lib.imagery import (
         SC_SCATT_CONDITIONS,
         SC_SCATT_DATA,
@@ -35,10 +33,9 @@ try:
         I_sc_insert_scatt_data,
         I_scd_init_scatt_data,
         scdScattData,
-        struct_Cell_head,
-        struct_Range,
         struct_scCats,
     )
+    from grass.lib.raster import struct_Range
 except ImportError as e:
     sys.stderr.write(_("Loading ctypes libs failed: %s") % e)
 
@@ -83,7 +80,8 @@ def ApplyColormap(vals, vals_mask, colmap, out_vals):
 
 def MergeArrays(merged_arr, overlay_arr, alpha):
     if merged_arr.shape != overlay_arr.shape:
-        GException("MergeArrays: merged_arr.shape != overlay_arr.shape")
+        msg = "MergeArrays: merged_arr.shape != overlay_arr.shape"
+        raise GException(msg)
 
     c_uint8_p = POINTER(c_uint8)
     merged_p = merged_arr.ctypes.data_as(c_uint8_p)
@@ -214,11 +212,7 @@ def _regionToCellHead(region):
     }
 
     for k, v in region.items():
-        if k in {"rows", "cols", "cells", "zone"}:  # zone added in r65224
-            v = int(v)
-        else:
-            v = float(v)
-
+        v = int(v) if k in {"rows", "cols", "cells", "zone"} else float(v)
         if k in convert_dict:
             k = convert_dict[k]
 

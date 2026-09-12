@@ -20,11 +20,8 @@
 #
 # See also:     d.rast, d.legend.
 #
-# COPYRIGHT:	(C) 1993-2014 by the GRASS Development Team
-#
-#               This program is free software under the GNU General Public
-#               License (>=v2). Read the file COPYING that comes with GRASS
-#               for details.
+# SPDX-FileCopyrightText: 1993-2014 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -132,16 +129,10 @@ def main():
     if not nlines:
         nlines = None
 
-    if rast:
-        lmap = rast
-    else:
-        lmap = map
+    lmap = rast or map
 
     kv = gs.raster_info(map=lmap)
-    if kv["datatype"] == "CELL":
-        leg_at = None
-    else:
-        leg_at = "%f,95,5,10" % VSpacing
+    leg_at = None if kv["datatype"] == "CELL" else "%f,95,5,10" % VSpacing
 
     # checking for histogram causes more problems than it solves
     #    histfiledir = grass.find_file(lmap, 'cell_misc')['file']

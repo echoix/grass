@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:      Export a space time raster dataset
-# COPYRIGHT:    (C) 2011-2017 by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2011-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -105,6 +96,7 @@
 # %end
 
 import os
+from pathlib import Path
 
 import grass.script as gs
 
@@ -115,24 +107,24 @@ def main():
     import grass.temporal as tgis
 
     # Get the options
-    _input = options["input"]
+    input_ = options["input"]
     output = options["output"]
     compression = options["compression"]
     directory = options["directory"]
     where = options["where"]
-    _format = options["format"]
-    _type = options["type"]
+    format_ = options["format"]
+    type_ = options["type"]
     kws = {
         key: options[key] for key in ("createopt", "metaopt", "nodata") if options[key]
     }
 
-    if not directory or not os.path.exists(directory):
+    if not directory or not Path(directory).exists():
         gs.fatal(_("Directory {} not found").format(directory))
 
     if not os.access(directory, os.W_OK):
         gs.fatal(_("Directory {} is not writable").format(directory))
 
-    if _type and _format in {"pack", "AAIGrid"}:
+    if type_ and format_ in {"pack", "AAIGrid"}:
         gs.warning(
             _("Type options is not working with pack format, it will be skipped")
         )
@@ -148,7 +140,7 @@ def main():
     tgis.init()
     # Export the space time raster dataset
     tgis.export_stds(
-        _input, output, compression, directory, where, _format, "strds", _type, **kws
+        input_, output, compression, directory, where, format_, "strds", type_, **kws
     )
 
 

@@ -19,10 +19,8 @@ List of classes:
  - :class:`QuitDialog`
  - :class:`DefaultFontDialog`
 
-(C) 2008-2016 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2008-2016 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 @author Anna Kratochvilova <kratochanna gmail.com> (GroupDialog, SymbolDialog)
@@ -30,6 +28,7 @@ This program is free software under the GNU General Public License
 
 import os
 import re
+from pathlib import Path
 
 import wx
 
@@ -37,7 +36,6 @@ from grass.script import core as grass
 from grass.script.utils import naturally_sorted, try_remove
 
 from grass.pydispatch.signal import Signal
-
 from core import globalvar
 from core.gcmd import GError, RunCommand, GMessage
 from gui_core.gselect import (
@@ -280,13 +278,11 @@ class VectorDialog(SimpleDialog):
         :param full: True to get fully qualified name
         """
         name = self.element.GetValue()
-        if full:
-            if "@" in name:
-                return name
-            else:
-                return name + "@" + grass.gisenv()["MAPSET"]
-
-        return name.split("@", 1)[0]
+        if not full:
+            return name.split("@", 1)[0]
+        if "@" in name:
+            return name
+        return name + "@" + grass.gisenv()["MAPSET"]
 
 
 class NewVectorDialog(VectorDialog):
@@ -427,7 +423,7 @@ class NewVectorDialog(VectorDialog):
         """
         if key == "add":
             return self.addbox.IsChecked()
-        elif key == "table":
+        if key == "table":
             return self.table.IsChecked()
 
         return None
@@ -467,10 +463,7 @@ def CreateNewVector(
     """
     vExternalOut = grass.parse_command("v.external.out", flags="g")
     isNative = vExternalOut["format"] == "native"
-    if cmd[0] == "v.edit" and not isNative:
-        showType = True
-    else:
-        showType = False
+    showType = bool(cmd[0] == "v.edit" and not isNative)
     dlg = NewVectorDialog(
         parent,
         title=title,
@@ -496,7 +489,7 @@ def CreateNewVector(
             % outmap,
         )
         dlg.Destroy()
-        return
+        return None
 
     if outmap == "":  # should not happen
         dlg.Destroy()
@@ -536,12 +529,11 @@ def CreateNewVector(
             caption=_("Overwrite?"),
             style=wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION,
         )
-        if dlgOw.ShowModal() == wx.ID_YES:
-            overwrite = True
-        else:
+        if dlgOw.ShowModal() != wx.ID_YES:
             dlgOw.Destroy()
             dlg.Destroy()
             return None
+        overwrite = True
 
     if UserSettings.Get(group="cmd", key="overwrite", subkey="enabled"):
         overwrite = True
@@ -1118,10 +1110,7 @@ class GroupDialog(wx.Dialog):
     def GetLayers(self):
         """Get layers"""
         if self.edit_subg:
-            layers = []
-            for maps, sel in self.subgmaps.items():
-                if sel:
-                    layers.append(maps)
+            layers = [maps for maps, sel in self.subgmaps.items() if sel]
         else:
             layers = self.gmaps[:]
 
@@ -1341,16 +1330,12 @@ class GroupDialog(wx.Dialog):
     def GetSelectedGroup(self):
         """Return currently selected group (without mapset)"""
         g = self.groupSelect.GetValue().split("@")[0]
-        if self.edit_subg:
-            s = self.subGroupSelect.GetValue()
-        else:
-            s = None
+        s = self.subGroupSelect.GetValue() if self.edit_subg else None
         return g, s
 
     def GetGroupLayers(self, group, subgroup=None):
         """Get layers in group"""
-        kwargs = {}
-        kwargs["group"] = group
+        kwargs = {"group": group}
         if subgroup:
             kwargs["subgroup"] = subgroup
 
@@ -1375,10 +1360,7 @@ class GroupDialog(wx.Dialog):
             GMessage(parent=self, message=_("No subgroup selected."))
             return 0
 
-        if self.edit_subg:
-            subgroup = self.currentSubgroup
-        else:
-            subgroup = None
+        subgroup = self.currentSubgroup if self.edit_subg else None
 
         groups = self.GetExistGroups()
         if group in groups:
@@ -1477,7 +1459,7 @@ class MapLayersDialogBase(wx.Dialog):
         """
 
     def _fullyQualifiedNames(self):
-        """Adds CheckBox which determines is fully qualified names are retuned."""
+        """Adds CheckBox which determines if fully qualified names are returned."""
         self.fullyQualified = wx.CheckBox(
             parent=self, id=wx.ID_ANY, label=_("Use fully-qualified map names")
         )
@@ -1731,7 +1713,7 @@ class MapLayersDialog(MapLayersDialogBase):
 
 
 class MapLayersDialogForGroups(MapLayersDialogBase):
-    """Subclass of MapLayersDialogBase used for specyfying maps in an imagery group.
+    """Subclass of MapLayersDialogBase used for specifying maps in an imagery group.
 
     Shows only raster maps.
     """
@@ -2031,9 +2013,7 @@ class SqlQueryFrame(wx.Frame):
 
         wx.Frame.__init__(self, parent=parent, id=id, title=title, *kwargs)
         self.SetIcon(
-            wx.Icon(
-                os.path.join(globalvar.ICONDIR, "grass_sql.ico"), wx.BITMAP_TYPE_ICO
-            )
+            wx.Icon(os.path.join(globalvar.ICONDIR, "grass.ico"), wx.BITMAP_TYPE_ICO)
         )
         self.panel = wx.Panel(parent=self, id=wx.ID_ANY)
 
@@ -2098,7 +2078,7 @@ class SymbolDialog(wx.Dialog):
         """
         wx.Dialog.__init__(self, parent=parent, title=title, id=wx.ID_ANY)
 
-        self.symbolPath = symbolPath
+        self.symbolPath = Path(symbolPath)
         self.currentSymbol = currentSymbol  # default basic/x
         self.selected = None
         self.selectedDir = None
@@ -2111,7 +2091,7 @@ class SymbolDialog(wx.Dialog):
         vSizer = wx.BoxSizer(wx.VERTICAL)
         fgSizer = wx.FlexGridSizer(rows=2, cols=2, vgap=5, hgap=5)
         self.folderChoice = wx.Choice(
-            mainPanel, id=wx.ID_ANY, choices=os.listdir(self.symbolPath)
+            mainPanel, id=wx.ID_ANY, choices=[p.name for p in self.symbolPath.iterdir()]
         )
         self.folderChoice.Bind(wx.EVT_CHOICE, self.OnFolderSelect)
 
@@ -2149,9 +2129,10 @@ class SymbolDialog(wx.Dialog):
         mainSizer.Add(btnSizer, proportion=0, flag=wx.EXPAND | wx.ALL, border=5)
 
         # show panel with the largest number of images and fit size
-        count = []
-        for folder in os.listdir(self.symbolPath):
-            count.append(len(os.listdir(os.path.join(self.symbolPath, folder))))
+        count = [
+            len(list((self.symbolPath / folder).iterdir()))
+            for folder in [p.name for p in self.symbolPath.iterdir()]
+        ]
 
         index = count.index(max(count))
         self.folderChoice.SetSelection(index)
@@ -2180,7 +2161,7 @@ class SymbolDialog(wx.Dialog):
         """Creates multiple panels with symbols.
 
         Panels are shown/hidden according to selected folder."""
-        folders = os.listdir(self.symbolPath)
+        folders = [p.name for p in self.symbolPath.iterdir()]
 
         panels = []
         self.symbolPanels = []
@@ -2188,7 +2169,7 @@ class SymbolDialog(wx.Dialog):
         for folder in folders:
             panel = wx.Panel(parent, style=wx.BORDER_RAISED)
             sizer = wx.GridSizer(cols=6, vgap=3, hgap=3)
-            images = self._getSymbols(path=os.path.join(self.symbolPath, folder))
+            images = self._getSymbols(path=self.symbolPath / folder)
 
             symbolPanels = []
             for img in images:
@@ -2206,9 +2187,7 @@ class SymbolDialog(wx.Dialog):
 
     def _getSymbols(self, path):
         # we assume that images are in subfolders (1 level only)
-        imageList = []
-        for image in os.listdir(path):
-            imageList.append(os.path.join(path, image))
+        imageList = [str(p) for p in path.iterdir()]
 
         return sorted(imageList)
 
@@ -2350,7 +2329,7 @@ class QuitDialog(wx.Dialog):
     def __init__(
         self,
         parent,
-        title=_("Quit GRASS GIS"),
+        title=_("Quit GRASS"),
         id=wx.ID_ANY,
         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         **kwargs,
@@ -2371,20 +2350,15 @@ class QuitDialog(wx.Dialog):
         self._shell_running = is_shell_running()
 
         if self._shell_running:
-            text = _(
-                "Do you want to quit GRASS GIS including shell "
-                "or just close the GUI?"
-            )
+            text = _("Do you want to quit GRASS including shell or just close the GUI?")
         else:
-            text = _("Do you want to quit GRASS GIS?")
+            text = _("Do you want to quit GRASS?")
         self.informLabel = StaticText(parent=self.panel, id=wx.ID_ANY, label=text)
         self.btnCancel = Button(parent=self.panel, id=wx.ID_CANCEL)
         if self._shell_running:
             self.btnClose = Button(parent=self.panel, id=wx.ID_NO, label=_("Close GUI"))
             self.btnClose.Bind(wx.EVT_BUTTON, self.OnClose)
-        self.btnQuit = Button(
-            parent=self.panel, id=wx.ID_YES, label=_("Quit GRASS GIS")
-        )
+        self.btnQuit = Button(parent=self.panel, id=wx.ID_YES, label=_("Quit GRASS"))
         self.btnQuit.SetFocus()
         self.btnQuit.Bind(wx.EVT_BUTTON, self.OnQuit)
 

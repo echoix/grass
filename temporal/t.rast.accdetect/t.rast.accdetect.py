@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:      Detect accumulation pattern in temporally accumulated space time raster datasets created by t.rast.accumulate.
-# COPYRIGHT:    (C) 2013-2017  by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2013-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -45,7 +36,7 @@
 
 # %option G_OPT_STRDS_OUTPUT
 # % key: occurrence
-# % description: The output space time raster dataset that stores the occurrence of the the accumulation pattern using the provided data range
+# % description: The output space time raster dataset that stores the occurrence of the accumulation pattern using the provided data range
 # % required: yes
 # %end
 
@@ -94,16 +85,9 @@
 # % description: A numerical suffix separated by an underscore will be attached to create a unique identifier
 # % required: yes
 # % multiple: no
-# % gisprompt:
 # %end
 
-# %option
-# % key: suffix
-# % type: string
-# % description: Suffix to add at basename: set 'gran' for granularity, 'time' for the full time format, 'count' for numerical suffix with a specific number of digits (default %05)
-# % answer: gran
-# % required: no
-# % multiple: no
+# %option G_OPT_T_SUFFIX
 # %end
 
 # %option
@@ -173,11 +157,7 @@ def main():
 
     mapset = tgis.get_current_mapset()
 
-    if input.find("@") >= 0:
-        id = input
-    else:
-        id = input + "@" + mapset
-
+    id = input if input.find("@") >= 0 else input + "@" + mapset
     input_strds = tgis.SpaceTimeRasterDataset(id)
 
     if not input_strds.is_in_db():
@@ -261,10 +241,7 @@ def main():
     # The minimum threshold space time raster dataset
     minimum_strds = None
     if minimum:
-        if minimum.find("@") >= 0:
-            minimum_id = minimum
-        else:
-            minimum_id = minimum + "@" + mapset
+        minimum_id = minimum if minimum.find("@") >= 0 else minimum + "@" + mapset
 
         minimum_strds = tgis.SpaceTimeRasterDataset(minimum_id)
         if not minimum_strds.is_in_db():
@@ -282,10 +259,7 @@ def main():
     # The maximum threshold space time raster dataset
     maximum_strds = None
     if maximum:
-        if maximum.find("@") >= 0:
-            maximum_id = maximum
-        else:
-            maximum_id = maximum + "@" + mapset
+        maximum_id = maximum if maximum.find("@") >= 0 else maximum + "@" + mapset
 
         maximum_strds = tgis.SpaceTimeRasterDataset(maximum_id)
         if not maximum_strds.is_in_db():
@@ -304,16 +278,10 @@ def main():
 
     if input_strds.is_time_absolute():
         start = tgis.string_to_datetime(start)
-        if stop:
-            stop = tgis.string_to_datetime(stop)
-        else:
-            stop = input_strds_end
+        stop = tgis.string_to_datetime(stop) if stop else input_strds_end
     else:
         start = int(start)
-        if stop:
-            stop = int(stop)
-        else:
-            stop = input_strds_end
+        stop = int(stop) if stop else input_strds_end
 
     if input_strds.is_time_absolute():
         end = tgis.increment_datetime_by_string(start, cycle)
@@ -365,10 +333,7 @@ def main():
         if indicator:
             num_maps = len(input_maps)
             for i in range(num_maps):
-                if reverse:
-                    map = input_maps[num_maps - i - 1]
-                else:
-                    map = input_maps[i]
+                map = input_maps[num_maps - i - 1] if reverse else input_maps[i]
 
                 if (
                     input_strds.get_temporal_type() == "absolute"
@@ -421,7 +386,7 @@ def main():
                         prev_map = curr_map
                         subexpr1 = "null()"
                         subexpr3 = "%i" % (indicator_start)
-                    elif i > 0 and i < num_maps - 1:
+                    elif 0 < i < num_maps - 1:
                         prev_map = occurrence_maps[map.next().get_id()].get_name()
                         next_map = occurrence_maps[map.prev().get_id()].get_name()
                         # In case the previous map is null() set null() or the start
@@ -463,7 +428,7 @@ def main():
                         prev_map = curr_map
                         subexpr1 = "null()"
                         subexpr3 = "%i" % (indicator_start)
-                    elif i > 0 and i < num_maps - 1:
+                    elif 0 < i < num_maps - 1:
                         prev_map = occurrence_maps[map.prev().get_id()].get_name()
                         next_map = occurrence_maps[map.next().get_id()].get_name()
                         # In case the previous map is null() set null() or the start
@@ -637,19 +602,13 @@ def compute_occurrence(
     # Aggregate
     num_maps = len(input_maps)
     for i in range(num_maps):
-        if reverse:
-            map = input_maps[num_maps - i - 1]
-        else:
-            map = input_maps[i]
+        map = input_maps[num_maps - i - 1] if reverse else input_maps[i]
 
         # Compute the days since start
         input_start, input_end = map.get_temporal_extent_as_tuple()
 
         td = input_start - start
-        if map.is_time_absolute():
-            days = tgis.time_delta_to_relative_time(td)
-        else:
-            days = td
+        days = tgis.time_delta_to_relative_time(td) if map.is_time_absolute() else td
 
         if input_strds.get_temporal_type() == "absolute" and tsuffix == "gran":
             suffix = tgis.create_suffix_from_datetime(

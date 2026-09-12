@@ -12,10 +12,8 @@ Classes:
  - controllers::IMapDispConnection
  - controllers::IClassConnection
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Stepan Turek <stepan.turek seznam.cz> (mentor: Martin Landa)
 """
@@ -149,12 +147,9 @@ class ScattsManager:
             callable=self.core.CleanUp, ondone=lambda event: self.CleanUpDone()
         )
 
-        if self.show_add_scatt_plot:
-            show_add = True
-        else:
-            show_add = False
+        show_add = bool(self.show_add_scatt_plot)
 
-        self.all_bands_to_bands = dict(zip(bands, [-1] * len(bands)))
+        self.all_bands_to_bands = dict(zip(bands, [-1] * len(bands), strict=False))
         self.all_bands = bands
 
         self.region = GetRegion()
@@ -238,7 +233,7 @@ class ScattsManager:
                 )
             )
             return
-        elif ncells > WARN_NCELLS:
+        if ncells > WARN_NCELLS:
             dlg = wx.MessageDialog(
                 parent=self.guiparent,
                 message=_(
@@ -271,9 +266,7 @@ class ScattsManager:
                 transpose = False
                 if b_1 > b_2:
                     transpose = True
-                    tmp_band = b_2
-                    b_2 = b_1
-                    b_1 = tmp_band
+                    b_2, b_1 = b_1, b_2
 
                 b_1_id = self.all_bands_to_bands[self.all_bands[b_1]]
                 b_2_id = self.all_bands_to_bands[self.all_bands[b_2]]
@@ -344,7 +337,7 @@ class ScattsManager:
                 ),
             )
             return False
-        elif mrange > WARN_SCATT_SIZE:
+        if mrange > WARN_SCATT_SIZE:
             dlg = wx.MessageDialog(
                 parent=self.guiparent,
                 message=_(
@@ -508,7 +501,7 @@ class PlotsRenderingManager:
     """Manages rendering of scatter plot.
 
     .. todo::
-        still space for optimalization
+        still space for optimization
     """
 
     def __init__(self, scatt_mgr, cats_mgr, core):
@@ -697,10 +690,7 @@ class CategoriesManager:
 
     def AddCategory(self, cat_id=None, name=None, color=None, nstd=None):
         if cat_id is None:
-            if self.cats_ids:
-                cat_id = max(self.cats_ids) + 1
-            else:
-                cat_id = 1
+            cat_id = max(self.cats_ids) + 1 if self.cats_ids else 1
 
         if self.scatt_mgr.data_set:
             self.scatt_mgr.thread.Run(callable=self.core.AddCategory, cat_id=cat_id)
@@ -963,16 +953,15 @@ class IMapDispConnection:
 
         bands = []
         while True:
-            if dlg.ShowModal() == wx.ID_OK:
-                bands = dlg.GetGroupBandsErr(parent=self.scatt_mgr.guiparent)
-                if bands:
-                    name, s = dlg.GetData()
-                    group = gs.find_file(name=name, element="group")
-                    self.set_g["group"] = group["name"]
-                    self.set_g["subg"] = s
+            if dlg.ShowModal() != wx.ID_OK:
+                break
+            bands = dlg.GetGroupBandsErr(parent=self.scatt_mgr.guiparent)
+            if bands:
+                name, s = dlg.GetData()
+                group = gs.find_file(name=name, element="group")
+                self.set_g["group"] = group["name"]
+                self.set_g["subg"] = s
 
-                    break
-            else:
                 break
 
         dlg.Destroy()
@@ -1139,11 +1128,9 @@ class IClassConnection:
 
     def SetCategory(self, cat, stats):
         self.cats_mgr.setCategoryAttrs.disconnect(self.SetStatistics)
-        cats_attr = {}
-
-        for attr in ["name", "color", "nstd"]:
-            if attr in stats:
-                cats_attr[attr] = stats[attr]
+        cats_attr = {
+            attr: stats[attr] for attr in ["name", "color", "nstd"] if attr in stats
+        }
 
         if cats_attr:
             self.cats_mgr.SetCategoryAttrs(cat, cats_attr)

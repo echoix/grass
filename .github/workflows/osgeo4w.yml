@@ -8,12 +8,15 @@ on:
       - releasebranch_*
   pull_request:
 
+permissions: {}
+
 jobs:
   build:
     name: ${{ matrix.os }} build and tests
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
+      group: >-
+        ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
         matrix.os }}
       cancel-in-progress: true
 
@@ -23,7 +26,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - windows-2019
+          - windows-2022
       fail-fast: false
 
     steps:
@@ -31,64 +34,81 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-      - uses: msys2/setup-msys2@ddf331adaebd714795f1042345e6ca57bd66cea8 # v2.24.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
+        id: msys2
         with:
           path-type: inherit
           location: D:\
           update: true
           msystem: MINGW64
-          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-fftw mingw-w64-x86_64-openblas mingw-w64-x86_64-pkgconf
-            mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
-            mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
-            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
-            mingw-w64-x86_64-pcre
+          install: >-
+            bison
+            diffutils
+            dos2unix
+            flex
+            git
+            libintl
+            make
+            tar
+            zip
+          pacboy: >-
+            bzip2
+            ccache
+            fftw
+            gcc
+            gettext
+            libiconv
+            libsystre
+            libtre
+            libwinpthread-git
+            openblas
+            pcre
+            pkgconf
+            toolchain
+            zlib
 
       - name: Setup OSGeo4W environment
-        uses: echoix/setup-OSGeo4W@17deecd39e077a80bf1081443998ea8edd6f15bf  # v0.1.0
+        uses: echoix/setup-OSGeo4W@1e711832882e03603e9013181a87885b10af8a98 # v0.3.0
+        id: osgeo4w
         with:
           package-dir: "D:/OSGeo4W_pkg"
           packages: |
             cairo-devel
-            fftw
             freetype-devel
             gdal-devel
-            gdal-ecw
-            gdal-mrsid
             geos-devel
+            libjpeg-turbo-devel
             liblas-devel
             libpng-devel
             libpq-devel
             libtiff-devel
-            libxdr
             netcdf-devel
-            pdal-devel
-            pdcurses
             proj-devel
             python3-core
+            python3-gdal
             python3-jupyter
             python3-matplotlib
             python3-numpy
             python3-pip
-            python3-ply
-            python3-pytest
             python3-pywin32
             python3-wxpython
-            regex-devel
+            sqlite3-devel
             zstd-devel
 
       - name: Set number of cores for compilation
         run: |
-          echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
+          echo "MAKEFLAGS=-j$(nproc)" >> "${GITHUB_ENV}"
         shell: msys2 {0}
 
-      - name: Compile GRASS GIS
+      - name: Compile GRASS
         shell: msys2 {0}
         run: |
-          export CFLAGS="${CFLAGS} -pipe"
-          export CXXFLAGS="${CXXFLAGS} -pipe"
           .github/workflows/build_osgeo4w.sh
+        env:
+          MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
 
       - name: Print installed versions
         if: always()
@@ -96,15 +116,24 @@ jobs:
         run: .github/workflows/print_versions.sh
 
       - name: Test executing of the grass command
-        run: .github/workflows/test_simple.bat 'C:\OSGeo4W\opt\grass\grass85.bat'
+        run: .github/workflows/test_simple.bat '%O4WROOT%\opt\grass\grass86.bat'
+        env:
+          O4WROOT: ${{ steps.osgeo4w.outputs.root }}
 
       - name: Test executing of the grass command in bash
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
 
-      - name: Install pytest plugins
-        run: python -m pip install --upgrade pytest pytest-timeout pytest-cov pytest-xdist pytest-randomly
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+      - name: Install additional python packages
+        run: |
+          python -m pip install ^
+            pytest ^
+            pytest-timeout ^
+            pytest-cov ^
+            pytest-xdist ^
+            pytest-randomly
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
@@ -112,14 +141,16 @@ jobs:
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           set INITIAL_GISBASE=%GISBASE%
           set INITIAL_PWD=%CD%
-          pytest --verbose --color=yes ^
-            --durations=0 --durations-min=0.5 ^
-            --numprocesses auto ^
-            --cov ^
-            --cov-context=test ^
-            -ra . ^
-            -m "not needs_solo_run"
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+          pytest ^
+            @.github/workflows/pytest_args_ci.txt ^
+            @.github/workflows/pytest_args_cov.txt ^
+            @.github/workflows/pytest_args_parallel.txt ^
+            --junitxml=pytest.xdist.junit.xml ^
+            -k "not testsuite"
+        env:
+          OMP_NUM_THREADS: 1
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
       - name: Run pytest with a single worker (for tests marked with needs_solo_run)
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
@@ -127,14 +158,29 @@ jobs:
           path %GISBASE%\lib;%GISBASE%\bin;%PATH%
           set INITIAL_GISBASE=%GISBASE%
           set INITIAL_PWD=%CD%
-          pytest --verbose --color=yes ^
-            --durations=0 --durations-min=0.5 ^
-            --cov ^
-            --cov-context=test ^
-            --cov-append ^
-            -ra . ^
-            -m "needs_solo_run"
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+          pytest ^
+            @.github/workflows/pytest_args_ci.txt ^
+            @.github/workflows/pytest_args_cov.txt ^
+            @.github/workflows/pytest_args_not_parallel.txt ^
+            --junitxml=pytest.needs_solo_run.junit.xml ^
+            -k "not testsuite"
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+      - name: Run pytest with a single worker (for gunittest-based tests)
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%;%OSGEO4W_ROOT%\opt\grass
+          set INITIAL_GISBASE=%GISBASE%
+          set INITIAL_PWD=%CD%
+          pytest ^
+            @.github/workflows/pytest_args_ci.txt ^
+            @.github/workflows/pytest_args_cov.txt ^
+            @.github/workflows/pytest_args_deselect.txt ^
+            @.github/workflows/pytest_args_gunittest.txt ^
+            --junitxml=pytest.gunittest.junit.xml
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
       - name: Fix non-standard installed script paths in coverage data
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
@@ -148,8 +194,17 @@ jobs:
           coverage report
           coverage json
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          exclude: gui
+          flags: ${{ matrix.os }}-pytest-python
+          token: ${{ secrets.CODECOV_TOKEN }}
+          report_type: test_results
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           verbose: true
           flags: pytest-osgeo4w
@@ -157,18 +212,20 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: python-codecoverage-report-${{ matrix.os }}
           path: coverage_html_report
           retention-days: 1
 
       - name: Run tests
-        run: .github/workflows/test_thorough.bat 'C:\OSGeo4W\opt\grass\grass85.bat' 'C:\OSGeo4W\bin\python3'
+        run: .github/workflows/test_thorough.bat '%O4WROOT%\opt\grass\grass86.bat' '%O4WROOT%\bin\python3'
+        env:
+          O4WROOT: ${{ steps.osgeo4w.outputs.root }}
 
       - name: Make HTML test report available
         if: ${{ always() }}
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: testreport-${{ matrix.os }}
           path: testreport

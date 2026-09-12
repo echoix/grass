@@ -1,16 +1,14 @@
 """
 @package wxplot.base
 
-@brief Base classes for iinteractive plotting using PyPlot
+@brief Base classes for interactive plotting using PyPlot
 
 Classes:
  - base::PlotIcons
  - base::BasePlotFrame
 
-(C) 2011 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton, Arizona State University
 """
@@ -30,6 +28,7 @@ from gui_core.toolbars import BaseIcons
 from gui_core.wrap import Menu
 
 import grass.script as gs
+from grass.exceptions import CalledModuleError
 
 PlotIcons = {
     "draw": MetaIcon(img="show", label=_("Draw/re-draw plot")),
@@ -204,7 +203,7 @@ class BasePlotFrame(wx.Frame):
 
             try:
                 ret = gs.raster_info(r)
-            except:
+            except CalledModuleError:
                 continue
                 # if r.info cannot parse map, skip it
 
@@ -246,11 +245,12 @@ class BasePlotFrame(wx.Frame):
                         rdict[r]["pcolor"] = self.colorDict[self.colorList[idx]]
                 else:
                     rdict[r]["pcolor"] = self.colorDict[self.colorList[idx]]
-            else:
-                r = randint(0, 255)
-                b = randint(0, 255)
-                g = randint(0, 255)
-                rdict[r]["pcolor"] = (r, g, b, 255)
+                continue
+
+            r = randint(0, 255)
+            b = randint(0, 255)
+            g = randint(0, 255)
+            rdict[r]["pcolor"] = (r, g, b, 255)
 
         return rdict
 
@@ -260,7 +260,7 @@ class BasePlotFrame(wx.Frame):
         """
 
         if len(rasterList) == 0:
-            return
+            return None
 
         rdict = {}  # initialize a dictionary
         for rpair in rasterList:
@@ -270,7 +270,7 @@ class BasePlotFrame(wx.Frame):
                 ret0 = gs.raster_info(rpair[0])
                 ret1 = gs.raster_info(rpair[1])
 
-            except:
+            except (IndexError, CalledModuleError):
                 continue
                 # if r.info cannot parse map, skip it
 
@@ -321,11 +321,12 @@ class BasePlotFrame(wx.Frame):
 
             if idx <= len(self.colorList):
                 rdict[rpair]["pcolor"] = self.colorDict[self.colorList[idx]]
-            else:
-                r = randint(0, 255)
-                b = randint(0, 255)
-                g = randint(0, 255)
-                rdict[rpair]["pcolor"] = (r, g, b, 255)
+                continue
+
+            r = randint(0, 255)
+            b = randint(0, 255)
+            g = randint(0, 255)
+            rdict[rpair]["pcolor"] = (r, g, b, 255)
 
         return rdict
 
@@ -510,7 +511,6 @@ class BasePlotFrame(wx.Frame):
 
     def PlotOptionsMenu(self, event):
         """Popup menu for plot and text options"""
-        point = wx.GetMousePosition()
         popt = Menu()
         # Add items to the menu
         settext = wx.MenuItem(popt, wx.ID_ANY, _("Text settings"))
@@ -608,7 +608,6 @@ class BasePlotFrame(wx.Frame):
 
     def PrintMenu(self, event):
         """Print options and output menu"""
-        point = wx.GetMousePosition()
         printmenu = Menu()
         for title, handler in (
             (_("Page setup"), self.OnPageSetup),

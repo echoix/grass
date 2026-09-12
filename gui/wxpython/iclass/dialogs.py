@@ -11,10 +11,8 @@ Classes:
  - dialogs::IClassSignatureFileDialog
  - dialogs::IClassExportAreasDialog
 
-(C) 2006-2011 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2006-2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Vaclav Petras <wenzeslaus gmail.com>
 @author Anna Kratochvilova <kratochanna gmail.com>
@@ -486,9 +484,8 @@ class CategoryListCtrl(ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.TextEdi
             index = self.GetNextItem(lastFound, wx.LIST_NEXT_ALL, state)
             if index == -1:
                 break
-            else:
-                lastFound = index
-                indices.append(index)
+            lastFound = index
+            indices.append(index)
         return indices
 
     def OnEdit(self, event):
@@ -586,13 +583,9 @@ def ContrastColor(color):
         could be useful by other apps, consider moving it into gui_core
     """
     # gacek,
-    # http://stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
+    # https://stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
     a = 1 - (0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]) / 255
-
-    if a < 0.5:
-        d = 0
-    else:
-        d = 255
+    d = 0 if a < 0.5 else 255
     # maybe return just bool if text should be dark or bright
     return (d, d, d)
 

@@ -6,11 +6,9 @@
 # AUTHOR(S):    Markus Neteler, converted to Python by Glynn Clements
 #               Bug fixes, sort for coor by Huidae Cho <grass4u gmail.com>
 # PURPOSE:      Reports geometry statistics for vector maps
-# COPYRIGHT:    (C) 2005-2021 by MN and the GRASS Development Team
-#
-#               This program is free software under the GNU General Public
-#               License (>=v2). Read the file COPYING that comes with GRASS
-#               for details.
+# SPDX-FileCopyrightText: 2005-2021 MN
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -91,10 +89,7 @@ def main():
         isConnection = False
         colnames = ["cat"]
 
-    if option == "coor":
-        extracolnames = ["x", "y", "z"]
-    else:
-        extracolnames = [option]
+    extracolnames = ["x", "y", "z"] if option == "coor" else [option]
 
     if units == "percent":
         unitsp = "meters"
@@ -116,7 +111,7 @@ def main():
             cols = decode(line).rstrip("\r\n").split("|")
             if catcol == -1:
                 ncols = len(cols)
-                for i in range(0, ncols):
+                for i in range(ncols):
                     if cols[i] == f["key"]:
                         catcol = i
                         break
@@ -227,10 +222,10 @@ def main():
 
         # calculate percentages
         records4 = [float(r[-1]) * 100 / total for r in records3]
-        if type(records1[0]) == int:
-            records3 = [[r1] + [r4] for r1, r4 in zip(records1, records4)]
+        if isinstance(records1[0], int):
+            records3 = [[r1] + [r4] for r1, r4 in zip(records1, records4, strict=False)]
         else:
-            records3 = [r1 + [r4] for r1, r4 in zip(records1, records4)]
+            records3 = [r1 + [r4] for r1, r4 in zip(records1, records4, strict=False)]
 
     # sort results
     if sort:

@@ -6,10 +6,8 @@
 List of classes:
  - vinfo::VectorDBInfo
 
-(C) 2007-2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 """
@@ -23,6 +21,7 @@ from gui_core.wrap import StaticText
 from core.gcmd import RunCommand, GError
 from core.settings import UserSettings
 import grass.script as gs
+from grass.exceptions import ScriptError
 
 
 def GetUnicodeValue(value):
@@ -37,8 +36,7 @@ def GetUnicodeValue(value):
     if isinstance(value, bytes):
         enc = GetDbEncoding()
         return str(value, enc, errors="replace")
-    else:
-        return str(value)
+    return str(value)
 
 
 def GetDbEncoding():
@@ -46,10 +44,9 @@ def GetDbEncoding():
     then env variable), if not assumes unicode."""
     enc = UserSettings.Get(group="atm", key="encoding", subkey="value")
     if not enc and "GRASS_DB_ENCODING" in os.environ:
-        enc = os.environ["GRASS_DB_ENCODING"]
-    else:
-        enc = "utf-8"  # assuming UTF-8
-    return enc
+        return os.environ["GRASS_DB_ENCODING"]
+    # assuming UTF-8
+    return "utf-8"
 
 
 def CreateDbInfoDesc(panel, mapDBInfo, layer):
@@ -108,7 +105,7 @@ class VectorDBInfo(VectorDBInfoBase):
                 coord=(float(queryCoords[0]), float(queryCoords[1])),
                 distance=float(qdist),
             )
-        except gs.ScriptError:
+        except ScriptError:
             GError(
                 parent=None,
                 message=_(
@@ -121,9 +118,7 @@ class VectorDBInfo(VectorDBInfoBase):
             return None
 
         # process attributes
-        ret = {}
-        for key in ["Category", "Layer", "Table", "Id"]:
-            ret[key] = []
+        ret = {key: [] for key in ["Category", "Layer", "Table", "Id"]}
 
         for record in data:
             if "Table" not in record:

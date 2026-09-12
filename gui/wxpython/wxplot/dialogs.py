@@ -11,10 +11,8 @@ Classes:
  - dialogs::TextDialog
  - dialogs::OptDialog
 
-(C) 2011-2016 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2011-2016 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton, Arizona State University
 """
@@ -547,8 +545,6 @@ class HistRasterDialog(wx.Dialog):
             self.gselection.Enable()
             self.rselection.Disable()
             self.rselection.SetValue("")
-        else:
-            pass
 
     def OnRasterSelection(self, event):
         """Handler for selecting a single raster map"""
@@ -986,9 +982,7 @@ class OptDialog(wx.Dialog):
         gridSizer = wx.GridBagSizer(vgap=5, hgap=5)
 
         row = 0
-        choicelist = []
-        for i in self.rasterList:
-            choicelist.append(str(i))
+        choicelist = [str(i) for i in self.rasterList]
 
         self.mapchoice = Choice(
             parent=self, id=wx.ID_ANY, size=(300, -1), choices=choicelist

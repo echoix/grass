@@ -11,10 +11,8 @@ from core.debug import Debug
 Debug.msg (3, 'debug message')
 @endcode
 
-(C) 2007-2009, 2011 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2009, 2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 """
@@ -61,7 +59,7 @@ class DebugMsg:
         :param args: formatting params
         """
         # self.SetLevel()
-        if self.debuglevel > 0 and level > 0 and level <= self.debuglevel:
+        if 0 < level <= self.debuglevel:
             if args:
                 sys.stderr.write(
                     "GUI D%d/%d: " % (level, self.debuglevel)

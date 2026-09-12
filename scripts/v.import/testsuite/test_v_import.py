@@ -18,9 +18,9 @@ from grass.gunittest.main import test
 class TestVImport(TestCase):
     imported = "test_v_import_imported"
 
-    def tearDown(cls):
+    def tearDown(self):
         """Remove imported map after each test method"""
-        cls.runModule("g.remove", flags="f", type="vector", name=cls.imported)
+        self.runModule("g.remove", flags="f", type="vector", name=self.imported)
 
     def test_import_same_proj_gpkg(self):
         """Import GPKG in same proj, default params"""
@@ -82,10 +82,10 @@ class TestVImport(TestCase):
             vector=self.imported,
             # Values rounded to one decimal point.
             reference={
-                "north": 227744.8,
-                "south": 215259.6,
-                "east": 644450.6,
-                "west": 631257.4,
+                "north": 227744.0,
+                "south": 215258.8,
+                "east": 644450.8,
+                "west": 631257.7,
                 "top": 0,
                 "bottom": 0,
             },

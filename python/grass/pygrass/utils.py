@@ -1,18 +1,21 @@
-import itertools
 import fnmatch
+import itertools
 import os
+from pathlib import Path
 from sqlite3 import OperationalError
 
 import grass.lib.gis as libgis
+from grass.script import core as grasscore
+from grass.script import utils as grassutils
 
+# flake8: noqa: E402
 libgis.G_gisinit("")
 
 import grass.lib.raster as libraster
 from grass.lib.ctypes_preamble import String
-from grass.script import core as grasscore
-from grass.script import utils as grassutils
-
 from grass.pygrass.errors import GrassError
+
+# flake8: qa
 
 
 test_vector_name = "Utils_test_vector"
@@ -37,7 +40,7 @@ def findfiles(dirpath, match=None):
     res = []
     for f in sorted(os.listdir(dirpath)):
         abspath = os.path.join(dirpath, f)
-        if os.path.isdir(abspath):
+        if Path(abspath).is_dir():
             res.extend(findfiles(abspath, match))
 
         if match:
@@ -49,7 +52,7 @@ def findfiles(dirpath, match=None):
 
 
 def findmaps(type, pattern=None, mapset="", location="", gisdbase=""):
-    """Return a list of tuple contining the names of the:
+    """Return a list of tuples containing the names of the:
 
     * map
     * mapset,
@@ -72,10 +75,11 @@ def findmaps(type, pattern=None, mapset="", location="", gisdbase=""):
         return res
 
     def find_in_gisdbase(type, pattern, gisdbase):
-        res = []
-        for loc in gisdbase.locations():
-            res.extend(find_in_location(type, pattern, Location(loc, gisdbase.name)))
-        return res
+        return [
+            a
+            for loc in gisdbase.locations()
+            for a in find_in_location(type, pattern, Location(loc, gisdbase.name))
+        ]
 
     if gisdbase and location and mapset:
         mset = Mapset(mapset, location, gisdbase)
@@ -83,24 +87,23 @@ def findmaps(type, pattern=None, mapset="", location="", gisdbase=""):
             (m, mset.name, mset.location, mset.gisdbase)
             for m in mset.glist(type, pattern)
         ]
-    elif gisdbase and location:
+    if gisdbase and location:
         loc = Location(location, gisdbase)
         return find_in_location(type, pattern, loc)
-    elif gisdbase:
+    if gisdbase:
         gis = Gisdbase(gisdbase)
         return find_in_gisdbase(type, pattern, gis)
-    elif location:
+    if location:
         loc = Location(location)
         return find_in_location(type, pattern, loc)
-    elif mapset:
+    if mapset:
         mset = Mapset(mapset)
         return [
             (m, mset.name, mset.location, mset.gisdbase)
             for m in mset.glist(type, pattern)
         ]
-    else:
-        gis = Gisdbase()
-        return find_in_gisdbase(type, pattern, gis)
+    gis = Gisdbase()
+    return find_in_gisdbase(type, pattern, gis)
 
 
 def remove(oldname, maptype):
@@ -136,11 +139,10 @@ def decode(obj, encoding=None):
     """
     if isinstance(obj, String):
         return grassutils.decode(obj.data, encoding=encoding)
-    elif isinstance(obj, bytes):
+    if isinstance(obj, bytes):
         return grassutils.decode(obj)
-    else:
-        # eg None
-        return obj
+    # eg None
+    return obj
 
 
 def getenv(env):
@@ -187,7 +189,7 @@ def is_clean_name(name) -> bool:
     False
 
     """
-    return not libgis.G_legal_filename(name) < 0
+    return libgis.G_legal_filename(name) >= 0
 
 
 def coor2pixel(coord, region):
@@ -297,6 +299,7 @@ def get_raster_for_points(poi_vector, raster, column=None, region=None):
     (10.0, 1.0)
     >>> r[1]  # doctest: +ELLIPSIS
     (12.0, 1.0)
+    >>> vect.close()
     >>> remove("test_vect_2", "vect")
 
     :param poi_vector: A VectorTopo object that contains points
@@ -337,9 +340,8 @@ def get_raster_for_points(poi_vector, raster, column=None, region=None):
                 result.append((poi.id, poi.x, poi.y, None))
     if not column:
         return result
-    else:
-        poi.attrs.commit()
-        return True
+    poi.attrs.commit()
+    return True
 
 
 def r_export(rast, output="", fmt="png", **kargs):
@@ -355,8 +357,8 @@ def r_export(rast, output="", fmt="png", **kargs):
             **kargs,
         )
         return output
-    else:
-        raise ValueError("Raster map does not exist.")
+    msg = "Raster map does not exist."
+    raise ValueError(msg)
 
 
 def get_lib_path(modname, libname=None):
@@ -391,13 +393,11 @@ def split_in_chunk(iterable, length=10):
 
     >>> for chunk in split_in_chunk(range(25)):
     ...     print(chunk)
-    ...
     (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
     (10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
     (20, 21, 22, 23, 24)
     >>> for chunk in split_in_chunk(range(25), 3):
     ...     print(chunk)
-    ...
     (0, 1, 2)
     (3, 4, 5)
     (6, 7, 8)
@@ -447,25 +447,25 @@ def create_test_vector_map(map_name="test_vector"):
     11 boundaries and 4 centroids. The attribute table contains cat, name
     and value columns.
 
-     param map_name: The vector map name that should be used
+    :param map_name: The vector map name that should be used
 
+    .. code-block:: none
 
-
-                               P1 P2 P3
-        6                       *  *  *
-        5
-        4    _______ ___ ___   L1 L2 L3
-     Y  3   |A1___ *|  *|  *|   |  |  |
-        2   | |A2*| |   |   |   |  |  |
-        1   | |___| |A3 |A4 |   |  |  |
-        0   |_______|___|___|   |  |  |
-       -1
-         -1 0 1 2 3 4 5 6 7 8 9 10 12 14
-                        X
+                                   P1 P2 P3
+            6                       *  *  *
+            5
+            4    _______ ___ ___   L1 L2 L3
+         Y  3   |A1___ *|  *|  *|   |  |  |
+            2   | |A2*| |   |   |   |  |  |
+            1   | |___| |A3 |A4 |   |  |  |
+            0   |_______|___|___|   |  |  |
+           -1
+             -1 0 1 2 3 4 5 6 7 8 9 10 12 14
+                            X
     """
 
     from grass.pygrass.vector import VectorTopo
-    from grass.pygrass.vector.geometry import Point, Line, Centroid, Boundary
+    from grass.pygrass.vector.geometry import Boundary, Centroid, Line, Point
 
     cols = [
         ("cat", "INTEGER PRIMARY KEY"),
@@ -519,37 +519,39 @@ def create_test_vector_map(map_name="test_vector"):
 def create_test_stream_network_map(map_name="streams"):
     R"""Create test data
 
-       This functions creates a vector map layer with lines that represent
-       a stream network with two different graphs. The first graph
-       contains a loop, the second can be used as directed graph.
+    This functions creates a vector map layer with lines that represent
+    a stream network with two different graphs. The first graph
+    contains a loop, the second can be used as directed graph.
 
-       This should be used in doc and unit tests to create location/mapset
-       independent vector map layer.
+    This should be used in doc and unit tests to create location/mapset
+    independent vector map layer.
 
-        param map_name: The vector map name that should be used
+    :param map_name: The vector map name that should be used
 
-       1(0,2)  3(2,2)
-        \     /
-       1 \   / 2
-          \ /
-           2(1,1)
-    6(0,1) ||  5(2,1)
-       5 \ || / 4
-          \||/
-           4(1,0)
-           |
-           | 6
-           |7(1,-1)
+    .. code-block:: none
 
-       7(0,-1) 8(2,-1)
-        \     /
-       8 \   / 9
-          \ /
-           9(1, -2)
-           |
-           | 10
-           |
-          10(1,-3)
+           1(0,2)  3(2,2)
+            \     /
+           1 \   / 2
+              \ /
+               2(1,1)
+        6(0,1) ||  5(2,1)
+           5 \ || / 4
+              \||/
+               4(1,0)
+               |
+               | 6
+               |7(1,-1)
+
+           7(0,-1) 8(2,-1)
+            \     /
+           8 \   / 9
+              \ /
+               9(1, -2)
+               |
+               | 10
+               |
+              10(1,-3)
     """
 
     from grass.pygrass.vector import VectorTopo
@@ -593,6 +595,7 @@ def create_test_stream_network_map(map_name="streams"):
 
 if __name__ == "__main__":
     import doctest
+
     from grass.script.core import run_command
 
     create_test_vector_map(test_vector_name)
@@ -601,10 +604,11 @@ if __name__ == "__main__":
 
     doctest.testmod()
 
-    # Remove the generated vector map, if exist
     mset = get_mapset_vector(test_vector_name, mapset="")
     if mset:
+        # Remove the generated vector map, if exists
         run_command("g.remove", flags="f", type="vector", name=test_vector_name)
     mset = get_mapset_raster(test_raster_name, mapset="")
     if mset:
+        # Remove the generated raster map, if exists
         run_command("g.remove", flags="f", type="raster", name=test_raster_name)

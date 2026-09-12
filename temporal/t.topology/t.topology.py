@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:      List temporal topology of a space time dataset
-# COPYRIGHT:    (C) 2011-2017 by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2011-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -74,10 +65,7 @@ def main():
     spatial = None
 
     if spatio_temporal_relations:
-        if sp.get_type() == "strds":
-            spatial = "2D"
-        else:
-            spatial = "3D"
+        spatial = "2D" if sp.get_type() == "strds" else "3D"
 
     if temporal_relations or spatio_temporal_relations:
         sp.print_spatio_temporal_relationships(maps=maps, spatial=spatial)

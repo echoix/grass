@@ -2,13 +2,11 @@
 #
 # AUTHOR(S): Vaclav Petras <wenzeslaus gmail com>
 #
-# PURPOSE:   Benchmarking for GRASS GIS modules
+# PURPOSE:   Benchmarking for GRASS modules
 #
-# COPYRIGHT: (C) 2021 Vaclav Petras, and by the GRASS Development Team
-#
-#            This program is free software under the GNU General Public
-#            License (>=v2). Read the file COPYING that comes with GRASS
-#            for details.
+# SPDX-FileCopyrightText: 2021 Vaclav Petras
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 
 """Plotting functionality for benchmark results"""
@@ -25,10 +23,7 @@ def get_pyplot(to_file):
     """
     import matplotlib as mpl  # pylint: disable=import-outside-toplevel
 
-    if to_file:
-        backend = "agg"
-    else:
-        backend = None
+    backend = "agg" if to_file else None
     if backend:
         mpl.use(backend)
 
@@ -75,10 +70,9 @@ def nprocs_plot(results, filename=None, title=None, metric="time"):
             ylabel = metric.title()
             plt.plot(x, getattr(result, metric), label=result.label)
         else:
-            raise ValueError(
-                f"Invalid metric '{metric}' in result, it should be:\
+            msg = f"Invalid metric '{metric}' in result, it should be:\
                 'time', 'speedup' or 'efficiency'"
-            )
+            raise ValueError(msg)
     plt.legend()
     # If there is not many x values, show ticks for each, but use default
     # ticks when there is a lot of x values.
@@ -124,10 +118,7 @@ def num_cells_plot(results, filename=None, title=None, show_resolution=False):
 
     x_ticks = set()
     for result in results:
-        if show_resolution:
-            x = result.resolutions
-        else:
-            x = result.cells
+        x = result.resolutions if show_resolution else result.cells
         x_ticks.update(x)
         plt.plot(x, result.times, label=result.label)
         if hasattr(result, "all_times"):

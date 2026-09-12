@@ -8,23 +8,36 @@ Classes:
  - statistics::Statistics
  - statistics::BandStatistics
 
-(C) 2006-2011, 2013 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2006-2011, 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Vaclav Petras <wenzeslaus gmail.com>
 @author Anna Kratochvilova <kratochanna gmail.com>
 """
 
 import os
-from ctypes import *
+import sys
+from ctypes import byref, c_char_p, c_float, c_int
 
 import grass.script as gs
 
 try:
-    from grass.lib.imagery import *
-except ImportError as e:
+    from grass.lib.imagery import (
+        I_iclass_statistics_get_cat,
+        I_iclass_statistics_get_color,
+        I_iclass_statistics_get_histo,
+        I_iclass_statistics_get_max,
+        I_iclass_statistics_get_mean,
+        I_iclass_statistics_get_min,
+        I_iclass_statistics_get_name,
+        I_iclass_statistics_get_nbands,
+        I_iclass_statistics_get_ncells,
+        I_iclass_statistics_get_nstd,
+        I_iclass_statistics_get_range_max,
+        I_iclass_statistics_get_range_min,
+        I_iclass_statistics_get_stddev,
+    )
+except ImportError:
     sys.stderr.write(_("Loading imagery lib failed"))
 
 from grass.pydispatch.signal import Signal

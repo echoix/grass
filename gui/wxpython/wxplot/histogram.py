@@ -7,10 +7,8 @@ Classes:
  - histogram::HistogramPlotFrame
  - histogram::HistogramPlotToolbar
 
-(C) 2011-2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2011-2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton, Arizona State University
 """
@@ -97,10 +95,7 @@ class HistogramPlotFrame(BasePlotFrame):
         create a list of cell value and count/percent/area pairs. This is passed to
         plot to create a line graph of the histogram.
         """
-        try:
-            self.SetCursor(StockCursor(wx.CURSOR_ARROW))
-        except:
-            pass
+        self.SetCursor(StockCursor(wx.CURSOR_ARROW))
 
         self.SetGraphStyle()
         wx.BeginBusyCursor()
@@ -154,7 +149,7 @@ class HistogramPlotFrame(BasePlotFrame):
         # set xlabel based on first raster map in list to be histogrammed
         #
         units = self.raster[self.rasterList[0]]["units"]
-        if units not in ("", "(none)") and units is not None:
+        if units not in {"", "(none)"} and units is not None:
             self.xlabel = _("Raster cell values %s") % units
         else:
             self.xlabel = _("Raster cell values")
@@ -243,8 +238,7 @@ class HistogramPlotFrame(BasePlotFrame):
 
         if len(self.plotlist) > 0:
             return self.plotlist
-        else:
-            return None
+        return None
 
     def Update(self):
         """Update histogram after changing options"""

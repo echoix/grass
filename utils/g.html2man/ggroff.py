@@ -1,6 +1,6 @@
-import sys
 import os
 import re
+import sys
 
 __all__ = ["Formatter"]
 
@@ -69,7 +69,7 @@ class Formatter:
             "index": [],
         }
         self.stack = []
-        self.strip_re = re.compile("^[ \t]+")
+        self.strip_re = re.compile(r"^[ \t]+")
         self.filename = filename
         self.at_bol = True
 
@@ -119,10 +119,7 @@ class Formatter:
             self.show(pre)
         if sep != "":
             if var:
-                if var == "index":
-                    val = self.get("index") + [0]
-                else:
-                    val = True
+                val = self.get("index") + [0] if var == "index" else True
                 self.pp_with(content, var, val)
             else:
                 self.pp(content)
@@ -131,7 +128,7 @@ class Formatter:
 
     def pp_li(self, content):
         if self.get("in_ul"):
-            self.fmt("\n.IP \\(bu 4n\n@", content)
+            self.fmt("\n.IP \\(bu 4n\n@", content)  # codespell:ignore bu
         else:
             idx = self.get("index")
             idx[-1] += 1
@@ -146,7 +143,7 @@ class Formatter:
             + os.path.basename(self.filename).replace(".html", "")
             + ' 1 "" "GRASS '
             + version
-            + '" "GRASS GIS User\'s Manual"'
+            + '" "GRASS User\'s Manual"'
         )
 
     def pp_tr(self, content):
@@ -204,7 +201,7 @@ class Formatter:
         self.show("\n.TS\nexpand;\n")
         self.show(" lw1 ".join(["lw60" for i in range(cols)]) + ".\n")
         self.pp_tbody(content)
-        self.show("\n.TE\n")
+        self.show("\n.TE\n")  # codespell:ignore: TE
 
     def pp_tag(self, tag, content):
         if self.get("in_tr") and tag not in styles:
@@ -253,8 +250,7 @@ class Formatter:
             for line in lines:
                 self.pp_text(line)
             return
-        else:
-            content = lines[0]
+        content = lines[0]
         if self.at_bol and not self.get("preformat"):
             content = self.strip_re.sub("", content)
         self.pp_string(content)

@@ -7,10 +7,8 @@ Classes:
  - scatter::ScatterFrame
  - scatter::ScatterToolbar
 
-(C) 2011 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton, Arizona State University
 """
@@ -176,11 +174,7 @@ class ScatterFrame(BasePlotFrame):
         frequency can be in cell counts, percents, or area
         """
         datalist = []
-
-        if self.scattertype == "bubble":
-            freqflag = "cn"
-        else:
-            freqflag = "n"
+        freqflag = "cn" if self.scattertype == "bubble" else "n"
 
         try:
             ret = RunCommand(

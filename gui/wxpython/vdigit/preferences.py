@@ -6,10 +6,8 @@
 Classes:
  - preferences::VDigitSettingsDialog
 
-(C) 2007-2011 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 """
@@ -199,7 +197,7 @@ class VDigitSettingsDialog(wx.Dialog):
             self.snappingUnit.SetSelection(
                 UserSettings.Get(group="vdigit", key="snapping", subkey="unit")
             )
-        except:
+        except KeyError:
             self.snappingUnit.SetSelection(0)
         self.snappingUnit.Bind(wx.EVT_CHOICE, self.OnChangeSnappingUnits)
         flexSizer.Add(text, proportion=0, flag=wx.ALIGN_CENTER_VERTICAL)
@@ -525,7 +523,6 @@ class VDigitSettingsDialog(wx.Dialog):
         # settings
         flexSizer = wx.FlexGridSizer(cols=2, hgap=3, vgap=3)
         flexSizer.AddGrowableCol(0)
-        settings = ((_("Layer"), 1), (_("Category"), 1), (_("Mode"), _("Next to use")))
         # layer
         text = StaticText(parent=panel, id=wx.ID_ANY, label=_("Layer"))
         self.layer = SpinCtrl(parent=panel, id=wx.ID_ANY, min=1, max=1e3)
@@ -622,10 +619,7 @@ class VDigitSettingsDialog(wx.Dialog):
         layer = UserSettings.Get(group="vdigit", key="layer", subkey="value")
         mapLayer = self.parent.toolbars["vdigit"].GetLayer()
         tree = self.parent.tree
-        if tree:
-            item = tree.FindItemByData("maplayer", mapLayer)
-        else:
-            item = None
+        item = tree.FindItemByData("maplayer", mapLayer) if tree else None
         row = 0
         for attrb in ["length", "area", "perimeter"]:
             # checkbox
@@ -664,10 +658,7 @@ class VDigitSettingsDialog(wx.Dialog):
                 column.SetStringSelection(
                     tree.GetLayerInfo(item, key="vdigit")["geomAttr"][attrb]["column"]
                 )
-                if attrb == "area":
-                    type = "area"
-                else:
-                    type = "length"
+                type = "area" if attrb == "area" else "length"
                 unitsIdx = Units.GetUnitsIndex(
                     type,
                     tree.GetLayerInfo(item, key="vdigit")["geomAttr"][attrb]["units"],
@@ -987,10 +978,7 @@ class VDigitSettingsDialog(wx.Dialog):
         # geometry attributes (workspace)
         mapLayer = self.parent.toolbars["vdigit"].GetLayer()
         tree = self._giface.GetLayerTree()
-        if tree:
-            item = tree.FindItemByData("maplayer", mapLayer)
-        else:
-            item = None
+        item = tree.FindItemByData("maplayer", mapLayer) if tree else None
         for key, val in self.geomAttrb.items():
             checked = self.FindWindowById(val["check"]).IsChecked()
             column = self.FindWindowById(val["column"]).GetValue()
@@ -999,11 +987,8 @@ class VDigitSettingsDialog(wx.Dialog):
                 tree.SetLayerInfo(item, key="vdigit", value={"geomAttr": {}})
 
             if checked:  # enable
-                if key == "area":
-                    type = key
-                else:
-                    type = "length"
-                unitsKey = Units.GetUnitsKey(type, unitsIdx)
+                type_ = key if key == "area" else "length"
+                unitsKey = Units.GetUnitsKey(type_, unitsIdx)
                 tree.GetLayerInfo(item, key="vdigit")["geomAttr"][key] = {
                     "column": column,
                     "units": unitsKey,

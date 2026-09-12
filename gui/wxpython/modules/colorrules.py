@@ -12,10 +12,8 @@ Classes:
  - colorrules::ThematicVectorTable
  - colorrules::BufferedWindow
 
-(C) 2008-2015 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2008-2015 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton (Arizona State University)
 @author Martin Landa <landa.martin gmail.com> (various updates, pre-defined color table)
@@ -203,8 +201,7 @@ class RulesPanel:
             self.mainPanel.FindWindowById(id + 1000).Enable()
             self.mainPanel.FindWindowById(id + 2000).Enable()
             if self.mapType == "vector" and not self.parent.GetParent().colorTable:
-                vals = []
-                vals.append(self.mainPanel.FindWindowById(id + 1000).GetValue())
+                vals = [self.mainPanel.FindWindowById(id + 1000).GetValue()]
                 try:
                     vals.append(self.mainPanel.FindWindowById(id + 1 + 1000).GetValue())
                 except AttributeError:
@@ -273,8 +270,7 @@ class RulesPanel:
 
     def SetVectorRule(self, num, val):
         """Set vector rule"""
-        vals = []
-        vals.append(val)
+        vals = [val]
         try:
             vals.append(self.mainPanel.FindWindowById(num + 1).GetValue())
         except AttributeError:
@@ -286,7 +282,7 @@ class RulesPanel:
         for child in self.mainPanel.GetChildren():
             child.Enable(enable)
         sql = True
-        self.LoadRulesline(sql)  # todo
+        self.LoadRulesline(sql)  # TODO
         self.btnAdd.Enable(enable)
         self.numRules.Enable(enable)
         self.checkAll.Enable(enable)
@@ -318,12 +314,14 @@ class RulesPanel:
                             int, self.ruleslines[item][self.attributeType].split(":")
                         )
                     except ValueError as e:
-                        message = _("Bad color format. Use color format '0:0:0'")
+                        message = (
+                            _("Bad color format '%s'. Use color format '0:0:0'") % e
+                        )
                     self.mainPanel.FindWindowById(item + 2000).SetValue((r, g, b))
                 else:
                     value = float(self.ruleslines[item][self.attributeType])
                     self.mainPanel.FindWindowById(item + 2000).SetValue(value)
-            except:
+            except Exception:
                 continue
 
         if message:
@@ -405,12 +403,11 @@ class ColorTable(wx.Frame):
                 layer = sel
             else:
                 layer = self.layerTree.FindItemByData(key="type", value=self.mapType)
-        except:
+        except (AttributeError, TypeError):
             layer = None
         if layer:
             mapLayer = self.layerTree.GetLayerInfo(layer, key="maplayer")
             name = mapLayer.GetName()
-            type = mapLayer.GetType()
             self.selectionInput.SetValue(name)
             self.inmap = name
 
@@ -575,7 +572,7 @@ class ColorTable(wx.Frame):
         )
 
         row += 1
-        # add ckeck all and clear all
+        # add check all and clear all
         bodySizer.Add(
             self.rulesPanel.checkAll, flag=wx.ALIGN_CENTER_VERTICAL, pos=(row, 0)
         )
@@ -666,7 +663,7 @@ class ColorTable(wx.Frame):
         if not path:
             return
 
-        if os.path.exists(path):
+        if Path(path).exists():
             dlgOw = wx.MessageDialog(
                 self,
                 message=_(
@@ -688,21 +685,16 @@ class ColorTable(wx.Frame):
             GMessage(message=_("Nothing to save."), parent=self)
             return
 
-        fd = open(path, "w")
-        fd.write(rulestxt)
-        fd.close()
+        Path(path).write_text(rulestxt)
 
     def OnLoadRulesFile(self, event):
         """Load color table from file"""
         path = event.GetString()
-        if not os.path.exists(path):
+        if not Path(path).exists():
             return
 
         self.rulesPanel.Clear()
-
-        fd = open(path)
-        self.ReadColorTable(ctable=fd.read())
-        fd.close()
+        self.ReadColorTable(ctable=Path(path).read_text())
 
     def ReadColorTable(self, ctable):
         """Read color table
@@ -724,9 +716,7 @@ class ColorTable(wx.Frame):
             self.rulesPanel.ruleslines[count]["value"] = value
             self.rulesPanel.ruleslines[count]["color"] = color
             self.rulesPanel.mainPanel.FindWindowById(count + 1000).SetValue(value)
-            rgb = []
-            for c in color.split(":"):
-                rgb.append(int(c))
+            rgb = [int(c) for c in color.split(":")]
             self.rulesPanel.mainPanel.FindWindowById(count + 2000).SetColour(rgb)
             # range
             try:
@@ -804,11 +794,7 @@ class ColorTable(wx.Frame):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
-        try:
-            output.write(rulestxt)
-        finally:
-            output.close()
+        Path(gtemp).write_text(rulestxt)
 
         cmd = [
             "%s.colors" % self.mapType[0],  # r.colors/v.colors
@@ -976,10 +962,7 @@ class RasterColorTable(ColorTable):
             self.cr_label.SetLabel(_("Enter raster category values or percents"))
             return
 
-        if info["datatype"] == "CELL":
-            mapRange = _("range")
-        else:
-            mapRange = _("fp range")
+        mapRange = _("range") if info["datatype"] == "CELL" else _("fp range")
         self.cr_label.SetLabel(
             _("Enter raster category values or percents (%(range)s = %(min)d-%(max)d)")
             % {
@@ -1408,11 +1391,8 @@ class VectorColorTable(ColorTable):
             idx += 1
             self.properties["tmpColumn"] = name + "_" + str(idx)
 
-        if self.version7:
-            modul = "v.db.addcolumn"
-        else:
-            modul = "v.db.addcol"
-        ret = RunCommand(
+        modul = "v.db.addcolumn" if self.version7 else "v.db.addcol"
+        RunCommand(
             modul,
             parent=self,
             map=self.inmap,
@@ -1426,11 +1406,8 @@ class VectorColorTable(ColorTable):
             return
 
         if self.inmap:
-            if self.version7:
-                modul = "v.db.dropcolumn"
-            else:
-                modul = "v.db.dropcol"
-            ret = RunCommand(
+            modul = "v.db.dropcolumn" if self.version7 else "v.db.dropcol"
+            RunCommand(
                 modul,
                 map=self.inmap,
                 layer=self.properties["layer"],
@@ -1451,10 +1428,7 @@ class VectorColorTable(ColorTable):
         self.sourceColumn.SetValue("cat")
         self.properties["sourceColumn"] = self.sourceColumn.GetValue()
 
-        if self.attributeType == "color":
-            type = ["character"]
-        else:
-            type = ["integer"]
+        type = ["character"] if self.attributeType == "color" else ["integer"]
         self.fromColumn.InsertColumns(
             vector=self.inmap,
             layer=vlayer,
@@ -1501,11 +1475,8 @@ class VectorColorTable(ColorTable):
             self.columnsProp[self.attributeType]["name"]
             not in self.fromColumn.GetColumns()
         ):
-            if self.version7:
-                modul = "v.db.addcolumn"
-            else:
-                modul = "v.db.addcol"
-            ret = RunCommand(
+            modul = "v.db.addcolumn" if self.version7 else "v.db.addcol"
+            RunCommand(
                 modul,
                 map=self.inmap,
                 layer=self.properties["layer"],
@@ -1575,8 +1546,13 @@ class VectorColorTable(ColorTable):
             columns += "," + self.properties["loadColumn"]
 
         sep = ";"
-        if self.inmap:
-            outFile = tempfile.NamedTemporaryFile(mode="w+")
+        if not self.inmap:
+            self.preview.EraseMap()
+            del busy
+            return
+
+        # Use a context manager for the file
+        with tempfile.NamedTemporaryFile(mode="w+") as outFile:
             ret = RunCommand(
                 "v.db.select",
                 quiet=True,
@@ -1587,65 +1563,61 @@ class VectorColorTable(ColorTable):
                 sep=sep,
                 stdout=outFile,
             )
-        else:
-            self.preview.EraseMap()
-            del busy
-            return
 
-        outFile.seek(0)
-        i = 0
-        minim = maxim = 0.0
-        limit = 1000
+            outFile.seek(0)
+            i = 0
+            minim = maxim = 0.0
+            limit = 1000
 
-        colvallist = []
-        readvals = False
+            colvallist = []
+            readvals = False
 
-        while True:
-            # os.linesep doesn't work here (MSYS)
-            record = outFile.readline().replace("\n", "")
-            if not record:
-                break
-            self.rulesPanel.ruleslines[i] = {}
+            while True:
+                # os.linesep doesn't work here (MSYS)
+                record = outFile.readline().replace("\n", "")
+                if not record:
+                    break
+                self.rulesPanel.ruleslines[i] = {}
 
-            if not self.properties["loadColumn"]:
-                col1 = record
-                col2 = None
-            else:
-                col1, col2 = record.split(sep)
-
-            minim = min(float(col1), minim)
-            maxim = max(float(col1), maxim)
-
-            # color rules list should only have unique values of col1, not all
-            # records
-            if col1 not in colvallist:
-                self.rulesPanel.ruleslines[i]["value"] = col1
-                self.rulesPanel.ruleslines[i][self.attributeType] = col2
-
-                colvallist.append(col1)
-                i += 1
-
-            if i > limit and readvals is False:
-                dlg = wx.MessageDialog(
-                    parent=self,
-                    message=_(
-                        "Number of loaded records reached %d, "
-                        "displaying all the records will be time-consuming "
-                        "and may lead to computer freezing, "
-                        "do you still want to continue?"
-                    )
-                    % i,
-                    caption=_("Too many records"),
-                    style=wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
-                )
-                if dlg.ShowModal() == wx.ID_YES:
-                    readvals = True
-                    dlg.Destroy()
+                if not self.properties["loadColumn"]:
+                    col1 = record
+                    col2 = None
                 else:
-                    del busy
-                    dlg.Destroy()
-                    self.updateColumn = False
-                    return
+                    col1, col2 = record.split(sep)
+
+                minim = min(float(col1), minim)
+                maxim = max(float(col1), maxim)
+
+                # color rules list should only have unique values of col1, not all
+                # records
+                if col1 not in colvallist:
+                    self.rulesPanel.ruleslines[i]["value"] = col1
+                    self.rulesPanel.ruleslines[i][self.attributeType] = col2
+
+                    colvallist.append(col1)
+                    i += 1
+
+                if i > limit and readvals is False:
+                    dlg = wx.MessageDialog(
+                        parent=self,
+                        message=_(
+                            "Number of loaded records reached %d, "
+                            "displaying all the records will be time-consuming "
+                            "and may lead to computer freezing, "
+                            "do you still want to continue?"
+                        )
+                        % i,
+                        caption=_("Too many records"),
+                        style=wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
+                    )
+                    if dlg.ShowModal() == wx.ID_YES:
+                        readvals = True
+                        dlg.Destroy()
+                    else:
+                        del busy
+                        dlg.Destroy()
+                        self.updateColumn = False
+                        return
 
         self.rulesPanel.AddRules(i, start=True)
         ret = self.rulesPanel.LoadRules()
@@ -1844,11 +1816,7 @@ class VectorColorTable(ColorTable):
             return False
 
         gtemp = utils.GetTempfile()
-        output = open(gtemp, "w")
-        try:
-            output.write(rulestxt)
-        finally:
-            output.close()
+        Path(gtemp).write_text(rulestxt)
 
         RunCommand("db.execute", parent=self, input=gtemp)
         return True
@@ -1869,7 +1837,7 @@ class VectorColorTable(ColorTable):
         else:
             if not self.properties["storeColumn"]:
                 GError(_("No color column defined. Operation canceled."), parent=self)
-                return
+                return None
 
             self.UseAttrColumn(True)
 
@@ -2080,8 +2048,8 @@ class BufferedWindow(wx.Window):
         """Converts files to wx.Image"""
         if (
             self.Map.mapfile
-            and os.path.isfile(self.Map.mapfile)
-            and os.path.getsize(self.Map.mapfile)
+            and Path(self.Map.mapfile).is_file()
+            and Path(self.Map.mapfile).stat().st_size
         ):
             img = wx.Image(self.Map.mapfile, wx.BITMAP_TYPE_ANY)
         else:

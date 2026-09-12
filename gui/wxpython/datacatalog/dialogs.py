@@ -6,10 +6,8 @@
 Classes:
  - dialogs::CatalogReprojectionDialog
 
-(C) 2017 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2017 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Petrasova <kratochanna gmail.com>
 """
@@ -143,8 +141,7 @@ class CatalogReprojectionDialog(wx.Dialog):
         dialogSizer.Add(optionsSizer, proportion=1, flag=wx.ALL | wx.EXPAND, border=10)
         helptext = StaticText(
             self.panel,
-            label="For more reprojection options,"
-            " please see {module}".format(
+            label="For more reprojection options, please see {module}".format(
                 module="r.proj" if self.etype == "raster" else "v.proj"
             ),
         )

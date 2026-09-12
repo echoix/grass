@@ -8,10 +8,8 @@ Classes:
  - frame::GMFrame
  - frame::SingleWindowAuiManager
 
-(C) 2006-2021 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2006-2021 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton (Arizona State University)
 @author Jachym Cepicky (Mendel University of Agriculture)
@@ -55,6 +53,7 @@ from core.watchdog import (
     EVT_CURRENT_MAPSET_CHANGED,
     MapsetWatchdog,
 )
+from core.menutree import MenuTreeModelBuilder
 from gui_core.preferences import MapsetAccess, PreferencesDialog
 from lmgr.layertree import LayerTree, LMIcons
 from lmgr.menudata import LayerManagerMenuData, LayerManagerModuleTree
@@ -124,7 +123,7 @@ class GMFrame(wx.Frame):
         if title:
             self.baseTitle = title
         else:
-            self.baseTitle = _("GRASS GIS")
+            self.baseTitle = _("GRASS")
 
         self.iconsize = (16, 16)
         self.size = size
@@ -521,9 +520,11 @@ class GMFrame(wx.Frame):
                                                map display notebook page
                                                index (single window mode)
             """
-            pgnum_dict = {}
-            pgnum_dict["layers"] = self.notebookLayers.GetPageIndex(page)
-            pgnum_dict["mainnotebook"] = self.mainnotebook.GetPageIndex(mapdisplay)
+            pgnum_dict = {
+                "layers": self.notebookLayers.GetPageIndex(page),
+                "mainnotebook": self.mainnotebook.GetPageIndex(mapdisplay),
+            }
+
             name = self.notebookLayers.GetPageText(pgnum_dict["layers"])
             caption = _("Close Map Display {}").format(name)
             if not askIfSaveWorkspace or (
@@ -790,8 +791,7 @@ class GMFrame(wx.Frame):
     def AddNvizTools(self, firstTime):
         """Add nviz notebook page
 
-        :param firstTime: if a mapdisplay is starting 3D mode for the
-                          first time
+        :param firstTime: if a mapdisplay is starting 3D mode for the first time
         """
         Debug.msg(5, "GMFrame.AddNvizTools()")
         from nviz.main import haveNviz
@@ -861,10 +861,7 @@ class GMFrame(wx.Frame):
             self._giface.grassdbChanged.emit(
                 grassdb=grassdb, location=location, action="new", element="location"
             )
-            if grassdb == gisenv["GISDBASE"]:
-                switch_grassdb = None
-            else:
-                switch_grassdb = grassdb
+            switch_grassdb = grassdb if grassdb != gisenv["GISDBASE"] else None
             if can_switch_mapset_interactive(self, grassdb, location, mapset):
                 switch_mapset_interactively(
                     self,
@@ -906,6 +903,167 @@ class GMFrame(wx.Frame):
 
         # add map display panel to notebook and make it current
         self.mainnotebook.AddPage(gmodeler_panel, _("Graphical Modeler"))
+
+    def _add_jupyter_panel_to_notebook(self, panel, mode_name, storage):
+        """Add Jupyter panel to notebook with tooltip."""
+        tooltip = str(storage.resolve())
+
+        # Store tooltip as panel attribute (persists through undock/dock)
+        panel.page_tooltip = tooltip
+
+        self.mainnotebook.AddPage(
+            panel,
+            _("Jupyter Notebook ({}) - {}").format(mode_name, storage.resolve().name),
+        )
+
+        page_idx = self.mainnotebook.GetPageCount() - 1
+        self.mainnotebook.SetPageTooltip(page_idx, tooltip)
+
+    def _setup_jupyter_integrated_mode(self, storage, create_template):
+        """Setup integrated Jupyter panel. Returns True on success."""
+        from jupyter_notebook.panel import JupyterPanel
+
+        panel = JupyterPanel(
+            parent=self.mainnotebook,
+            giface=self._giface,
+            statusbar=self.statusbar,
+            dockable=True,
+            storage=storage,
+            create_template=create_template,
+        )
+        panel.SetUpPage(self, self.mainnotebook)
+
+        try:
+            if not panel.SetUpEnvironment():
+                panel.Destroy()
+                return False
+
+        except NotImplementedError:
+            panel.Destroy()
+            return False
+
+        # Success - add panel to notebook
+        self._add_jupyter_panel_to_notebook(panel, _("Integrated"), storage)
+        return True
+
+    def _setup_jupyter_browser_mode(self, storage, create_template):
+        """Setup browser-based Jupyter panel."""
+        from jupyter_notebook.panel import JupyterBrowserPanel
+
+        panel = JupyterBrowserPanel(
+            parent=self.mainnotebook,
+            giface=self._giface,
+            statusbar=self.statusbar,
+            dockable=True,
+            storage=storage,
+            create_template=create_template,
+        )
+        panel.SetUpPage(self, self.mainnotebook)
+
+        # Setup environment FIRST (before adding to UI)
+        if not panel.SetUpEnvironment():
+            panel.Destroy()
+            return
+
+        # Success - add panel to notebook
+        self._add_jupyter_panel_to_notebook(panel, _("Browser"), storage)
+
+    def OnJupyterNotebook(self, event=None, cmd=None):
+        """Launch Jupyter Notebook interface."""
+        from jupyter_notebook.utils import (
+            ensure_notebook_module_available,
+            ensure_webview2_backend_available,
+            is_notebook_module_available,
+            is_wx_html2_available,
+        )
+        from jupyter_notebook.dialogs import JupyterStartDialog
+
+        # global requirement (always needed)
+        if not is_notebook_module_available():
+            if not ensure_notebook_module_available(
+                parent=self,
+                report_error=GError,
+                report_info=GMessage,
+            ):
+                return
+
+        dlg = JupyterStartDialog(parent=self)
+
+        if dlg.ShowModal() != wx.ID_OK:
+            dlg.Destroy()
+            return
+
+        values = dlg.GetValues()
+        action = dlg.action
+        dlg.Destroy()
+
+        if not values:
+            return
+
+        storage = values["storage"]
+        create_template = values["create_template"]
+
+        # Check integrated mode requirements and offer fallback
+        if action == "integrated":
+            message = None
+
+            if not is_wx_html2_available():
+                message = _(
+                    "Integrated mode requires wx.html2.WebView, which is not available on this system.\n\n"
+                    "This can happen if wxPython or wxWidgets were built without HTML2/WebView support."
+                )
+            elif sys.platform.startswith("win"):
+                webview2_status = ensure_webview2_backend_available(
+                    parent=self,
+                    report_error=GError,
+                    report_info=GMessage,
+                )
+                if webview2_status == "restart-required":
+                    return
+                if webview2_status == "unavailable":
+                    message = _(
+                        "Integrated mode requires Microsoft Edge WebView2 runtime on Windows.\n\n"
+                        "It is missing or not properly configured on this system."
+                    )
+
+            if message is not None:
+                response = wx.MessageBox(
+                    _(
+                        "{message}\n\nWould you like to open Jupyter Notebook in your external browser instead?"
+                    ).format(message=message),
+                    _("Integrated Mode Not Available"),
+                    wx.ICON_WARNING | wx.YES_NO,
+                )
+
+                if response == wx.YES:
+                    action = "browser"
+                else:
+                    return
+
+        # Try integrated mode
+        if action == "integrated":
+            success = self._setup_jupyter_integrated_mode(storage, create_template)
+            if success:
+                return  # Successfully set up integrated mode
+
+            # Integrated mode failed, offer browser fallback
+            response = wx.MessageBox(
+                _(
+                    "Integrated mode is not supported on this system.\n\n"
+                    "Would you like to open Jupyter Notebook in your external browser instead?"
+                ),
+                _("WebView Not Supported"),
+                wx.ICON_ERROR | wx.YES_NO,
+            )
+
+            if response == wx.YES:
+                action = "browser"
+            else:
+                return
+
+        # Set up browser mode
+        if action == "browser":
+            self._setup_jupyter_browser_mode(storage, create_template)
 
     def OnPsMap(self, event=None, cmd=None):
         """Launch Cartographic Composer. See OnIClass documentation"""
@@ -1054,7 +1212,7 @@ class GMFrame(wx.Frame):
                                 notebook layers tree page index and
                                 "mainnotebook" key represent map display
                                 notebook page index (single window mode)
-              boolean is_docked: "True" means that map display is docked in map
+        :param boolean is_docked: "True" means that map display is docked in map
                                display notebook, "False" means that map display
                                is undocked to independent frame
         """
@@ -1111,8 +1269,7 @@ class GMFrame(wx.Frame):
         else:
             result = False
             raise ValueError(
-                "Layer Manager special command (%s)"
-                " not supported." % " ".join(command)
+                "Layer Manager special command (%s) not supported." % " ".join(command)
             )
         if result:
             self._gconsole.UpdateHistory(status=Status.SUCCESS)
@@ -1123,7 +1280,7 @@ class GMFrame(wx.Frame):
         """Handles display commands.
 
         :param command: command in a list
-        :return int: False if failed, True if succcess
+        :return int: False if failed, True if success
         """
         if not self.currentPage:
             self.NewDisplay(show=True)
@@ -1240,14 +1397,12 @@ class GMFrame(wx.Frame):
         if onlyCurrent:
             if self.currentPage:
                 return self.GetLayerTree().GetMapDisplay()
-            else:
-                return None
-        else:  # -> return list of all mapdisplays
-            mlist = []
-            for idx in range(0, self.notebookLayers.GetPageCount()):
-                mlist.append(self.notebookLayers.GetPage(idx).maptree.GetMapDisplay())
-
-            return mlist
+            return None
+        # -> return list of all mapdisplays
+        return [
+            self.notebookLayers.GetPage(idx).maptree.GetMapDisplay()
+            for idx in range(self.notebookLayers.GetPageCount())
+        ]
 
     def GetAllMapDisplays(self):
         """Get all (open) map displays"""
@@ -1269,10 +1424,7 @@ class GMFrame(wx.Frame):
 
         :return: command as a list"""
         layer = None
-        if event:
-            cmd = self.menucmd[event.GetId()]
-        else:
-            cmd = ""
+        cmd = self.menucmd[event.GetId()] if event else ""
 
         try:
             cmdlist = cmd.split(" ")
@@ -1347,8 +1499,7 @@ class GMFrame(wx.Frame):
             GMessage(
                 parent=self,
                 message=_(
-                    "Editing is allowed only for vector maps from the "
-                    "current mapset."
+                    "Editing is allowed only for vector maps from the current mapset."
                 ),
             )
             return
@@ -1387,13 +1538,13 @@ class GMFrame(wx.Frame):
         if not filename:
             return False
 
-        if not os.path.exists(filename):
+        if not Path(filename).exists():
             GError(
                 parent=self,
                 message=_("Script file '%s' doesn't exist. Operation canceled.")
                 % filename,
             )
-            return
+            return None
 
         # check permission
         if not os.access(filename, os.X_OK):
@@ -1410,14 +1561,14 @@ class GMFrame(wx.Frame):
                 style=wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION,
             )
             if dlg.ShowModal() != wx.ID_YES:
-                return
+                return None
             dlg.Destroy()
             try:
                 mode = stat.S_IMODE(os.lstat(filename)[stat.ST_MODE])
                 os.chmod(filename, mode | stat.S_IXUSR)
             except OSError:
                 GError(_("Unable to set permission. Operation canceled."), parent=self)
-                return
+                return None
 
         # check GRASS_ADDON_PATH
         addonPath = os.getenv("GRASS_ADDON_PATH", [])
@@ -1555,10 +1706,11 @@ class GMFrame(wx.Frame):
             # this is programmer's error
             # can be relaxed in future
             # but keep it strict unless needed otherwise
-            raise ValueError(
-                "OnChangeCWD cmd parameter must be list of"
+            msg = (
+                f"{self.OnChangeCWD.__name__} cmd parameter must be a list of"
                 " length 1 or 2 and 'cd' as a first item"
             )
+            raise ValueError(msg)
         if cmd and len(cmd) > 2:
             # this might be a user error
             write_beginning(command=cmd)
@@ -1625,8 +1777,9 @@ class GMFrame(wx.Frame):
             sys.stderr.write(_("Unable to get GRASS version\n"))
 
         # check also OSGeo4W on MS Windows
-        if sys.platform == "win32" and not os.path.exists(
-            os.path.join(os.getenv("GISBASE"), "WinGRASS-README.url")
+        if (
+            sys.platform == "win32"
+            and not Path(os.getenv("GISBASE"), "WinGRASS-README.url").exists()
         ):
             osgeo4w = " (OSGeo4W)"
         else:
@@ -1717,7 +1870,8 @@ class GMFrame(wx.Frame):
 
     def OnWorkspaceClose(self, event=None):
         """Close file with workspace definition"""
-        self.workspace_manager.Close()
+        if self.workspace_manager.CanClosePage(caption=_("Close workspace")):
+            self.workspace_manager.Close()
 
     def OnDisplayClose(self, event=None):
         """Close current map display window"""
@@ -1853,20 +2007,34 @@ class GMFrame(wx.Frame):
 
         win.Show()
 
-    def OnAnimationTool(self, event=None, cmd=None):
-        """Launch Animation tool. See OnIClass documentation."""
-        from animation.frame import AnimationFrame
+    def OpenAnimationTool(self):
+        """Open the Animation Tool in a new page of the main notebook
 
-        frame = AnimationFrame(parent=self, giface=self._giface)
-        frame.CentreOnScreen()
-        frame.Show()
+        :return: the animation panel, so that a caller can load data into it
+        """
+        from animation.panels import AnimationToolPanel
+
+        animation_panel = AnimationToolPanel(
+            parent=self, giface=self._giface, statusbar=self.statusbar, dockable=True
+        )
+        animation_panel.SetUpPage(self, self.mainnotebook)
+
+        # add animation panel to notebook and make it current
+        self.mainnotebook.AddPage(animation_panel, _("Animation Tool"))
+
+        return animation_panel
+
+    def OnAnimationTool(self, event=None, cmd=None):
+        """Launch Animation tool"""
+        animation_panel = self.OpenAnimationTool()
 
         tree = self.GetLayerTree()
         if tree:
-            rasters = []
-            for layer in tree.GetSelectedLayers(checkedOnly=False):
-                if tree.GetLayerInfo(layer, key="type") == "raster":
-                    rasters.append(tree.GetLayerInfo(layer, key="maplayer").GetName())
+            rasters = [
+                tree.GetLayerInfo(layer, key="maplayer").GetName()
+                for layer in tree.GetSelectedLayers(checkedOnly=False)
+                if tree.GetLayerInfo(layer, key="type") == "raster"
+            ]
             if len(rasters) >= 2:
                 from core.layerlist import LayerList
                 from animation.data import AnimLayer
@@ -1877,7 +2045,7 @@ class GMFrame(wx.Frame):
                 layer.name = ",".join(rasters)
                 layer.cmd = ["d.rast", "map="]
                 layerList.AddLayer(layer)
-                frame.SetAnimations([layerList, None, None, None])
+                animation_panel.SetAnimations([layerList, None, None, None])
 
     def OnTimelineTool(self, event=None, cmd=None):
         """Launch Timeline Tool"""
@@ -1987,14 +2155,23 @@ class GMFrame(wx.Frame):
 
     def OnSimpleEditor(self, event):
         # import on demand
-        from gui_core.pyedit import PyEditFrame
+        from gui_core.pyedit import PyEditPanel
 
         # we don't keep track of them and we don't care about open files
         # there when closing the main GUI
-        simpleEditor = PyEditFrame(parent=self, giface=self._giface)
-        simpleEditor.SetSize(self.GetSize())
-        simpleEditor.CenterOnScreen()
-        simpleEditor.Show()
+        simpleEditor = PyEditPanel(
+            parent=self, giface=self._giface, statusbar=self.statusbar, dockable=True
+        )
+        filename = os.path.join(globalvar.WXGUIDIR, "xml", "menudata_pyedit.xml")
+        simpleEditor.SetUpPage(
+            self,
+            self.mainnotebook,
+            menuModel=MenuTreeModelBuilder(filename).GetModel(separators=True),
+            menuName="&Editor",
+        )
+
+        # add map display panel to notebook and make it current
+        self.mainnotebook.AddPage(simpleEditor, _("Code editor"))
 
     def OnShowAttributeTable(self, event, selection=None):
         """Show attribute table of the given vector map layer"""
@@ -2044,7 +2221,7 @@ class GMFrame(wx.Frame):
         """Changes bookcontrol page to page associated with display."""
         # moved from mapdisp/frame.py
         # TODO: why it is called 3 times when getting focus?
-        # and one times when loosing focus?
+        # and one times when losing focus?
         pgnum = self.notebookLayers.GetPageIndex(notebookLayerPage)
         if pgnum > -1:
             self.notebookLayers.SetSelection(pgnum)
@@ -2054,7 +2231,7 @@ class GMFrame(wx.Frame):
         """Disables 3D mode for all map displays except for @p mapDisplay"""
         # TODO: it should be disabled also for newly created map windows
         # moreover mapdisp.Disable3dMode() does not work properly
-        for page in range(0, self.GetLayerNotebook().GetPageCount()):
+        for page in range(self.GetLayerNotebook().GetPageCount()):
             mapdisp = self.GetLayerNotebook().GetPage(page).maptree.GetMapDisplay()
             if self.GetLayerNotebook().GetPage(page) != mapDisplayPage:
                 mapdisp.Disable3dMode()
@@ -2400,6 +2577,18 @@ class GMFrame(wx.Frame):
             if hasattr(event, "Veto"):
                 event.Veto()
             return
+
+        # Stop all running Jupyter servers before destroying the GUI
+        from jupyter_notebook.environment import JupyterEnvironment
+
+        try:
+            JupyterEnvironment.stop_all()
+        except RuntimeError as e:
+            wx.MessageBox(
+                _("Failed to stop Jupyter servers:\n{}").format(str(e)),
+                caption=_("Error"),
+                style=wx.ICON_ERROR | wx.OK,
+            )
 
         self.DisplayCloseAll()
 

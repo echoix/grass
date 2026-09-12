@@ -3,10 +3,9 @@ Name:        r.random test
 Purpose:    Tests r.random module and some of its options.
 
 Author:     Shubham Sharma, Google Code-in 2018
-Copyright:  (C) 2018 by Shubham Sharma and the GRASS Development Team
-Licence:    This program is free software under the GNU General Public
-            License (>=v2). Read the file COPYING that comes with GRASS
-            for details.
+SPDX-FileCopyrightText: 2018 Shubham Sharma
+SPDX-FileCopyrightText: GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 from grass.gunittest.case import TestCase
@@ -28,30 +27,30 @@ class TestRasterTile(TestCase):
     def tearDownClass(cls):
         cls.del_temp_region()
 
-        cls.runModule("g.remove", type="raster", flags="f", name=cls.raster)
-        cls.runModule("g.remove", type="raster", flags="f", name=cls.raster + "_null")
-        cls.runModule(
-            "g.remove", type="raster", flags="f", name=cls.raster + "_without_topology"
-        )
-        cls.runModule("g.remove", type="raster", flags="f", name=cls.raster + "_3D")
         cls.runModule(
             "g.remove",
             type="raster",
             flags="f",
-            name=cls.raster + "_cover_landcover_1m",
+            name=(
+                cls.raster,
+                cls.raster + "_null",
+                cls.raster + "_without_topology",
+                cls.raster + "_3D",
+                cls.raster + "_cover_landcover_1m",
+            ),
         )
 
-        cls.runModule("g.remove", type="vector", flags="f", name=cls.vector)
-        cls.runModule("g.remove", type="vector", flags="f", name=cls.vector + "_null")
-        cls.runModule(
-            "g.remove", type="vector", flags="f", name=cls.vector + "_without_topology"
-        )
-        cls.runModule("g.remove", type="vector", flags="f", name=cls.vector + "_3D")
         cls.runModule(
             "g.remove",
             type="vector",
             flags="f",
-            name=cls.vector + "_cover_landcover_1m",
+            name=(
+                cls.vector,
+                cls.vector + "_null",
+                cls.vector + "_without_topology",
+                cls.vector + "_3D",
+                cls.vector + "_cover_landcover_1m",
+            ),
         )
 
     def test_random_raster(self):

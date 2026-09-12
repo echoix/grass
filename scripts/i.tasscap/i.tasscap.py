@@ -9,11 +9,8 @@
 #               Sentinel-2 support by Veronica Andreo
 #
 # PURPOSE:	At-satellite reflectance based tasseled cap transformation.
-# COPYRIGHT:	(C) 1997-2014 by the GRASS Development Team
-#
-# 		This program is free software under the GNU General Public
-# 		License (>=v2). Read the file COPYING that comes with GRASS
-# 		for details.
+# SPDX-FileCopyrightText: 1997-2014 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 # References:
@@ -27,7 +24,7 @@
 #   DERIVATION OF A TASSELED CAP TRANSFORMATION BASED ON LANDSAT 7 AT-SATELLITE REFLECTANCE
 #   Chengquan Huang, Bruce Wylie, Limin Yang, Collin Homer and Gregory Zylstra Raytheon ITSS,
 #   USGS EROS Data Center Sioux Falls, SD 57198, USA
-#   http://landcover.usgs.gov/pdf/tasseled.pdf
+#   https://digitalcommons.unl.edu/usgsstaffpub/621/
 #
 #  This is published as well in INT. J. OF RS, 2002, VOL 23, NO. 8, 1741-1748.
 #  Compare discussion:
@@ -326,7 +323,7 @@ def calcN(outpre, bands, satel):
         bands_num = used_bands[i]
 
         # use combination function suitable for used number of bands
-        eval("calc1bands%d(out, bands, *p)" % bands_num)
+        globals()["calc1bands%d" % bands_num](out, bands, *p)
         gs.run_command("r.colors", map=out, color="grey", quiet=True)
 
 
@@ -352,7 +349,7 @@ def main():
 
     # assign "Data Description" field in all four component maps
     num_comp = len(parms[satellites.index(satellite)])
-    for i in range(0, num_comp):
+    for i in range(num_comp):
         comp = names[i]
         gs.run_command(
             "r.support",

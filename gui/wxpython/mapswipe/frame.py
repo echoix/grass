@@ -8,10 +8,8 @@ Classes:
  - frame::SwipeMapDisplay
  - frame::MapSplitter
 
-(C) 2012 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2012 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Kratochvilova <kratochanna gmail.com>
 """
@@ -545,15 +543,15 @@ class SwipeMapPanel(DoubleMapPanel):
             we are pasting together 2 rendered images, so
             we need to know when both are finished."""
 
-            def __init__(self2):
+            def __init__(self2):  # noqa: N805
                 self2.called = 0
 
-            def __call__(self2):
+            def __call__(self2):  # noqa: N805
                 self2.called += 1
                 if self2.called == 2:
                     self2.process()
 
-            def process(self2):
+            def process(self2):  # noqa: N805
                 # create empty white image  - needed for line
                 im = wx.Image(width, height)
                 im.Replace(0, 0, 0, 255, 255, 255)
@@ -829,9 +827,7 @@ class SwipeMapDisplay(FrameMixin, SwipeMapPanel):
         )
         # set system icon
         parent.SetIcon(
-            wx.Icon(
-                os.path.join(globalvar.ICONDIR, "grass_map.ico"), wx.BITMAP_TYPE_ICO
-            )
+            wx.Icon(os.path.join(globalvar.ICONDIR, "grass.ico"), wx.BITMAP_TYPE_ICO)
         )
 
         # bindings

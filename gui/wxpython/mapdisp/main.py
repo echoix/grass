@@ -15,10 +15,8 @@ Classes:
 Usage:
 python mapdisp/main.py monitor-identifier /path/to/map/file /path/to/command/file /path/to/env/file
 
-(C) 2006-2015 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2006-2015 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton
 @author Jachym Cepicky
@@ -32,6 +30,7 @@ import sys
 import time
 import shutil
 import fileinput
+from pathlib import Path
 
 from grass.script.utils import try_remove
 from grass.script import core as grass
@@ -123,9 +122,8 @@ class DMonMap(Map):
 
         nlayers = 0
         try:
-            fd = open(self.cmdfile)
-            lines = fd.readlines()
-            fd.close()
+            with open(self.cmdfile) as fd:
+                lines = fd.readlines()
             # detect d.out.file, delete the line from the cmd file and export
             # graphics
             if len(lines) > 0:
@@ -133,9 +131,8 @@ class DMonMap(Map):
                     "d.to.rast"
                 ):
                     dCmd = lines[-1].strip()
-                    fd = open(self.cmdfile, "w")
-                    fd.writelines(lines[:-1])
-                    fd.close()
+                    with open(self.cmdfile, "w") as fd:
+                        fd.writelines(lines[:-1])
                     if lines[-1].startswith("d.out.file"):
                         self.saveToFile.emit(cmd=utils.split(dCmd))
                     else:
@@ -143,9 +140,8 @@ class DMonMap(Map):
                     return
                 if lines[-1].startswith("d.what"):
                     dWhatCmd = lines[-1].strip()
-                    fd = open(self.cmdfile, "w")
-                    fd.writelines(lines[:-1])
-                    fd.close()
+                    with open(self.cmdfile, "w") as fd:
+                        fd.writelines(lines[:-1])
                     if "=" in utils.split(dWhatCmd)[1]:
                         maps = utils.split(dWhatCmd)[1].split("=")[1].split(",")
                     else:
@@ -176,7 +172,7 @@ class DMonMap(Map):
                         mapFile = line.split("=", 1)[1].strip()
                     try:
                         k, v = line[2:].strip().split("=", 1)
-                    except:
+                    except (ValueError, IndexError):
                         pass
                     render_env[k] = v
                     continue
@@ -219,24 +215,26 @@ class DMonMap(Map):
 
                 exists = False
                 for i, layer in enumerate(existingLayers):
-                    if layer.GetCmd(string=True) == utils.GetCmdString(
+                    if layer.GetCmd(string=True) != utils.GetCmdString(
                         cmdlist_to_tuple(cmd)
                     ):
-                        exists = True
+                        continue
 
-                        if layersOrder[i] == -1:
-                            layersOrder[i] = next_layer
-                            next_layer += 1
-                        # layer must be put higher in render order (same cmd was
-                        # insered more times)
-                        # TODO delete rendurant cmds from cmd file?
-                        else:
-                            for j, l_order in enumerate(layersOrder):
-                                if l_order > layersOrder[i]:
-                                    layersOrder[j] -= 1
-                            layersOrder[i] = next_layer - 1
+                    exists = True
 
-                        break
+                    if layersOrder[i] == -1:
+                        layersOrder[i] = next_layer
+                        next_layer += 1
+                    # layer must be put higher in render order (same cmd was
+                    # inserted more times)
+                    # TODO delete redundant cmds from cmd file?
+                    else:
+                        for j, l_order in enumerate(layersOrder):
+                            if l_order > layersOrder[i]:
+                                layersOrder[j] -= 1
+                        layersOrder[i] = next_layer - 1
+
+                    break
                 if exists:
                     continue
 
@@ -334,14 +332,14 @@ class Layer:
     def __getattr__(self, name):
         if name == "cmd":
             return cmdtuple_to_list(self._maplayer.GetCmd())
-        elif hasattr(self._maplayer, name):
+        if hasattr(self._maplayer, name):
             return getattr(self._maplayer, name)
-        elif name == "maplayer":
+        if name == "maplayer":
             return self._maplayer
-        elif name == "type":
+        if name == "type":
             return self._maplayer.GetType()
             # elif name == 'ctrl':
-        elif name == "label":
+        if name == "label":
             return self._maplayer.GetName()
             # elif name == 'propwin':
 
@@ -365,7 +363,7 @@ class LayerList:
         try:
             result = items[self._index]
         except IndexError:
-            raise StopIteration
+            raise StopIteration from None
         self._index += 1
         return result
 
@@ -386,8 +384,7 @@ class LayerList:
         layers = self.GetSelectedLayers()
         if len(layers) > 0:
             return layers[0]
-        else:
-            return None
+        return None
 
     def AddLayer(self, ltype, name=None, checked=None, opacity=1.0, cmd=None):
         """Adds a new layer to the layer list.
@@ -464,7 +461,7 @@ class DMonGrassInterface(StandaloneMapDisplayGrassInterface):
 
 
 class DMonDisplay(FrameMixin, MapPanel):
-    """Map display for wrapping map panel with d.mon mathods and frame methods"""
+    """Map display for wrapping map panel with d.mon methods and frame methods"""
 
     def __init__(self, parent, giface, id, Map, title, toolbars, statusbar):
         # init map panel
@@ -480,9 +477,7 @@ class DMonDisplay(FrameMixin, MapPanel):
         )
         # set system icon
         parent.SetIcon(
-            wx.Icon(
-                os.path.join(globalvar.ICONDIR, "grass_map.ico"), wx.BITMAP_TYPE_ICO
-            )
+            wx.Icon(os.path.join(globalvar.ICONDIR, "grass.ico"), wx.BITMAP_TYPE_ICO)
         )
 
         # bindings
@@ -494,13 +489,14 @@ class DMonDisplay(FrameMixin, MapPanel):
 
         # update env file
         width, height = self.MapWindow.GetClientSize()
-        for line in fileinput.input(monFile["env"], inplace=True):
-            if "GRASS_RENDER_WIDTH" in line:
-                print("GRASS_RENDER_WIDTH={0}".format(width))
-            elif "GRASS_RENDER_HEIGHT" in line:
-                print("GRASS_RENDER_HEIGHT={0}".format(height))
-            else:
-                print(line.rstrip("\n"))
+        with fileinput.input(monFile["env"], inplace=True) as file:
+            for line in file:
+                if "GRASS_RENDER_WIDTH" in line:
+                    print("GRASS_RENDER_WIDTH={0}".format(width))
+                elif "GRASS_RENDER_HEIGHT" in line:
+                    print("GRASS_RENDER_HEIGHT={0}".format(height))
+                else:
+                    print(line.rstrip("\n"))
 
         # add Map Display panel to Map Display frame
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -617,9 +613,9 @@ class MapApp(wx.App):
         #    self.timer.Stop()
         #    return
 
-        # todo: events
+        # TODO: events
         try:
-            currentCmdFileTime = os.path.getmtime(monFile["cmd"])
+            currentCmdFileTime = Path(monFile["cmd"]).stat().st_mtime
             if currentCmdFileTime > self.cmdTimeStamp:
                 self.timer.Stop()
                 self.cmdTimeStamp = currentCmdFileTime
@@ -656,11 +652,10 @@ if __name__ == "__main__":
 
     # create pid file
     pidFile = os.path.join(monPath, "pid")
-    fd = open(pidFile, "w")
-    if not fd:
-        grass.fatal(_("Unable to create file <%s>") % pidFile)
-    fd.write("%s\n" % os.getpid())
-    fd.close()
+    with open(pidFile, "w") as fd:
+        if not fd:
+            grass.fatal(_("Unable to create file <%s>") % pidFile)
+        fd.write("%s\n" % os.getpid())
 
     RunCommand("g.gisenv", set="MONITOR_%s_PID=%d" % (monName.upper(), os.getpid()))
 

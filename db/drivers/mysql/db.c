@@ -2,11 +2,8 @@
  * MODULE:    mysql
  * AUTHOR(S): Radim Blazek (radim.blazek@gmail.com)
  * PURPOSE:   MySQL database driver
- * COPYRIGHT: (C) 2001 by the GRASS Development Team
- *            This program is free software under the
- *            GNU General Public License (>=v2).
- *            Read the file COPYING that comes with GRASS
- *            for details.
+ * SPDX-FileCopyrightText: 2001 GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  **********************************************************/
 #include <stdlib.h>
 #include <string.h>
@@ -51,7 +48,7 @@ int db__driver_open_database(dbHandle *handle)
                 connpar.host, connpar.port, connpar.dbname, connpar.user,
                 connpar.password);
 
-        db_get_login2("mysql", name, &user, &password, &host, &port);
+        db_get_login("mysql", name, &user, &password, &host, &port);
 
         connection = mysql_init(NULL);
         res =

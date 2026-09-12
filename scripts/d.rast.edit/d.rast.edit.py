@@ -4,17 +4,9 @@
 #
 # MODULE:       d.rast.edit
 # AUTHOR(S):    Glynn Clements <glynn@gclements.plus.com>
-# COPYRIGHT:    (C) 2007,2008,2009 Glynn Clements
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2007,2008,2009 Glynn Clements
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 # /
 
@@ -77,6 +69,8 @@
 import sys
 import math
 import atexit
+from string import digits
+
 import grass.script as gs
 
 from grass.script.setup import set_gui_path
@@ -293,10 +287,7 @@ def wxGUI():
             px, py = -dy, dx
 
             r, g, b, a = wx.Colour(fill).Get()
-            if r + g + b > 384:
-                line = "black"
-            else:
-                line = "white"
+            line = "black" if r + g + b > 384 else "white"
 
             dc.SetPen(wx.Pen(line))
             dc.DrawLine(x0, y0, x1, y1)
@@ -448,7 +439,7 @@ def wxGUI():
 
         def OnReturn(self, ev):
             self.app.brush = self.newval.GetValue()
-            if self.app.brush != "*" and self.app.brush.strip("0123456789") != "":
+            if self.app.brush != "*" and self.app.brush.strip(digits) != "":
                 self.app.brush = "*"
             self.brush_update()
 
@@ -645,28 +636,9 @@ def wxGUI():
             if self.angles:
                 self.status["aspect"] = self.angles[row][col]
 
-        def force_color(self, val):
-            run("g.region", rows=1, cols=1)
-            run("r.mapcalc", expression="%s = %d" % (self.tempmap, val))
-            run("r.colors", map=self.tempmap, rast=self.inmap)
-            run("r.out.ppm", input=self.tempmap, out=self.tempfile)
-            run("g.remove", flags="f", type="raster", name=self.tempmap)
-
-            tempimg = wx.Image(self.tempfile)
-            gs.try_remove(self.tempfile)
-
-            rgb = tempimg.get(0, 0)
-            color = "#%02x%02x%02x" % rgb
-            self.colors[val] = color
-            tempimg.delete()
-
         def get_color(self, val):
             if val not in self.colors:
-                try:
-                    self.force_color(val)
-                except:
-                    self.colors[val] = "#ffffff"
-
+                self.colors[val] = "#ffffff"
             return self.colors[val]
 
         def refresh_canvas(self):

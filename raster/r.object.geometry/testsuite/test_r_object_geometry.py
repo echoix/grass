@@ -5,12 +5,10 @@ Purpose:   This script is to demonstrate a unit test for r.object.geometry
 """
 
 import json
-import os
-from sys import stderr
+from pathlib import Path
 
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
-from grass.gunittest.gmodules import call_module
 
 from grass.gunittest.gmodules import SimpleModule
 
@@ -52,8 +50,7 @@ class TestObjectGeometryPixel(TestCase):
         """Remove the outputs created from the object geometry module and the temporary region
         This is executed after each test run.
         """
-        if os.path.isfile(self.output_file_pixel):
-            os.remove(self.output_file_pixel)
+        Path(self.output_file_pixel).unlink(missing_ok=True)
         self.del_temp_region()
         self.runModule("g.remove", flags="f", type="raster", name=self.test_objects1)
 
@@ -144,8 +141,7 @@ class TestObjectGeometryMeter(TestCase):
 
         This is executed after each test run.
         """
-        if os.path.isfile(self.output_file_meter):
-            os.remove(self.output_file_meter)
+        Path(self.output_file_meter).unlink(missing_ok=True)
         self.runModule("g.remove", flags="f", type="raster", name=self.test_objects1)
 
     def test_object_geometry_meter(self):

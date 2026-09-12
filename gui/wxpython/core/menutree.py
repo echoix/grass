@@ -23,20 +23,22 @@ and <i>menu</i>:
  - modeler (Graphical Modeler)
  - psmap (Cartographic Composer)
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Glynn Clements (menudata.py)
 @author Martin Landa <landa.martin gmail.com> (menudata.py)
 @author Anna Petrasova <kratochanna gmail.com>
 """
 
+from __future__ import annotations
+
 import os
 import sys
 import copy
 import xml.etree.ElementTree as ET
+
+from typing import TYPE_CHECKING
 
 import wx
 
@@ -50,8 +52,12 @@ from core.gcmd import GError
 if not os.getenv("GISBASE"):
     sys.exit("GRASS is not running. Exiting...")
 
+if TYPE_CHECKING:
+    from typing_extensions import Writer
 
 # TODO: change the system to remove strange derived classes
+
+
 class MenuTreeModelBuilder:
     """Abstract menu data class"""
 
@@ -69,7 +75,7 @@ class MenuTreeModelBuilder:
                 message_handler(message)
             clearToolboxMessages()
 
-        self.model = TreeModel(ModuleNode)
+        self.model: TreeModel = TreeModel(ModuleNode)
         self._createModel(xmlTree)
 
     def _createModel(self, xmlTree):
@@ -108,30 +114,14 @@ class MenuTreeModelBuilder:
             shortcut = item.find("shortcut")  # optional
             wxId = item.find("id")  # optional
             icon = item.find("icon")  # optional
-            if gcmd is not None:
-                gcmd = gcmd.text
-            else:
-                gcmd = ""
-            if desc.text:
-                desc = _(desc.text)
-            else:
-                desc = ""
-            if keywords is None or keywords.text is None:
-                keywords = ""
-            else:
-                keywords = keywords.text
-            if shortcut is not None:
-                shortcut = shortcut.text
-            else:
-                shortcut = ""
-            if wxId is not None:
-                wxId = eval("wx." + wxId.text)
-            else:
-                wxId = wx.ID_ANY
-            if icon is not None:
-                icon = icon.text
-            else:
-                icon = ""
+            gcmd = gcmd.text if gcmd is not None else ""
+            desc = _(desc.text) if desc.text else ""
+            keywords = (
+                "" if keywords is None or keywords.text is None else keywords.text
+            )
+            shortcut = shortcut.text if shortcut is not None else ""
+            wxId = getattr(wx, wxId.text, wx.ID_ANY) if wxId is not None else wx.ID_ANY
+            icon = icon.text if icon is not None else ""
             label = origLabel
             if gcmd:
                 if self.menustyle == 1:
@@ -152,7 +142,7 @@ class MenuTreeModelBuilder:
         elif item.tag == "menu":
             self._createMenu(item, node)
         else:
-            raise ValueError(_("Unknow tag %s") % item.tag)
+            raise ValueError(_("Unknown tag %s") % item.tag)
 
     def GetModel(self, separators=False):
         """Returns copy of model with or without separators
@@ -160,16 +150,15 @@ class MenuTreeModelBuilder:
         """
         if separators:
             return copy.deepcopy(self.model)
-        else:
-            model = copy.deepcopy(self.model)
-            removeSeparators(model)
-            return model
+        model = copy.deepcopy(self.model)
+        removeSeparators(model)
+        return model
 
     def PrintTree(self, fh):
         for child in self.model.root.children:
             printTree(node=child, fh=fh)
 
-    def PrintStrings(self, fh):
+    def PrintStrings(self, fh: Writer[str]):
         """Print menu strings to file (used for localization)
 
         :param fh: file descriptor
@@ -203,15 +192,15 @@ def printTree(node, fh, indent=0):
         printTree(node=child, fh=fh, indent=indent + 2)
 
 
-def printStrings(node, fh):
+def printStrings(node, fh: Writer[str]):
     # node.label  - with module in brackets
     # node.data['label'] - without module in brackets
     if node.label and not node.data:
         fh.write("    _(%r),\n" % str(node.label))
     if node.data:
-        if "label" in node.data and node.data["label"]:
+        if node.data.get("label"):
             fh.write("    _(%r),\n" % str(node.data["label"]))
-        if "description" in node.data and node.data["description"]:
+        if node.data.get("description"):
             fh.write("    _(%r),\n" % str(node.data["description"]))
     for child in node.children:
         printStrings(node=child, fh=fh)
@@ -273,7 +262,7 @@ if __name__ == "__main__":
     else:
         import grass.script.core as gscore
 
-        gscore.fatal("Unknown value for parameter menu: " % menu)
+        gscore.fatal("Unknown value for parameter menu: %s" % menu)
 
     if action == "strings":
         menudata.PrintStrings(sys.stdout)
@@ -286,6 +275,6 @@ if __name__ == "__main__":
     else:
         import grass.script.core as gscore
 
-        gscore.fatal("Unknown value for parameter action: " % action)
+        gscore.fatal("Unknown value for parameter action: %s" % action)
 
     sys.exit(0)

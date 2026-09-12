@@ -6,10 +6,8 @@
 Classes:
  - toolbars::MapToolbar
 
-(C) 2007-2015 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2015 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton
 @author Jachym Cepicky
@@ -67,8 +65,7 @@ NvizIcons = {
         img="flythrough",
         label=_("Fly-through mode"),
         desc=_(
-            "Drag with mouse, hold Ctrl down for different mode"
-            " or Shift to accelerate"
+            "Drag with mouse, hold Ctrl down for different mode or Shift to accelerate"
         ),
     ),
     "zoomIn": BaseIcons["zoomIn"].SetLabel(desc=_("Click mouse to zoom")),
@@ -285,10 +282,7 @@ class MapToolbar(BaseToolbar):
 
     def ChangeToolsDesc(self, mode2d):
         """Change description of zoom tools for 2D/3D view"""
-        if mode2d:
-            icons = BaseIcons
-        else:
-            icons = NvizIcons
+        icons = BaseIcons if mode2d else NvizIcons
         for i, data in enumerate(self.controller.data):
             for tool in ("zoomIn", "zoomOut"):
                 if data[0] == tool:

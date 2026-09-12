@@ -6,10 +6,8 @@
 Classes:
  - treeview::TreeView
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Petrasova <kratochanna gmail.com>
 """
@@ -209,10 +207,7 @@ class CTreeView(AbstractTreeViewMixin, CustomTreeCtrl):
     """Tree view class inheriting from wx.TreeCtrl"""
 
     def __init__(self, model, parent, **kw):
-        if hasAgw:
-            style = "agwStyle"
-        else:
-            style = "style"
+        style = "agwStyle" if hasAgw else "style"
 
         if style not in kw:
             kw[style] = (
@@ -256,8 +251,7 @@ class TreeListView(AbstractTreeViewMixin, ExpansionState, TreeListCtrl):
         # remove & because of & needed in menu (&Files)
         if column > 0:
             return node.data.get(self._columns[column], "")
-        else:
-            return node.label.replace("&", "")
+        return node.label.replace("&", "")
 
     def OnRightClick(self, event):
         """Select item on right click.

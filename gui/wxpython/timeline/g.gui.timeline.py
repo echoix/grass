@@ -5,17 +5,9 @@
 # AUTHOR(S): Anna Kratochvilova
 # PURPOSE:   Timeline Tool is a wxGUI component (based on matplotlib)
 #            which allows the user to compare temporal datasets' extents.
-# COPYRIGHT: (C) 2012-13 by Anna Kratochvilova, and the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2012-13 Anna Kratochvilova
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 ############################################################################
 
@@ -24,7 +16,7 @@
 # % keyword: general
 # % keyword: GUI
 # % keyword: temporal
-# % keywords: plot
+# % keyword: plot
 # %end
 # %option G_OPT_STDS_INPUTS
 # % required: no
@@ -50,7 +42,7 @@ def main():
         from timeline.frame import TimelineFrame
     except ImportError as e:
         # TODO: why do we need this special check here, the reason of error
-        # is wrong intallation or something, no need to report this to the
+        # is wrong installation or something, no need to report this to the
         # user in a nice way
         gs.fatal(str(e))
 
@@ -61,7 +53,7 @@ def main():
     app = wx.App()
     frame = TimelineFrame(
         parent=None,
-        title=_("Timeline Tool - GRASS GIS"),
+        title=_("Timeline Tool - GRASS"),
     )
     frame.SetDatasets(datasets)
     frame.Show3D(view3d)

@@ -2,19 +2,17 @@
 
 Temporal raster algebra
 
-(C) 2013 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 :authors: Thomas Leppelt and Soeren Gebbert
 
-.. code-block:: python
+.. code-block:: pycon
 
     >>> p = TemporalRasterAlgebraLexer()
     >>> p.build()
     >>> p.debug = True
-    >>> expression =  'R = A[0,1,0] / B[0,0,1] * 20 + C[0,1,1] - 2.45'
+    >>> expression = "R = A[0,1,0] / B[0,0,1] * 20 + C[0,1,1] - 2.45"
     >>> p.test(expression)
     R = A[0,1,0] / B[0,0,1] * 20 + C[0,1,1] - 2.45
     LexToken(NAME,'R',1,0)
@@ -52,13 +50,11 @@ for details.
 
 """
 
-try:
-    from ply import yacc
-except ImportError:
-    pass
+from __future__ import annotations
 
 import grass.pygrass.modules as pymod
 
+from .ply import yacc
 from .space_time_datasets import RasterDataset
 from .temporal_raster_base_algebra import (
     TemporalRasterAlgebraLexer,
@@ -71,15 +67,15 @@ class TemporalRasterAlgebraParser(TemporalRasterBaseAlgebraParser):
 
     def __init__(
         self,
-        pid=None,
-        run=False,
-        debug=True,
-        spatial=False,
-        register_null=False,
-        dry_run=False,
-        nprocs=1,
+        pid: int | None = None,
+        run: bool = False,
+        debug: bool = True,
+        spatial: bool = False,
+        register_null: bool = False,
+        dry_run: bool = False,
+        nprocs: int = 1,
         time_suffix=None,
-    ):
+    ) -> None:
         TemporalRasterBaseAlgebraParser.__init__(
             self,
             pid=pid,
@@ -93,12 +89,14 @@ class TemporalRasterAlgebraParser(TemporalRasterBaseAlgebraParser):
         )
 
         if spatial is True:
-            self.m_mapcalc = pymod.Module("r.mapcalc", region="union", run_=False)
+            self.m_mapcalc = pymod.Module(
+                "r.mapcalc", region="union", nprocs=1, run_=False
+            )
         else:
-            self.m_mapcalc = pymod.Module("r.mapcalc")
+            self.m_mapcalc = pymod.Module("r.mapcalc", nprocs=1, run_=False)
         self.m_mremove = pymod.Module("g.remove")
 
-    def parse(self, expression, basename=None, overwrite=False):
+    def parse(self, expression, basename=None, overwrite: bool = False):
         # Check for space time dataset type definitions from temporal algebra
         lx = TemporalRasterAlgebraLexer()
         lx.build()
@@ -114,7 +112,7 @@ class TemporalRasterAlgebraParser(TemporalRasterBaseAlgebraParser):
 
         self.lexer = TemporalRasterAlgebraLexer()
         self.lexer.build()
-        self.parser = yacc.yacc(module=self, debug=self.debug, write_tables=False)
+        self.parser = yacc.yacc(module=self, debug=self.debug)
 
         self.overwrite = overwrite
         self.count = 0
@@ -127,14 +125,14 @@ class TemporalRasterAlgebraParser(TemporalRasterBaseAlgebraParser):
 
         return self.process_chain_dict
 
-    def p_statement_assign(self, t):
+    def p_statement_assign(self, t) -> None:
         # The expression should always return a list of maps.
         """
         statement : stds EQUALS expr
         """
         TemporalRasterBaseAlgebraParser.p_statement_assign(self, t)
 
-    def p_ts_neighbour_operation(self, t):
+    def p_ts_neighbour_operation(self, t) -> None:
         # Spatial and temporal neighbour operations via indexing
         # Examples:
         # A[1,0]
@@ -166,7 +164,7 @@ class TemporalRasterAlgebraParser(TemporalRasterBaseAlgebraParser):
                 # Get map index and temporal extent.
                 map_index = maplist.index(map_i)
                 new_index = map_index + t_neighbour
-                if new_index < max_index and new_index >= 0:
+                if 0 <= new_index < max_index:
                     map_i_t_extent = map_i.get_temporal_extent()
                     # Get neighbouring map and set temporal extent.
                     map_n = maplist[new_index]

@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:      Convert a space time raster dataset into a 3D raster map
-# COPYRIGHT:    (C) 2011-2017 by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2011-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -183,10 +174,7 @@ def main():
         gs.warning(_("%s failed to set units.") % "r3.support")
 
     # Register the space time voxel cube in the temporal GIS
-    if output.find("@") >= 0:
-        id = output
-    else:
-        id = output + "@" + mapset
+    id = output if output.find("@") >= 0 else output + "@" + mapset
 
     start, end = sp.get_temporal_extent_as_tuple()
     r3ds = tgis.Raster3DDataset(id)

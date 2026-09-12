@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:      Observe specific locations in a space time raster dataset over a period of time using vector points
-# COPYRIGHT:    (C) 2011-2017 by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2011-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -185,8 +176,7 @@ def main():
                     if name is None:
                         isvalid = False
                         break
-                    else:
-                        mapname_list.append(name)
+                    mapname_list.append(name)
 
             if isvalid:
                 entry = mapmatrizes[0][i]
@@ -202,11 +192,8 @@ def main():
     vector_db = gs.vector.vector_db(input)
 
     # We copy the vector table and create the new layers
-    if vector_db:
-        # Use the first layer to copy the categories from
-        layers = "1,"
-    else:
-        layers = ""
+    # If vector_db, use the first layer to copy the categories from
+    layers = "1," if vector_db else ""
     first = True
     for layer in range(num_samples):
         layer += 1
@@ -269,7 +256,7 @@ def main():
 
         # Create the columns creation string
         columns_string = ""
-        for name, column in zip(raster_names, column_names):
+        for name, column in zip(raster_names, column_names, strict=False):
             # The column is by default double precision
             coltype = "DOUBLE PRECISION"
             # Get raster map type
@@ -319,7 +306,7 @@ def main():
                 )
 
         # Call v.what.rast for each raster map
-        for name, column in zip(raster_names, column_names):
+        for name, column in zip(raster_names, column_names, strict=False):
             try:
                 gs.run_command(
                     "v.what.rast",

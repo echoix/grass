@@ -10,10 +10,8 @@ Classes:
  - menu::SearchModuleWindow
  - menu::RecentFilesMenu
 
-(C) 2010-2024 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2010-2024 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 @author Pawel Netzel (menu customization)
@@ -25,6 +23,7 @@ This program is free software under the GNU General Public License
 
 import re
 import os
+from pathlib import Path
 import wx
 
 from core import globalvar
@@ -62,11 +61,11 @@ class MenuBase:
                 label = child.label
                 subMenu = self._createMenu(child)
                 menu.AppendMenu(wx.ID_ANY, label, subMenu)
-            else:
-                data = child.data.copy()
-                data.pop("label")
+                continue
+            data = child.data.copy()
+            data.pop("label")
 
-                self._createMenuItem(menu, label=child.label, **data)
+            self._createMenuItem(menu, label=child.label, **data)
 
         return menu
 
@@ -91,10 +90,7 @@ class MenuBase:
             menu.AppendSeparator()
             return
 
-        if command:
-            helpString = command + " -- " + description
-        else:
-            helpString = description
+        helpString = command + " -- " + description if command else description
 
         if shortcut:
             label += "\t" + shortcut
@@ -120,7 +116,7 @@ class MenuBase:
             ):
                 menuItem.Enable(False)
 
-        rhandler = eval("self.class_handler." + handler)  # nosec B307
+        rhandler = getattr(self.class_handler, handler)
         self.parent.Bind(wx.EVT_MENU, rhandler, menuItem)
 
     def GetData(self):
@@ -281,12 +277,12 @@ class SearchModuleWindow(wx.Panel):
             return
 
         # extract name of the handler and create a new call
-        handler = "self._handlerObj." + data["handler"].lstrip("self.")
+        handler = getattr(self._handlerObj, data["handler"].removeprefix("self."))
 
         if data["command"]:
-            eval(handler)(event=None, cmd=data["command"].split())
+            handler(event=None, cmd=data["command"].split())
         else:
-            eval(handler)(event=None)
+            handler(event=None)
 
     def Help(self, node=None):
         """Show documentation for a module"""
@@ -345,8 +341,7 @@ class RecentFilesMenu:
                          written into the .recent_files file
     :param obj parent_menu: menu widget instance where be inserted
                             recent files menu on the specified position
-    :param int pos: position (index) where insert recent files menu in
-                    the parent menu
+    :param int pos: position (index) where insert recent files menu in the parent menu
     :param int history_len: the maximum number of file paths written
                             into the .recent_files file to app name group
     """
@@ -361,7 +356,7 @@ class RecentFilesMenu:
         self.file_requested = Signal("RecentFilesMenu.FileRequested")
 
         self._filehistory = wx.FileHistory(maxFiles=history_len)
-        # Recent files path stored in GRASS GIS config dir in the
+        # Recent files path stored in GRASS config dir in the
         # .recent_files file in the group by application name
         self._config = wx.FileConfig(
             style=wx.CONFIG_USE_LOCAL_FILE,
@@ -406,7 +401,7 @@ class RecentFilesMenu:
         file_index = event.GetId() - wx.ID_FILE1
         path = self._filehistory.GetHistoryFile(file_index)
 
-        if not os.path.exists(path):
+        if not Path(path).exists():
             self.RemoveFileFromHistory(file_index)
             file_exists = False
         self.file_requested.emit(
@@ -444,9 +439,9 @@ class RecentFilesMenu:
 
     def RemoveNonExistentFiles(self):
         """Remove non existent files from the history"""
-        for i in reversed(range(0, self._filehistory.GetCount())):
+        for i in reversed(range(self._filehistory.GetCount())):
             file = self._filehistory.GetHistoryFile(index=i)
-            if not os.path.exists(file):
+            if not Path(file).exists():
                 self._filehistory.RemoveFileFromHistory(i=i)
 
         self._filehistory.Save(self._config)

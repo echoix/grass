@@ -8,11 +8,9 @@
 #
 # PURPOSE:      Rebuilds or removes locally installed GRASS Addons extensions
 #
-# COPYRIGHT:    (C) 2011-2013 by Martin Landa, and the GRASS Development Team
-#
-#               This program is free software under the GNU General
-#               Public License (>=v2). Read the file COPYING that
-#               comes with GRASS for details.
+# SPDX-FileCopyrightText: 2011-2013 Martin Landa
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -42,7 +40,7 @@ import re
 import sys
 
 import xml.etree.ElementTree as ET
-
+from pathlib import Path
 from urllib import request as urlrequest
 from urllib.error import HTTPError, URLError
 
@@ -60,7 +58,7 @@ def get_extensions():
     if not addon_base:
         gs.fatal(_("%s not defined") % "GRASS_ADDON_BASE")
     fXML = os.path.join(addon_base, "modules.xml")
-    if not os.path.exists(fXML):
+    if not Path(fXML).exists():
         return []
 
     # read XML file
@@ -109,9 +107,7 @@ def download_modules_xml_file(url, response_format, *args, **kwargs):
             desc = HTTP_STATUS_CODES[index].description
             gs.fatal(
                 _(
-                    "Download file from <{url}>, "
-                    "return status code {code}, "
-                    "{desc}"
+                    "Download file from <{url}>, return status code {code}, {desc}"
                 ).format(
                     url=url,
                     code=response.code,
@@ -173,7 +169,7 @@ def find_addon_name(addons):
     if grass_version != "unknown":
         major, minor, patch = grass_version.split(".")
     else:
-        gs.fatal(_("Unable to get GRASS GIS version."))
+        gs.fatal(_("Unable to get GRASS version."))
     url = "https://grass.osgeo.org/addons/grass{major}/modules.xml".format(
         major=major,
     )

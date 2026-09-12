@@ -23,10 +23,8 @@ Classes:
  - wizard::LocationWizard
  - wizard::WizardWithHelpButton
 
-(C) 2007-2016 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2016 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton
 @author Jachym Cepicky
@@ -34,48 +32,49 @@ This program is free software under the GNU General Public License
 @author Hamish Bowman (planetary ellipsoids)
 """
 
-import os
-import locale
-import functools
+from __future__ import annotations
 
+import functools
+import locale
+import os
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import wx
 import wx.lib.mixins.listctrl as listmix
 from core import globalvar
 
-if globalvar.wxPythonPhoenix:
+if globalvar.wxPythonPhoenix or TYPE_CHECKING:
     from wx import adv as wiz
-    from wx.adv import Wizard
-    from wx.adv import WizardPageSimple
+    from wx.adv import Wizard, WizardPageSimple
 else:
     from wx import wizard as wiz
     from wx.wizard import Wizard
     from wx.wizard import WizardPageSimple
-import wx.lib.scrolledpanel as scrolled
 
+import wx.lib.scrolledpanel as scrolled
 from core import utils
+from core.gcmd import GError, GWarning, RunCommand
 from core.utils import cmp
-from core.gcmd import RunCommand, GError, GWarning
 from gui_core.widgets import GenericMultiValidator
 from gui_core.wrap import (
-    SpinCtrl,
-    SearchCtrl,
-    StaticText,
-    TextCtrl,
     Button,
     CheckBox,
-    StaticBox,
-    NewId,
-    ListCtrl,
     HyperlinkCtrl,
+    ListCtrl,
+    NewId,
+    SearchCtrl,
+    SpinCtrl,
+    StaticBox,
+    StaticText,
+    TextCtrl,
 )
 from location_wizard.dialogs import SelectTransformDialog
 
+from grass.exceptions import OpenError, ScriptError
 from grass.grassdb.checks import location_exists
-from grass.script import decode
 from grass.script import core as grass
-from grass.exceptions import OpenError
+from grass.script import decode
 
 global coordsys, north, south, east, west, resolution, wizerror, translist
 
@@ -83,6 +82,9 @@ if globalvar.CheckWxVersion(version=[4, 1, 0]):
     search_cancel_evt = wx.EVT_SEARCH_CANCEL
 else:
     search_cancel_evt = wx.EVT_SEARCHCTRL_CANCEL_BTN
+
+if TYPE_CHECKING:
+    from wx.adv import WizardEvent
 
 
 class TitledPage(WizardPageSimple):
@@ -193,7 +195,11 @@ class DatabasePage(TitledPage):
         self.bbrowse = self.MakeButton(_("Change"))
 
         # text controls
-        self.tgisdbase = self.MakeLabel(grassdatabase)
+        # Show long paths with middle ellipsis and full value in tooltip
+        self.tgisdbase = self.MakeLabel(
+            text=grassdatabase, style=wx.ST_ELLIPSIZE_MIDDLE, tooltip=grassdatabase
+        )
+        self.tgisdbase.SetMaxSize((400, -1))
         self.tlocation = self.MakeTextCtrl("newProject")
         self.tlocation.SetFocus()
 
@@ -270,7 +276,7 @@ class DatabasePage(TitledPage):
         )
         self.sizer.Add(
             self.tgisdbase,
-            flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL | wx.ALL,
+            flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND,
             border=5,
             pos=(6, 1),
         )
@@ -328,10 +334,11 @@ class DatabasePage(TitledPage):
         if dlg.ShowModal() == wx.ID_OK:
             self.grassdatabase = dlg.GetPath()
             self.tgisdbase.SetLabel(self.grassdatabase)
+            self.tgisdbase.SetToolTip(self.grassdatabase)
 
         dlg.Destroy()
 
-    def OnPageChanging(self, event=None):
+    def OnPageChanging(self, event: WizardEvent | None = None) -> None:
         self.location = self.tlocation.GetValue()
         self.grassdatabase = self.tgisdbase.GetLabel()
         self.locTitle = self.tlocTitle.GetValue()
@@ -416,7 +423,7 @@ class CoordinateSystemPage(TitledPage):
         self.Bind(wx.EVT_RADIOBUTTON, self.SetVal, id=self.radioXy.GetId())
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnEnterPage)
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         global coordsys
 
         if not coordsys:
@@ -566,7 +573,7 @@ class ProjectionsPage(TitledPage):
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGING, self.OnPageChanging)
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnEnterPage)
 
-    def OnPageChanging(self, event):
+    def OnPageChanging(self, event: WizardEvent) -> None:
         if event.GetDirection() and self.proj not in self.parent.projections.keys():
             event.Veto()
 
@@ -591,14 +598,14 @@ class ProjectionsPage(TitledPage):
                 self.tproj.SetValue(self.proj)
                 nextButton.Enable(False)
                 return
-            elif self.proj.lower() == "ll":
+            if self.proj.lower() == "ll":
                 self.p4proj = "+proj=longlat"
             else:
                 self.p4proj = "+proj=" + self.proj.lower()
             self.projdesc = self.parent.projections[self.proj][0]
             nextButton.Enable()
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         if len(self.proj) == 0:
             # disable 'next' button by default
             wx.FindWindowById(wx.ID_FORWARD).Enable(False)
@@ -614,7 +621,7 @@ class ProjectionsPage(TitledPage):
             self.proj, self.projdesc = self.projlist.Search(
                 index=[0, 1], pattern=search_str
             )
-        except:
+        except (IndexError, ValueError):
             self.proj = self.projdesc = ""
 
         event.Skip()
@@ -771,8 +778,7 @@ class ItemList(ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.ColumnSorterMix
 
         if ascending:
             return cmpVal
-        else:
-            return -cmpVal
+        return -cmpVal
 
     def GetListCtrl(self):
         """Used by listmix.ColumnSorterMixin"""
@@ -804,12 +810,10 @@ class ItemList(ListCtrl, listmix.ListCtrlAutoWidthMixin, listmix.ColumnSorterMix
         if len(data) > 0:
             if firstOnly:
                 return data[0]
-            else:
-                return data
-        elif firstOnly:
+            return data
+        if firstOnly:
             return None
-        else:
-            return []
+        return []
 
 
 class ProjParamsPage(TitledPage):
@@ -895,16 +899,15 @@ class ProjParamsPage(TitledPage):
 
         event.Skip()
 
-    def OnPageChange(self, event=None):
+    def OnPageChange(self, event: WizardEvent | None = None) -> None:
         """Go to next page"""
         if event.GetDirection():
             self.p4projparams = ""
             for param in self.pparam.values():
                 if param["type"] == "bool":
-                    if param["value"] is False:
+                    if param["value"] == 0 or param["value"] is False:
                         continue
-                    else:
-                        self.p4projparams += " +" + param["proj4"]
+                    self.p4projparams += " +" + param["proj4"]
                 elif param["value"] is None:
                     wx.MessageBox(
                         parent=self,
@@ -918,7 +921,7 @@ class ProjParamsPage(TitledPage):
                         " +" + param["proj4"] + "=" + str(param["value"])
                     )
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         """Page entered"""
         self.projdesc = self.parent.projections[self.parent.projpage.proj][0]
         if self.prjParamSizer is None:
@@ -1063,9 +1066,9 @@ class DatumPage(TitledPage):
         self.searchb.ShowCancelButton(True)
 
         # create list control for datum/elipsoid list
-        data = []
-        for key in self.parent.datums.keys():
-            data.append([key, self.parent.datums[key][0], self.parent.datums[key][1]])
+        data = [
+            [key, datum[0], datum[1]] for (key, datum) in self.parent.datums.items()
+        ]
         self.datumlist = ItemList(
             self, data=data, columns=[_("Code"), _("Ellipsoid"), _("Description")]
         )
@@ -1119,7 +1122,7 @@ class DatumPage(TitledPage):
         # do page layout
         # self.DoLayout()
 
-    def OnPageChanging(self, event):
+    def OnPageChanging(self, event: WizardEvent):
         self.proj4params = ""
         proj = self.parent.projpage.p4proj
 
@@ -1163,7 +1166,7 @@ class DatumPage(TitledPage):
                 self.ellipse
             ][1]
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         self.parent.datum_trans = None
         if event.GetDirection():
             if len(self.datum) == 0:
@@ -1188,15 +1191,15 @@ class DatumPage(TitledPage):
             self.datumparams = self.parent.datums[self.datum][2]
             try:
                 self.datumparams.remove("dx=0.0")
-            except:
+            except ValueError:
                 pass
             try:
                 self.datumparams.remove("dy=0.0")
-            except:
+            except ValueError:
                 pass
             try:
                 self.datumparams.remove("dz=0.0")
-            except:
+            except ValueError:
                 pass
 
             nextButton.Enable(True)
@@ -1211,7 +1214,7 @@ class DatumPage(TitledPage):
             self.datum, self.ellipsoid, self.datumdesc = self.datumlist.Search(
                 index=[0, 1, 2], pattern=search_str
             )
-        except:
+        except (IndexError, ValueError):
             self.datum = self.datumdesc = self.ellipsoid = ""
 
         event.Skip()
@@ -1262,10 +1265,10 @@ class EllipsePage(TitledPage):
         )
 
         # create list control for ellipse list
-        data = []
         # extract code, desc
-        for key in self.parent.ellipsoids.keys():
-            data.append([key, self.parent.ellipsoids[key][0]])
+        data = [
+            [key, ellipsoid[0]] for (key, ellipsoid) in self.parent.ellipsoids.items()
+        ]
 
         self.ellipselist = ItemList(
             self, data=data, columns=[_("Code"), _("Description")]
@@ -1334,7 +1337,7 @@ class EllipsePage(TitledPage):
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnEnterPage)
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGING, self.OnPageChanging)
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         if len(self.ellipse) == 0:
             # disable 'next' button by default
             wx.FindWindowById(wx.ID_FORWARD).Enable(False)
@@ -1343,7 +1346,7 @@ class EllipsePage(TitledPage):
         self.scope = "earth"
         event.Skip()
 
-    def OnPageChanging(self, event):
+    def OnPageChanging(self, event: WizardEvent) -> None:
         if (
             event.GetDirection()
             and self.ellipse not in self.parent.ellipsoids
@@ -1361,7 +1364,7 @@ class EllipsePage(TitledPage):
     # FIXME: index number doesn't translate when you've given a valid name
     # from the other list
     def OnText(self, event):
-        """Ellipspoid code changed"""
+        """Ellipsoid code changed"""
         self.ellipse = event.GetString()
         nextButton = wx.FindWindowById(wx.ID_FORWARD)
         if len(self.ellipse) == 0 or (
@@ -1392,7 +1395,7 @@ class EllipsePage(TitledPage):
                 self.ellipseparams = self.parent.ellipsoids[self.ellipse][1]
             else:
                 self.ellipseparams = self.parent.planetary_ellipsoids[self.ellipse][1]
-        except:
+        except (IndexError, ValueError, KeyError):
             self.ellipse = self.ellipsedesc = self.ellipseparams = ""
 
         event.Skip()
@@ -1469,7 +1472,7 @@ class GeoreferencedFilePage(TitledPage):
         # do page layout
         # self.DoLayout()
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         if len(self.georeffile) == 0:
             # disable 'next' button by default
             wx.FindWindowById(wx.ID_FORWARD).Enable(False)
@@ -1478,8 +1481,8 @@ class GeoreferencedFilePage(TitledPage):
 
         event.Skip()
 
-    def OnPageChanging(self, event):
-        if event.GetDirection() and not os.path.isfile(self.georeffile):
+    def OnPageChanging(self, event: WizardEvent) -> None:
+        if event.GetDirection() and not Path(self.georeffile).is_file():
             event.Veto()
         self.GetNext().SetPrev(self)
 
@@ -1487,7 +1490,7 @@ class GeoreferencedFilePage(TitledPage):
         """File changed"""
         self.georeffile = event.GetString()
         nextButton = wx.FindWindowById(wx.ID_FORWARD)
-        if len(self.georeffile) > 0 and os.path.isfile(self.georeffile):
+        if len(self.georeffile) > 0 and Path(self.georeffile).is_file():
             if not nextButton.IsEnabled():
                 nextButton.Enable(True)
         elif nextButton.IsEnabled():
@@ -1544,7 +1547,7 @@ class WKTPage(TitledPage):
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGING, self.OnPageChanging)
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnEnterPage)
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         if len(self.wktstring) == 0:
             # disable 'next' button by default
             wx.FindWindowById(wx.ID_FORWARD).Enable(False)
@@ -1553,7 +1556,7 @@ class WKTPage(TitledPage):
 
         event.Skip()
 
-    def OnPageChanging(self, event):
+    def OnPageChanging(self, event: WizardEvent) -> None:
         if event.GetDirection() and not self.wktstring.strip():
             event.Veto()
         self.GetNext().SetPrev(self)
@@ -1607,9 +1610,12 @@ class EPSGPage(TitledPage):
             self, data=None, columns=[_("Code"), _("Description"), _("Parameters")]
         )
 
-        # epsg.io hyperlink
+        # A hyperlink to a CRS database (PROJ related)
         self.tlink = HyperlinkCtrl(
-            self, id=wx.ID_ANY, label="epsg.io", url="https://epsg.io/"
+            self,
+            id=wx.ID_ANY,
+            label="spatialreference.org",
+            url="https://spatialreference.org/",
         )
         self.tlink.SetNormalColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
         self.tlink.SetVisitedColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
@@ -1642,7 +1648,7 @@ class EPSGPage(TitledPage):
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGING, self.OnPageChanging)
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnEnterPage)
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         self.parent.datum_trans = None
         if event.GetDirection():
             if not self.epsgcode:
@@ -1655,34 +1661,33 @@ class EPSGPage(TitledPage):
 
         event.Skip()
 
-    def OnPageChanging(self, event):
+    def OnPageChanging(self, event: WizardEvent):
         if event.GetDirection():
             if not self.epsgcode:
                 event.Veto()
-                return
-            else:
-                # check for datum transforms
-                ret = RunCommand(
-                    "g.proj", read=True, epsg=self.epsgcode, datum_trans="-1", flags="t"
-                )
+                return None
+            # check for datum transforms
+            ret = RunCommand(
+                "g.proj", read=True, epsg=self.epsgcode, datum_trans="-1", flags="t"
+            )
 
-                if ret != "":
-                    dtrans = ""
-                    # open a dialog to select datum transform number
-                    dlg = SelectTransformDialog(self.parent.parent, transforms=ret)
+            if ret != "":
+                dtrans = ""
+                # open a dialog to select datum transform number
+                dlg = SelectTransformDialog(self.parent.parent, transforms=ret)
 
-                    if dlg.ShowModal() == wx.ID_OK:
-                        dtrans = dlg.GetTransform()
-                        if dtrans == "":
-                            dlg.Destroy()
-                            event.Veto()
-                            return "Datum transform is required."
-                    else:
+                if dlg.ShowModal() == wx.ID_OK:
+                    dtrans = dlg.GetTransform()
+                    if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
                         return "Datum transform is required."
+                else:
+                    dlg.Destroy()
+                    event.Veto()
+                    return "Datum transform is required."
 
-                    self.parent.datum_trans = dtrans
+                self.parent.datum_trans = dtrans
             self.GetNext().SetPrev(self)
 
     def EnableNext(self, enable=True):
@@ -1692,14 +1697,14 @@ class EPSGPage(TitledPage):
     def OnTextChange(self, event):
         value = self.searchb.GetValue()
         if value == "":
-            self.tlink.SetURL("https://epsg.io/")
+            self.tlink.SetURL("https://spatialreference.org/")
             self.epsgcode = None
             self.epsgdesc = self.epsgparams = ""
             self.searchb.ChangeValue("")
             self.OnBrowseCodes(None)
             self.EnableNext(False)
         else:
-            self.tlink.SetURL(str("https://epsg.io/?q={0}".format(value)))
+            self.tlink.SetURL(f"https://spatialreference.org/ref/?&search={value}")
             data = self.epsglist.Search(index=[0, 1, 2], pattern=value, firstOnly=False)
             if data:
                 index = 0
@@ -1751,10 +1756,11 @@ class EPSGPage(TitledPage):
             self.epsglist.Populate([], update=True)
             return
 
-        data = []
-        for code, val in self.epsgCodeDict.items():
-            if code is not None:
-                data.append((code, val[0], val[1]))
+        data = [
+            (code, val[0], val[1])
+            for code, val in self.epsgCodeDict.items()
+            if code is not None
+        ]
 
         self.epsglist.Populate(data, update=True)
 
@@ -1861,7 +1867,7 @@ class IAUPage(TitledPage):
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGING, self.OnPageChanging)
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnEnterPage)
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         self.parent.datum_trans = None
         if event.GetDirection():
             if not self.epsgcode:
@@ -1875,60 +1881,57 @@ class IAUPage(TitledPage):
 
         event.Skip()
 
-    def OnPageChanging(self, event):
+    def OnPageChanging(self, event: WizardEvent):
         if event.GetDirection():
             if not self.epsgcode:
                 event.Veto()
-                return
-            else:
-                # check for datum transforms
-                ret = RunCommand(
-                    "g.proj",
-                    read=True,
-                    proj4=self.epsgparams,
-                    datum_trans="-1",
-                    flags="t",
-                )
+                return None
+            # check for datum transforms
+            ret = RunCommand(
+                "g.proj",
+                read=True,
+                proj4=self.epsgparams,
+                datum_trans="-1",
+                flags="t",
+            )
 
-                if ret != "":
-                    dtrans = ""
-                    # open a dialog to select datum transform number
-                    dlg = SelectTransformDialog(self.parent.parent, transforms=ret)
+            if ret != "":
+                dtrans = ""
+                # open a dialog to select datum transform number
+                dlg = SelectTransformDialog(self.parent.parent, transforms=ret)
 
-                    if dlg.ShowModal() == wx.ID_OK:
-                        dtrans = dlg.GetTransform()
-                        if dtrans == "":
-                            dlg.Destroy()
-                            event.Veto()
-                            return "Datum transform is required."
-                    else:
+                if dlg.ShowModal() == wx.ID_OK:
+                    dtrans = dlg.GetTransform()
+                    if dtrans == "":
                         dlg.Destroy()
                         event.Veto()
                         return "Datum transform is required."
+                else:
+                    dlg.Destroy()
+                    event.Veto()
+                    return "Datum transform is required."
 
-                    self.parent.datum_trans = dtrans
-                    self.parent.epsgcode = self.epsgcode
-                    self.parent.epsgdesc = self.epsgdesc
+                self.parent.datum_trans = dtrans
+                self.parent.epsgcode = self.epsgcode
+                self.parent.epsgdesc = self.epsgdesc
 
-                # prepare +nadgrids or +towgs84 terms for Summary page. first
-                # convert them:
-                ret, projlabel, err = RunCommand(
-                    "g.proj",
-                    flags="jft",
-                    proj4=self.epsgparams,
-                    datum_trans=self.parent.datum_trans,
-                    getErrorMsg=True,
-                    read=True,
-                )
-                # splitting on space alone would break for grid files with
-                # space in pathname
-                for projterm in projlabel.split(" +"):
-                    if (
-                        projterm.find("towgs84=") != -1
-                        or projterm.find("nadgrids=") != -1
-                    ):
-                        self.custom_dtrans_string = " +%s" % projterm
-                        break
+            # prepare +nadgrids or +towgs84 terms for Summary page. first
+            # convert them:
+            ret, projlabel, err = RunCommand(
+                "g.proj",
+                flags="ftp",
+                format="proj4",
+                proj4=self.epsgparams,
+                datum_trans=self.parent.datum_trans,
+                getErrorMsg=True,
+                read=True,
+            )
+            # splitting on space alone would break for grid files with
+            # space in pathname
+            for projterm in projlabel.split(" +"):
+                if projterm.find("towgs84=") != -1 or projterm.find("nadgrids=") != -1:
+                    self.custom_dtrans_string = " +%s" % projterm
+                    break
 
             self.GetNext().SetPrev(self)
 
@@ -1936,7 +1939,7 @@ class IAUPage(TitledPage):
         self.epsgcode = event.GetString()
         try:
             self.epsgcode = int(self.epsgcode)
-        except:
+        except ValueError:
             self.epsgcode = None
 
         nextButton = wx.FindWindowById(wx.ID_FORWARD)
@@ -2027,10 +2030,11 @@ class IAUPage(TitledPage):
             self.epsglist.Populate([], update=True)
             return
 
-        data = []
-        for code, val in self.epsgCodeDict.items():
-            if code is not None:
-                data.append((code, val[0], val[1]))
+        data = [
+            (code, val[0], val[1])
+            for code, val in self.epsgCodeDict.items()
+            if code is not None
+        ]
 
         self.epsglist.Populate(data, update=True)
 
@@ -2076,20 +2080,20 @@ class CustomPage(TitledPage):
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGING, self.OnPageChanging)
         self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnEnterPage)
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         if len(self.customstring) == 0:
             # disable 'next' button by default
             wx.FindWindowById(wx.ID_FORWARD).Enable(False)
         else:
             wx.FindWindowById(wx.ID_FORWARD).Enable(True)
 
-    def OnPageChanging(self, event):
+    def OnPageChanging(self, event: WizardEvent):
         if event.GetDirection():
             self.custom_dtrans_string = ""
 
             if self.customstring.find("+datum=") < 0:
                 self.GetNext().SetPrev(self)
-                return
+                return None
 
             # check for datum transforms
             # FIXME: -t flag is a hack-around for trac bug #1849
@@ -2109,7 +2113,7 @@ class CustomPage(TitledPage):
                     style=wx.OK | wx.ICON_ERROR | wx.CENTRE,
                 )
                 event.Veto()
-                return
+                return None
 
             if out:
                 dtrans = ""
@@ -2133,7 +2137,8 @@ class CustomPage(TitledPage):
                 # convert them:
                 ret, projlabel, err = RunCommand(
                     "g.proj",
-                    flags="jft",
+                    flags="ftp",
+                    format="proj4",
                     proj4=self.customstring,
                     datum_trans=dtrans,
                     getErrorMsg=True,
@@ -2274,7 +2279,7 @@ class SummaryPage(TitledPage):
         self.sizer.AddGrowableRow(4, 1)
         self.sizer.AddGrowableRow(5, 5)
 
-    def OnEnterPage(self, event):
+    def OnEnterPage(self, event: WizardEvent) -> None:
         """Insert values into text controls for summary of location
         creation options
         """
@@ -2289,10 +2294,7 @@ class SummaryPage(TitledPage):
 
         # print coordsys,proj4string
         if coordsys in {"proj", "epsg", "iau", "wkt", "file"}:
-            extra_opts = {}
-            extra_opts["project"] = "project"
-            extra_opts["getErrorMsg"] = True
-            extra_opts["read"] = True
+            extra_opts = {"project": "project", "getErrorMsg": True, "read": True}
 
             if coordsys == "proj":
                 if len(datum) > 0:
@@ -2300,7 +2302,11 @@ class SummaryPage(TitledPage):
                     extra_opts["datum_trans"] = dtrans
 
                 ret, projlabel, err = RunCommand(
-                    "g.proj", flags="jf", proj4=proj4string, **extra_opts
+                    "g.proj",
+                    flags="fp",
+                    format="proj4",
+                    proj4=proj4string,
+                    **extra_opts,
                 )
             elif coordsys == "iau":
                 if len(datum) > 0:
@@ -2308,12 +2314,17 @@ class SummaryPage(TitledPage):
                     extra_opts["datum_trans"] = dtrans
 
                 ret, projlabel, err = RunCommand(
-                    "g.proj", flags="jf", proj4=iauproj4string, **extra_opts
+                    "g.proj",
+                    flags="fp",
+                    format="proj4",
+                    proj4=iauproj4string,
+                    **extra_opts,
                 )
             elif coordsys == "epsg":
                 ret, projlabel, err = RunCommand(
                     "g.proj",
-                    flags="jft",
+                    flags="ftp",
+                    format="proj4",
                     epsg=epsgcode,
                     datum_trans=dtrans,
                     **extra_opts,
@@ -2321,14 +2332,16 @@ class SummaryPage(TitledPage):
             elif coordsys == "file":
                 ret, projlabel, err = RunCommand(
                     "g.proj",
-                    flags="jft",
+                    flags="ftp",
+                    format="proj4",
                     georef=self.parent.filepage.georeffile,
                     **extra_opts,
                 )
             elif coordsys == "wkt":
                 ret, projlabel, err = RunCommand(
                     "g.proj",
-                    flags="jft",
+                    flags="ftp",
+                    format="proj4",
                     wkt="-",
                     stdin=self.parent.wktpage.wktstring,
                     **extra_opts,
@@ -2492,6 +2505,14 @@ class LocationWizard(wx.Object):
         self.wizard.FitToPage(self.datumpage)
         size = self.wizard.GetPageSize()
         self.wizard.SetPageSize((size[0], size[1] + 75))
+        # Allow user to resize while keeping sensible minimum size
+        cur_size = self.wizard.GetSize()
+        try:
+            # Set size hints (min size) to current size
+            self.wizard.SetSizeHints(cur_size[0], cur_size[1])
+        except Exception:
+            # Fallback for environments not supporting SetSizeHints
+            self.wizard.SetMinSize(cur_size)
 
         # new location created?
         self.location = None
@@ -2543,89 +2564,86 @@ class LocationWizard(wx.Object):
         """Get georeferencing information from tables in $GISBASE/etc/proj"""
 
         # read projection and parameters
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "parms.table"))
         self.projections = {}
         self.projdesc = {}
-        for line in f:
-            line = line.strip()
-            try:
-                proj, projdesc, params = line.split(":")
-                paramslist = params.split(";")
-                plist = []
-                for p in paramslist:
-                    if p == "":
-                        continue
-                    p1, pdefault = p.split(",")
-                    pterm, pask = p1.split("=")
-                    p = [pterm.strip(), pask.strip(), pdefault.strip()]
-                    plist.append(p)
-                self.projections[proj.lower().strip()] = (projdesc.strip(), plist)
-                self.projdesc[proj.lower().strip()] = projdesc.strip()
-            except:
-                continue
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "parms.table")) as f:
+            for line in f:
+                line = line.strip()
+                try:
+                    proj, projdesc, params = line.split(":")
+                    paramslist = params.split(";")
+                    plist = []
+                    for p in paramslist:
+                        if p == "":
+                            continue
+                        p1, pdefault = p.split(",")
+                        pterm, pask = p1.split("=")
+                        p = [pterm.strip(), pask.strip(), pdefault.strip()]
+                        plist.append(p)
+                    self.projections[proj.lower().strip()] = (projdesc.strip(), plist)
+                    self.projdesc[proj.lower().strip()] = projdesc.strip()
+                except (ValueError, IndexError):
+                    continue
 
         # read datum definitions
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "datum.table"))
         self.datums = {}
         paramslist = []
-        for line in f:
-            line = line.expandtabs(1)
-            line = line.strip()
-            if line == "" or line[0] == "#":
-                continue
-            datum, info = line.split(" ", 1)
-            info = info.strip()
-            datumdesc, params = info.split(" ", 1)
-            datumdesc = datumdesc.strip('"')
-            paramlist = params.split()
-            ellipsoid = paramlist.pop(0)
-            self.datums[datum] = (ellipsoid, datumdesc.replace("_", " "), paramlist)
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "datum.table")) as f:
+            for line in f:
+                line = line.expandtabs(1)
+                line = line.strip()
+                if line == "" or line[0] == "#":
+                    continue
+                datum, info = line.split(" ", 1)
+                info = info.strip()
+                datumdesc, params = info.split(" ", 1)
+                datumdesc = datumdesc.strip('"')
+                paramlist = params.split()
+                ellipsoid = paramlist.pop(0)
+                self.datums[datum] = (ellipsoid, datumdesc.replace("_", " "), paramlist)
 
         # read Earth-based ellipsiod definitions
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "ellipse.table"))
         self.ellipsoids = {}
-        for line in f:
-            line = line.expandtabs(1)
-            line = line.strip()
-            if line == "" or line[0] == "#":
-                continue
-            ellipse, rest = line.split(" ", 1)
-            rest = rest.strip('" ')
-            desc, params = rest.split('"', 1)
-            desc = desc.strip('" ')
-            paramslist = params.split()
-            self.ellipsoids[ellipse] = (desc, paramslist)
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "ellipse.table")) as f:
+            for line in f:
+                line = line.expandtabs(1)
+                line = line.strip()
+                if line == "" or line[0] == "#":
+                    continue
+                ellipse, rest = line.split(" ", 1)
+                rest = rest.strip('" ')
+                desc, params = rest.split('"', 1)
+                desc = desc.strip('" ')
+                paramslist = params.split()
+                self.ellipsoids[ellipse] = (desc, paramslist)
 
         # read Planetary ellipsiod definitions
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "ellipse.table.solar.system"))
         self.planetary_ellipsoids = {}
-        for line in f:
-            line = line.expandtabs(1)
-            line = line.strip()
-            if line == "" or line[0] == "#":
-                continue
-            ellipse, rest = line.split(" ", 1)
-            rest = rest.strip('" ')
-            desc, params = rest.split('"', 1)
-            desc = desc.strip('" ')
-            paramslist = params.split()
-            self.planetary_ellipsoids[ellipse] = (desc, paramslist)
-        f.close()
+        with open(
+            os.path.join(globalvar.ETCDIR, "proj", "ellipse.table.solar.system")
+        ) as f:
+            for line in f:
+                line = line.expandtabs(1)
+                line = line.strip()
+                if line == "" or line[0] == "#":
+                    continue
+                ellipse, rest = line.split(" ", 1)
+                rest = rest.strip('" ')
+                desc, params = rest.split('"', 1)
+                desc = desc.strip('" ')
+                paramslist = params.split()
+                self.planetary_ellipsoids[ellipse] = (desc, paramslist)
 
         # read projection parameter description and parsing table
-        f = open(os.path.join(globalvar.ETCDIR, "proj", "desc.table"))
         self.paramdesc = {}
-        for line in f:
-            line = line.strip()
-            try:
-                pparam, datatype, proj4term, desc = line.split(":")
-                self.paramdesc[pparam] = (datatype, proj4term, desc)
-            except:
-                continue
-        f.close()
+        with open(os.path.join(globalvar.ETCDIR, "proj", "desc.table")) as f:
+            for line in f:
+                line = line.strip()
+                try:
+                    pparam, datatype, proj4term, desc = line.split(":")
+                    self.paramdesc[pparam] = (datatype, proj4term, desc)
+                except ValueError:
+                    continue
 
     def OnWizFinished(self):
         """Wizard finished, create new location
@@ -2637,7 +2655,7 @@ class LocationWizard(wx.Object):
         location = self.startpage.location
 
         # location already exists?
-        if os.path.isdir(os.path.join(database, location)):
+        if Path(database, location).is_dir():
             GError(
                 parent=self.wizard,
                 message="%s <%s>: %s"
@@ -2653,10 +2671,10 @@ class LocationWizard(wx.Object):
         current_gdb = decode(grass.gisenv()["GISDBASE"])
         if current_gdb != database:
             # change to new GISDbase or create new one
-            if not os.path.isdir(database):
+            if not Path(database).is_dir():
                 # create new directory
                 try:
-                    os.mkdir(database)
+                    Path(database).mkdir()
                 except OSError as error:
                     GError(
                         parent=self.wizard,
@@ -2723,8 +2741,9 @@ class LocationWizard(wx.Object):
                     desc=self.startpage.locTitle,
                 )
             elif coordsys == "file":
-                if not self.filepage.georeffile or not os.path.isfile(
-                    self.filepage.georeffile
+                if (
+                    not self.filepage.georeffile
+                    or not Path(self.filepage.georeffile).is_file()
                 ):
                     return _("File <%s> not found.") % self.filepage.georeffile
 
@@ -2745,7 +2764,7 @@ class LocationWizard(wx.Object):
                     desc=self.startpage.locTitle,
                 )
 
-        except grass.ScriptError as e:
+        except ScriptError as e:
             return e.value
 
         return None
@@ -2765,10 +2784,7 @@ class LocationWizard(wx.Object):
 
         # set ellipsoid parameters
         for item in ellipseparams:
-            if item[:4] == "f=1/":
-                item = " +rf=" + item[4:]
-            else:
-                item = " +" + item
+            item = " +rf=" + item[4:] if item[:4] == "f=1/" else " +" + item
             proj4string = "%s %s" % (proj4string, item)
 
         # set datum transform parameters if relevant
@@ -2778,7 +2794,7 @@ class LocationWizard(wx.Object):
 
         return "%s +no_defs" % proj4string
 
-    def OnHelp(self, event):
+    def OnHelp(self, event: WizardEvent) -> None:
         """'Help' button clicked"""
 
         # help text in lib/init/helptext.html
@@ -2790,9 +2806,19 @@ class WizardWithHelpButton(Wizard):
         if globalvar.wxPythonPhoenix:
             Wizard.__init__(self)
             self.SetExtraStyle(wx.adv.WIZARD_EX_HELPBUTTON)
-            self.Create(parent=parent, id=id, title=title)
+            self.Create(
+                parent=parent,
+                id=id,
+                title=title,
+                style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX,
+            )
         else:
             pre = wiz.PreWizard()
             pre.SetExtraStyle(wx.wizard.WIZARD_EX_HELPBUTTON)
-            pre.Create(parent=parent, id=id, title=title)
+            pre.Create(
+                parent=parent,
+                id=id,
+                title=title,
+                style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX,
+            )
             self.PostCreate(pre)

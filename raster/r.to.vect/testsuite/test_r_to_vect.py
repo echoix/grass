@@ -3,10 +3,9 @@ Name:       r.to.vect test
 Purpose:    Tests r.to.vect and its flags/options.
 
 Author:     Sunveer Singh, Google Code-in 2017
-Copyright:  (C) 2017 by Sunveer Singh and the GRASS Development Team
-Licence:    This program is free software under the GNU General Public
-            License (>=v2). Read the file COPYING that comes with GRASS
-            for details.
+SPDX-FileCopyrightText: 2017 Sunveer Singh
+SPDX-FileCopyrightText: GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 from grass.gunittest.case import TestCase
@@ -28,8 +27,8 @@ class Testrr(TestCase):
     def tearDownClass(cls):
         cls.del_temp_region()
 
-    def tearDown(cls):
-        cls.runModule("g.remove", type="vector", flags="f", name=cls.output)
+    def tearDown(self):
+        self.runModule("g.remove", type="vector", flags="f", name=self.output)
 
     def test_flags(self):
         """Testing flag s"""

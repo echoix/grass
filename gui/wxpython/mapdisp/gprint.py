@@ -8,10 +8,8 @@ Classes:
  - gprint::MapPrint
  - gprint::PrintOptions
 
-(C) 2007-2011 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton (Arizona State University)
 """
@@ -25,21 +23,6 @@ class MapPrint(wx.Printout):
     def __init__(self, canvas):
         wx.Printout.__init__(self)
         self.canvas = canvas
-
-    def OnBeginDocument(self, start, end):
-        return super().OnBeginDocument(start, end)
-
-    def OnEndDocument(self):
-        super().OnEndDocument()
-
-    def OnBeginPrinting(self):
-        super().OnBeginPrinting()
-
-    def OnEndPrinting(self):
-        super().OnEndPrinting()
-
-    def OnPreparePrinting(self):
-        super().OnPreparePrinting()
 
     def HasPage(self, page) -> bool:
         return page <= 2

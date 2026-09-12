@@ -11,11 +11,8 @@
 #               all cells in the map. If one or many of them are NULL (no data),
 #               the figure will not reach the outer circle. The vector inside
 #               indicates the prevalent direction.
-# COPYRIGHT:    (C) 2006,2008 by the GRASS Development Team
-#
-#               This program is free software under the GNU General Public
-#               License (>=v2). Read the file COPYING that comes with GRASS
-#               for details.
+# SPDX-FileCopyrightText: 2006,2008 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -48,6 +45,7 @@ import math
 import atexit
 import glob
 import shutil
+from pathlib import Path
 from grass.script.utils import try_remove, basename
 from grass.script import core as gcore
 
@@ -112,7 +110,7 @@ def plot_dgraph():
             50 * (1 + ring * math.sin(math.radians(i))),
             50 * (1 + ring * math.cos(math.radians(i))),
         )
-        for i in range(0, 361)
+        for i in range(361)
     ]
 
     # trend vector
@@ -283,10 +281,10 @@ newpath
 
     (x, y) = outercircle[1]
     outf.write("%.2f %.2f moveto\n" % (x * scale + halfframe, y * scale + halfframe))
-    for x, y in outercircle[2:]:
-        outf.write(
-            "%.2f %.2f lineto\n" % (x * scale + halfframe, y * scale + halfframe)
-        )
+    outf.writelines(
+        "%.2f %.2f lineto\n" % (x * scale + halfframe, y * scale + halfframe)
+        for x, y in outercircle[2:]
+    )
 
     t = string.Template(
         """
@@ -338,10 +336,10 @@ newpath
 
     (x, y) = sine_cosine_replic[1]
     outf.write("%.2f %.2f moveto\n" % (x * scale + halfframe, y * scale + halfframe))
-    for x, y in sine_cosine_replic[2:]:
-        outf.write(
-            "%.2f %.2f lineto\n" % (x * scale + halfframe, y * scale + halfframe)
-        )
+    outf.writelines(
+        "%.2f %.2f lineto\n" % (x * scale + halfframe, y * scale + halfframe)
+        for x, y in sine_cosine_replic[2:]
+    )
 
     t = string.Template(
         """
@@ -363,10 +361,10 @@ newpath
 
     (x, y) = vector[1]
     outf.write("%.2f %.2f moveto\n" % (x * scale + halfframe, y * scale + halfframe))
-    for x, y in vector[2:]:
-        outf.write(
-            "%.2f %.2f lineto\n" % (x * scale + halfframe, y * scale + halfframe)
-        )
+    outf.writelines(
+        "%.2f %.2f lineto\n" % (x * scale + halfframe, y * scale + halfframe)
+        for x, y in vector[2:]
+    )
 
     t = string.Template(
         """
@@ -421,7 +419,7 @@ def main():
         gcore.fatal(_("Please select only one output method"))
 
     if eps:
-        if os.sep in eps and not os.path.exists(os.path.dirname(eps)):
+        if os.sep in eps and not Path(eps).parent.exists():
             gcore.fatal(
                 _(
                     "EPS output file path <{}>, doesn't exists. "
@@ -432,7 +430,7 @@ def main():
             eps = basename(eps, "eps") + ".eps"
         if not eps.endswith(".eps"):
             eps += ".eps"
-        if os.path.exists(eps) and not os.getenv("GRASS_OVERWRITE"):
+        if Path(eps).exists() and not os.getenv("GRASS_OVERWRITE"):
             gcore.fatal(
                 _(
                     "option <output>: <{}> exists. To overwrite, "
@@ -512,7 +510,7 @@ def main():
         outercircle = []
         outercircle.append('"All Data incl. NULLs')
         scale = 1.0 * totalnumber / totalvalidnumber * maxradius
-        for i in range(0, 361):
+        for i in range(361):
             a = math.radians(i)
             x = math.cos(a) * scale
             y = math.sin(a) * scale

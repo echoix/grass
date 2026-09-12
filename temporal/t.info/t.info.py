@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:      Print information about a space-time dataset
-# COPYRIGHT:    (C) 2011-2017 by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2011-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -91,7 +82,7 @@ def main():
             " +----------------------------------------------------------------------------+"  # noqa: E501
         )
         return
-    elif system and not history:
+    if system and not history:
         print("dbmi_python_interface='" + str(dbif.get_dbmi().__name__) + "'")
         print("dbmi_string='" + str(tgis.get_tgis_database_string()) + "'")
         print("sql_template_path='" + str(tgis.get_sql_template_path()) + "'")
@@ -103,11 +94,7 @@ def main():
     if not system and not name:
         gs.fatal(_("Please specify %s=") % ("name"))
 
-    if name.find("@") >= 0:
-        id_ = name
-    else:
-        id_ = name + "@" + gs.gisenv()["MAPSET"]
-
+    id_ = name if name.find("@") >= 0 else name + "@" + gs.gisenv()["MAPSET"]
     dataset = tgis.dataset_factory(type_, id_)
 
     if not dataset.is_in_db(dbif):

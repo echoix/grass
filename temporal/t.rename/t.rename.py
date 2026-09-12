@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:      Renames a space time dataset
-# COPYRIGHT:    (C) 2011-2017 by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2011-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -59,15 +50,8 @@ def main():
     # Get the current mapset to create the id of the space time dataset
     mapset = gs.gisenv()["MAPSET"]
 
-    if input.find("@") >= 0:
-        old_id = input
-    else:
-        old_id = input + "@" + mapset
-
-    if output.find("@") >= 0:
-        new_id = output
-    else:
-        new_id = output + "@" + mapset
+    old_id = input if input.find("@") >= 0 else input + "@" + mapset
+    new_id = output if output.find("@") >= 0 else output + "@" + mapset
 
     # Do not overwrite yourself
     if new_id == old_id:

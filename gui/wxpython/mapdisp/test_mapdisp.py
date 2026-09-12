@@ -5,17 +5,9 @@
 # MODULE:    Map window and mapdisplay test module
 # AUTHOR(S): Vaclav Petras
 # PURPOSE:   Test functionality using small GUI applications.
-# COPYRIGHT: (C) 2013 by Vaclav Petras, and the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2013 Vaclav Petras
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 ############################################################################
 
@@ -44,7 +36,7 @@
 # %end
 
 """
-Module to run test map window (BufferedWidnow) and map display (MapFrame).
+Module to run test map window (BufferedMapWindow) and map display (MapFrame).
 
 @author Vaclav Petras  <wenzeslaus gmail.com>
 """
@@ -267,10 +259,11 @@ class Tester:
         self.controller = ProfileController(giface, window)
         self.controller.Start()
 
-        rasters = []
-        for layer in giface.GetLayerList().GetSelectedLayers():
-            if layer.maplayer.GetType() == "raster":
-                rasters.append(layer.maplayer.GetName())
+        rasters = [
+            layer.maplayer.GetName()
+            for layer in giface.GetLayerList().GetSelectedLayers()
+            if layer.maplayer.GetType() == "raster"
+        ]
 
         from wxplot.profile import ProfileFrame
 

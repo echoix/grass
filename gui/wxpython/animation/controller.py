@@ -6,10 +6,8 @@
 Classes:
  - controller::AnimationController
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Petrasova <kratochanna gmail.com>
 """
@@ -33,10 +31,10 @@ from animation.utils import (
     WxImageToPil,
     sampleCmdMatrixAndCreateNames,
     layerListToCmdsMatrix,
+    getCpuCount,
     HashCmds,
 )
 from animation.data import AnimationData
-from itertools import starmap
 
 
 class AnimationController(wx.EvtHandler):
@@ -61,7 +59,7 @@ class AnimationController(wx.EvtHandler):
         self.bitmapPool = bitmapPool
         self.mapFilesPool = mapFilesPool
         self.bitmapProvider = provider
-        for anim, win in zip(self.animations, self.mapwindows):
+        for anim, win in zip(self.animations, self.mapwindows, strict=False):
             anim.SetCallbackUpdateFrame(
                 lambda index, dataId, win=win: self.UpdateFrame(index, win, dataId)
             )
@@ -369,7 +367,7 @@ class AnimationController(wx.EvtHandler):
                 if anim.viewMode == "3d":
                     regions = [None] * len(regions)
                 self.animations[i].SetFrames(
-                    list(starmap(HashCmds, zip(anim.cmdMatrix, regions)))
+                    list(map(HashCmds, anim.cmdMatrix, regions))
                 )
                 self.animations[i].SetActive(True)
         else:
@@ -401,6 +399,17 @@ class AnimationController(wx.EvtHandler):
             ):
                 self.frame.RemoveWindow(windowIndex)
 
+    def _getNprocs(self):
+        """Returns the number of processes to render with.
+
+        The setting is -1 (autodetect) until the animation preferences are
+        opened, and None when it is missing.
+        """
+        nprocs = UserSettings.Get(group="animation", key="nprocs", subkey="value")
+        if not nprocs or nprocs < 1:
+            return getCpuCount()
+        return nprocs
+
     def _updateBitmapData(self):
         # unload previous data
         self.bitmapProvider.Unload()
@@ -413,7 +422,7 @@ class AnimationController(wx.EvtHandler):
                 self._load3DData(animData)
             self._loadLegend(animData)
         color = UserSettings.Get(group="animation", key="bgcolor", subkey="color")
-        cpus = UserSettings.Get(group="animation", key="nprocs", subkey="value")
+        cpus = self._getNprocs()
         self.bitmapProvider.Load(nprocs=cpus, bgcolor=color)
         # clear pools
         self.bitmapPool.Clear()
@@ -493,7 +502,7 @@ class AnimationController(wx.EvtHandler):
         self.EndAnimation()
 
         color = UserSettings.Get(group="animation", key="bgcolor", subkey="color")
-        cpus = UserSettings.Get(group="animation", key="nprocs", subkey="value")
+        cpus = self._getNprocs()
         self.bitmapProvider.Load(nprocs=cpus, bgcolor=color, force=True)
 
         self.EndAnimation()
@@ -528,7 +537,9 @@ class AnimationController(wx.EvtHandler):
         animWinIndex = []
         legends = [anim.legendCmd for anim in self.animationData]
         # determine position and sizes of bitmaps
-        for i, (win, anim) in enumerate(zip(self.mapwindows, self.animations)):
+        for i, (win, anim) in enumerate(
+            zip(self.mapwindows, self.animations, strict=False)
+        ):
             if anim.IsActive():
                 pos = win.GetPosition()
                 animWinPos.append(pos)
@@ -627,7 +638,6 @@ class AnimationController(wx.EvtHandler):
                 del self.busy
                 if error:
                     GError(parent=self.frame, message=error)
-                    return
 
             if exportInfo["method"] == "sequence":
                 filename = os.path.join(

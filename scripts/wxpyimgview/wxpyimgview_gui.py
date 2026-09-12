@@ -4,17 +4,9 @@
 #
 # MODULE:       wxpyimgview
 # AUTHOR(S):    Glynn Clements <glynn@gclements.plus.com>
-# COPYRIGHT:    (C) 2010 Glynn Clements
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2010 Glynn Clements
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 # /
 
@@ -117,12 +109,14 @@ class Application(wx.App):
         magic, bmfh, bmih = struct.unpack("2s12s40s10x", header)
 
         if gs.decode(magic) != "BM":
-            raise SyntaxError("Invalid magic number")
+            msg = "Invalid magic number"
+            raise SyntaxError(msg)
 
         size, res1, res2, hsize = struct.unpack("<IHHI", bmfh)
 
         if hsize != self.HEADER_SIZE:
-            raise SyntaxError("Invalid file header size")
+            msg = "Invalid file header size"
+            raise SyntaxError(msg)
 
         (
             hsize,
@@ -139,29 +133,36 @@ class Application(wx.App):
         ) = struct.unpack("<IiiHHIIiiII", bmih)
 
         if hsize != 40:
-            raise SyntaxError("Invalid info header size")
+            msg = "Invalid info header size"
+            raise SyntaxError(msg)
 
         self.i_width = width
         self.i_height = -height
 
         if planes != 1:
-            raise SyntaxError("Planar data not supported")
+            msg = "Planar data not supported"
+            raise SyntaxError(msg)
         if bpp != 32:
-            raise SyntaxError("Only 32-BPP images supported")
+            msg = "Only 32-BPP images supported"
+            raise SyntaxError(msg)
         if compression != 0:
-            raise SyntaxError("Compression not supported")
+            msg = "Compression not supported"
+            raise SyntaxError(msg)
         if imsize != self.i_width * self.i_height * 4:
-            raise SyntaxError("Invalid image data size")
+            msg = "Invalid image data size"
+            raise SyntaxError(msg)
         if size != self.HEADER_SIZE + self.i_width * self.i_height * 4:
-            raise SyntaxError("Invalid image size")
+            msg = "Invalid image size"
+            raise SyntaxError(msg)
 
     def map_file(self):
-        f = open(self.image, "rb")
-
-        header = f.read(self.HEADER_SIZE)
+        with open(self.image, "rb") as f:
+            header = f.read(self.HEADER_SIZE)
         self.read_bmp_header(header)
 
-        self.imgbuf = np.memmap(f, mode="r", offset=self.HEADER_SIZE)
+        self.imgbuf = np.memmap(
+            self.image, mode="r", offset=self.HEADER_SIZE, dtype=np.uint8
+        )
 
     def signal_handler(self, sig, frame):
         wx.CallAfter(self.mainwin.Refresh)

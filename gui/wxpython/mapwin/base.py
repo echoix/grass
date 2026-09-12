@@ -7,10 +7,8 @@ Classes:
  - mapwindow::MapWindowProperties
  - mapwindow::MapWindowBase
 
-(C) 2006-2012 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2006-2012 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 @author Michael Barton
@@ -220,7 +218,7 @@ class MapWindowBase:
         for handler in handlers:
             try:
                 handler(event)
-            except:
+            except Exception:
                 handlers.remove(handler)
                 GError(
                     parent=self,
@@ -271,7 +269,6 @@ class MapWindowBase:
                 )
                 event.Skip()
 
-
         Emits mouseHandlerRegistered signal before handler is registered.
 
         :param event: one of mouse events
@@ -309,7 +306,7 @@ class MapWindowBase:
                 try:
                     handler("unregistered")
                     handlers.remove(handler)
-                except:
+                except Exception:
                     GError(
                         parent=self,
                         message=_(
@@ -348,7 +345,7 @@ class MapWindowBase:
                     grass.warning(
                         _("Handler: %s was not registered") % handler.__name__
                     )
-            except:
+            except Exception:
                 GError(
                     parent=self,
                     message=_(
@@ -370,10 +367,10 @@ class MapWindowBase:
         return True
 
     def Pixel2Cell(self, xyCoords):
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def Cell2Pixel(self, enCoords):
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def OnMotion(self, event):
         """Tracks mouse motion and update statusbar
@@ -453,8 +450,8 @@ class MapWindowBase:
 
     def DisactivateWin(self):
         """Use when the class instance is hidden in MapFrame."""
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def ActivateWin(self):
         """Used when the class instance is activated in MapFrame."""
-        raise NotImplementedError()
+        raise NotImplementedError

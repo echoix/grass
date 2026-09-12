@@ -2,22 +2,18 @@
 
 Temporal raster algebra
 
-(C) 2013 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 :authors: Thomas Leppelt and Soeren Gebbert
 
 """
 
-try:
-    from ply import yacc
-except ImportError:
-    pass
+from __future__ import annotations
 
 import grass.pygrass.modules as pymod
 
+from .ply import yacc
 from .space_time_datasets import Raster3DDataset
 from .temporal_raster_base_algebra import (
     TemporalRasterAlgebraLexer,
@@ -30,14 +26,14 @@ class TemporalRaster3DAlgebraParser(TemporalRasterBaseAlgebraParser):
 
     def __init__(
         self,
-        pid=None,
-        run=False,
-        debug=True,
-        spatial=False,
-        register_null=False,
-        dry_run=False,
-        nprocs=1,
-    ):
+        pid: int | None = None,
+        run: bool = False,
+        debug: bool = True,
+        spatial: bool = False,
+        register_null: bool = False,
+        dry_run: bool = False,
+        nprocs: int = 1,
+    ) -> None:
         TemporalRasterBaseAlgebraParser.__init__(
             self,
             pid=pid,
@@ -52,7 +48,7 @@ class TemporalRaster3DAlgebraParser(TemporalRasterBaseAlgebraParser):
         self.m_mapcalc = pymod.Module("r3.mapcalc")
         self.m_mremove = pymod.Module("g.remove")
 
-    def parse(self, expression, basename=None, overwrite=False):
+    def parse(self, expression, basename=None, overwrite: bool = False):
         # Check for space time dataset type definitions from temporal algebra
         lx = TemporalRasterAlgebraLexer()
         lx.build()
@@ -68,7 +64,7 @@ class TemporalRaster3DAlgebraParser(TemporalRasterBaseAlgebraParser):
 
         self.lexer = TemporalRasterAlgebraLexer()
         self.lexer.build()
-        self.parser = yacc.yacc(module=self, debug=self.debug, write_tables=False)
+        self.parser = yacc.yacc(module=self, debug=self.debug)
 
         self.overwrite = overwrite
         self.count = 0
@@ -81,14 +77,14 @@ class TemporalRaster3DAlgebraParser(TemporalRasterBaseAlgebraParser):
 
         return self.process_chain_dict
 
-    def p_statement_assign(self, t):
+    def p_statement_assign(self, t) -> None:
         # The expression should always return a list of maps.
         """
         statement : stds EQUALS expr
         """
         TemporalRasterBaseAlgebraParser.p_statement_assign(self, t)
 
-    def p_ts_neighbor_operation(self, t):
+    def p_ts_neighbor_operation(self, t) -> None:
         # Examples:
         # A[1,0,-1]
         # B[-2]
@@ -122,7 +118,7 @@ class TemporalRaster3DAlgebraParser(TemporalRasterBaseAlgebraParser):
                 # Get map index and temporal extent.
                 map_index = maplist.index(map_i)
                 new_index = map_index + t_neighbor
-                if new_index < max_index and new_index >= 0:
+                if 0 <= new_index < max_index:
                     map_i_t_extent = map_i.get_temporal_extent()
                     # Get neighboring map and set temporal extent.
                     map_n = maplist[new_index]
