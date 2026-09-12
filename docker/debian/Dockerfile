@@ -191,7 +191,9 @@ ENV GRASS_SKIP_MAPSET_OWNER_CHECK=1
 ENV PROJ_NETWORK=ON
 
 # Create generic GRASS lib name regardless of version number
-RUN ln -sf /usr/local/grass86 /usr/local/grass
+RUN GRASS_DIR="$(find /usr/local -maxdepth 1 -type d -name 'grass*' ! -name 'grass' | sort | tail -n 1)" && \
+    test -n "$GRASS_DIR" && \
+    ln -sfn "$GRASS_DIR" /usr/local/grass
 
 # show GRASS, PROJ, GDAL etc versions
 RUN grass --tmp-project EPSG:4326 --exec g.version -rge && \
