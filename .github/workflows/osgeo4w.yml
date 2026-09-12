@@ -193,7 +193,8 @@ jobs:
           coverage html
           coverage report
           coverage json
-        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}""
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
