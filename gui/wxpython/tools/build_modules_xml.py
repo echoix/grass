@@ -3,10 +3,8 @@
 
 @brief Builds XML metadata of GRASS modules. Runs only during compilation.
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Vaclav Petras <wenzeslaus gmail.com>
 @author Anna Petrasova <kratochanna gmail.com>
@@ -55,7 +53,7 @@ def parse_modules(fd):
     indent = 4
     for m in sorted(mlist):
         # TODO: get rid of g.mapsets_picker.py
-        if m == "g.mapsets_picker.py" or m == "g.parser":
+        if m in {"g.mapsets_picker.py", "g.parser"}:
             continue
         desc, keyw = get_module_metadata(m)
         fd.write('%s<module-item name="%s">\n' % (" " * indent, m))
@@ -70,7 +68,7 @@ def parse_modules(fd):
 
 
 def get_module_metadata(name):
-    """
+    """Gets the module's metadata for a given module name
 
     >>> get_module_metadata("g.region")
     ('Manages the boundary definitions for the geographic region.', ['general', 'settings'])

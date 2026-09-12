@@ -19,6 +19,7 @@ SUBDIRS = \
 	db.test \
 	db.univar \
 	g.download.location \
+	g.download.project \
 	g.extension \
 	g.extension.all \
 	g.manual \
@@ -68,6 +69,7 @@ SUBDIRS = \
 	v.db.univar \
 	v.db.update \
 	v.dissolve \
+	v.geometry \
 	v.import \
 	v.in.e00 \
 	v.in.geonames \

@@ -8,11 +8,8 @@
  *               the vector
  *               control points can come from g.gui.gcp or a user-given
  *               text file
- * COPYRIGHT:    (C) 2002-2011 by the GRASS Development Team
- *
- *               This program is free software under the GNU General Public
- *               License (>=v2). Read the file COPYING that comes with GRASS
- *               for details.
+ * SPDX-FileCopyrightText: 2002-2011 GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  *****************************************************************************/
 
@@ -126,7 +123,9 @@ int main(int argc, char *argv[])
 
     if (grp->answer) {
         G_strip(grp->answer);
-        strcpy(group, grp->answer);
+        if (G_strlcpy(group, grp->answer, sizeof(group)) >= sizeof(group)) {
+            G_fatal_error(_("Group name <%s> is too long"), grp->answer);
+        }
     }
     else
         group[0] = '\0';

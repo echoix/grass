@@ -14,10 +14,8 @@ Classes:
  - preferences::MapsetAccess
  - preferences::CheckListMapset
 
-(C) 2007-2017 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2017 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton (Arizona State University)
 @author Martin Landa <landa.martin gmail.com>
@@ -28,6 +26,8 @@ This program is free software under the GNU General Public License
 import os
 import sys
 
+from pathlib import Path
+
 try:
     import pwd
 
@@ -36,13 +36,13 @@ except ImportError:
     havePwd = False
 
 import wx
-import wx.lib.agw.aui as aui
+from wx.lib.agw import aui
 import wx.lib.colourselect as csel
 import wx.lib.mixins.listctrl as listmix
 import wx.lib.scrolledpanel as SP
 
 from grass.pydispatch.signal import Signal
-import grass.script as grass
+import grass.script as gs
 from grass.exceptions import OpenError
 
 from core import globalvar
@@ -1137,10 +1137,10 @@ class PreferencesDialog(PreferencesBaseDialog):
         #
 
         # see initialization of nviz GLWindow
-        if globalvar.CheckWxVersion(version=[2, 8, 11]) and sys.platform not in (
+        if globalvar.CheckWxVersion(version=[2, 8, 11]) and sys.platform not in {
             "win32",
             "darwin",
-        ):
+        }:
             box = StaticBox(
                 parent=panel,
                 id=wx.ID_ANY,
@@ -1285,6 +1285,34 @@ class PreferencesDialog(PreferencesBaseDialog):
         gridSizer.Add(verbosity, pos=(row, 1), flag=wx.ALIGN_RIGHT)
 
         row += 1
+        gridSizer.Add(
+            StaticText(
+                parent=panel,
+                id=wx.ID_ANY,
+                label=_("Default Python API for copied commands:"),
+            ),
+            flag=wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL,
+            pos=(row, 0),
+        )
+        pythonAPI = wx.Choice(
+            parent=panel,
+            id=wx.ID_ANY,
+            size=(200, -1),
+            choices=self.settings.Get(
+                group="cmd",
+                key="pythonAPI",
+                subkey="choices",
+                settings_type="internal",
+            ),
+            name="GetSelection",
+        )
+        pythonAPI.SetSelection(
+            self.settings.Get(group="cmd", key="pythonAPI", subkey="selection")
+        )
+        self.winId["cmd:pythonAPI:selection"] = pythonAPI.GetId()
+        gridSizer.Add(pythonAPI, pos=(row, 1), flag=wx.ALIGN_RIGHT)
+
+        row += 1
         # nprocs
         gridSizer.Add(
             StaticText(
@@ -1300,7 +1328,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         self.nprocs = TextCtrl(
             parent=panel,
             id=wx.ID_ANY,
-            value=grass.gisenv().get("NPROCS", ""),
+            value=gs.gisenv().get("NPROCS", ""),
             validator=IntegerValidator(),
             name="NumberOfProcs",
         )
@@ -1324,7 +1352,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         self.memorymb = TextCtrl(
             parent=panel,
             id=wx.ID_ANY,
-            value=grass.gisenv().get("MEMORYMB", ""),
+            value=gs.gisenv().get("MEMORYMB", ""),
             validator=IntegerValidator(),
             name="MemorySizeMB",
         )
@@ -1818,7 +1846,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         epsgCode = wx.ComboBox(
             parent=panel, id=wx.ID_ANY, name="GetValue", size=(150, -1)
         )
-        self.epsgCodeDict = dict()
+        self.epsgCodeDict = {}
         epsgCode.SetValue(
             str(self.settings.Get(group="projection", key="statusbar", subkey="epsg"))
         )
@@ -2021,8 +2049,6 @@ class PreferencesDialog(PreferencesBaseDialog):
 
     def OnLoadEpsgCodes(self, event):
         """Load EPSG codes from the file"""
-        win = self.FindWindowById(self.winId["projection:statusbar:projFile"])
-        path = win.GetValue()
         epsgCombo = self.FindWindowById(self.winId["projection:statusbar:epsg"])
         wx.BeginBusyCursor()
         try:
@@ -2044,7 +2070,7 @@ class PreferencesDialog(PreferencesBaseDialog):
                 caption=_("Error"),
                 style=wx.OK | wx.ICON_ERROR | wx.CENTRE,
             )
-            self.epsgCodeDict = dict()
+            self.epsgCodeDict = {}
             epsgCombo.SetItems([])
             epsgCombo.SetValue("")
             self.FindWindowById(self.winId["projection:statusbar:proj4"]).SetValue("")
@@ -2124,7 +2150,7 @@ class PreferencesDialog(PreferencesBaseDialog):
                     GError(
                         parent=self,
                         message=_(
-                            "Failed to set default display font. " "Try different font."
+                            "Failed to set default display font. Try different font."
                         ),
                         showTraceback=True,
                     )
@@ -2186,8 +2212,7 @@ class PreferencesDialog(PreferencesBaseDialog):
 
         dlg = wx.FontDialog(self, fontdata)
 
-        "FIXME: native font dialog does not initialize with current font"
-
+        # FIXME: native font dialog does not initialize with current font
         if dlg.ShowModal() == wx.ID_OK:
             outdata = dlg.GetFontData()
             font = outdata.GetChosenFont()
@@ -2268,10 +2293,7 @@ class PreferencesDialog(PreferencesBaseDialog):
         """Enable/disable wheel zoom mode control"""
         choiceId = self.winId["display:mouseWheelZoom:selection"]
         choice = self.FindWindowById(choiceId)
-        if choice.GetSelection() == 2:
-            enable = False
-        else:
-            enable = True
+        enable = choice.GetSelection() != 2
         scrollId = self.winId["display:scrollDirection:selection"]
         self.FindWindowById(scrollId).Enable(enable)
 
@@ -2288,18 +2310,18 @@ class PreferencesDialog(PreferencesBaseDialog):
                     group="language", key="locale", subkey="lc_all", value=None
                 )
                 lang = None
-            env = grass.gisenv()
+            env = gs.gisenv()
 
             # Set gisenv MEMORYMB var value
             memorydb_gisenv = "MEMORYMB"
             memorymb = self.memorymb.GetValue()
             if memorymb:
-                grass.run_command(
+                gs.run_command(
                     "g.gisenv",
                     set=f"{memorydb_gisenv}={memorymb}",
                 )
             elif env.get(memorydb_gisenv):
-                grass.run_command(
+                gs.run_command(
                     "g.gisenv",
                     unset=memorydb_gisenv,
                 )
@@ -2307,12 +2329,12 @@ class PreferencesDialog(PreferencesBaseDialog):
             nprocs_gisenv = "NPROCS"
             nprocs = self.nprocs.GetValue()
             if nprocs:
-                grass.run_command(
+                gs.run_command(
                     "g.gisenv",
                     set=f"{nprocs_gisenv}={nprocs}",
                 )
             elif env.get(nprocs_gisenv):
-                grass.run_command(
+                gs.run_command(
                     "g.gisenv",
                     unset=nprocs_gisenv,
                 )
@@ -2338,7 +2360,7 @@ class MapsetAccess(wx.Dialog):
 
         self.all_mapsets_ordered = ListOfMapsets(get="ordered")
         self.accessible_mapsets = ListOfMapsets(get="accessible")
-        self.curr_mapset = grass.gisenv()["MAPSET"]
+        self.curr_mapset = gs.gisenv()["MAPSET"]
 
         # make a checklistbox from available mapsets and check those that are
         # active
@@ -2421,28 +2443,27 @@ class CheckListMapset(ListCtrl, listmix.ListCtrlAutoWidthMixin, CheckListCtrlMix
         """Load data into list"""
         self.InsertColumn(0, _("Mapset"))
         self.InsertColumn(1, _("Owner"))
-        ### self.InsertColumn(2, _('Group'))
-        gisenv = grass.gisenv()
+        # self.InsertColumn(2, _('Group'))
+        gisenv = gs.gisenv()
         locationPath = os.path.join(gisenv["GISDBASE"], gisenv["LOCATION_NAME"])
 
         for mapset in self.parent.all_mapsets_ordered:
             index = self.InsertItem(self.GetItemCount(), mapset)
-            mapsetPath = os.path.join(locationPath, mapset)
-            stat_info = os.stat(mapsetPath)
+            stat_info = Path(locationPath, mapset).stat()
             if havePwd:
                 try:
                     self.SetItem(index, 1, "%s" % pwd.getpwuid(stat_info.st_uid)[0])
                 except KeyError:
                     self.SetItem(index, 1, "nobody")
                 # FIXME: get group name
-                ### self.SetStringItem(index, 2, "%-8s" % stat_info.st_gid)
+                # self.SetStringItem(index, 2, "%-8s" % stat_info.st_gid)
             else:
                 # FIXME: no pwd under MS Windows (owner: 0, group: 0)
                 self.SetItem(index, 1, "%-8s" % stat_info.st_uid)
-                ### self.SetStringItem(index, 2, "%-8s" % stat_info.st_gid)
+                # self.SetStringItem(index, 2, "%-8s" % stat_info.st_gid)
 
         self.SetColumnWidth(col=0, width=wx.LIST_AUTOSIZE)
-        ### self.SetColumnWidth(col = 1, width = wx.LIST_AUTOSIZE)
+        # self.SetColumnWidth(col = 1, width = wx.LIST_AUTOSIZE)
 
     def OnCheckItem(self, index, flag):
         """Mapset checked/unchecked"""

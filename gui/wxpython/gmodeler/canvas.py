@@ -7,10 +7,8 @@ Classes:
  - canvas::ModelCanvas
  - canvas::ModelEvtHandler
 
-(C) 2010-2023 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2010-2023 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 @author Python exports Ondrej Pesek <pesej.ondrek gmail.com>
@@ -23,8 +21,9 @@ from gui_core.dialogs import TextEntryDialog as CustomTextEntryDialog
 from gui_core.wrap import TextEntryDialog as wxTextEntryDialog, NewId, Menu
 from gui_core.forms import GUI
 from core.gcmd import GException, GError
+from core.giface import StandaloneGrassInterface
 
-from gmodeler.model import (
+from gmodeler.model_items import (
     ModelRelation,
     ModelAction,
     ModelData,
@@ -85,10 +84,10 @@ class ModelCanvas(ogl.ShapeCanvas):
             remList, upList = self.parent.GetModel().RemoveItem(shape)
             shape.Select(False)
             diagram.RemoveShape(shape)
-            shape.__del__()
+            shape.__del__()  # noqa: PLC2801, C2801
             for item in remList:
                 diagram.RemoveShape(item)
-                item.__del__()
+                item.__del__()  # noqa: PLC2801, C2801
 
             for item in upList:
                 item.Update()
@@ -103,14 +102,13 @@ class ModelCanvas(ogl.ShapeCanvas):
         ymax = 20
         for item in self.GetDiagram().GetShapeList():
             y = item.GetY() + item.GetBoundingBoxMin()[1]
-            if y > ymax:
-                ymax = y
+            ymax = max(y, ymax)
 
         return (self.GetSize()[0] // 2, ymax + yoffset)
 
     def GetShapesSelected(self):
         """Get list of selected shapes"""
-        selected = list()
+        selected = []
         diagram = self.GetDiagram()
         for shape in diagram.GetShapeList():
             if shape.Selected():
@@ -168,7 +166,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
                 del self.frame.defineRelation
 
         # select object
-        self._onSelectShape(shape, append=True if keys == 1 else False)
+        self._onSelectShape(shape, append=keys == 1)
 
         if hasattr(shape, "GetLog"):
             self.log.SetStatusText(shape.GetLog(), 0)
@@ -198,7 +196,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
             )
 
         elif isinstance(shape, ModelData):
-            if shape.GetPrompt() in (
+            if shape.GetPrompt() in {
                 "raster",
                 "vector",
                 "raster_3d",
@@ -206,7 +204,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
                 "strds",
                 "stvds",
                 "str3ds",
-            ):
+            }:
                 dlg = ModelDataDialog(parent=self.frame, shape=shape)
                 shape.SetPropDialog(dlg)
                 dlg.CentreOnParent()
@@ -219,7 +217,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
                 shape.SetLabel(dlg.GetCondition())
                 model = self.frame.GetModel()
                 ids = dlg.GetItems()
-                alist = list()
+                alist = []
                 for aId in ids["unchecked"]:
                     action = model.GetItem(aId, objType=ModelAction)
                     if action:
@@ -244,7 +242,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
                 model = self.frame.GetModel()
                 ids = dlg.GetItems()
                 for b in ids.keys():
-                    alist = list()
+                    alist = []
                     for aId in ids[b]["unchecked"]:
                         action = model.GetItem(aId, objType=ModelAction)
                         action.UnSetBlock(shape)
@@ -295,7 +293,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
     def OnRightClick(self, x, y, keys=0, attachment=0):
         """Right click -> pop-up menu"""
         if not hasattr(self, "popupID"):
-            self.popupID = dict()
+            self.popupID = {}
             for key in (
                 "remove",
                 "enable",
@@ -321,19 +319,19 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
         popupMenu = Menu()
         popupMenu.Append(self.popupID["remove"], _("Remove"))
         self.frame.Bind(wx.EVT_MENU, self.OnRemove, id=self.popupID["remove"])
-        if isinstance(shape, ModelAction) or isinstance(shape, ModelLoop):
+        if isinstance(shape, (ModelAction, ModelLoop)):
             if shape.IsEnabled():
                 popupMenu.Append(self.popupID["enable"], _("Disable"))
                 self.frame.Bind(wx.EVT_MENU, self.OnDisable, id=self.popupID["enable"])
             else:
                 popupMenu.Append(self.popupID["enable"], _("Enable"))
                 self.frame.Bind(wx.EVT_MENU, self.OnEnable, id=self.popupID["enable"])
-        if isinstance(shape, ModelAction) or isinstance(shape, ModelComment):
+        if isinstance(shape, (ModelAction, ModelComment)):
             popupMenu.AppendSeparator()
-        if isinstance(shape, ModelAction):
-            popupMenu.Append(self.popupID["label"], _("Set label"))
-            self.frame.Bind(wx.EVT_MENU, self.OnSetLabel, id=self.popupID["label"])
-        if isinstance(shape, ModelAction) or isinstance(shape, ModelComment):
+            if isinstance(shape, ModelAction):
+                popupMenu.Append(self.popupID["label"], _("Set label"))
+                self.frame.Bind(wx.EVT_MENU, self.OnSetLabel, id=self.popupID["label"])
+
             popupMenu.Append(self.popupID["comment"], _("Set comment"))
             self.frame.Bind(wx.EVT_MENU, self.OnSetComment, id=self.popupID["comment"])
 
@@ -378,11 +376,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
                 if self.GetShape().IsIntermediate():
                     popupMenu.Enable(self.popupID["display"], False)
 
-        if (
-            isinstance(shape, ModelData)
-            or isinstance(shape, ModelAction)
-            or isinstance(shape, ModelLoop)
-        ):
+        if isinstance(shape, (ModelData, ModelAction, ModelLoop)):
             popupMenu.AppendSeparator()
             popupMenu.Append(self.popupID["props"], _("Properties"))
             self.frame.Bind(wx.EVT_MENU, self.OnProperties, id=self.popupID["props"])
@@ -445,12 +439,8 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
             shape.Select(False, dc)
         else:
             shapeList = canvas.GetDiagram().GetShapeList()
-            toUnselect = list()
 
-            if not append:
-                for s in shapeList:
-                    if s.Selected():
-                        toUnselect.append(s)
+            toUnselect = [s for s in shapeList if s.Selected()] if not append else []
 
             shape.Select(True, dc)
 
@@ -491,22 +481,34 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
         shape.SetHasDisplay(event.IsChecked())
         self.frame.canvas.Refresh()
 
+        if isinstance(self.frame._giface, StandaloneGrassInterface):
+            return
+
+        model = self.frame.GetModel()
+        run_params = model.GetRunParams()
+        resolved = {}
+        if run_params and "variables" in run_params:
+            for p in run_params["variables"]["params"]:
+                name = p.get("name", "")
+                value = p.get("value", "")
+                if name and value:
+                    resolved[name] = value
+
+        layer_list = self.frame._giface.GetLayerList()
         try:
             if event.IsChecked():
                 # add map layer to display
-                self.frame._giface.GetLayerList().AddLayer(
+                layer_list.AddLayer(
                     ltype=shape.GetPrompt(),
-                    name=shape.GetValue(),
+                    name=shape.GetResolvedValue(resolved),
                     checked=True,
-                    cmd=shape.GetDisplayCmd(),
+                    cmd=shape.GetDisplayCmd(resolved),
                 )
             else:
                 # remove map layer(s) from display
-                layers = self.frame._giface.GetLayerList().GetLayersByName(
-                    shape.GetValue()
-                )
+                layers = layer_list.GetLayersByName(shape.GetResolvedValue(resolved))
                 for layer in layers:
-                    self.frame._giface.GetLayerList().DeleteLayer(layer)
+                    layer_list.DeleteLayer(layer)
 
         except GException as e:
             GError(parent=self, message="{}".format(e))

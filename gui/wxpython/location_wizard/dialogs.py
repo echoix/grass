@@ -8,10 +8,8 @@ Classes:
  - dialogs::TransList
  - dialogs::SelectTransformDialog
 
-(C) 2007-2011 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2007-2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton
 @author Jachym Cepicky
@@ -50,9 +48,7 @@ class RegionDef(BaseClass, wx.Dialog):
         self.parent = parent
         self.location = location
 
-        #
         # default values
-        #
         # 2D
         self.north = 1.0
         self.south = 0.0
@@ -67,9 +63,7 @@ class RegionDef(BaseClass, wx.Dialog):
         #         self.ewres3 = 1.0
         self.tbres = 1.0
 
-        #
         # inputs
-        #
         # 2D
         self.tnorth = self.MakeTextCtrl(
             text=str(self.north), size=(150, -1), parent=panel
@@ -80,43 +74,26 @@ class RegionDef(BaseClass, wx.Dialog):
         self.tnsres = self.MakeTextCtrl(str(self.nsres), size=(150, -1), parent=panel)
         self.tewres = self.MakeTextCtrl(str(self.ewres), size=(150, -1), parent=panel)
 
-        #
         # labels
-        #
         self.lrows = self.MakeLabel(parent=panel)
         self.lcols = self.MakeLabel(parent=panel)
         self.lcells = self.MakeLabel(parent=panel)
 
-        #
         # buttons
-        #
         self.bset = self.MakeButton(text=_("&Set region"), id=wx.ID_OK, parent=panel)
         self.bcancel = Button(panel, id=wx.ID_CANCEL)
         self.bset.SetDefault()
 
-        #
         # image
-        #
         self.img = wx.Image(
             os.path.join(globalvar.IMGDIR, "qgis_world.png"), wx.BITMAP_TYPE_PNG
         ).ConvertToBitmap()
 
-        #
         # set current working environment to PERMANENT mapset
         # in selected location in order to set default region (WIND)
-        #
         envval = {}
         ret = RunCommand("g.gisenv", read=True)
-        if ret:
-            for line in ret.splitlines():
-                key, val = line.split("=")
-                envval[key] = val
-            self.currlocation = envval["LOCATION_NAME"].strip("';")
-            self.currmapset = envval["MAPSET"].strip("';")
-            if self.currlocation != self.location or self.currmapset != "PERMANENT":
-                RunCommand("g.gisenv", set="LOCATION_NAME=%s" % self.location)
-                RunCommand("g.gisenv", set="MAPSET=PERMANENT")
-        else:
+        if not ret:
             dlg = wx.MessageBox(
                 parent=self,
                 message=_("Invalid location selected."),
@@ -124,17 +101,19 @@ class RegionDef(BaseClass, wx.Dialog):
                 style=wx.ID_OK | wx.ICON_ERROR,
             )
             return
+        for line in ret.splitlines():
+            key, val = line.split("=")
+            envval[key] = val
+        self.currlocation = envval["LOCATION_NAME"].strip("';")
+        self.currmapset = envval["MAPSET"].strip("';")
+        if self.currlocation != self.location or self.currmapset != "PERMANENT":
+            RunCommand("g.gisenv", set="LOCATION_NAME=%s" % self.location)
+            RunCommand("g.gisenv", set="MAPSET=PERMANENT")
 
-        #
         # get current region settings
-        #
         region = {}
         ret = RunCommand("g.region", read=True, flags="gp3")
-        if ret:
-            for line in ret.splitlines():
-                key, val = line.split("=")
-                region[key] = float(val)
-        else:
+        if not ret:
             dlg = wx.MessageBox(
                 parent=self,
                 message=_("Invalid region"),
@@ -144,8 +123,10 @@ class RegionDef(BaseClass, wx.Dialog):
             dlg.ShowModal()
             dlg.Destroy()
             return
+        for line in ret.splitlines():
+            key, val = line.split("=")
+            region[key] = float(val)
 
-        #
         # update values
         # 2D
         self.north = float(region["n"])
@@ -166,9 +147,7 @@ class RegionDef(BaseClass, wx.Dialog):
         self.depth = int(region["depths"])
         self.cells3 = int(region["cells3"])
 
-        #
         # 3D box collapsible
-        #
         self.infoCollapseLabelExp = _("Click here to show 3D settings")
         self.infoCollapseLabelCol = _("Click here to hide 3D settings")
         self.settings3D = wx.CollapsiblePane(
@@ -184,9 +163,7 @@ class RegionDef(BaseClass, wx.Dialog):
             self.settings3D,
         )
 
-        #
         # set current region settings
-        #
         self.tnorth.SetValue(str(self.north))
         self.tsouth.SetValue(str(self.south))
         self.twest.SetValue(str(self.west))
@@ -202,9 +179,7 @@ class RegionDef(BaseClass, wx.Dialog):
         self.lcols.SetLabel(_("Cols: %d") % self.cols)
         self.lcells.SetLabel(_("Cells: %d") % self.cells)
 
-        #
         # bindings
-        #
         self.Bind(wx.EVT_BUTTON, self.OnSetButton, self.bset)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, self.bcancel)
         self.tnorth.Bind(wx.EVT_TEXT, self.OnValue)
@@ -550,7 +525,7 @@ class RegionDef(BaseClass, wx.Dialog):
 
         except ValueError as e:
             if len(event.GetString()) > 0 and event.GetString() != "-":
-                dlg = wx.MessageBox(
+                wx.MessageBox(
                     parent=self,
                     message=_("Invalid value: %s") % e,
                     caption=_("Error"),
@@ -594,8 +569,8 @@ class RegionDef(BaseClass, wx.Dialog):
         self.lcols.SetLabel(_("Cols: %d") % self.cols)
         self.lcells.SetLabel(_("Cells: %d") % self.cells)
         # 3D
-        self.ldepth.SetLabel(_("Depth: %d" % self.depth))
-        self.lcells3.SetLabel(_("3D Cells: %d" % self.cells3))
+        self.ldepth.SetLabel(_("Depth: %d") % self.depth)
+        self.lcells3.SetLabel(_("3D Cells: %d") % self.cells3)
 
     def OnSetButton(self, event=None):
         """Set default region"""
@@ -702,12 +677,10 @@ class SelectTransformDialog(wx.Dialog):
             height += h
             width = max(width, w)
 
-        height = height + 5
-        if height > 400:
-            height = 400
-        width = width + 5
-        if width > 400:
-            width = 400
+        height += 5
+        height = min(height, 400)
+        width += 5
+        width = min(width, 400)
 
         #
         # VListBox for displaying and selecting transformations
@@ -748,22 +721,22 @@ class SelectTransformDialog(wx.Dialog):
     def ClickTrans(self, event):
         """Get the number of the datum transform to use in g.proj"""
         self.transnum = event.GetSelection()
-        self.transnum = self.transnum - 1
+        self.transnum -= 1
 
     def GetTransform(self):
         """Get the number of the datum transform to use in g.proj"""
         self.transnum = self.translist.GetSelection()
-        self.transnum = self.transnum - 1
+        self.transnum -= 1
         return self.transnum
 
 
 def testRegionDef():
     import wx.lib.inspection
-    import grass.script as gscript
+    import grass.script as gs
 
     app = wx.App()
 
-    dlg = RegionDef(None, location=gscript.gisenv()["LOCATION_NAME"])
+    dlg = RegionDef(None, location=gs.gisenv()["LOCATION_NAME"])
     dlg.Show()
     wx.lib.inspection.InspectionTool().Show()
     app.MainLoop()

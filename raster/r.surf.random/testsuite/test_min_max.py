@@ -7,11 +7,9 @@ AUTHOR(S): Vaclav Petras <wenzeslaus gmail com>
 
 PURPOSE:   Test of min and max parameters
 
-COPYRIGHT: (C) 2020 by Vaclav Petras and the GRASS Development Team
-
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2020 Vaclav Petras
+SPDX-FileCopyrightText: GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 import grass.script as gs
@@ -65,7 +63,7 @@ class MinMaxTestCase(TestCase):
         )
         self.assertRasterFitsInfo(
             raster=self.output,
-            reference=dict(min=-3.20423, max=5.68621),
+            reference={"min": -3.20423, "max": 5.68621},
             precision=precision,
             msg="Output min and max too far from parameters",
         )
@@ -94,7 +92,7 @@ class MinMaxTestCase(TestCase):
         )
         self.assertRasterFitsInfo(
             raster=self.output,
-            reference=dict(min=min_value, max=max_value),
+            reference={"min": min_value, "max": max_value},
             precision=precision,
             msg="Output min and max too far from parameters",
         )

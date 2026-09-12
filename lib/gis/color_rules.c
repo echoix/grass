@@ -5,9 +5,11 @@
 
    Taken from r.colors module.
 
-   (C) 2001-2011 by the GRASS Development Team
+   SPDX-FileCopyrightText: 2001-2011 GRASS Development Team
+   SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -267,7 +269,7 @@ struct colorinfo *get_colorinfo(int *nrules)
     char **cnames;
 
     /* load color rules */
-    G_snprintf(path, GPATH_MAX, "%s/etc/colors", G_gisbase());
+    snprintf(path, GPATH_MAX, "%s/etc/colors", G_gisbase());
 
     *nrules = 0;
     cnames = G_ls2(path, nrules);
@@ -283,8 +285,8 @@ struct colorinfo *get_colorinfo(int *nrules)
         colorinfo[i].desc = NULL;
 
         /* open color rule file */
-        G_snprintf(path, GPATH_MAX, "%s/etc/colors/%s", G_gisbase(),
-                   colorinfo[i].name);
+        snprintf(path, GPATH_MAX, "%s/etc/colors/%s", G_gisbase(),
+                 colorinfo[i].name);
         fp = fopen(path, "r");
         if (!fp)
             G_fatal_error(_("Unable to open color rule"));
@@ -338,7 +340,7 @@ struct colorinfo *get_colorinfo(int *nrules)
         if (cisperc)
             colorinfo[i].type = G_store(_("range: map values"));
         else {
-            G_snprintf(buf, sizeof(buf) - 1, _("range: %g to %g"), rmin, rmax);
+            snprintf(buf, sizeof(buf) - 1, _("range: %g to %g"), rmin, rmax);
             colorinfo[i].type = G_store(buf);
         }
     }
@@ -360,7 +362,7 @@ struct colorinfo *get_colorinfo(int *nrules)
     qsort(colorinfo, *nrules, sizeof(struct colorinfo), cmp_clrname);
 
     /* load color descriptions */
-    G_snprintf(path, GPATH_MAX, "%s/etc/colors.desc", G_gisbase());
+    snprintf(path, GPATH_MAX, "%s/etc/colors.desc", G_gisbase());
     fp = fopen(path, "r");
     if (!fp)
         G_fatal_error(_("Unable to open color descriptions"));

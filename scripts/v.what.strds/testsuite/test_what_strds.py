@@ -1,10 +1,8 @@
 """
 Test v.what.strds
 
-(C) 2014 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2014 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Luca Delucchi
 """
@@ -12,7 +10,7 @@ for details.
 from grass.gunittest.case import TestCase
 from grass.gunittest.main import test
 from grass.gunittest.gmodules import SimpleModule
-import grass.script as gscript
+import grass.script as gs
 from grass.script.utils import decode
 
 
@@ -64,8 +62,8 @@ class TestWhatStrds(TestCase):
             overwrite=True,
         )
 
-        maps = gscript.list_strings("vector")
-        self.assertIn("what_strds@{ma}".format(ma=gscript.gisenv()["MAPSET"]), maps)
+        maps = gs.list_strings("vector")
+        self.assertIn("what_strds@{ma}".format(ma=gs.gisenv()["MAPSET"]), maps)
 
     def test_values(self):
         self.assertModule(

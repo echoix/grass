@@ -8,11 +8,8 @@
  * PURPOSE:      Recategorizes data in a raster map layer by grouping cells
  *               that form physically discrete areas into unique categories.
  *
- * COPYRIGHT:    (C) 2006-2016 by the GRASS Development Team
- *
- *               This program is free software under the GNU General Public
- *               License (>=v2). Read the file COPYING that comes with GRASS
- *               for details.
+ * SPDX-FileCopyrightText: 2006-2016 GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  ***************************************************************************/
 
@@ -25,6 +22,8 @@
 #include <grass/raster.h>
 #include <grass/glocale.h>
 #include "local_proto.h"
+#include <errno.h>
+#include <string.h>
 
 #define INCR 1024
 
@@ -92,7 +91,11 @@ static CELL do_renumber(int *in_fd, DCELL *rng, int nin, int diag, int minsize,
             G_percent(row, nrows, 2);
 
             coffset = (off_t)row * csize;
-            lseek(cfd, coffset, SEEK_SET);
+            if (lseek(cfd, coffset, SEEK_SET) == -1) {
+                int err = errno;
+                G_fatal_error(_("File read/write operation failed: %s (%d)"),
+                              strerror(err), err);
+            }
             if (read(cfd, cur_clump, csize) != csize)
                 G_fatal_error(_("Unable to read from temp file"));
 
@@ -108,7 +111,12 @@ static CELL do_renumber(int *in_fd, DCELL *rng, int nin, int diag, int minsize,
                 temp_clump++;
             }
             if (do_write) {
-                lseek(cfd, coffset, SEEK_SET);
+                if (lseek(cfd, coffset, SEEK_SET) == -1) {
+                    int err = errno;
+                    G_fatal_error(
+                        _("File read/write operation failed: %s (%d)"),
+                        strerror(err), err);
+                }
                 if (write(cfd, cur_clump, csize) != csize)
                     G_fatal_error(_("Unable to write to temp file"));
             }
@@ -135,7 +143,11 @@ static CELL do_renumber(int *in_fd, DCELL *rng, int nin, int diag, int minsize,
      * using instead the temp file with initial clump labels */
 
     /* rewind temp file */
-    lseek(cfd, 0, SEEK_SET);
+    if (lseek(cfd, 0, SEEK_SET) == -1) {
+        int err = errno;
+        G_fatal_error(_("File read/write operation failed: %s (%d)"),
+                      strerror(err), err);
+    }
 
     cur_clump = Rast_allocate_c_buf();
     out_cell = Rast_allocate_c_buf();

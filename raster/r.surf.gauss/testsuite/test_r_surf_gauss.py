@@ -7,11 +7,9 @@ AUTHOR(S): Corey White <ctwhite48 gmail com>
 
 PURPOSE: Tests random gauss surface generation
 
-COPYRIGHT: (C) 2023 - 2024 by Corey White and the GRASS Development Team
-
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2023 - 2024 Corey White
+SPDX-FileCopyrightText: GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 import os
@@ -47,7 +45,7 @@ class MeanSigmaTestCase(TestCase):
         self.assertModule("r.surf.gauss", output=self.output)
         self.assertRasterFitsUnivar(
             self.output,
-            reference=dict(mean=-0.044860, stddev=1.019485),
+            reference={"mean": -0.044860, "stddev": 1.019485},
             precision=1e-6,
         )
 
@@ -64,7 +62,7 @@ class MeanSigmaTestCase(TestCase):
         self.assertRasterExists(self.output, msg="Output was not created")
         self.assertRasterFitsUnivar(
             self.output,
-            reference=dict(mean=2.739812, stddev=5.913014),
+            reference={"mean": 2.739812, "stddev": 5.913014},
             precision=1e-6,
         )
 
@@ -82,7 +80,7 @@ class MeanSigmaTestCase(TestCase):
         self.assertRasterExists(self.output, msg="Output was not created")
         self.assertRasterFitsUnivar(
             self.output,
-            reference=dict(mean=3.183532, stddev=6.050756),
+            reference={"mean": 3.183532, "stddev": 6.050756},
             precision=1e-6,
         )
 
