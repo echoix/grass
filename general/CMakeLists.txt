@@ -1,0 +1,65 @@
+build_program_in_subdir(g.access DEPENDS grass_gis)
+build_program_in_subdir(g.copy DEPENDS grass_manage)
+build_program_in_subdir(g.dirseps DEPENDS grass_gis)
+build_program_in_subdir(g.filename DEPENDS grass_gis)
+build_program_in_subdir(g.findetc DEPENDS grass_gis)
+build_program_in_subdir(g.findfile DEPENDS grass_manage)
+build_program_in_subdir(g.gisenv DEPENDS grass_gis)
+build_program_in_subdir(g.mapset DEPENDS grass_gis)
+build_program_in_subdir(g.mapsets DEPENDS grass_gis grass_parson)
+build_program_in_subdir(g.message DEPENDS grass_gis)
+build_program_in_subdir(g.mkfontcap DEPENDS grass_gis FREETYPE)
+add_dependencies(g.mkfontcap fonts)
+add_custom_command(
+  TARGET g.mkfontcap
+  POST_BUILD
+  COMMAND ${grass_env_command} ${GISBASE}/bin/g.mkfontcap -o)
+build_program_in_subdir(g.parser DEPENDS grass_gis FREETYPE)
+build_program_in_subdir(g.pnmcomp DEPENDS grass_gis)
+if(WITH_LIBPNG)
+  build_program_in_subdir(g.ppmtopng DEPENDS grass_gis LIBPNG)
+endif()
+build_program_in_subdir(g.proj DEPENDS grass_gis grass_gproj GDAL)
+build_program_in_subdir(
+  g.region
+  DEPENDS
+  grass_gis
+  grass_gproj
+  grass_vector
+  grass_raster3d
+  grass_gmath)
+
+build_program_in_subdir(g.rename DEPENDS grass_manage grass_raster)
+build_program_in_subdir(g.tempfile DEPENDS grass_gis)
+
+build_program_in_subdir(
+  g.version
+  DEPENDS
+  grass_gis
+  PROJ
+  GDAL
+  SQLITE
+  OPTIONAL_DEPENDS
+  GEOS
+  DEFS
+  "-DGRASS_VERSION_NUMBER=\"${GRASS_VERSION_NUMBER}\""
+  "-DGRASS_VERSION_GIT=\"${GRASS_VERSION_GIT}\""
+  "-DGRASS_VERSION_UPDATE_PKG=${GRASS_VERSION_UPDATE_PKG}"
+  "-DARCH=\"${BUILD_ARCH}\"")
+
+# TODO: add CAIRO_HAS_XRENDER and CAIRO_HAS_XRENDER_SURFACE to if clause
+if(WITH_CAIRO AND USE_X11)
+  if(NOT MSVC)
+    build_program_in_subdir(g.cairocomp DEPENDS grass_gis CAIRO
+                            grass_cairodriver)
+  endif()
+endif()
+
+add_subdirectory(manage/lister)
+
+build_program_in_subdir(g.list DEPENDS grass_manage)
+add_dependencies(g.list cell vector)
+
+build_program_in_subdir(g.remove DEPENDS grass_manage grass_raster)
+
+build_program_in_subdir(g.gui DEPENDS grass_raster)
