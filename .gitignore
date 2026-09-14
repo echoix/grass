@@ -93,6 +93,12 @@ coverage-llvm.lcov
 llvm-cov-raw/
 coverage_html_report/
 
+# Ignore project-local git worktree directories created by AI coding
+# agent workflows (e.g. Claude Code)
+.claude/worktrees/
+.worktrees/
+worktrees/
+
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos
 
