@@ -1,4 +1,4 @@
-FROM debian:13.4-slim@sha256:26f98ccd92fd0a44d6928ce8ff8f4921b4d2f535bfa07555ee5d18f61429cf0c
+FROM debian:13.6-slim@sha256:d7e12182ce18b85b93007c1dedf31f2d29e01ccf3182cc4017c709b6259bc132
 
 # apt-get update && apt-get install lsb-release -y && lsb_release -a
 
@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # define versions to be used (PDAL is not available on Debian, so we compile it here)
 # https://github.com/PDAL/PDAL/releases
 # renovate: datasource=github-tags depName=PDAL/PDAL
-ARG PDAL_VERSION=2.10.0
+ARG PDAL_VERSION=2.10.2
 
 SHELL ["/bin/bash", "-c"]
 
