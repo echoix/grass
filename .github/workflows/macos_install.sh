@@ -64,6 +64,21 @@ export CFLAGS="-O2 -pipe -ffp-contract=off -arch ${CONDA_ARCH} -DGL_SILENCE_DEPR
 export CXXFLAGS="-O2 -pipe -ffp-contract=off -stdlib=libc++ -arch ${CONDA_ARCH} -Wall -Wextra -Wpedantic"
 export CPPFLAGS="-isystem${CONDA_PREFIX}/include"
 
+# LLVM source-based coverage instrumentation, opt-in via env var. The
+# coverage-mapping section is generated before the LLVM optimizer runs, so
+# optimization does not affect coverage quality (per clang's
+# SourceBasedCodeCoverage docs) - keep the project's -O2. -fprofile-update=
+# atomic makes counter increments atomic; without it, OpenMP parallel
+# regions (e.g. r.univar's process_raster) lose counter updates across
+# threads and the merged .profdata is non-deterministic.
+if [ "${GRASS_LLVM_COVERAGE:-0}" = "1" ]; then
+    COV_FLAGS="-fprofile-instr-generate -fcoverage-mapping -fprofile-update=atomic"
+    CFLAGS="${CFLAGS} ${COV_FLAGS}"
+    CXXFLAGS="${CXXFLAGS} ${COV_FLAGS}"
+    LDFLAGS="${LDFLAGS:-} -fprofile-instr-generate -fcoverage-mapping"
+    export CFLAGS CXXFLAGS LDFLAGS
+fi
+
 ./configure $CONFIGURE_FLAGS
 
 EXEMPT=""
