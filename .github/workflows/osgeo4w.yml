@@ -42,7 +42,13 @@ jobs:
         with:
           path-type: inherit
           location: D:\
-          update: true
+          # CI diagnostic, not for merge: skip pacman -Syu to see whether
+          # avoiding the latest mingw-w64 crt/headers/winpthreads git
+          # snapshot (the only packages that changed between the last
+          # passing run and the first failing one) fixes the DLL load
+          # crash. See the sibling gdal313.dll/dumpbin diagnostic PR
+          # for the exports/imports analysis that ruled out GDAL/OpenSSL.
+          update: false
           msystem: MINGW64
           install: >-
             bison
