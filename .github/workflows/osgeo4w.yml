@@ -133,6 +133,78 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] Dump libgomp-1.dll / libsystre-0.dll exports"
+        # Completes an exhaustive symbol-level cross-check of grass_gis.8.6.dll's
+        # entire non-system dependency closure (gdal313.dll, curl, openssl,
+        # libjpeg-turbo, expat, PROJ, sqlite3, libxml2, brotli, zstd all
+        # already checked clean offline). These two MSYS2-provided libraries
+        # could only be spot-checked locally against a non-identical build,
+        # so dump the real ones here.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $dumpbin = & $vswhere -latest -products * -find '**\dumpbin.exe' | Select-Object -First 1
+          foreach ($dll in @('libgomp-1.dll', 'libsystre-0.dll')) {
+            $path = "D:\msys64\mingw64\bin\$dll"
+            if (Test-Path $path) {
+              Write-Output "::group::$dll exports"
+              & $dumpbin /exports $path
+              Write-Output '::endgroup::'
+            } else {
+              Write-Output "::warning::$path not found"
+            }
+          }
+
+      - name: "[CI diagnostic, not for merge] Capture Windows loader snaps around the crash"
+        # Every native dependency in this investigation has been checked
+        # clean via manual dumpbin export/import diffing (GDAL, curl,
+        # OpenSSL, libjpeg-turbo, expat, PROJ, sqlite3, libxml2, brotli,
+        # zstd, msvcrt2019, and most MSYS2-provided libraries). Rather
+        # than continue guessing which binary might have an unresolved
+        # symbol, this asks Windows' own loader directly: enables Loader
+        # Snaps (verbose OS-level trace of every module load and symbol
+        # resolution step) for python.exe via the Image File Execution
+        # Options GlobalFlag, captures it with Sysinternals DebugView,
+        # and runs `python -m pytest` (which reliably crashes with
+        # "Windows fatal exception: code 0xc0000139") underneath it.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          Write-Output '::group::Enable loader snaps for python.exe'
+          $ifeoPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\python.exe'
+          New-Item -Path $ifeoPath -Force | Out-Null
+          New-ItemProperty -Path $ifeoPath -Name 'GlobalFlag' -PropertyType DWord -Value 0x2 -Force | Out-Null
+          Write-Output '::endgroup::'
+
+          Write-Output '::group::Download DebugView'
+          Invoke-WebRequest -Uri 'https://download.sysinternals.com/files/DebugView.zip' -OutFile "$env:RUNNER_TEMP\DebugView.zip"
+          Expand-Archive -Path "$env:RUNNER_TEMP\DebugView.zip" -DestinationPath "$env:RUNNER_TEMP\DebugView"
+          Write-Output '::endgroup::'
+
+          $logfile = "$env:RUNNER_TEMP\loadersnaps.log"
+          $dbgview = Start-Process -FilePath "$env:RUNNER_TEMP\DebugView\Dbgview64.exe" -ArgumentList @('/accepteula', '/l', $logfile, '/min') -PassThru
+          Start-Sleep -Seconds 5
+
+          Write-Output '::group::Run python -m pytest under loader snaps'
+          $cmd = 'call "C:\OSGeo4W\opt\grass\etc\env.bat" && set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH% && path %GISBASE%\lib;%GISBASE%\bin;%PATH% && python -m pytest -v imagery/i.gensig/testsuite/test_i_gensig.py lib/arraystats/tests'
+          & "C:\OSGeo4W\OSGeo4W.bat" cmd /c $cmd
+          Write-Output '::endgroup::'
+
+          Start-Sleep -Seconds 5
+          Stop-Process -Id $dbgview.Id -Force -ErrorAction SilentlyContinue
+
+          Write-Output '::group::Loader snaps log (filtered)'
+          if (Test-Path $logfile) {
+            Get-Content $logfile | Select-String -Pattern 'python|grass|proj_9|gdal313|not found|procedure' | Select-Object -First 500
+          } else {
+            Write-Output '::error::No loader snaps log was produced'
+          }
+          Write-Output '::endgroup::'
+        continue-on-error: true
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
