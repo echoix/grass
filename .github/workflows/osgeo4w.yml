@@ -133,6 +133,98 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] Dump libgomp-1.dll / libsystre-0.dll exports"
+        # Completes an exhaustive symbol-level cross-check of grass_gis.8.6.dll's
+        # entire non-system dependency closure (gdal313.dll, curl, openssl,
+        # libjpeg-turbo, expat, PROJ, sqlite3, libxml2, brotli, zstd all
+        # already checked clean offline). These two MSYS2-provided libraries
+        # could only be spot-checked locally against a non-identical build,
+        # so dump the real ones here.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $dumpbin = & $vswhere -latest -products * -find '**\dumpbin.exe' | Select-Object -First 1
+          foreach ($dll in @('libgomp-1.dll', 'libsystre-0.dll')) {
+            $path = "D:\msys64\mingw64\bin\$dll"
+            if (Test-Path $path) {
+              Write-Output "::group::$dll exports"
+              & $dumpbin /exports $path
+              Write-Output '::endgroup::'
+            } else {
+              Write-Output "::warning::$path not found"
+            }
+          }
+
+      - name: "[CI diagnostic, not for merge] Enable loader snaps and locate cdb.exe"
+        # Every native dependency in this investigation has been checked
+        # clean via manual dumpbin export/import diffing (GDAL, curl,
+        # OpenSSL, libjpeg-turbo, expat, PROJ, sqlite3, libxml2, brotli,
+        # zstd, msvcrt2019, and all MSYS2-provided libraries). Rather
+        # than continue guessing which binary might have an unresolved
+        # symbol, this asks Windows' own loader directly: enables Loader
+        # Snaps (verbose OS-level trace of every module load and symbol
+        # resolution step) for python.exe via the Image File Execution
+        # Options GlobalFlag. DebugView (a GUI app) was tried first but
+        # never produced a log file at all, with or without its /k switch,
+        # most likely because GitHub Actions runs steps in a non-interactive
+        # Session 0 where its window/message pump cannot initialize. cdb.exe
+        # (console-mode debugger, part of the Windows SDK Debugging Tools)
+        # is a debugger itself, which is the OS-level sink loader snaps are
+        # designed to write to, and needs no desktop session.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ifeoPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\python.exe'
+          New-Item -Path $ifeoPath -Force | Out-Null
+          New-ItemProperty -Path $ifeoPath -Name 'GlobalFlag' -PropertyType DWord -Value 0x2 -Force | Out-Null
+
+          $candidates = @(
+            "${env:ProgramFiles(x86)}\Windows Kits\10\Debuggers\x64\cdb.exe",
+            "${env:ProgramFiles}\Windows Kits\10\Debuggers\x64\cdb.exe"
+          )
+          $cdb = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $cdb) {
+            Write-Output "cdb.exe not preinstalled, installing Debugging Tools for Windows via choco"
+            choco install windbg -y --no-progress
+            $cdb = Get-ChildItem -Path "${env:ProgramFiles(x86)}\Windows Kits\10\Debuggers\x64\cdb.exe" -ErrorAction SilentlyContinue |
+              Select-Object -First 1 -ExpandProperty FullName
+          }
+          if (-not $cdb) {
+            throw "cdb.exe could not be found or installed"
+          }
+          Write-Output "Using cdb at $cdb"
+          Set-Content -Path "$env:RUNNER_TEMP\cdb_path.txt" -Value $cdb -NoNewline
+
+      - name: "[CI diagnostic, not for merge] Run python -m pytest under cdb (loader snaps)"
+        run: |
+          call C:\OSGeo4W\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          set /p CDB_PATH=<"%RUNNER_TEMP%\cdb_path.txt"
+          "%CDB_PATH%" -g -G -c "g;q" python -m pytest -v imagery/i.gensig/testsuite/test_i_gensig.py lib/arraystats/tests > "%RUNNER_TEMP%\cdb_output.log" 2>&1
+          type "%RUNNER_TEMP%\cdb_output.log"
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+        continue-on-error: true
+
+      - name: "[CI diagnostic, not for merge] Dump cdb loader snaps output"
+        if: always()
+        shell: pwsh
+        run: |
+          $logfile = "$env:RUNNER_TEMP\cdb_output.log"
+          if (Test-Path $logfile) {
+            Write-Output "::group::Full cdb output line count"
+            (Get-Content $logfile).Count
+            Write-Output '::endgroup::'
+            Write-Output '::group::cdb output (filtered for LDR/not found/procedure/ModLoad/python/grass_/Exception)'
+            Get-Content $logfile | Select-String -Pattern 'LDR|not found|procedure|ModLoad|python|grass_|proj_9|gdal313|Exception' | Select-Object -First 1000
+            Write-Output '::endgroup::'
+          } else {
+            Write-Output '::error::No cdb output log was produced'
+          }
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
