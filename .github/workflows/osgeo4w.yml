@@ -133,6 +133,31 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] Standalone import after pip install"
+        # A plain `python -c "from grass.pygrass import utils"` run
+        # BEFORE this pip install step succeeds (see
+        # ci-diag/standalone-import-test), but `pytest`/`python -m
+        # pytest` collecting the exact same import AFTER this step
+        # crashes with "Windows fatal exception: code 0xc0000139" (see
+        # ci-diag/no-xdist-single-process and
+        # ci-diag/python-m-pytest-vs-exe). None of pytest/pytest-xdist/
+        # execnet/pytest-timeout/pytest-randomly/colorama declare a
+        # pywin32 dependency, so this isn't a duplicate-pywin32-install
+        # conflict (a scenario pywin32's own README explicitly blames
+        # for this same generic Windows error text). This repeats the
+        # plain standalone import again, but now AFTER pip has installed
+        # pytest and friends, to isolate whether the crash is tied to
+        # something the pip install changes in the environment, or
+        # specifically to pytest's own import/collection machinery.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          python -c "from grass.pygrass import utils; print('OK: pygrass.utils imported successfully after pip install')"
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
