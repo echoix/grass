@@ -106,8 +106,9 @@ jobs:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
         run: |
           $ErrorActionPreference = 'Stop'
+          # gdal313.dll ships in gdal313-runtime, not in the gdal package itself.
           $base = 'https://download.osgeo.org/osgeo4w/v2/x86_64/release/gdal'
-          foreach ($pkg in @('gdal', 'python3-gdal')) {
+          foreach ($pkg in @('gdal313-runtime', 'python3-gdal')) {
             $file = "$pkg-3.13.3-1.tar.bz2"
             $url = "$base/$pkg/$file"
             Write-Output "Downloading $url"
