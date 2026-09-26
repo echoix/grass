@@ -124,6 +124,26 @@ jobs:
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
 
+      - name: "[CI diagnostic, not for merge] Standalone single-process import test"
+        # Checks whether the "Windows fatal exception: code 0xc0000139"
+        # crash (STATUS_ENTRYPOINT_NOT_FOUND) seen loading grass_gis.8.6.dll
+        # under pytest-xdist also reproduces in a single, fresh Python
+        # process with almost nothing else loaded yet. Every dumpbin
+        # export/import diff of grass_gis.8.6.dll's own dependency chain
+        # (proj_9.dll, curl, sqlite3, tiff/jpeg) came back clean, so this
+        # tests whether the crash is instead tied to the number of
+        # dynamically loaded DLLs accumulated across a worker process
+        # (e.g. a Windows/MinGW TLS-slot exhaustion, since libgomp and
+        # other mingw-w64 runtime DLLs use TLS) rather than any single
+        # missing symbol.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          python -c "from grass.pygrass import utils; print('OK: pygrass.utils imported successfully in a fresh standalone process')"
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Install additional python packages
         run: |
           python -m pip install ^
