@@ -124,6 +124,24 @@ jobs:
         shell: msys2 {0}
         run: .github/workflows/test_simple.sh
 
+      - name: "[CI diagnostic, not for merge] Sequential grass.lib load count"
+        # A plain single import of grass.pygrass.utils (which loads
+        # grass_gis.8.6.dll) does not crash in isolation (see the sibling
+        # standalone-import-test PR), but the same load crashes with
+        # "Windows fatal exception: code 0xc0000139" under pytest-xdist.
+        # This imports every grass.lib.* ctypes submodule one at a time
+        # in a single process to see whether the crash is tied to the
+        # number of distinct DLLs accumulated as loaded in one process
+        # (e.g. a Windows/MinGW TLS-slot exhaustion), and if so, exactly
+        # how many/which imports it takes to trigger it.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          python .github/workflows/ci_diag_sequential_lib_load.py
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Install additional python packages
         run: |
           python -m pip install ^
