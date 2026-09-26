@@ -133,6 +133,32 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] Confirm plain-import-OK/pytest-crashes on latest main"
+        # All prior diagnostics in this investigation (gdal313.dll
+        # exports/imports, curl/openssl/libjpeg-turbo/expat exports,
+        # MSYS2 toolchain downgrade, standalone imports vs pytest
+        # collection, xdist vs no xdist, pytest.exe vs python -m
+        # pytest, before/after pip install) were run against commit
+        # b0a6d7703c, which turned out to be 15 commits behind the
+        # commit (d24a5e09d7) actually used in the originally reported
+        # passing/failing runs, and further behind current main. None
+        # of the 15 intervening commits touch Windows CI, ctypes
+        # loading, or pytest config, but this confirms the core
+        # divergence (plain import succeeds, pytest collection crashes
+        # with "Windows fatal exception: code 0xc0000139") still holds
+        # on the actual current main tip, not just the stale base.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          echo === plain python import ===
+          python -c "from grass.pygrass import utils; print('OK: pygrass.utils imported successfully')"
+          echo === bare pytest, no xdist ===
+          pytest -v imagery/i.gensig/testsuite/test_i_gensig.py lib/arraystats/tests
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
