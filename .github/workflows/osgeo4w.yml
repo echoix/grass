@@ -133,6 +133,30 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] Single-process pytest (no xdist) reproduction test"
+        # A single, isolated `from grass.pygrass import utils` and a
+        # sequential import of every grass.lib.* submodule both succeed
+        # in one process (see the sibling diagnostic PRs), yet the same
+        # loads crash with "Windows fatal exception: code 0xc0000139"
+        # under pytest-xdist. pytest-xdist's execnet transport runs a
+        # background thread for worker I/O alongside the thread doing
+        # test collection/ctypes loading, and Windows' DLL loader is
+        # known to be fragile under concurrent/multi-threaded
+        # LoadLibrary calls (loader-lock contention), which can surface
+        # as a spurious "entry point not found" even when nothing is
+        # actually missing. This runs a couple of the known-failing
+        # test files directly through plain pytest, with no `-n`/xdist
+        # argument at all, to see if skipping execnet's threaded
+        # worker transport avoids the crash.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          pytest -v imagery/i.gensig/testsuite/test_i_gensig.py lib/arraystats/tests
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
