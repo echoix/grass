@@ -133,6 +133,29 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] pytest with --capture=no"
+        # A plain `python -c "from grass.pygrass import utils"` succeeds
+        # even AFTER pip has installed pytest/xdist/timeout/randomly
+        # (see ci-diag/standalone-import-after-pip), but pytest itself
+        # collecting the same import crashes with "Windows fatal
+        # exception: code 0xc0000139" regardless of xdist, the exe
+        # launcher stub, or pytest-timeout (whose watchdog thread does
+        # not start until after collection succeeds, per its own
+        # source, so it isn't running yet when this crash happens).
+        # pytest's other big process-wide difference from a plain
+        # python invocation is its default fd-level output capturing
+        # (dup2-based stdout/stderr redirection), active for the whole
+        # session including collection. This tests whether disabling
+        # it with --capture=no avoids the crash.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          pytest -v --capture=no imagery/i.gensig/testsuite/test_i_gensig.py lib/arraystats/tests
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
