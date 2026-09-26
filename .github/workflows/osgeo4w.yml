@@ -110,6 +110,46 @@ jobs:
         env:
           MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
 
+      - name: "[CI diagnostic, not for merge] Dump grass_gis.8.6.dll exports/imports"
+        # Finds the exact missing symbol behind the
+        # "Windows fatal exception: code 0xc0000139" crash seen when
+        # ctypes loads grass_gis.8.6.dll. Package-level dumpbin diffs of
+        # gdal313.dll, curl, openssl, libjpeg-turbo, expat, and proj (the
+        # only OSGeo4W packages that changed in the regression window)
+        # found no removed exports or broken ordinals, and downgrading
+        # the MSYS2 mingw-w64 toolchain snapshot didn't fix the crash
+        # either, so this inspects the freshly compiled DLL directly.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $dumpbin = & $vswhere -latest -products * -find '**\dumpbin.exe' | Select-Object -First 1
+          if (-not $dumpbin) {
+            Write-Output '::error::dumpbin.exe not found via vswhere'
+            exit 1
+          }
+          Write-Output "Using dumpbin: $dumpbin"
+
+          $dlls = @(
+            'dist.x86_64-w64-mingw32\lib\libgrass_gis.8.6.dll',
+            'dist.x86_64-w64-mingw32\lib\libgrass_datetime.8.6.dll',
+            'dist.x86_64-w64-mingw32\lib\libgrass_arraystats.8.6.dll',
+            'dist.x86_64-w64-mingw32\lib\libgrass_rowio.8.6.dll',
+            'dist.x86_64-w64-mingw32\lib\libgrass_vector.8.6.dll'
+          )
+          foreach ($dll in $dlls) {
+            if (-not (Test-Path $dll)) {
+              Write-Output "::warning::$dll not found, skipping"
+              continue
+            }
+            Write-Output "::group::$dll dependents"
+            & $dumpbin /dependents $dll
+            Write-Output '::endgroup::'
+            Write-Output "::group::$dll full import table"
+            & $dumpbin /imports $dll
+            Write-Output '::endgroup::'
+          }
+
       - name: Print installed versions
         if: always()
         shell: msys2 {0}
