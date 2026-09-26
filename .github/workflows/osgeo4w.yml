@@ -133,6 +133,30 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] python -m pytest vs pytest.exe launcher"
+        # Bare `pytest ...` (invoking the compiled Scripts\pytest.exe
+        # launcher stub) crashes with "Windows fatal exception: code
+        # 0xc0000139" collecting these same test files even WITHOUT
+        # xdist (confirmed in the sibling ci-diag/no-xdist-single-process
+        # PR), while a plain `python -c "from grass.pygrass import
+        # utils"` and a sequential import of every grass.lib.* submodule
+        # both succeed in a single process (see the other sibling
+        # diagnostic PRs). The one concrete difference left: pytest was
+        # invoked via the pytest.exe launcher stub
+        # (Scripts\pytest.exe\__main__.py), not python.exe directly.
+        # This runs the same collection through `python -m pytest`
+        # instead, which runs inside the already-running python.exe
+        # process with no separate launcher stub, to see if that alone
+        # avoids the crash.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          python -m pytest -v imagery/i.gensig/testsuite/test_i_gensig.py lib/arraystats/tests
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
