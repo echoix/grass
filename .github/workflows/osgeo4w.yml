@@ -133,6 +133,28 @@ jobs:
             pytest-randomly
         # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
         shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
+      - name: "[CI diagnostic, not for merge] pytest with all third-party plugins disabled"
+        # pytest auto-loads every installed plugin's entry_points at
+        # startup regardless of which command-line flags are used --
+        # meaning pytest-xdist, pytest-randomly, and pytest-timeout
+        # (and execnet, pytest-xdist's own dependency) all get imported
+        # and register their hooks even in a plain, single-process,
+        # no-"-n" pytest run. Every other angle (xdist, the exe
+        # launcher stub, pytest-timeout's watchdog thread, fd-level
+        # capture, environment changes from pip install, GRASS's own
+        # source at both the stale test base and current main) has been
+        # ruled out in this investigation. This disables every
+        # third-party plugin explicitly via -p no:X, to see whether
+        # bare, plugin-free pytest core collection alone still crashes.
+        run: |
+          call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
+          set PYTHONPATH=%GISBASE%\etc\python;%PYTHONPATH%
+          path %GISBASE%\lib;%GISBASE%\bin;%PATH%
+          pytest -v -p no:xdist -p no:randomly -p no:timeout -p no:cacheprovider imagery/i.gensig/testsuite/test_i_gensig.py lib/arraystats/tests
+        # Obfuscated usage of GitHub Actions features, Windows CMD shell limits analysis
+        shell: cmd /D /E:ON /V:OFF /S /C "CALL C:/OSGeo4W/OSGeo4W.bat "{0}"" # zizmor: ignore[misfeature]
+
       - name: Run pytest with multiple workers in parallel
         run: |
           call %OSGEO4W_ROOT%\opt\grass\etc\env.bat
