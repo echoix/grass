@@ -115,14 +115,16 @@ jobs:
           }
           Write-Output "Using dumpbin: $dumpbin"
 
+          # python3-gdal ships ABI-tagged pyd names, e.g. _gdal.cp312-win_amd64.pyd;
+          # the dotted filter excludes siblings like _gdal_array.cp312-win_amd64.pyd.
           $gdalDll = Get-ChildItem -Path "$env:O4WROOT\bin" -Filter 'gdal*.dll' | Select-Object -First 1
-          $gdalPyd = Get-ChildItem -Path "$env:O4WROOT\apps" -Recurse -Filter '_gdal.pyd' | Select-Object -First 1
+          $gdalPyd = Get-ChildItem -Path "$env:O4WROOT\apps" -Recurse -Filter '_gdal.*.pyd' | Select-Object -First 1
           if (-not $gdalDll) {
             Write-Output '::error::gdal*.dll not found under O4WROOT\bin'
             exit 1
           }
           if (-not $gdalPyd) {
-            Write-Output '::error::_gdal.pyd not found under O4WROOT\apps'
+            Write-Output '::error::_gdal.*.pyd not found under O4WROOT\apps'
             exit 1
           }
           Write-Output "gdal DLL: $($gdalDll.FullName)"
