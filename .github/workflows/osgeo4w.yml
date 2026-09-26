@@ -182,7 +182,10 @@ jobs:
           Expand-Archive -Path "$env:RUNNER_TEMP\DebugView.zip" -DestinationPath "$env:RUNNER_TEMP\DebugView"
 
           $logfile = "$env:RUNNER_TEMP\loadersnaps.log"
-          $dbgview = Start-Process -FilePath "$env:RUNNER_TEMP\DebugView\Dbgview64.exe" -ArgumentList @('/accepteula', '/l', $logfile, '/min') -PassThru
+          # /k enables kernel-mode DbgPrint capture; loader snaps are emitted
+          # through that path, not Win32 OutputDebugString, so the previous
+          # run (without /k) produced an empty log despite the crash firing.
+          $dbgview = Start-Process -FilePath "$env:RUNNER_TEMP\DebugView\Dbgview64.exe" -ArgumentList @('/accepteula', '/k', '/l', $logfile, '/min') -PassThru
           Set-Content -Path "$env:RUNNER_TEMP\dbgview.pid" -Value $dbgview.Id
           Start-Sleep -Seconds 5
           Write-Output "Started DebugView (pid $($dbgview.Id)), logging to $logfile"
