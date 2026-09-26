@@ -98,6 +98,48 @@ jobs:
             sqlite3-devel
             zstd-devel
 
+      - name: "[CI diagnostic, not for merge] Dump gdal DLL exports and _gdal.pyd imports"
+        # Locates the exact symbol _gdal.pyd fails to resolve at import time
+        # against the current gdal 3.13.3-2 build, using dumpbin from the
+        # Visual Studio install already on the runner.
+        shell: pwsh
+        env:
+          O4WROOT: ${{ steps.osgeo4w.outputs.root }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $dumpbin = & $vswhere -latest -products * -find '**\dumpbin.exe' | Select-Object -First 1
+          if (-not $dumpbin) {
+            Write-Output '::error::dumpbin.exe not found via vswhere'
+            exit 1
+          }
+          Write-Output "Using dumpbin: $dumpbin"
+
+          $gdalDll = Get-ChildItem -Path "$env:O4WROOT\bin" -Filter 'gdal*.dll' | Select-Object -First 1
+          $gdalPyd = Get-ChildItem -Path "$env:O4WROOT\apps" -Recurse -Filter '_gdal.pyd' | Select-Object -First 1
+          if (-not $gdalDll) {
+            Write-Output '::error::gdal*.dll not found under O4WROOT\bin'
+            exit 1
+          }
+          if (-not $gdalPyd) {
+            Write-Output '::error::_gdal.pyd not found under O4WROOT\apps'
+            exit 1
+          }
+          Write-Output "gdal DLL: $($gdalDll.FullName)"
+          Write-Output "_gdal.pyd: $($gdalPyd.FullName)"
+
+          Write-Output '::group::gdal DLL exports containing GlobalDestructor'
+          & $dumpbin /exports $gdalDll.FullName | Select-String 'GlobalDestructor'
+          Write-Output '::endgroup::'
+
+          Write-Output '::group::_gdal.pyd dependents'
+          & $dumpbin /dependents $gdalPyd.FullName
+          Write-Output '::endgroup::'
+
+          Write-Output '::group::_gdal.pyd full import table'
+          & $dumpbin /imports $gdalPyd.FullName
+          Write-Output '::endgroup::'
+
       - name: Set number of cores for compilation
         run: |
           echo "MAKEFLAGS=-j$(nproc)" >> "${GITHUB_ENV}"
