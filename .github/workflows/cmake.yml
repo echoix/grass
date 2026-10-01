@@ -5,6 +5,7 @@ name: CMake
 # CMakeLists.txt files there do, so they are added back after the doc/**
 # exclusion (later patterns take precedence).
 on:
+  workflow_dispatch:
   push:
     paths:
       - "**"
@@ -22,7 +23,7 @@ on:
       - "doc/**/CMakeLists.txt"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{ github.run_id }}
   cancel-in-progress: true
 
 env:
