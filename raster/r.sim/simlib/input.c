@@ -34,7 +34,6 @@ void alloc_grids_water(const Geometry *geometry, const Outputs *outputs,
     grids->gama = G_alloc_matrix(geometry->my, geometry->mx);
     if (outputs->err != NULL)
         grids->gammas = G_alloc_matrix(geometry->my, geometry->mx);
-    grids->dif = G_alloc_fmatrix(geometry->my, geometry->mx);
 }
 
 void alloc_grids_sediment(const Geometry *geometry, const Outputs *outputs,
@@ -47,7 +46,6 @@ void alloc_grids_sediment(const Geometry *geometry, const Outputs *outputs,
 
     /* memory allocation for output grids */
 
-    grids->dif = G_alloc_fmatrix(geometry->my, geometry->mx);
     if (outputs->erdep != NULL || outputs->et != NULL)
         grids->er = G_alloc_fmatrix(geometry->my, geometry->mx);
 }
@@ -308,13 +306,17 @@ int grad_check(Setup *setup, const Geometry *geometry, const Settings *settings,
 
     setup->si0 = setup->sisum / cc;
     setup->vmean = vsum / cc;
+    setup->vmax = vmax;
     setup->chmean = chsum / cc;
 
     if (grids->inf)
         setup->infmean = infsum / cc;
 
-    if (inputs->wdepth)
+    if (inputs->wdepth) {
         deltaw = 0.8 / (sigmax * vmax); /*time step for sediment */
+        setup->deltaw = deltaw;
+        setup->sigmax = sigmax;
+    }
     setup->deltap =
         0.25 * sqrt(geometry->stepx * geometry->stepy) /
         (setup->vmean > EPS ? setup->vmean : EPS); /*time step for water */

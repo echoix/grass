@@ -23,12 +23,8 @@ used to determine the direction and magnitude of water flow velocity. To
 include a predefined direction of flow, map algebra can be used to
 replace terrain-derived partial derivatives with pre-defined partial
 derivatives in selected grid cells such as man-made channels, ditches or
-culverts. Equations (2) and (3) from [this
-report](http://fatra.cnr.ncsu.edu/~hmitaso/gmslab/reports/cerl99/rep99.html)
-can be used to compute partial derivates of the predefined flow using
-its direction given by aspect and slope.
-
-The equations are
+culverts. The partial derivatives of the predefined flow are computed
+from its direction, given by aspect and slope:
 
 ```sh
 dx = tan(slope) * cos(aspect)
@@ -58,10 +54,12 @@ overland flow infiltration rate map **infil** or a single value
 **infil_value** in \[mm/hr\] that control the rate of infiltration for
 the already flowing water, effectively reducing the flow depth and
 discharge. Overland flow can be further controlled by permeable check
-dams or similar type of structures, the user can provide a map of these
-structures and their permeability ratio in the map **flow_control** that
-defines the probability of particles to pass through the structure (the
-values will be 0-1).
+dams or similar types of structures. The user can provide a map of
+these structures as **flow_control** with values 0-1 that give the
+probability of a particle being trapped by the structure at each time
+step. A trapped particle is moved slightly back instead of forward, so
+a higher value means lower permeability, holding back more water and
+increasing the flow depth at the structure.
 
 Output includes a water depth raster map **depth** in \[m\], and a water
 discharge raster map **discharge** in \[m3/s\]. The **error** raster map
@@ -167,6 +165,101 @@ For the shallow overland flow simulated here, Manning's n is generally
 higher than for deeper channel or floodplain flow, especially over
 vegetated surfaces, see the *r.manning* documentation.
 
+### Run summary
+
+With the **-p** flag, a summary of the run is printed to standard output
+after the last map is written. The **format** option selects plain text
+(one `key: value` pair per line) or JSON. Without **-p**, nothing is
+printed to standard output regardless of **format**. The values are also
+stored in the history of the output raster maps under the same keys (see
+[r.info](r.info.md)).
+
+| Key | Meaning | Unit |
+| --- | --- | --- |
+| `walkers_requested` | Number of walkers from **nwalkers**, by default twice the number of cells | count |
+| `walkers_generated` | Walkers created, at least one per cell and more where the source rate is higher | count |
+| `walkers_remaining` | Walkers still in the domain at the end of the run | count |
+| `duration` | Requested simulation length (**duration**) | s |
+| `simulated_time` | Simulated time reached at the end of the run | s |
+| `time_step` | Simulated time per iteration | s |
+| `iterations_planned` | Iterations needed to cover **duration** | count |
+| `iterations_completed` | Iterations run, fewer than planned when the run stopped early | count |
+| `stopped_early` | `true` when all walkers left the domain before **duration** was reached | |
+| `mean_velocity` | Mean flow velocity over the defined cells | m/s |
+| `mean_mannings_n` | Harmonic mean of Manning's n over the defined cells (the inverse of the mean of 1/n), `null` when undefined | |
+| `mean_source_rate` | Mean rainfall excess | m/s |
+| `mean_infiltration` | Mean infiltration rate, 0 without infiltration input | m/s |
+| `threads` | Threads used for the computation | count |
+| `outputs` | One entry per set of written maps: one per **output_step** with **-t**, otherwise a single entry | |
+
+Each entry of `outputs` contains the `simulated_time` (s) and `timestamp`
+of the written maps, the number of `walkers_remaining` at that time, and
+the names of the `depth`, `discharge`, `error` and `walkers` maps, or
+`null` for maps which were not requested.
+
+Summary of a time series run with two output steps in JSON:
+
+```sh
+r.sim.water elevation=elevation depth=depth discharge=discharge rain_value=50 \
+    man_value=0.05 nwalkers=100000 duration=20 output_step=10 random_seed=3 \
+    -t -p format=json
+```
+
+```json
+{
+    "walkers_requested": 100000,
+    "walkers_generated": 120000,
+    "walkers_remaining": 112724,
+    "duration": 1200,
+    "simulated_time": 1199.2085202681737,
+    "time_step": 1.0631281208051186,
+    "iterations_planned": 1128,
+    "iterations_completed": 1128,
+    "stopped_early": false,
+    "mean_velocity": 9.4062040165270862,
+    "mean_mannings_n": 0.050000000000000003,
+    "mean_source_rate": 1.390000000000819e-05,
+    "mean_infiltration": 0,
+    "threads": 1,
+    "outputs": [
+        {
+            "simulated_time": 599.60426013408687,
+            "timestamp": "10 minutes",
+            "walkers_remaining": 113464,
+            "depth": "depth.10",
+            "discharge": "discharge.10",
+            "error": null,
+            "walkers": null
+        },
+        {
+            "simulated_time": 1199.2085202681737,
+            "timestamp": "20 minutes",
+            "walkers_remaining": 112724,
+            "depth": "depth.20",
+            "discharge": "discharge.20",
+            "error": null,
+            "walkers": null
+        }
+    ]
+}
+```
+
+Reading the summary in Python:
+
+```python
+import grass.script as gs
+
+summary = gs.parse_command(
+    "r.sim.water",
+    elevation="elevation",
+    depth="depth",
+    discharge="discharge",
+    flags="p",
+    format="json",
+)
+print(summary["walkers_remaining"], summary["outputs"][-1]["depth"])
+```
+
 ## EXAMPLE
 
 Using the North Carolina full sample dataset:
@@ -210,21 +303,20 @@ Carolina sample dataset.*
   Mitas L., 2004, [Path sampling method for modeling overland water
   flow, sediment transport and short term terrain evolution in Open
   Source
-  GIS.](http://fatra.cnr.ncsu.edu/~hmitaso/gmslab/papers/II.6.8_Mitasova_044.pdf)
+  GIS.](https://doi.org/10.1016/S0167-5648(04)80159-X)
   In: C.T. Miller, M.W. Farthing, V.G. Gray, G.F. Pinder eds.,
   Proceedings of the XVth International Conference on Computational
   Methods in Water Resources (CMWR XV), June 13-17 2004, Chapel Hill,
   NC, USA, Elsevier, pp. 1479-1490.
-- Mitasova H, Mitas, L., 2000, [Modeling spatial processes in multiscale
-  framework: exploring duality between particles and
-  fields,](http://fatra.cnr.ncsu.edu/~hmitaso/gmslab/gisc00/duality.html)
-  plenary talk at GIScience2000 conference, Savannah, GA.
+- Mitasova H, Mitas, L., 2000, Modeling spatial processes in multiscale
+  framework: exploring duality between particles and fields, plenary
+  talk at GIScience2000 conference, Savannah, GA.
 - Mitas, L., and Mitasova, H., 1998, Distributed soil erosion simulation
   for effective erosion prevention. Water Resources Research, 34(3),
   505-516.
 - Mitasova, H., Mitas, L., 2001, [Multiscale soil erosion simulations
   for land use
-  management,](http://fatra.cnr.ncsu.edu/~hmitaso/gmslab/papers/LLEmiterev1.pdf)
+  management,](https://doi.org/10.1007/978-1-4615-0575-4_11)
   In: Landscape erosion and landscape evolution modeling, Harmon R. and
   Doe W. eds., Kluwer Academic/Plenum Publishers, pp. 321-347.
 - Hofierka, J, Mitasova, H., Mitas, L., 2002. GRASS and modeling
