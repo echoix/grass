@@ -26,6 +26,27 @@ jobs:
       - name: Run
         shell: cmd
         run: check.exe
+      - name: Install libintl with vcpkg
+        id: vcpkg
+        continue-on-error: true
+        shell: cmd
+        run: vcpkg install gettext-libintl:x64-windows
+      - name: Compile with libintl
+        if: steps.vcpkg.outcome == 'success'
+        continue-on-error: true
+        shell: cmd
+        run: |
+          set VPREFIX=%VCPKG_INSTALLATION_ROOT%\installed\x64-windows
+          dir %VPREFIX%\include\libintl.h %VPREFIX%\lib\*intl* %VPREFIX%\bin\*intl*
+          findstr /n /i "define.*printf _INTL_REDIRECT" %VPREFIX%\include\libintl.h
+          cl /nologo /W3 /DUSE_LIBINTL /DTEST_LIBINTL_DIRECT /I%VPREFIX%\include .github\scripts\positional_printf_check.c /Fe:check_intl.exe /link /LIBPATH:%VPREFIX%\lib intl.lib
+      - name: Run with libintl
+        if: steps.vcpkg.outcome == 'success'
+        continue-on-error: true
+        shell: cmd
+        run: |
+          set PATH=%VCPKG_INSTALLATION_ROOT%\installed\x64-windows\bin;%PATH%
+          check_intl.exe
 
   mingw:
     name: MinGW64 (MSYS2)
@@ -43,8 +64,12 @@ jobs:
           update: false
           install: >-
             mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-gettext-runtime
+            mingw-w64-x86_64-gettext-tools
       - name: Compile
         run: |
+          gcc -Wall -DUSE_LIBINTL -DTEST_LIBINTL_DIRECT -o check_intl.exe .github/scripts/positional_printf_check.c -lintl
+          gcc -Wall -D__USE_MINGW_ANSI_STDIO=0 -DUSE_LIBINTL -DTEST_LIBINTL_DIRECT -o check_intl_msvcrt.exe .github/scripts/positional_printf_check.c -lintl
           gcc -Wall -o check_default.exe .github/scripts/positional_printf_check.c
           gcc -Wall -D__USE_MINGW_ANSI_STDIO=1 -o check_ansi.exe .github/scripts/positional_printf_check.c
           gcc -Wall -D__USE_MINGW_ANSI_STDIO=0 -o check_msvcrt.exe .github/scripts/positional_printf_check.c
@@ -54,3 +79,11 @@ jobs:
         run: ./check_ansi.exe
       - name: Run with __USE_MINGW_ANSI_STDIO=0
         run: ./check_msvcrt.exe
+      - name: Show libintl.h printf redirects
+        run: |
+          ls -l /mingw64/include/libintl.h
+          grep -n -i "define.*printf\|_INTL_REDIRECT\|_INTL_NO_REDIRECT" /mingw64/include/libintl.h
+      - name: Run with libintl.h
+        run: ./check_intl.exe
+      - name: Run with libintl.h and __USE_MINGW_ANSI_STDIO=0
+        run: ./check_intl_msvcrt.exe
