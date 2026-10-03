@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 18:51+0000\n"
+"POT-Creation-Date: 2026-10-03 21:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6133,7 +6133,7 @@ msgid "Attempt to read points of nonexistent isle"
 msgstr ""
 
 #: ../lib/vector/Vlib/area.c:92 ../lib/vector/Vlib/area.c:493
-#: ../lib/vector/Vlib/build_pg.c:124 ../lib/vector/Vlib/build_sfa.c:717
+#: ../lib/vector/Vlib/build_pg.c:124 ../lib/vector/Vlib/build_sfa.c:720
 #: ../lib/vector/Vlib/close.c:260 ../lib/vector/Vlib/close_pg.c:100
 #: ../lib/vector/Vlib/close_pg.c:148 ../lib/vector/Vlib/copy.c:449
 #: ../lib/vector/Vlib/header_finfo.c:42 ../lib/vector/Vlib/header_finfo.c:79
@@ -6635,21 +6635,21 @@ msgstr ""
 msgid "Error writing out spatial index file"
 msgstr ""
 
-#: ../lib/vector/Vlib/build_nat.c:74 ../lib/vector/Vlib/build_sfa.c:329
-#: ../lib/vector/Vlib/build_sfa.c:628
+#: ../lib/vector/Vlib/build_nat.c:74 ../lib/vector/Vlib/build_sfa.c:330
+#: ../lib/vector/Vlib/build_sfa.c:630
 msgid "Registering primitives..."
 msgstr ""
 
-#: ../lib/vector/Vlib/build_nat.c:117 ../lib/vector/Vlib/build_sfa.c:374
-#: ../lib/vector/Vlib/build_sfa.c:660
+#: ../lib/vector/Vlib/build_nat.c:117 ../lib/vector/Vlib/build_sfa.c:375
+#: ../lib/vector/Vlib/build_sfa.c:662
 #, c-format
 msgid "One primitive registered"
 msgid_plural "%d primitives registered"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../lib/vector/Vlib/build_nat.c:120 ../lib/vector/Vlib/build_sfa.c:377
-#: ../lib/vector/Vlib/build_sfa.c:663
+#: ../lib/vector/Vlib/build_nat.c:120 ../lib/vector/Vlib/build_sfa.c:378
+#: ../lib/vector/Vlib/build_sfa.c:665
 #, c-format
 msgid "One vertex registered"
 msgid_plural "%<PRId64> vertices registered"
@@ -6793,41 +6793,41 @@ msgstr ""
 msgid "Unable to build simple features from topogeometry data. Unsupported type %d."
 msgstr ""
 
-#: ../lib/vector/Vlib/build_sfa.c:269 ../lib/vector/Vlib/build_sfa.c:540
+#: ../lib/vector/Vlib/build_sfa.c:270 ../lib/vector/Vlib/build_sfa.c:542
 #, c-format
 msgid "Unable to calculate centroid for area %d"
 msgstr ""
 
-#: ../lib/vector/Vlib/build_sfa.c:295
+#: ../lib/vector/Vlib/build_sfa.c:296
 #, c-format
 msgid "Feature type %d not supported"
 msgstr ""
 
-#: ../lib/vector/Vlib/build_sfa.c:344 ../lib/vector/Vlib/build_sfa.c:353
+#: ../lib/vector/Vlib/build_sfa.c:345 ../lib/vector/Vlib/build_sfa.c:354
 #: ../lib/vector/Vlib/read_pg.c:387
 #, c-format
 msgid "Feature %d without geometry skipped"
 msgstr ""
 
-#: ../lib/vector/Vlib/build_sfa.c:599 ../lib/vector/Vlib/read_ogr.c:321
+#: ../lib/vector/Vlib/build_sfa.c:601 ../lib/vector/Vlib/read_ogr.c:321
 #: ../lib/vector/Vlib/read_ogr.c:556
 #, c-format
 msgid "OGR feature type %d not supported"
 msgstr ""
 
-#: ../lib/vector/Vlib/build_sfa.c:667
+#: ../lib/vector/Vlib/build_sfa.c:670
 #, c-format
 msgid "One feature without geometry skipped"
 msgid_plural "%d features without geometry skipped"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../lib/vector/Vlib/build_sfa.c:721
+#: ../lib/vector/Vlib/build_sfa.c:724
 #, c-format
 msgid "%s: Native format unsupported"
 msgstr ""
 
-#: ../lib/vector/Vlib/build_sfa.c:746
+#: ../lib/vector/Vlib/build_sfa.c:749
 msgid "Feature index is built only for non-native formats. Nothing to dump."
 msgstr ""
 
