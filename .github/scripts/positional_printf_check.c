@@ -80,12 +80,12 @@ int main(void)
 
 #ifdef _MSC_VER
     memset(buf, 0, sizeof buf);
-    _snprintf_p(buf, sizeof buf, fmt_s, "a", "b");
-    report("_snprintf_p", fmt_s, buf, "b a");
+    _sprintf_p(buf, sizeof buf, fmt_s, "a", "b");
+    report("_sprintf_p", fmt_s, buf, "b a");
 
     memset(buf, 0, sizeof buf);
-    _snprintf_p(buf, sizeof buf, fmt_m, "x", 42);
-    report("_snprintf_p", fmt_m, buf, "42 x");
+    _sprintf_p(buf, sizeof buf, fmt_m, "x", 42);
+    report("_sprintf_p", fmt_m, buf, "42 x");
 
     memset(buf, 0, sizeof buf);
     wrap_vsprintf_p(buf, sizeof buf, fmt_s, "a", "b");
