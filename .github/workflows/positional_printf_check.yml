@@ -39,7 +39,9 @@ jobs:
           set VPREFIX=%VCPKG_INSTALLATION_ROOT%\installed\x64-windows
           dir %VPREFIX%\include\libintl.h %VPREFIX%\lib\*intl* %VPREFIX%\bin\*intl*
           findstr /n /i "define.*printf _INTL_REDIRECT" %VPREFIX%\include\libintl.h
-          cl /nologo /W3 /DUSE_LIBINTL /DTEST_LIBINTL_DIRECT /I%VPREFIX%\include .github\scripts\positional_printf_check.c /Fe:check_intl.exe /link /LIBPATH:%VPREFIX%\lib intl.lib
+          dumpbin /exports %VPREFIX%\bin\intl-8.dll | findstr /i "printf"
+          cl /nologo /W3 /DUSE_LIBINTL /I%VPREFIX%\include .github\scripts\positional_printf_check.c /Fe:check_intl.exe /link /LIBPATH:%VPREFIX%\lib intl.lib
+          cl /nologo /W3 /DUSE_LIBINTL /DTEST_LIBINTL_DIRECT /I%VPREFIX%\include .github\scripts\positional_printf_check.c /Fe:check_intl_direct.exe /link /LIBPATH:%VPREFIX%\lib intl.lib
       - name: Run with libintl
         if: steps.vcpkg.outcome == 'success'
         continue-on-error: true
