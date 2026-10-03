@@ -1,5 +1,27 @@
 @PACKAGE_INIT@
 
+# When the GRASS build this addon links against was configured with
+# WITH_SANCOV_COVERAGE, every GRASS_${comp}Targets.cmake file included
+# below records "sancovrt" as an INTERFACE_LINK_LIBRARIES entry (each
+# GRASS library was itself linked against it via CMakeLists.txt's
+# project-wide link_libraries(sancovrt)). sancovrt is deliberately an
+# IMPORTED target rather than an exported one (see CMakeLists.txt), so
+# that reference reaches consumers as a plain, unresolved target/library
+# name -- this addon-building CMake project needs its own IMPORTED
+# sancovrt target, pointing at the same installed runtime, before the
+# component Targets.cmake files below try to resolve it. Without this,
+# the addon's link step fails with "cannot find -lsancovrt" (confirmed
+# empirically via g.extension).
+if(@WITH_SANCOV_COVERAGE@ AND NOT TARGET sancovrt)
+    add_library(sancovrt SHARED IMPORTED GLOBAL)
+    set_target_properties(
+        sancovrt
+        PROPERTIES
+            IMPORTED_LOCATION
+                "@CMAKE_INSTALL_PREFIX@/@GRASS_INSTALL_LIBDIR@/libsancovrt${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    )
+endif()
+
 set(_GRASS_supported_components
     arraystats
     bitmap

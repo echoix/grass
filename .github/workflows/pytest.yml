@@ -7,31 +7,80 @@ on:
       - main
       - releasebranch_*
   pull_request:
+  # Lets this branch's coverage-mechanism comparison be run on demand
+  # without opening a PR, see doc/development/
+  # sancov_coverage_experiment.md. Remove before merging.
+  workflow_dispatch:
 
 permissions: {}
 
 jobs:
   pytest:
     concurrency:
+      # matrix.coverage, not just matrix.python-version, disambiguates
+      # this group: three cells (llvm-source, sancov-gcc, sancov-clang)
+      # now share python-version 3.13, and cancel-in-progress cancels
+      # whichever jobs share a group with one that just started -
+      # confirmed on a real workflow_dispatch run, where exactly that
+      # collision cancelled two of the three 3.13 cells within a second
+      # of starting.
       group: >-
         ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{
-        matrix.os }}-${{ matrix.python-version }}
+        matrix.os }}-${{ matrix.python-version }}-${{ matrix.coverage }}
       cancel-in-progress: true
 
     strategy:
       matrix:
-        os:
-          - ubuntu-24.04
-        python-version:
-          - "3.11"
-          - "3.13"
-      fail-fast: true
+        # Deliberately an include-only matrix, each entry a complete,
+        # independent combination: mixing a base os/python-version/coverage
+        # cross product with `include` entries that only partially override
+        # it (e.g. just coverage) is a known GitHub Actions matrix pitfall
+        # -- an entry that does not exactly match an existing combination
+        # on every key it names is added as a *new*, separate combination
+        # instead of overriding the intended one, which silently produced
+        # zero actual "pytest" job instances here (confirmed on a real
+        # workflow_dispatch run: the whole job list came back empty).
+        #
+        # No coverage instrumentation on the default cell (kept fast); the
+        # clang source-based mechanism is compared here against two
+        # SanitizerCoverage prototypes (one per compiler) on the same
+        # Python version, see doc/development/
+        # sancov_coverage_experiment.md. All three coverage cells reuse
+        # 3.13 rather than adding yet more cells on top of 3.11's.
+        include:
+          - os: ubuntu-24.04
+            python-version: "3.11"
+            coverage: none
+          - os: ubuntu-24.04
+            python-version: "3.13"
+            coverage: llvm-source
+          - os: ubuntu-24.04
+            python-version: "3.13"
+            coverage: sancov-gcc
+          - os: ubuntu-24.04
+            python-version: "3.13"
+            coverage: sancov-clang
+      # These four cells are independent configurations being compared
+      # against each other, not one build validated four ways, so a
+      # failure specific to one coverage mechanism should not cancel the
+      # others before they finish -- confirmed to matter on a real
+      # workflow_dispatch run, where a sancov-clang build failure
+      # (unrelated: a missing -lm this mold-linked toolchain needed,
+      # see build_ubuntu-24.04.sh) cancelled the other three cells'
+      # still-running pytest steps under the default fail-fast: true,
+      # losing their timing data along with it. Revert to true (matching
+      # every other job in this file) if this ever merges past being a
+      # coverage-mechanism comparison.
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
     env:
       FORCE_COLOR: 1 # for software including pip: https://force-color.org/
       CLICOLOR_FORCE: 1 # for other software including ninja: https://bixense.com/clicolors/
       PYTHONWARNINGS: always
+      GRASS_LLVM_COVERAGE: ${{ matrix.coverage == 'llvm-source' && '1' || '0' }}
+      GRASS_SANCOV_COVERAGE: ${{ (matrix.coverage == 'sancov-gcc' || matrix.coverage == 'sancov-clang') && '1' || '0' }}
+      GRASS_SANCOV_CC: ${{ matrix.coverage == 'sancov-clang' && 'clang' || 'gcc' }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -53,6 +102,12 @@ jobs:
           sudo apt-get update -y
           xargs -a <(awk '! /^ *(#|$)/' ".github/workflows/apt.txt") -r -- \
               sudo apt-get install -y --no-install-recommends --no-install-suggests
+
+      - name: Install LLVM coverage toolchain
+        if: env.GRASS_LLVM_COVERAGE == '1' || env.GRASS_SANCOV_CC == 'clang'
+        run: |
+          sudo apt-get install -y --no-install-recommends --no-install-suggests \
+              clang llvm libomp-dev
 
       - uses: rui314/setup-mold@7e4f20ad28a2e8ca6fd0892ccf72e2abb706b9c3 # v1
 
@@ -90,16 +145,33 @@ jobs:
       - name: Test executing of the grass command
         run: .github/workflows/test_simple.sh
 
+      - name: Prepare coverage directories
+        run: |
+          mkdir -p "${PWD}/llvm-cov-raw"
+          # Wipe stray default.profraw the build step left behind (Makefiles
+          # run instrumented tools to dump interface XML), so their build-
+          # time data can't contaminate the test-run coverage.
+          find . -name 'default.profraw' -type f -delete
+          # %p (process id) separates every subprocess; %9m caps the per-binary
+          # pool at 512 files so long suites don't create millions of tiny
+          # .profraw. Together they eliminate the write-collision that made
+          # earlier runs non-deterministic.
+          {
+            echo "LLVM_PROFILE_FILE=${PWD}/llvm-cov-raw/grass-%p-%9m.profraw"
+            echo "INITIAL_GISBASE=$(grass --config path)"
+            echo "INITIAL_PWD=${PWD}"
+          } >> "${GITHUB_ENV}"
+          if [ "${GRASS_SANCOV_COVERAGE}" = "1" ]; then
+            mkdir -p "${PWD}/sancov-raw"
+            echo "GRASS_SANCOV_DUMP_DIR=${PWD}/sancov-raw" >> "${GITHUB_ENV}"
+          fi
+
       - name: Run pytest with multiple workers in parallel
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
           export PYTHONPATH
           export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
           pytest \
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_cov.txt \
@@ -113,12 +185,8 @@ jobs:
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
           export PYTHONPATH
           export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
           pytest \
             @.github/workflows/pytest_args_ci.txt \
             @.github/workflows/pytest_args_cov.txt \
@@ -129,53 +197,105 @@ jobs:
         run: |
           PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
           LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
           export PYTHONPATH
           export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
           pytest \
             @.github/workflows/pytest_args_cov.txt \
             @.github/workflows/pytest_args_gunittest.txt \
             --junitxml=pytest.gunittest.junit.xml
-      - name: Fix non-standard installed script paths in coverage data
+
+      - name: Coverage disk usage (before combine)
+        if: ${{ !cancelled() }}
+        run: utils/coverage_disk_usage.sh
+
+      - name: Combine Python coverage and export XML
+        if: ${{ !cancelled() }}
         run: |
-          PYTHONPATH="$(grass --config python_path):${PYTHONPATH}"
-          LD_LIBRARY_PATH="$(grass --config path)/lib:${LD_LIBRARY_PATH}"
-          INITIAL_GISBASE="$(grass --config path)"
-          INITIAL_PWD="${PWD}"
-          export PYTHONPATH
-          export LD_LIBRARY_PATH
-          export INITIAL_GISBASE
-          export INITIAL_PWD
-          python utils/coverage_mapper.py
-          coverage combine
-          coverage html
+          # coverage combine must run before coverage_mapper.py: parallel
+          # mode leaves .coverage.<host>.<pid>.<rand> partials and no
+          # .coverage file for the mapper to read. Tolerate "no data" so
+          # a build failure earlier in the job does not mask itself as a
+          # later failure here.
+          coverage combine || true
+          if [ -f .coverage ]; then
+              python utils/coverage_mapper.py
+              if [ -f .coverage.fixed_scripts ]; then
+                  mv .coverage.fixed_scripts .coverage
+              fi
+              coverage html
+              coverage xml -o coverage.xml
+          else
+              echo "No .coverage data collected; skipping Python coverage export."
+          fi
+
+      - name: Merge and export LLVM C/C++ coverage
+        if: ${{ !cancelled() && env.GRASS_LLVM_COVERAGE == '1' }}
+        run: utils/llvm_coverage_export.sh
+
+      - name: Symbolize and summarize SanitizerCoverage
+        if: ${{ !cancelled() && env.GRASS_SANCOV_COVERAGE == '1' }}
+        run: |
+          python utils/sancov_symbolize.py "${GRASS_SANCOV_DUMP_DIR}" \
+              --ignore-path-substring /usr/ \
+              --ignore-path-substring /conda- \
+              --ignore-path-substring /miniconda \
+              --ignore-path-substring /micromamba \
+              > sancov-coverage-summary.txt
+          du -sh "${GRASS_SANCOV_DUMP_DIR}"
+          wc -l sancov-coverage-summary.txt
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           exclude: gui
-          flags: pytest-python-${{ matrix.python-version }}
+          flags: pytest-python-${{ matrix.python-version }}-${{ matrix.coverage }}
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload Python coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           verbose: true
-          flags: pytest-python-${{ matrix.python-version }}
-          name: pytest-python-${{ matrix.python-version }}
+          files: coverage.xml
+          # matrix.coverage disambiguates this from the two other cells
+          # now sharing python-version 3.13.
+          flags: pytest-python-${{ matrix.python-version }}-${{ matrix.coverage }}
+          name: pytest-python-${{ matrix.python-version }}-${{ matrix.coverage }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload LLVM C/C++ coverage to Codecov
+        if: ${{ !cancelled() && env.GRASS_LLVM_COVERAGE == '1' }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          verbose: true
+          files: coverage-llvm.lcov
+          flags: ubuntu-llvm-c
+          name: ubuntu-llvm-c-${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Make python-only code coverage test report available
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.python-version }}
+          # matrix.coverage, not just matrix.python-version, disambiguates
+          # this name: three cells (llvm-source, sancov-gcc, sancov-clang)
+          # now share python-version 3.13, and upload-artifact requires
+          # unique names within a run.
+          name: python-codecoverage-report-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.coverage }}
           path: coverage_html_report
           retention-days: 1
+
+      - name: Make SanitizerCoverage summary available
+        if: ${{ !cancelled() && env.GRASS_SANCOV_COVERAGE == '1' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sancov-coverage-summary-${{ matrix.coverage }}
+          # Not uploaded to Codecov: this is a line-hit-count summary, not
+          # lcov, produced for this experiment's own comparison rather
+          # than as an ongoing coverage-tracking mechanism -- see
+          # doc/development/sancov_coverage_experiment.md.
+          path: sancov-coverage-summary.txt
+          retention-days: 7
 
   pytest-success:
     name: pytest Result
