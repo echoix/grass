@@ -142,9 +142,8 @@ def main():
         for v, p in oif:
             sys.stdout.write(fmt % (p + (v,)))
     else:
-        outf = open(output, "w")
-        outf.writelines(fmt % (p + (v,)) for v, p in oif)
-        outf.close()
+        with open(output, "w") as outf:
+            outf.writelines(fmt % (p + (v,)) for v, p in oif)
 
 
 if __name__ == "__main__":

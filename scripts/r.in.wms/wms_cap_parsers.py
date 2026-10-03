@@ -159,7 +159,7 @@ class WMSCapabilitiesTree(BaseCapabilitiesTree):
             for element in replaced_elements:
                 elems = layer.findall(self.xml_ns.Ns(element[0]))
 
-                if len(elems) != 0 or element[1] == "add":
+                if len(elems) == 0 or element[1] == "add":
                     for e in parent_layer.findall(self.xml_ns.Ns(element[0])):
                         layer.append(e)
 
