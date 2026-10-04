@@ -319,8 +319,16 @@ g.parser -t somescriptfile
 </pre></div>
 
 <em>g.parser</em> will print the text of the translatable options to
-standard output, one per line, and exit. This is for internal use within
-the build system to prepare GRASS scripts for translation.
+standard output, one per line, and exit.
+<p>
+The translatable fields are the <b>label</b>, <b>description</b>, and
+<b>keyword</b> of the module, the <b>label</b>, <b>description</b>, and
+<b>guisection</b> of flags and options, and the descriptions in the
+<b>descriptions</b> of options. Each description of an option value is
+translated separately with the message context
+<code>option value description</code>, so the values themselves are never
+translated. The strings are extracted for translation from the source files
+by <code>utils/grass_tool_header_pot.py</code> in the GRASS source code.
 
 <h2>EXAMPLES</h2>
 

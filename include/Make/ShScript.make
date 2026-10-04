@@ -16,7 +16,7 @@ include $(MODULE_TOPDIR)/include/Make/Rules.make
 include $(MODULE_TOPDIR)/include/Make/Html.make
 include $(MODULE_TOPDIR)/include/Make/ShScriptRules.make
 
-SCRIPT_ACTIONS = $(SCRIPT) $(ETCPYFILES) html scriptstrings
+SCRIPT_ACTIONS = $(SCRIPT) $(ETCPYFILES) html
 ifdef MINGW
 SCRIPT_ACTIONS += $(BIN)/$(PGM).bat
 SCRIPT_DIR = %GISBASE%/scripts
@@ -27,8 +27,6 @@ script: $(SCRIPT_ACTIONS)
 $(BIN)/$(PGM).bat: $(MODULE_TOPDIR)/scripts/windows_sh_launch.bat
 	sed -e "s#SCRIPT_NAME#$(PGM)#" -e "s#SCRIPT_DIR#$(SCRIPT_DIR)#" $(MODULE_TOPDIR)/scripts/windows_sh_launch.bat > $@
 	unix2dos $@
-
-scriptstrings: $(STRINGDIR)/$(PGM)_to_translate.c
 
 install:
 	$(INSTALL) $(SCRIPT) $(INST_DIR)/scripts/
@@ -42,4 +40,4 @@ install:
 		cp -RL $(ETC)/$(PGM) $(INST_DIR)/etc/ ; \
 	fi
 
-.PHONY: script scriptstrings
+.PHONY: script

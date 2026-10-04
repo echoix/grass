@@ -2112,9 +2112,6 @@ def install_extension_std_platforms(name, source, url, branch):
             "rest": os.path.join(srcdir, "docs", "rest"),
             "man": os.path.join(srcdir, "docs", "man"),
             "script": os.path.join(srcdir, "scripts"),
-            # TODO: handle locales also for addons
-            #             'string'  : os.path.join(srcdir, 'locale'),
-            "string": srcdir,
             "etc": os.path.join(srcdir, "etc"),
         }
         make_cmd = [
@@ -2127,7 +2124,6 @@ def install_extension_std_platforms(name, source, url, branch):
             "RESTDIR=%s" % dirs["rest"],
             "MANBASEDIR=%s" % dirs["man"],
             "SCRIPTDIR=%s" % dirs["script"],
-            "STRINGDIR=%s" % dirs["string"],
             "ETC=%s" % os.path.join(dirs["etc"]),
             "SOURCE_URL=%s" % url,
         ]

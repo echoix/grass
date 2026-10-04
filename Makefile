@@ -107,11 +107,7 @@ cleandistdirs:
 	-rm -rf $(ARCH_DISTDIR)
 	-rm -rf $(ARCH_BINDIR)
 
-# Clean out the strings extracted from scripts for translation
-cleanscriptstrings:
-	rm -f locale/scriptstrings/*.c 2>/dev/null
-
-clean: cleandistdirs cleanscriptstrings cleandocs code-coverage-clean
+clean: cleandistdirs cleandocs code-coverage-clean
 
 libsclean: cleandistdirs
 	$(MAKE) clean-recursive SUBDIRS=$(LIBDIRS)
@@ -134,4 +130,4 @@ include $(MODULE_TOPDIR)/include/Make/Sphinx.make
 DOXNAME=grass
 
 .PHONY: default libs
-.PHONY: cleandistdirs cleanscriptstrings clean libsclean distclean
+.PHONY: cleandistdirs clean libsclean distclean
