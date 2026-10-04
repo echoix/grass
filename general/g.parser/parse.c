@@ -222,7 +222,7 @@ void parse_option(struct context *ctx, const char *cmd, const char *arg)
     }
 
     if (G_strcasecmp(cmd, "guidependency") == 0) {
-        ctx->option->guidependency = translate(xstrdup(arg));
+        ctx->option->guidependency = xstrdup(arg);
         return;
     }
 
