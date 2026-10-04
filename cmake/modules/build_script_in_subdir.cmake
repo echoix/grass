@@ -55,24 +55,14 @@ function(build_script_in_subdir dir_name)
             WORLD_EXECUTE
     )
 
-    set(TRANSLATE_C_FILE
-        ${CMAKE_SOURCE_DIR}/locale/scriptstrings/${G_NAME}_to_translate.c
-    )
-
-    add_custom_command(
-        OUTPUT ${TRANSLATE_C_FILE}
-        COMMAND
-            ${CMAKE_COMMAND} -DG_NAME=${G_NAME} -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-            -DOUTPUT_FILE=${TRANSLATE_C_FILE} -DGISBASE_DIR="${RUNTIME_GISBASE}"
-            -DBINARY_DIR="${OUTDIR}/${GRASS_INSTALL_BINDIR}"
-            -DLIBDIR="${OUTDIR}/${GRASS_INSTALL_LIBDIR}"
-            -DSCRIPTDIR="${OUTDIR}/${G_DEST_DIR}"
-            -DETCDIR="${OUTDIR}/${GRASS_INSTALL_ETCDIR}"
-            -DPYDIR="${OUTDIR}/${GRASS_INSTALL_PYDIR}" -DGISRC="${GISRC}"
-            -DGUIDIR="${OUTDIR}/${GRASS_INSTALL_GUIDIR}" -P
-            ${CMAKE_SOURCE_DIR}/cmake/locale_strings.cmake
-        DEPENDS g.parser
-    )
+    if(WIN32)
+        set(PGM_NAME ${G_NAME})
+        configure_file(
+            ${CMAKE_SOURCE_DIR}/cmake/windows_launch.bat.in
+            ${OUTDIR}/${G_DEST_DIR}/${G_NAME}.bat
+            @ONLY
+        )
+    endif()
 
     set(OUT_HTML_FILE "")
 
@@ -96,11 +86,12 @@ function(build_script_in_subdir dir_name)
             OUTPUT ${OUT_HTML_FILE}
             SOURCEDIR ${G_SRC_DIR}
             DEST_DIR ${G_DEST_DIR}
-            DEPENDS ${TRANSLATE_C_FILE} LIB_PYTHON
+            DEPENDS LIB_PYTHON g.parser
         )
     endif() # WITH_DOCS
 
-    add_custom_target(${G_NAME} DEPENDS ${TRANSLATE_C_FILE} ${OUT_HTML_FILE})
+    add_custom_target(${G_NAME} DEPENDS ${OUT_HTML_FILE})
+    add_dependencies(${G_NAME} g.parser)
 
     set(modules_list
         "${G_NAME};${modules_list}"
