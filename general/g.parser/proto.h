@@ -17,6 +17,7 @@ struct Option *define_standard_option(const char *);
 
 /* translate.c */
 char *translate(const char *);
+char *translate_descriptions(const char *);
 
 /* rules.c */
 void parse_rule(struct context *, const char *, const char *);

@@ -202,7 +202,7 @@ void parse_option(struct context *ctx, const char *cmd, const char *arg)
     }
 
     if (G_strcasecmp(cmd, "descriptions") == 0) {
-        ctx->option->descriptions = translate(xstrdup(arg));
+        ctx->option->descriptions = translate_descriptions(xstrdup(arg));
         return;
     }
 
