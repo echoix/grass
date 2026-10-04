@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 18:17+0000\n"
+"POT-Creation-Date: 2026-10-03 18:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -357,7 +357,7 @@ msgstr ""
 msgid "send data: invalid C-type"
 msgstr ""
 
-#: ../lib/db/dbmi_client/column.c:133 ../lib/vector/Vlib/ascii.c:438
+#: ../lib/db/dbmi_client/column.c:133 ../lib/vector/Vlib/ascii.c:449
 #: ../lib/vector/Vlib/write_pg.c:684
 #, c-format
 msgid "Unable to describe table <%s>"
@@ -369,7 +369,7 @@ msgid "Array of values to select from column <%s> is empty"
 msgstr ""
 
 #: ../lib/db/dbmi_client/copy_tab.c:106 ../lib/db/dbmi_client/copy_tab.c:126
-#: ../lib/db/dbmi_client/db.c:37 ../lib/vector/Vlib/ascii.c:414
+#: ../lib/db/dbmi_client/db.c:37 ../lib/vector/Vlib/ascii.c:425
 #: ../lib/vector/Vlib/write_ogr.c:173 ../lib/vector/Vlib/write_pg.c:3034
 #, c-format
 msgid "Unable to start driver <%s>"
@@ -378,7 +378,7 @@ msgstr ""
 #: ../lib/db/dbmi_client/copy_tab.c:111 ../lib/db/dbmi_client/copy_tab.c:132
 #: ../lib/db/dbmi_client/db.c:42 ../lib/ogsf/gp3.c:217 ../lib/ogsf/gv3.c:354
 #: ../lib/rst/interp_float/vinput2d.c:102 ../lib/vector/Vlib/array.c:270
-#: ../lib/vector/Vlib/ascii.c:420 ../lib/vector/Vlib/cats.c:601
+#: ../lib/vector/Vlib/ascii.c:431 ../lib/vector/Vlib/cats.c:601
 #: ../lib/vector/Vlib/close_nat.c:163 ../lib/vector/Vlib/map.c:337
 #: ../lib/vector/Vlib/net_build.c:156 ../lib/vector/Vlib/net_build.c:206
 #: ../lib/vector/Vlib/net_build.c:500 ../lib/vector/Vlib/net_build.c:797
@@ -1177,8 +1177,8 @@ msgstr ""
 #: ../lib/ogsf/gs3.c:116 ../lib/ogsf/gs3.c:181 ../lib/ogsf/gs3.c:257
 #: ../lib/ogsf/gs3.c:329 ../lib/ogsf/gs3.c:436 ../lib/ogsf/gs3.c:524
 #: ../lib/ogsf/gs3.c:584 ../lib/ogsf/gs3.c:642 ../lib/ogsf/gs3.c:712
-#: ../lib/ogsf/gs3.c:782 ../lib/ogsf/gsd_legend.c:234 ../lib/raster/open.c:172
-#: ../lib/raster/open.c:854 ../lib/raster/open.c:891 ../lib/raster/open.c:944
+#: ../lib/ogsf/gs3.c:782 ../lib/ogsf/gsd_legend.c:234 ../lib/raster/open.c:176
+#: ../lib/raster/open.c:858 ../lib/raster/open.c:895 ../lib/raster/open.c:948
 #: ../lib/rst/interp_float/output2d.c:264
 #: ../lib/rst/interp_float/output2d.c:351
 #: ../lib/rst/interp_float/output2d.c:425
@@ -1318,8 +1318,8 @@ msgid "G__open(write): Unable to open '%s': %s"
 msgstr ""
 
 #: ../lib/gis/open.c:194 ../lib/gis/open.c:286 ../lib/gis/open.c:319
-#: ../lib/gis/open_misc.c:160 ../lib/gis/open_misc.c:232
-#: ../lib/gis/open_misc.c:250 ../lib/gis/seek.c:53 ../lib/gis/seek.c:63
+#: ../lib/gis/open_misc.c:152 ../lib/gis/open_misc.c:224
+#: ../lib/gis/open_misc.c:242 ../lib/gis/seek.c:53 ../lib/gis/seek.c:63
 #: ../lib/raster/close.c:398 ../lib/raster/close.c:444
 #: ../lib/raster/close.c:543 ../lib/raster/format.c:195
 #: ../lib/raster/put_row.c:143 ../lib/raster/put_row.c:520
@@ -1338,12 +1338,12 @@ msgstr ""
 msgid "File read/write operation failed: %s (%d)"
 msgstr ""
 
-#: ../lib/gis/open_misc.c:46
+#: ../lib/gis/open_misc.c:38
 #, c-format
 msgid "G__open_misc(read): mapset <%s> doesn't match xmapset <%s>"
 msgstr ""
 
-#: ../lib/gis/open_misc.c:73
+#: ../lib/gis/open_misc.c:65
 #, c-format
 msgid "G__open_misc(write): xmapset <%s> != G_mapset() <%s>"
 msgstr ""
@@ -4338,7 +4338,7 @@ msgstr ""
 
 #: ../lib/ogsf/gp3.c:211 ../lib/ogsf/gv3.c:348
 #: ../lib/rst/interp_float/vinput2d.c:93 ../lib/vector/Vlib/array.c:264
-#: ../lib/vector/Vlib/ascii.c:408 ../lib/vector/Vlib/cats.c:592
+#: ../lib/vector/Vlib/ascii.c:419 ../lib/vector/Vlib/cats.c:592
 #: ../lib/vector/Vlib/copy.c:647 ../lib/vector/Vlib/copy.c:762
 #: ../lib/vector/Vlib/map.c:298 ../lib/vector/Vlib/map.c:431
 #: ../lib/vector/Vlib/net_build.c:150 ../lib/vector/Vlib/net_build.c:201
@@ -5033,7 +5033,7 @@ msgstr ""
 msgid "Unable to open GDAL file"
 msgstr ""
 
-#: ../lib/raster/gdal.c:286 ../lib/raster/open.c:603
+#: ../lib/raster/gdal.c:286 ../lib/raster/open.c:607
 #, c-format
 msgid "Invalid map type <%d>"
 msgstr ""
@@ -5108,7 +5108,7 @@ msgstr ""
 msgid "Unable to open header file for raster map <%s@%s>. It seems that some previous step failed and created an incomplete raster map."
 msgstr ""
 
-#: ../lib/raster/get_row.c:34 ../lib/raster/get_row.c:920
+#: ../lib/raster/get_row.c:34 ../lib/raster/get_row.c:927
 #, c-format
 msgid "Reading raster map <%s@%s> request for row %d is outside region"
 msgstr ""
@@ -5143,32 +5143,32 @@ msgstr ""
 msgid "Error reading raster data for row %d of <%s>"
 msgstr ""
 
-#: ../lib/raster/get_row.c:233
+#: ../lib/raster/get_row.c:240
 #, c-format
 msgid "Error reading raster data via GDAL for row %d of <%s>"
 msgstr ""
 
-#: ../lib/raster/get_row.c:844
+#: ../lib/raster/get_row.c:851
 #, c-format
 msgid "Error seeking compressed null data for row %d of <%s>"
 msgstr ""
 
-#: ../lib/raster/get_row.c:851 ../lib/raster/get_row.c:863
+#: ../lib/raster/get_row.c:858 ../lib/raster/get_row.c:870
 #, c-format
 msgid "Error reading compressed null data for row %d of <%s>"
 msgstr ""
 
-#: ../lib/raster/get_row.c:869
+#: ../lib/raster/get_row.c:876
 #, c-format
 msgid "Error uncompressing null data for row %d of <%s>"
 msgstr ""
 
-#: ../lib/raster/get_row.c:903
+#: ../lib/raster/get_row.c:910
 #, c-format
 msgid "Error seeking null row %d for <%s>"
 msgstr ""
 
-#: ../lib/raster/get_row.c:906
+#: ../lib/raster/get_row.c:913
 #, c-format
 msgid "Error reading null row %d for <%s>"
 msgstr ""
@@ -5269,110 +5269,110 @@ msgstr ""
 msgid "Rast_set_null_value: wrong data type!"
 msgstr ""
 
-#: ../lib/raster/open.c:188
+#: ../lib/raster/open.c:192
 #, c-format
 msgid "Unable to open raster map <%s@%s> since it is a reclass of raster map <%s@%s> which does not exist"
 msgstr ""
 
-#: ../lib/raster/open.c:193
+#: ../lib/raster/open.c:197
 #, c-format
 msgid "Error reading reclass file for raster map <%s>"
 msgstr ""
 
-#: ../lib/raster/open.c:204
+#: ../lib/raster/open.c:208
 #, c-format
 msgid "Error reading map type for raster map <%s>"
 msgstr ""
 
-#: ../lib/raster/open.c:213
+#: ../lib/raster/open.c:217
 #, c-format
 msgid "Raster map <%s@%s>: format field in header file invalid"
 msgstr ""
 
-#: ../lib/raster/open.c:232
+#: ../lib/raster/open.c:236
 #, c-format
 msgid "Compression with %s is not supported in this GRASS GIS installation"
 msgstr ""
 
-#: ../lib/raster/open.c:239
+#: ../lib/raster/open.c:243
 #, c-format
 msgid "Raster map <%s> is in different projection than current region. Found <%s>, should be <%s>."
 msgstr ""
 
-#: ../lib/raster/open.c:246
+#: ../lib/raster/open.c:250
 #, c-format
 msgid "Raster map <%s> is in different zone (%d) than current region (%d)"
 msgstr ""
 
-#: ../lib/raster/open.c:253
+#: ../lib/raster/open.c:257
 #, c-format
 msgid "Raster map <%s>: bytes per cell (%d) too large"
 msgstr ""
 
-#: ../lib/raster/open.c:283
+#: ../lib/raster/open.c:287
 #, c-format
 msgid "Unable to open %s file for raster map <%s@%s>"
 msgstr ""
 
-#: ../lib/raster/open.c:322
+#: ../lib/raster/open.c:326
 #, c-format
 msgid "Error reading format for <%s@%s>"
 msgstr ""
 
-#: ../lib/raster/open.c:532
+#: ../lib/raster/open.c:536
 msgid "Unable to create GDAL link"
 msgstr ""
 
-#: ../lib/raster/open.c:608 ../lib/raster/open.c:766
+#: ../lib/raster/open.c:612 ../lib/raster/open.c:770
 #, c-format
 msgid "Raster map <%s> is not in the current mapset (%s)"
 msgstr ""
 
-#: ../lib/raster/open.c:615
+#: ../lib/raster/open.c:619
 #, c-format
 msgid "<%s> is an illegal file name"
 msgstr ""
 
-#: ../lib/raster/open.c:629 ../lib/raster/open.c:712 ../lib/raster/open.c:790
+#: ../lib/raster/open.c:633 ../lib/raster/open.c:716 ../lib/raster/open.c:794
 #, c-format
 msgid "No temp files available: %s"
 msgstr ""
 
-#: ../lib/raster/open.c:762
+#: ../lib/raster/open.c:766
 #, c-format
 msgid "Raster map <%s> does not exist in the current mapset (%s)"
 msgstr ""
 
-#: ../lib/raster/open.c:829
+#: ../lib/raster/open.c:833
 msgid "Rast_set_fp_type(): can only be called with FCELL_TYPE or DCELL_TYPE"
 msgstr ""
 
-#: ../lib/raster/open.c:888
+#: ../lib/raster/open.c:892
 #, c-format
 msgid "Raster map <%s> not found in mapset <%s>"
 msgstr ""
 
-#: ../lib/raster/open.c:950
+#: ../lib/raster/open.c:954
 #, c-format
 msgid "Unable to find '%s'"
 msgstr ""
 
-#: ../lib/raster/open.c:961
+#: ../lib/raster/open.c:965
 #, c-format
 msgid "Invalid type: field '%s' in file '%s'"
 msgstr ""
 
-#: ../lib/raster/open.c:967
+#: ../lib/raster/open.c:971
 #, c-format
 msgid "Missing type: field in file '%s'"
 msgstr ""
 
-#: ../lib/raster/open.c:972
+#: ../lib/raster/open.c:976
 #, c-format
 msgid "Raster map <%s> is not xdr: byte_order: %s"
 msgstr ""
 
-#: ../lib/raster/open.c:1041
+#: ../lib/raster/open.c:1045
 msgid "Rast_set_quant_rules() can be called only for raster maps opened for reading"
 msgstr ""
 
@@ -6218,70 +6218,75 @@ msgstr ""
 msgid "Error reading categories: [%s]"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:229
+#: ../lib/vector/Vlib/ascii.c:224
+#, c-format
+msgid "Layer number or category number out of range: [%s]"
+msgstr ""
+
+#: ../lib/vector/Vlib/ascii.c:240
 msgid "Unable to copy points"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:244
+#: ../lib/vector/Vlib/ascii.c:255
 #, c-format
 msgid "Vector map <%s> is 2D. %d 3D features (faces or kernels) skipped."
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:280
+#: ../lib/vector/Vlib/ascii.c:291
 #, c-format
 msgid ""
 "Unexpected data in vector header:\n"
 "[%s]"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:316
+#: ../lib/vector/Vlib/ascii.c:327
 #, c-format
 msgid "Unknown keyword <%s> in vector head"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:479
+#: ../lib/vector/Vlib/ascii.c:490
 #, c-format
 msgid "Column <%s> does not exist"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:481
+#: ../lib/vector/Vlib/ascii.c:492
 msgid "Available columns:"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:487
+#: ../lib/vector/Vlib/ascii.c:498
 msgid "Export cancelled"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:524
+#: ../lib/vector/Vlib/ascii.c:535
 #, c-format
 msgid "Unknown type of column <%s>, export cancelled"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:560
+#: ../lib/vector/Vlib/ascii.c:571
 #, c-format
 msgid "Unable to select record from table <%s> (key %s, column %s)"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:692
+#: ../lib/vector/Vlib/ascii.c:703
 #, c-format
 msgid "Unknown feature type %d"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:732
+#: ../lib/vector/Vlib/ascii.c:743
 #, c-format
 msgid "Feature has more categories. Only one category (%d) is exported."
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:752
+#: ../lib/vector/Vlib/ascii.c:763
 #, c-format
 msgid "Cannot select attributes for cat = %d"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:757
+#: ../lib/vector/Vlib/ascii.c:768
 msgid "Unable to fetch data from table"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:791 ../lib/vector/Vlib/net_build.c:211
+#: ../lib/vector/Vlib/ascii.c:802 ../lib/vector/Vlib/net_build.c:211
 #: ../lib/vector/Vlib/net_build.c:505 ../lib/vector/Vlib/net_build.c:523
 #: ../lib/vector/Vlib/net_build.c:802 ../lib/vector/Vlib/net_build.c:820
 #: ../lib/vector/Vlib/net_build.c:978
@@ -6289,30 +6294,30 @@ msgstr ""
 msgid "Column <%s> not found in table <%s>"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:795
+#: ../lib/vector/Vlib/ascii.c:806
 #, c-format
 msgid "Column <%s>: unsupported data type"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:882
+#: ../lib/vector/Vlib/ascii.c:893
 msgid "Unknown format"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:892
+#: ../lib/vector/Vlib/ascii.c:903
 msgid "Topology not available, unable to process areas"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:905
+#: ../lib/vector/Vlib/ascii.c:916
 #, c-format
 msgid "Unable to get boundary of area id %d"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:919
+#: ../lib/vector/Vlib/ascii.c:930
 #, c-format
 msgid "Unable to get boundary of isle id %d (area id %d)"
 msgstr ""
 
-#: ../lib/vector/Vlib/ascii.c:936
+#: ../lib/vector/Vlib/ascii.c:947
 #, c-format
 msgid "%d features without category skipped. To export also features without category use '%s=-1'."
 msgstr ""
