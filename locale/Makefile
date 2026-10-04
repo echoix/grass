@@ -35,7 +35,7 @@ LIB_POTFILES = find ../lib \( -name "*.c" -o -name "*.py" \) | xargs grep -l "_(
 MOD_POTFILES = find ../ \( -name "*.c" -o -name "*.cpp" \) | grep -v '../lib' | xargs grep -l "_(\"\|n_(\""
 WXPY_POTFILES = find ../gui/wxpython -name '*.py' | xargs grep -l "_(\"\|n_(\""
 #For Python script module messages (the interface headers of tools are
-#extracted by grass_tool_header_pot.py)
+#extracted by utils/grass_tool_header_pot.py)
 MOD_PYFILES = find ../scripts -name '*.py' | xargs grep -l "_(\"\|n_(\""
 
 XGETTEXT_ARGS = --no-wrap --sort-by-file
@@ -59,7 +59,7 @@ pot:
 	@echo "Generating $(MODDOMAIN)..."
 	xgettext $(XGETTEXT_ARGS) --from-code=utf-8 --keyword=_ --keyword=n_:1,2 -cGTC -o ./templates/$(MODDOMAIN).pot `$(MOD_POTFILES)`
 	xgettext $(XGETTEXT_ARGS) --from-code=utf-8 -j --keyword=_ --keyword=n_:1,2 -cGTC -o ./templates/$(MODDOMAIN).pot `$(MOD_PYFILES)`
-	$(PYTHON) ./grass_tool_header_pot.py -o ./templates/$(MODDOMAIN)_tool_headers.pot
+	$(PYTHON) ../utils/grass_tool_header_pot.py -o ./templates/$(MODDOMAIN)_tool_headers.pot
 	xgettext $(XGETTEXT_ARGS) -j -o ./templates/$(MODDOMAIN).pot ./templates/$(MODDOMAIN)_tool_headers.pot
 	@rm -f ./templates/$(MODDOMAIN)_tool_headers.pot
 	@echo "Generating $(WXPYDOMAIN)..."

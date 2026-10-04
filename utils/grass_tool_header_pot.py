@@ -17,8 +17,8 @@ The fields extracted here must match the fields g.parser translates
 
 Usage (from the locale directory, as in `make pot`):
 
-    python grass_tool_header_pot.py -o tool_headers.pot
-    python grass_tool_header_pot.py -o r_example.pot ../path/to/r.example.py
+    python ../utils/grass_tool_header_pot.py -o tool_headers.pot
+    python ../utils/grass_tool_header_pot.py -o r_example.pot ../path/to/r.example.py
 """
 
 import argparse

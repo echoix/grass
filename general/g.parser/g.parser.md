@@ -320,7 +320,7 @@ The translatable fields are the **label**, **description**, and
 **descriptions** of options. Each description of an option value is
 translated separately with the message context `option value description`,
 so the values themselves are never translated. The strings are extracted
-for translation from the source files by `locale/grass_tool_header_pot.py`
+for translation from the source files by `utils/grass_tool_header_pot.py`
 in the GRASS source code.
 
 ## EXAMPLES

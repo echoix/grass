@@ -9,11 +9,11 @@ from pathlib import Path
 
 import pytest
 
-LOCALE_DIR = Path(__file__).resolve().parent.parent
-SOURCE_DIR = LOCALE_DIR.parent
+UTILS_DIR = Path(__file__).resolve().parent.parent
+SOURCE_DIR = UTILS_DIR.parent
 
 spec = importlib.util.spec_from_file_location(
-    "grass_tool_header_pot", LOCALE_DIR / "grass_tool_header_pot.py"
+    "grass_tool_header_pot", UTILS_DIR / "grass_tool_header_pot.py"
 )
 pot = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pot)
