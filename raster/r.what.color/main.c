@@ -84,13 +84,8 @@ static int do_value(const char *buf, RASTER_MAP_TYPE type,
         switch (outputFormat) {
         case PLAIN:
             fprintf(stdout, "%d: ", ival);
-            if (strcmp(fmt, "plain") != 0) {
-                fprintf(stdout, fmt, red, grn, blu);
-            }
-            else {
-                G_color_to_str(red, grn, blu, colorFormat, color_str);
-                fprintf(stdout, "%s", color_str);
-            }
+            G_color_to_str(red, grn, blu, colorFormat, color_str);
+            fprintf(stdout, "%s", color_str);
             fprintf(stdout, "\n");
             break;
 
