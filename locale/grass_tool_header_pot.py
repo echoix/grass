@@ -33,6 +33,9 @@ VALUE_DESCRIPTION_CONTEXT = "option value description"
 
 # Directories with tools, relative to the source root.
 DEFAULT_DIRS = ("gui", "scripts", "temporal")
+# Directories where each Python file is a tool installed without the script
+# Makefile rules, relative to the source root.
+PLAIN_SCRIPT_DIRS = ("gui/scripts",)
 
 TRANSLATABLE_FIELDS = {
     "module": {"label", "description", "keyword", "keywords"},
@@ -188,8 +191,14 @@ def extract(paths):
 
 
 def find_tool_files(root):
-    """Return the tool source files built with the script Makefile rules."""
+    """Return the tool source files built with the script Makefile rules.
+
+    Also return the Python files in PLAIN_SCRIPT_DIRS.
+    """
     files = []
+    plain_script_dirs = {
+        os.path.normpath(os.path.join(root, path)) for path in PLAIN_SCRIPT_DIRS
+    }
     for directory in DEFAULT_DIRS:
         for dirpath, dirnames, filenames in os.walk(os.path.join(root, directory)):
             dirnames[:] = sorted(
@@ -197,6 +206,13 @@ def find_tool_files(root):
                 for name in dirnames
                 if not name.startswith(".") and name not in {"tests", "testsuite"}
             )
+            if os.path.normpath(dirpath) in plain_script_dirs:
+                files.extend(
+                    os.path.join(dirpath, name)
+                    for name in sorted(filenames)
+                    if name.endswith(".py")
+                )
+                continue
             if "Makefile" not in filenames:
                 continue
             makefile = Path(dirpath, "Makefile").read_text(encoding="utf-8")

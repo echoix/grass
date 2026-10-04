@@ -2,9 +2,11 @@
 
 g.parser translates each value description separately (see translate.c),
 so without a translation, the interface must be the same as written.
+The header is the same in Python and shell scripts.
 """
 
 import os
+import shutil
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -13,8 +15,7 @@ import pytest
 
 import grass.script as gs
 
-SCRIPT = """\
-#!/usr/bin/env python3
+HEADER = """\
 # %module
 # % description: Test of option value descriptions
 # %end
@@ -26,8 +27,21 @@ SCRIPT = """\
 # % guidependency: input,maps
 # % answer: plain
 # %end
+"""
+
+PYTHON_SCRIPT = f"""\
+#!/usr/bin/env python3
+{HEADER}
 import grass.script as gs
 gs.parser()
+"""
+
+SHELL_SCRIPT = f"""\
+#!/bin/sh
+{HEADER}
+if [ "$1" != "@ARGS_PARSED@" ] ; then
+    exec g.parser "$0" "$@"
+fi
 """
 
 
@@ -41,13 +55,19 @@ def session(tmp_path_factory):
         yield session
 
 
-@pytest.fixture(scope="module")
-def parameter(session, tmp_path_factory):
+@pytest.fixture(scope="module", params=["python", "shell"])
+def parameter(request, session, tmp_path_factory):
     """Return the parameter element from the interface description."""
-    script = tmp_path_factory.mktemp("script") / "t_example.py"
-    script.write_text(SCRIPT, encoding="utf-8")
+    if request.param == "python":
+        name, text, interpreter = "t_example.py", PYTHON_SCRIPT, sys.executable
+    else:
+        name, text, interpreter = "t_example.sh", SHELL_SCRIPT, shutil.which("sh")
+        if not interpreter:
+            pytest.skip("sh not available")
+    script = tmp_path_factory.mktemp("script") / name
+    script.write_text(text, encoding="utf-8")
     result = subprocess.run(
-        [sys.executable, script, "--interface-description"],
+        [interpreter, script, "--interface-description"],
         capture_output=True,
         check=True,
         env=session.env,

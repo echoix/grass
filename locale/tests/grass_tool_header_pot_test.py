@@ -47,6 +47,25 @@ import grass.script as gs
 # % description: Not in a block
 """
 
+# Header without the space after #, in the capitalized form used by some
+# shell scripts. The extractor reads it from any file whatever its language.
+SHELL_HEADER = """\
+#%Module
+#% Description: Does something in a shell
+#% keyword: raster
+#%End
+#%flag
+#% key: q
+#%end
+#%Option G_OPT_R_OUTPUT
+#% Description: Output map
+#%end
+#%option
+#% key: format
+#% DESCRIPTIONS: plain;Plain text output
+#%end
+"""
+
 
 def write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -152,11 +171,37 @@ def test_find_tool_files(tmp_path):
     gui = write(tmp_path / "gui" / "wxpython" / "x" / "g.gui.x.py", HEADER)
     write(gui.parent / "Makefile", include.format("GuiScript"))
     write(gui.parent / "other.py", HEADER)
+    shell = write(tmp_path / "scripts" / "r.c" / "r.c.sh", SHELL_HEADER)
+    write(shell.parent / "Makefile", f"PGM = r.c\n\n{include.format('ShScript')}")
+    no_extension = write(tmp_path / "scripts" / "r.d" / "r.d", SHELL_HEADER)
+    write(no_extension.parent / "Makefile", f"PGM = r.d\n\n{include.format('Script')}")
+    plain = write(tmp_path / "gui" / "scripts" / "d.x.py", HEADER)
+    write(plain.parent / "Makefile", include.format("Python"))
     testsuite = tmp_path / "scripts" / "r.a" / "testsuite"
     write(testsuite / "r.b.py", HEADER)
     write(testsuite / "Makefile", f"PGM = r.b\n\n{include.format('Script')}")
 
-    assert sorted(pot.find_tool_files(tmp_path)) == sorted([str(script), str(gui)])
+    assert sorted(pot.find_tool_files(tmp_path)) == sorted(
+        str(path) for path in (script, gui, shell, no_extension, plain)
+    )
+
+
+@pytest.mark.parametrize("name", ["r.tool.sh", "r.tool", "r.tool.pl"])
+def test_non_python_files(tmp_path, name):
+    """Headers are read from any file, and their commands ignore case."""
+    tool = write(tmp_path / name, SHELL_HEADER)
+    messages = messages_by_key(pot.extract([tool]))
+
+    assert set(messages) == {
+        (None, "Does something in a shell"),
+        (None, "raster"),
+        (None, "Output map"),
+        (pot.VALUE_DESCRIPTION_CONTEXT, "Plain text output"),
+    }
+    assert messages[None, "Output map"].references == [f"{tool.as_posix()}:9"]
+    assert messages[None, "Output map"].comments == [
+        "Description of standard option G_OPT_R_OUTPUT"
+    ]
 
 
 def test_context_matches_g_parser():

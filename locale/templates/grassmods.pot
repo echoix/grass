@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-04 20:20+0000\n"
+"POT-Creation-Date: 2026-10-04 20:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -499,7 +499,9 @@ msgstr ""
 #: ../db/db.databases/main.c:76 ../db/db.databases/main.c:87
 #: ../db/db.execute/main.c:151 ../db/db.execute/main.c:156
 #: ../db/db.execute/main.c:161 ../db/db.select/main.c:400
-#: ../db/db.select/main.c:405 ../scripts/db.droptable/db.droptable.py:29
+#: ../db/db.select/main.c:405 ../gui/scripts/d.wms.py:80
+#: ../gui/scripts/d.wms.py:119 ../gui/scripts/d.wms.py:126
+#: ../scripts/db.droptable/db.droptable.py:29
 #: ../scripts/db.droptable/db.droptable.py:35
 #: ../scripts/r.in.wms/r.in.wms.py:74 ../scripts/r.in.wms/r.in.wms.py:113
 #: ../scripts/r.in.wms/r.in.wms.py:120
@@ -1598,7 +1600,7 @@ msgstr ""
 #: ../display/d.vect.thematic/main.c:85 ../display/d.vect/main.c:69
 #: ../display/d.where/main.c:41 ../general/g.cairocomp/main.c:198
 #: ../general/g.mkfontcap/main.c:61 ../general/g.pnmcomp/main.c:279
-#: ../general/g.ppmtopng/main.c:114
+#: ../general/g.ppmtopng/main.c:114 ../gui/scripts/d.rast3d.py:18
 #: ../gui/wxpython/animation/g.gui.animation.py:18
 #: ../gui/wxpython/mapswipe/g.gui.mapswipe.py:18
 #: ../raster3d/r3.mkdspf/main.c:79 ../scripts/d.background/d.background.py:16
@@ -1835,7 +1837,7 @@ msgstr ""
 #: ../display/d.colortable/main.c:56 ../display/d.profile/main.c:192
 #: ../display/d.rast.arrow/main.c:94 ../display/d.rast.num/main.c:76
 #: ../display/d.rast/main.c:52 ../display/d.rgb/main.c:53
-#: ../doc/examples/raster/r.example/main.c:80
+#: ../doc/examples/raster/r.example/main.c:80 ../gui/scripts/d.wms.py:19
 #: ../gui/wxpython/rdigit/g.gui.rdigit.py:18
 #: ../gui/wxpython/rlisetup/g.gui.rlisetup.py:17 ../misc/m.nviz.image/main.c:48
 #: ../misc/m.nviz.script/main.c:66 ../raster/r.basins.fill/main.c:49
@@ -2051,13 +2053,15 @@ msgstr ""
 msgid "Erases the contents of the active graphics display frame with user defined color."
 msgstr ""
 
+#. Description of option "bgcolor"
 #. Label of option "color"
 #. Label of option "bgcolor"
 #: ../display/d.erase/main.c:33 ../display/d.grid/main.c:106
 #: ../display/d.histogram/main.c:102 ../display/d.legend.vect/main.c:94
 #: ../display/d.legend/main.c:240 ../display/d.mon/main.c:103
 #: ../display/d.path/main.c:114 ../general/g.pnmcomp/main.c:321
-#: ../misc/m.nviz.image/args.c:65 ../scripts/d.background/d.background.py:27
+#: ../gui/scripts/d.wms.py:141 ../misc/m.nviz.image/args.c:65
+#: ../scripts/d.background/d.background.py:27
 #: ../scripts/r.in.wms/r.in.wms.py:152 ../vector/v.label.sa/main.c:117
 #: ../vector/v.label/main.c:183 ../vector/v.lrs/v.lrs.label/main.c:217
 msgid "Background color"
@@ -7651,6 +7655,216 @@ msgstr ""
 
 #: ../general/g.version/main.c:368
 msgid "GRASS not compiled with SQLite support"
+msgstr ""
+
+#. Tool description
+#: ../gui/scripts/d.rast3d.py:17
+msgid "Displays a 3D raster map layer."
+msgstr ""
+
+#. Tool keyword
+#: ../gui/scripts/d.rast3d.py:19 ../misc/m.nviz.image/main.c:50
+#: ../misc/m.nviz.script/main.c:67 ../raster/r.colors.out/raster3d_main.c:43
+#: ../raster/r.colors/edit_colors.c:75 ../raster/r.to.rast3elev/main.c:374
+#: ../raster/r.univar/r3.univar_main.c:115 ../raster3d/r3.cross.rast/main.c:226
+#: ../raster3d/r3.flow/main.c:172 ../raster3d/r3.flow/test_main.c:42
+#: ../raster3d/r3.gradient/main.c:41 ../raster3d/r3.gwflow/main.c:163
+#: ../raster3d/r3.in.ascii/main.c:356 ../raster3d/r3.in.bin/main.c:262
+#: ../raster3d/r3.in.lidar/main.c:157 ../raster3d/r3.in.v5d/main.c:172
+#: ../raster3d/r3.info/main.c:82 ../raster3d/r3.mask/main.c:128
+#: ../raster3d/r3.mkdspf/main.c:78 ../raster3d/r3.neighbors/main.c:201
+#: ../raster3d/r3.null/main.c:167 ../raster3d/r3.out.ascii/main.c:300
+#: ../raster3d/r3.out.bin/main.c:214 ../raster3d/r3.out.netcdf/main.c:556
+#: ../raster3d/r3.out.v5d/main.c:283 ../raster3d/r3.out.vtk/main.c:371
+#: ../raster3d/r3.retile/main.c:93 ../raster3d/r3.stats/main.c:44
+#: ../raster3d/r3.support/main.c:45 ../raster3d/r3.timestamp/main.c:40
+#: ../raster3d/r3.to.rast/main.c:254 ../scripts/r3.in.xyz/r3.in.xyz.py:20
+#: ../temporal/t.rast.to.rast3/t.rast.to.rast3.py:19
+#: ../temporal/t.rast3d.algebra/t.rast3d.algebra.py:20
+#: ../temporal/t.rast3d.extract/t.rast3d.extract.py:18
+#: ../temporal/t.rast3d.list/t.rast3d.list.py:20
+#: ../temporal/t.rast3d.mapcalc/t.rast3d.mapcalc.py:18
+#: ../temporal/t.rast3d.univar/t.rast3d.univar.py:20
+msgid "raster3d"
+msgstr ""
+
+#. Description of option "map"
+#: ../gui/scripts/d.rast3d.py:26
+msgid "3D raster map to be displayed"
+msgstr ""
+
+#. Tool description
+#: ../gui/scripts/d.wms.py:18
+msgid "Downloads and displays data from WMS/WMTS/NASA OnEarth server."
+msgstr ""
+
+#. Tool keyword
+#: ../gui/scripts/d.wms.py:20 ../raster/r.external/main.c:57
+#: ../raster/r.in.ascii/main.c:67 ../raster/r.in.bin/main.c:282
+#: ../raster/r.in.gdal/main.c:112 ../raster/r.in.gridatb/main.c:42
+#: ../raster/r.in.lidar/main.c:109 ../raster/r.in.mat/main.c:94
+#: ../raster/r.in.pdal/main.cpp:91 ../raster/r.in.png/main.c:480
+#: ../raster/r.in.poly/main.c:32 ../raster/r.in.xyz/main.c:153
+#: ../raster/r.proj/main.c:149 ../raster3d/r3.in.ascii/main.c:357
+#: ../raster3d/r3.in.bin/main.c:263 ../raster3d/r3.in.lidar/main.c:158
+#: ../raster3d/r3.in.v5d/main.c:173 ../scripts/db.in.ogr/db.in.ogr.py:18
+#: ../scripts/g.download.location/g.download.location.py:20
+#: ../scripts/g.download.project/g.download.project.py:20
+#: ../scripts/i.in.spotvgt/i.in.spotvgt.py:32
+#: ../scripts/r.import/r.import.py:19 ../scripts/r.in.aster/r.in.aster.py:24
+#: ../scripts/r.in.srtm/r.in.srtm.py:55 ../scripts/r.in.wms/r.in.wms.py:17
+#: ../scripts/r.unpack/r.unpack.py:16 ../scripts/r3.in.xyz/r3.in.xyz.py:21
+#: ../scripts/v.import/v.import.py:19 ../scripts/v.in.e00/v.in.e00.py:25
+#: ../scripts/v.in.geonames/v.in.geonames.py:26
+#: ../scripts/v.in.lines/v.in.lines.py:18
+#: ../scripts/v.in.mapgen/v.in.mapgen.py:29 ../scripts/v.in.wfs/v.in.wfs.py:27
+#: ../scripts/v.unpack/v.unpack.py:17
+#: ../temporal/t.rast.import/t.rast.import.py:17
+#: ../temporal/t.vect.import/t.vect.import.py:17 ../vector/v.external/main.c:47
+#: ../vector/v.in.ascii/main.c:65 ../vector/v.in.db/main.c:49
+#: ../vector/v.in.dxf/main.c:60 ../vector/v.in.lidar/main.c:131
+#: ../vector/v.in.ogr/main.c:208 ../vector/v.in.pdal/main.cpp:127
+#: ../vector/v.proj/main.c:71
+msgid "import"
+msgstr ""
+
+#. Tool keyword
+#: ../gui/scripts/d.wms.py:21
+msgid "WMS"
+msgstr ""
+
+#. Tool keyword
+#: ../gui/scripts/d.wms.py:22
+msgid "WMTS"
+msgstr ""
+
+#. Tool keyword
+#: ../gui/scripts/d.wms.py:23
+msgid "OnEarth"
+msgstr ""
+
+#. Description of option "url"
+#: ../gui/scripts/d.wms.py:29 ../scripts/r.in.wms/r.in.wms.py:26
+msgid "Typically starts with \"http://\""
+msgstr ""
+
+#. Description of option "map"
+#: ../gui/scripts/d.wms.py:36
+msgid "Name for output WMS layer in the layer tree"
+msgstr ""
+
+#. Description of option "layers"
+#: ../gui/scripts/d.wms.py:43 ../scripts/r.in.wms/r.in.wms.py:37
+msgid "Layer(s) to request from the map server"
+msgstr ""
+
+#. Description of option "styles"
+#: ../gui/scripts/d.wms.py:51 ../scripts/r.in.wms/r.in.wms.py:45
+msgid "Layer style(s) to request from the map server"
+msgstr ""
+
+#. Name of a GUI section (tab) in the tool dialog
+#: ../gui/scripts/d.wms.py:53 ../gui/scripts/d.wms.py:142
+#: ../gui/scripts/d.wms.py:154 ../scripts/r.in.wms/r.in.wms.py:47
+#: ../scripts/r.in.wms/r.in.wms.py:154 ../scripts/r.in.wms/r.in.wms.py:193
+#: ../scripts/r.in.wms/r.in.wms.py:199
+msgid "Map style"
+msgstr ""
+
+#. Description of option "format"
+#: ../gui/scripts/d.wms.py:59 ../scripts/r.in.wms/r.in.wms.py:53
+msgid "Image format requested from the server"
+msgstr ""
+
+#. Name of a GUI section (tab) in the tool dialog
+#: ../gui/scripts/d.wms.py:62 ../gui/scripts/d.wms.py:70
+#: ../gui/scripts/d.wms.py:89 ../gui/scripts/d.wms.py:97
+#: ../gui/scripts/d.wms.py:105 ../gui/scripts/d.wms.py:112
+#: ../scripts/r.in.wms/r.in.wms.py:56 ../scripts/r.in.wms/r.in.wms.py:64
+#: ../scripts/r.in.wms/r.in.wms.py:83 ../scripts/r.in.wms/r.in.wms.py:91
+#: ../scripts/r.in.wms/r.in.wms.py:99 ../scripts/r.in.wms/r.in.wms.py:106
+#: ../scripts/r.in.wms/r.in.wms.py:139 ../scripts/r.in.wms/r.in.wms.py:146
+#: ../scripts/r.in.wms/r.in.wms.py:186
+msgid "Request"
+msgstr ""
+
+#. Description of option "srs"
+#: ../gui/scripts/d.wms.py:68 ../scripts/r.in.wms/r.in.wms.py:62
+msgid "EPSG code of requested source projection"
+msgstr ""
+
+#. Description of option "driver"
+#: ../gui/scripts/d.wms.py:76
+msgid "Driver used to communication with server"
+msgstr ""
+
+#. Description of value "WMS_GDAL" of option "driver" (do not use semicolons)
+#: ../gui/scripts/d.wms.py:77 ../scripts/r.in.wms/r.in.wms.py:71
+msgctxt "option value description"
+msgid "Download data using GDAL WMS driver"
+msgstr ""
+
+#. Description of value "OnEarth_GRASS" of option "driver" (do not use semicolons)
+#: ../gui/scripts/d.wms.py:77 ../scripts/r.in.wms/r.in.wms.py:71
+msgctxt "option value description"
+msgid "Download data using native GRASS-OnEarth driver"
+msgstr ""
+
+#. Description of value "WMS_GRASS" of option "driver" (do not use semicolons)
+#: ../gui/scripts/d.wms.py:77 ../scripts/r.in.wms/r.in.wms.py:71
+msgctxt "option value description"
+msgid "Download data using native GRASS-WMS driver"
+msgstr ""
+
+#. Description of value "WMTS_GRASS" of option "driver" (do not use semicolons)
+#: ../gui/scripts/d.wms.py:77 ../scripts/r.in.wms/r.in.wms.py:71
+msgctxt "option value description"
+msgid "Download data using native GRASS-WMTS driver"
+msgstr ""
+
+#. Description of option "wms_version"
+#: ../gui/scripts/d.wms.py:86 ../scripts/r.in.wms/r.in.wms.py:80
+msgid "WMS standard version"
+msgstr ""
+
+#. Description of option "maxcols"
+#: ../gui/scripts/d.wms.py:95 ../scripts/r.in.wms/r.in.wms.py:89
+msgid "Maximum columns to request at a time"
+msgstr ""
+
+#. Description of option "maxrows"
+#: ../gui/scripts/d.wms.py:103 ../scripts/r.in.wms/r.in.wms.py:97
+msgid "Maximum rows to request at a time"
+msgstr ""
+
+#. Description of option "urlparams"
+#: ../gui/scripts/d.wms.py:111 ../scripts/r.in.wms/r.in.wms.py:105
+msgid "Additional query parameters to pass to the server"
+msgstr ""
+
+#. Description of option "username"
+#: ../gui/scripts/d.wms.py:118 ../scripts/r.in.wms/r.in.wms.py:112
+msgid "Username for server connection"
+msgstr ""
+
+#. Description of option "password"
+#: ../gui/scripts/d.wms.py:125 ../scripts/r.in.wms/r.in.wms.py:119
+msgid "Password for server connection"
+msgstr ""
+
+#. Description of option "method"
+#: ../gui/scripts/d.wms.py:132 ../scripts/r.in.wms/r.in.wms.py:126
+msgid "Interpolation method to use in reprojection"
+msgstr ""
+
+#. Description of option "capfile"
+#: ../gui/scripts/d.wms.py:148 ../scripts/r.in.wms/r.in.wms.py:174
+msgid "Capabilities file to parse (input). It is relevant for WMTS_GRASS and OnEarth_GRASS drivers"
+msgstr ""
+
+#. Description of flag "-o"
+#: ../gui/scripts/d.wms.py:153
+msgid "Don't request transparent data"
 msgstr ""
 
 #. Tool description
@@ -13790,32 +14004,6 @@ msgstr ""
 msgid "visualization"
 msgstr ""
 
-#. Tool keyword
-#: ../misc/m.nviz.image/main.c:50 ../misc/m.nviz.script/main.c:67
-#: ../raster/r.colors.out/raster3d_main.c:43
-#: ../raster/r.colors/edit_colors.c:75 ../raster/r.to.rast3elev/main.c:374
-#: ../raster/r.univar/r3.univar_main.c:115 ../raster3d/r3.cross.rast/main.c:226
-#: ../raster3d/r3.flow/main.c:172 ../raster3d/r3.flow/test_main.c:42
-#: ../raster3d/r3.gradient/main.c:41 ../raster3d/r3.gwflow/main.c:163
-#: ../raster3d/r3.in.ascii/main.c:356 ../raster3d/r3.in.bin/main.c:262
-#: ../raster3d/r3.in.lidar/main.c:157 ../raster3d/r3.in.v5d/main.c:172
-#: ../raster3d/r3.info/main.c:82 ../raster3d/r3.mask/main.c:128
-#: ../raster3d/r3.mkdspf/main.c:78 ../raster3d/r3.neighbors/main.c:201
-#: ../raster3d/r3.null/main.c:167 ../raster3d/r3.out.ascii/main.c:300
-#: ../raster3d/r3.out.bin/main.c:214 ../raster3d/r3.out.netcdf/main.c:556
-#: ../raster3d/r3.out.v5d/main.c:283 ../raster3d/r3.out.vtk/main.c:371
-#: ../raster3d/r3.retile/main.c:93 ../raster3d/r3.stats/main.c:44
-#: ../raster3d/r3.support/main.c:45 ../raster3d/r3.timestamp/main.c:40
-#: ../raster3d/r3.to.rast/main.c:254 ../scripts/r3.in.xyz/r3.in.xyz.py:20
-#: ../temporal/t.rast.to.rast3/t.rast.to.rast3.py:19
-#: ../temporal/t.rast3d.algebra/t.rast3d.algebra.py:20
-#: ../temporal/t.rast3d.extract/t.rast3d.extract.py:18
-#: ../temporal/t.rast3d.list/t.rast3d.list.py:20
-#: ../temporal/t.rast3d.mapcalc/t.rast3d.mapcalc.py:18
-#: ../temporal/t.rast3d.univar/t.rast3d.univar.py:20
-msgid "raster3d"
-msgstr ""
-
 #: ../misc/m.nviz.image/main.c:51
 msgid "Creates a 3D rendering of GIS data."
 msgstr ""
@@ -16561,36 +16749,6 @@ msgstr ""
 #: ../vector/v.external.out/list.c:99 ../vector/v.external/list.c:91
 #: ../vector/v.in.ogr/main.c:428 ../vector/v.out.ogr/list.c:87
 msgid "Supported formats:"
-msgstr ""
-
-#. Tool keyword
-#: ../raster/r.external/main.c:57 ../raster/r.in.ascii/main.c:67
-#: ../raster/r.in.bin/main.c:282 ../raster/r.in.gdal/main.c:112
-#: ../raster/r.in.gridatb/main.c:42 ../raster/r.in.lidar/main.c:109
-#: ../raster/r.in.mat/main.c:94 ../raster/r.in.pdal/main.cpp:91
-#: ../raster/r.in.png/main.c:480 ../raster/r.in.poly/main.c:32
-#: ../raster/r.in.xyz/main.c:153 ../raster/r.proj/main.c:149
-#: ../raster3d/r3.in.ascii/main.c:357 ../raster3d/r3.in.bin/main.c:263
-#: ../raster3d/r3.in.lidar/main.c:158 ../raster3d/r3.in.v5d/main.c:173
-#: ../scripts/db.in.ogr/db.in.ogr.py:18
-#: ../scripts/g.download.location/g.download.location.py:20
-#: ../scripts/g.download.project/g.download.project.py:20
-#: ../scripts/i.in.spotvgt/i.in.spotvgt.py:32
-#: ../scripts/r.import/r.import.py:19 ../scripts/r.in.aster/r.in.aster.py:24
-#: ../scripts/r.in.srtm/r.in.srtm.py:55 ../scripts/r.in.wms/r.in.wms.py:17
-#: ../scripts/r.unpack/r.unpack.py:16 ../scripts/r3.in.xyz/r3.in.xyz.py:21
-#: ../scripts/v.import/v.import.py:19 ../scripts/v.in.e00/v.in.e00.py:25
-#: ../scripts/v.in.geonames/v.in.geonames.py:26
-#: ../scripts/v.in.lines/v.in.lines.py:18
-#: ../scripts/v.in.mapgen/v.in.mapgen.py:29 ../scripts/v.in.wfs/v.in.wfs.py:27
-#: ../scripts/v.unpack/v.unpack.py:17
-#: ../temporal/t.rast.import/t.rast.import.py:17
-#: ../temporal/t.vect.import/t.vect.import.py:17 ../vector/v.external/main.c:47
-#: ../vector/v.in.ascii/main.c:65 ../vector/v.in.db/main.c:49
-#: ../vector/v.in.dxf/main.c:60 ../vector/v.in.lidar/main.c:131
-#: ../vector/v.in.ogr/main.c:208 ../vector/v.in.pdal/main.cpp:127
-#: ../vector/v.proj/main.c:71
-msgid "import"
 msgstr ""
 
 #: ../raster/r.external/main.c:60
@@ -31402,7 +31560,7 @@ msgid "Branch <{branch}> not found in repository <{url}>"
 msgstr ""
 
 #: ../scripts/g.extension/g.extension.py:385
-#: ../scripts/g.extension/g.extension.py:2865
+#: ../scripts/g.extension/g.extension.py:2861
 #, python-brace-format
 msgid ""
 "Failed to get addons files list from the Git repository <{repo_path}>.\n"
@@ -31627,118 +31785,118 @@ msgstr ""
 msgid "Module name not found. Check module Makefile syntax (PGM variable)."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2143
+#: ../scripts/g.extension/g.extension.py:2139
 msgid "To compile run:"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2145
+#: ../scripts/g.extension/g.extension.py:2141
 msgid "To install run:"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2153
+#: ../scripts/g.extension/g.extension.py:2149
 msgid "Compiling..."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2155
+#: ../scripts/g.extension/g.extension.py:2151
 msgid "Please install GRASS development package"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2158
-#: ../scripts/g.extension/g.extension.py:2161
+#: ../scripts/g.extension/g.extension.py:2154
+#: ../scripts/g.extension/g.extension.py:2157
 msgid "Compilation failed, sorry. Please check above error messages."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2175
+#: ../scripts/g.extension/g.extension.py:2171
 msgid "Installing..."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2266
+#: ../scripts/g.extension/g.extension.py:2262
 msgid "List of removed files:"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2268
+#: ../scripts/g.extension/g.extension.py:2264
 msgid "Files to be removed:"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2274
+#: ../scripts/g.extension/g.extension.py:2270
 msgid "Updating addons metadata file..."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2278
+#: ../scripts/g.extension/g.extension.py:2274
 #, python-format
 msgid "Extension <%s> successfully uninstalled."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2281
+#: ../scripts/g.extension/g.extension.py:2277
 #, python-format
 msgid "Toolbox <%s> not removed. Re-run '%s' with '-f' flag to force removal"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2286
+#: ../scripts/g.extension/g.extension.py:2282
 #, python-format
 msgid "Extension <%s> not removed. Re-run '%s' with '-f' flag to force removal"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2335
+#: ../scripts/g.extension/g.extension.py:2331
 #, python-format
 msgid "Extension <%s> not found"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2440
+#: ../scripts/g.extension/g.extension.py:2436
 #, python-brace-format
 msgid "Unable to create '{filename}': {error}. Is the GRASS documentation package installed? Installation continues, but documentation may not look right."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2459
+#: ../scripts/g.extension/g.extension.py:2455
 #, python-format
 msgid "Unable to create '%s': %s"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2488
+#: ../scripts/g.extension/g.extension.py:2484
 #, python-format
 msgid "Manual page for <%s> updated"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2495
+#: ../scripts/g.extension/g.extension.py:2491
 #, python-format
 msgid "Unable to read manual page: %s"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2542
+#: ../scripts/g.extension/g.extension.py:2538
 #, python-format
 msgid "Unable for write manual page: %s"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2562
+#: ../scripts/g.extension/g.extension.py:2558
 msgid "GRASS_ADDON_BASE is not defined, installing to {}"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2569
+#: ../scripts/g.extension/g.extension.py:2565
 #, python-brace-format
 msgid "You don't have permission to install extension to <{0}>. Try to run {1} with administrator rights (su or sudo)."
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2661
+#: ../scripts/g.extension/g.extension.py:2657
 #, python-brace-format
 msgid "Identified {0} as known hosting service"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2666
+#: ../scripts/g.extension/g.extension.py:2662
 #, python-brace-format
 msgid "Not using {service} as known hosting service because the URL ends with '{suffix}'"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2683
+#: ../scripts/g.extension/g.extension.py:2679
 #, python-brace-format
 msgid "Will use the following URL for download: {0}"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2714
+#: ../scripts/g.extension/g.extension.py:2710
 #, python-brace-format
 msgid "Cannot open URL <{url}>: {error}"
 msgstr ""
 
-#: ../scripts/g.extension/g.extension.py:2920
+#: ../scripts/g.extension/g.extension.py:2916
 msgid "Flag '{}' is relevant only to 'operation=add'. Ignoring this flag."
 msgstr ""
 
@@ -33133,108 +33291,9 @@ msgstr ""
 msgid "OGC WMTS"
 msgstr ""
 
-#. Description of option "url"
-#: ../scripts/r.in.wms/r.in.wms.py:26
-msgid "Typically starts with \"http://\""
-msgstr ""
-
-#. Description of option "layers"
-#: ../scripts/r.in.wms/r.in.wms.py:37
-msgid "Layer(s) to request from the map server"
-msgstr ""
-
-#. Description of option "styles"
-#: ../scripts/r.in.wms/r.in.wms.py:45
-msgid "Layer style(s) to request from the map server"
-msgstr ""
-
-#. Name of a GUI section (tab) in the tool dialog
-#: ../scripts/r.in.wms/r.in.wms.py:47 ../scripts/r.in.wms/r.in.wms.py:154
-#: ../scripts/r.in.wms/r.in.wms.py:193 ../scripts/r.in.wms/r.in.wms.py:199
-msgid "Map style"
-msgstr ""
-
-#. Description of option "format"
-#: ../scripts/r.in.wms/r.in.wms.py:53
-msgid "Image format requested from the server"
-msgstr ""
-
-#. Name of a GUI section (tab) in the tool dialog
-#: ../scripts/r.in.wms/r.in.wms.py:56 ../scripts/r.in.wms/r.in.wms.py:64
-#: ../scripts/r.in.wms/r.in.wms.py:83 ../scripts/r.in.wms/r.in.wms.py:91
-#: ../scripts/r.in.wms/r.in.wms.py:99 ../scripts/r.in.wms/r.in.wms.py:106
-#: ../scripts/r.in.wms/r.in.wms.py:139 ../scripts/r.in.wms/r.in.wms.py:146
-#: ../scripts/r.in.wms/r.in.wms.py:186
-msgid "Request"
-msgstr ""
-
-#. Description of option "srs"
-#: ../scripts/r.in.wms/r.in.wms.py:62
-msgid "EPSG code of requested source projection"
-msgstr ""
-
 #. Description of option "driver"
 #: ../scripts/r.in.wms/r.in.wms.py:70
 msgid "Driver used for communication with the server"
-msgstr ""
-
-#. Description of value "WMS_GDAL" of option "driver" (do not use semicolons)
-#: ../scripts/r.in.wms/r.in.wms.py:71
-msgctxt "option value description"
-msgid "Download data using GDAL WMS driver"
-msgstr ""
-
-#. Description of value "OnEarth_GRASS" of option "driver" (do not use semicolons)
-#: ../scripts/r.in.wms/r.in.wms.py:71
-msgctxt "option value description"
-msgid "Download data using native GRASS-OnEarth driver"
-msgstr ""
-
-#. Description of value "WMS_GRASS" of option "driver" (do not use semicolons)
-#: ../scripts/r.in.wms/r.in.wms.py:71
-msgctxt "option value description"
-msgid "Download data using native GRASS-WMS driver"
-msgstr ""
-
-#. Description of value "WMTS_GRASS" of option "driver" (do not use semicolons)
-#: ../scripts/r.in.wms/r.in.wms.py:71
-msgctxt "option value description"
-msgid "Download data using native GRASS-WMTS driver"
-msgstr ""
-
-#. Description of option "wms_version"
-#: ../scripts/r.in.wms/r.in.wms.py:80
-msgid "WMS standard version"
-msgstr ""
-
-#. Description of option "maxcols"
-#: ../scripts/r.in.wms/r.in.wms.py:89
-msgid "Maximum columns to request at a time"
-msgstr ""
-
-#. Description of option "maxrows"
-#: ../scripts/r.in.wms/r.in.wms.py:97
-msgid "Maximum rows to request at a time"
-msgstr ""
-
-#. Description of option "urlparams"
-#: ../scripts/r.in.wms/r.in.wms.py:105
-msgid "Additional query parameters to pass to the server"
-msgstr ""
-
-#. Description of option "username"
-#: ../scripts/r.in.wms/r.in.wms.py:112
-msgid "Username for server connection"
-msgstr ""
-
-#. Description of option "password"
-#: ../scripts/r.in.wms/r.in.wms.py:119
-msgid "Password for server connection"
-msgstr ""
-
-#. Description of option "method"
-#: ../scripts/r.in.wms/r.in.wms.py:126
-msgid "Interpolation method to use in reprojection"
 msgstr ""
 
 #. Label of option "gdal_createopt"
@@ -33270,11 +33329,6 @@ msgstr ""
 #. Description of option "proxy_user_pw"
 #: ../scripts/r.in.wms/r.in.wms.py:168
 msgid "User and password for HTTP proxy"
-msgstr ""
-
-#. Description of option "capfile"
-#: ../scripts/r.in.wms/r.in.wms.py:174
-msgid "Capabilities file to parse (input). It is relevant for WMTS_GRASS and OnEarth_GRASS drivers"
 msgstr ""
 
 #. Description of option "capfile_output"
