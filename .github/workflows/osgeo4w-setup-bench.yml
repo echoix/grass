@@ -50,7 +50,7 @@ jobs:
           python .github/osgeo4w-setup-bench/make_mirror.py C:\bench\mirror python3-notebook python3-jupyterlab python3-core grass-dev qgis-ltr-pdb
           Start-Process python -ArgumentList '-m', 'http.server', '8000', '--bind', '127.0.0.1', '--directory', 'C:\bench\mirror' -WindowStyle Hidden
           Start-Sleep -Seconds 3
-          (Invoke-WebRequest http://127.0.0.1:8000/x86_64/setup.ini -UseBasicParsing).Content.Split("`n").Count
+          (Invoke-WebRequest http://127.0.0.1:8000/x86_64/setup.ini -UseBasicParsing).StatusCode
 
       - name: Run the real setup variants
         if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.mirror.outcome == 'success' }}

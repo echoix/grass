@@ -75,4 +75,4 @@ try {
 } finally {
   Pop-Location
 }
-Get-ChildItem "$Work\setup" | ForEach-Object { Write-Host "$($_.Name) $($_.Length) bytes" }
+Get-ChildItem "$Work\setup" | ForEach-Object { Write-Host "$($_.Name) $($_.Length) bytes sha256 $((Get-FileHash $_.FullName).Hash)" }
