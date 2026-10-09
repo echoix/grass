@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:53:56 +0000
+Subject: [PATCH] branding: Do not let the OSGEO4W macro rewrite a resource
+ name
+
+
+diff --git a/res.rc b/res.rc
+index ccbaa79..a284125 100644
+--- a/res.rc
++++ b/res.rc
+@@ -71,7 +71,7 @@ IDI_TREE_MINUS          ICON    "tree-minus.ico"
+ //
+ 
+ #ifdef OSGEO4W
+-OSGEO4W.ICON            FILE    "osgeo.ico"
++OSGEO.ICON             FILE    "osgeo.ico"
+ #else
+ CYGWIN-SETUP.ICON       FILE    "cygwin-setup.ico"
+ CYGWIN.ICON             FILE    "cygwin.ico"

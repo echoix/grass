@@ -1,0 +1,37 @@
+diff --git a/src/setup/CMakeLists.txt b/src/setup/CMakeLists.txt
+index 4fe3599..e87f2b0 100644
+--- a/src/setup/CMakeLists.txt
++++ b/src/setup/CMakeLists.txt
+@@ -172,3 +172,7 @@ ADD_EXECUTABLE(osgeo4w-setup WIN32 ${SRCS})
+ SET_PROPERTY(TARGET osgeo4w-setup PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+ 
+ TARGET_LINK_LIBRARIES(osgeo4w-setup wsock32 shlwapi comctl32 ole32 wsock32 wininet comdlg32 gdi32)
++IF(MINGW)
++  # IID_IShellLink and friends
++  TARGET_LINK_LIBRARIES(osgeo4w-setup uuid)
++ENDIF(MINGW)
+diff --git a/src/setup/main.cc b/src/setup/main.cc
+index a2eac6f..471627f 100644
+--- a/src/setup/main.cc
++++ b/src/setup/main.cc
+@@ -30,6 +30,7 @@
+ #include <commctrl.h>
+ #include "shlobj.h"
+ #include <windows.h>
++#include <shellapi.h>
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+diff --git a/src/setup/nio-ie5.cc b/src/setup/nio-ie5.cc
+index cadf0d7..e3971a3 100644
+--- a/src/setup/nio-ie5.cc
++++ b/src/setup/nio-ie5.cc
+@@ -241,7 +241,7 @@ try_again:
+     {
+     case INTERNET_HANDLE_TYPE_HTTP_REQUEST:
+     case INTERNET_HANDLE_TYPE_CONNECT_HTTP:
+-      type_s = sizeof DWORD;
++      type_s = sizeof (DWORD);
+       if (HttpQueryInfo (connection,
+ 			 HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER,
+ 			 &type, &type_s, NULL))
