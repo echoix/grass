@@ -18,7 +18,7 @@ class TestTextAssertions(TestCase):
     # pylint: disable=R0904
 
     std_newline = "aaa\nbbb\n"
-    platfrom_newline = "aaa{nl}bbb{nl}".format(nl=os.linesep)
+    platform_newline = "aaa{nl}bbb{nl}".format(nl=os.linesep)
 
     def test_assertLooksLike(self):
         self.assertLooksLike("Generated map is <elevation>", "Generated map is <...>")
@@ -63,7 +63,7 @@ class TestTextAssertions(TestCase):
     def test_assertMultiLineEqual(self):
         r"""Test different combinations of ``\n`` and os.linesep"""
         self.do_all_combidnations(
-            self.std_newline, self.platfrom_newline, function=self.assertMultiLineEqual
+            self.std_newline, self.platform_newline, function=self.assertMultiLineEqual
         )
 
     def test_assertMultiLineEqual_raises(self):
@@ -78,7 +78,7 @@ class TestTextAssertions(TestCase):
     def test_assertEqual(self):
         """Test for of newlines for strings (uses overwritten assertMultiLineEqual())"""
         self.do_all_combidnations(
-            self.std_newline, self.platfrom_newline, function=self.assertEqual
+            self.std_newline, self.platform_newline, function=self.assertEqual
         )
 
     def test_assertEqual_raises(self):
