@@ -14,8 +14,8 @@ $results = @{}
 $failures = 0
 
 function Invoke-Setup([string]$variant, [string]$pkg) {
-  # setup keeps its package cache and its setup.log in the "local package
-  # directory" (-l), not in the root, so use a fresh one for every run.
+  # Use a fresh local package directory (-l, the download cache) for every run,
+  # otherwise setup reuses what an earlier run left in %TEMP%.
   foreach ($d in $root, $cache) { if (Test-Path $d) { cmd /c "rd /s /q `"$d`"" } }
   $exe = "$Work\setup\osgeo4w-setup-$variant.exe"
   $sw = [Diagnostics.Stopwatch]::StartNew()
@@ -28,7 +28,8 @@ function Invoke-Setup([string]$variant, [string]$pkg) {
     return $null
   }
   $total = $sw.Elapsed.TotalSeconds
-  $log = "$cache\setup.log"
+  # For an install into a root, setup logs to <root>\var\log (LocalDirSetting).
+  $log = "$root\var\log\setup.log"
   $line = if (Test-Path $log) { Select-String -Path $log -Pattern "Extracted $pkg`: (\d+) entries in (\d+) ms" | Select-Object -First 1 }
   if (-not $line) {
     Write-Host "no extraction line for $variant $pkg (exit code $($p.ExitCode)); setup.log tail:"
