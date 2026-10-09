@@ -389,7 +389,7 @@ class TestMd5Sums(TestCase):
             msg="MD5 sums different",
         )
 
-    def test_text_file_platfrom(self):
+    def test_text_file_platform(self):
         r"""Text file with platform dependent newlines"""
         self.assertEqual(
             text_file_md5(self.correct_file_name_platform_nl),
