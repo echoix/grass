@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 23:03:20 +0000
+Subject: [PATCH] main: Keep settings in the root, the package cache in TEMP,
+ and tell scripts about shortcuts early
+
+
+diff --git a/localdir.cc b/localdir.cc
+index 52bf734..bd8da21 100644
+--- a/localdir.cc
++++ b/localdir.cc
+@@ -62,6 +62,10 @@ LocalDirSetting::LocalDirSetting ()
+     local_dir = std::string (LocalDirOption);
+   else if ((fg_ret = UserSettings::instance().get ("last-cache")))
+     local_dir = std::string (fg_ret);
++#ifdef OSGEO4W
++  else if (getenv ("TEMP"))
++    local_dir = getenv ("TEMP");  /* not the installation root */
++#endif
+ }
+ 
+ void
+diff --git a/main.cc b/main.cc
+index d3cb8a7..d4ca1d7 100644
+--- a/main.cc
++++ b/main.cc
+@@ -532,7 +532,12 @@ WinMain (HINSTANCE h,
+     else
+       {
+ 	UserSettings Settings;
++#ifdef OSGEO4W
++        /* settings live in the installation root */
++        UserSettings::instance().load (get_root_dir ());
++#else
+         UserSettings::instance().load (local_dir);
++#endif
+ 	main_display ();
+ 	Settings.save ();	// Clean exit.. save user options.
+ 	if (rebootneeded)
+diff --git a/osgeo4w.cc b/osgeo4w.cc
+index a21b591..b39a395 100644
+--- a/osgeo4w.cc
++++ b/osgeo4w.cc
+@@ -16,6 +16,7 @@
+ #include "resource.h"
+ #include "state.h"
+ #include "mount.h"
++#include "desktop.h"
+ 
+ BoolOption AutoAcceptLicenseOption (false, 'k', "autoaccept", IDS_HELPTEXT_AUTOACCEPT);
+ BoolOption DesktopOption (false, 'T', "desktop", IDS_HELPTEXT_DESKTOP);
+@@ -35,6 +36,10 @@ void
+ osgeo4w_process_options ()
+ {
+   test_mode = TestOption;
++  /* The post-install scripts are told about shortcuts before the last page of
++     the wizard runs, so decide here.  */
++  root_menu = !NoShortcutsOption && !NoStartMenuOption;
++  root_desktop = !NoShortcutsOption && DesktopOption;
+   safe_mode = SafeModeOption;
+   if (((std::string) MenuNameOption).size ())
+     menu_name = (std::string) MenuNameOption;

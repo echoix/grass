@@ -37,6 +37,6 @@ cd "$bld"
 # -Werror from upstream's Makefile.am is kept for the unmodified upstream build
 # but dropped for the patched ones (new compiler warnings must not fail them).
 "$src/configure" --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 2>&1 | tail -30
-make -j"$(nproc)" setup.exe V=1 2>&1 | tail -n 400 > make.log || { cat make.log; exit 1; }
+make -j"$(nproc)" V=1 2>&1 | tail -n 400 > make.log || { cat make.log; exit 1; }
 cp setup.exe "$out"
 ls -l "$out"
