@@ -1,0 +1,41 @@
+name: OSGeo4W setup extraction benchmark
+
+on:
+  push:
+    branches:
+      - claude/busy-dirac-47uztw
+    paths:
+      - .github/workflows/osgeo4w-setup-bench.yml
+      - .github/osgeo4w-setup-bench/**
+
+permissions:
+  contents: read
+
+jobs:
+  bench:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/osgeo4w-setup-bench
+
+      - name: Build harness
+        shell: cmd
+        run: .github\osgeo4w-setup-bench\build.bat C:\bench
+
+      - name: Download packages
+        shell: pwsh
+        run: python .github/osgeo4w-setup-bench/select_pkgs.py C:\bench\pkgs
+
+      - name: Benchmark extraction
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench
+
+      - name: Compare compression formats
+        shell: pwsh
+        run: |
+          python -m pip install --quiet zstandard
+          $out = python .github/osgeo4w-setup-bench/formats.py (Get-ChildItem C:\bench\pkgs\*.tar.bz2).FullName
+          $out
+          Add-Content $env:GITHUB_STEP_SUMMARY "## Format comparison`n`n$($out -join "`n")"
