@@ -2,7 +2,8 @@
 # decoding alone (single and multi-threaded) and decoding plus tar extraction.
 param(
   [string]$Work = "C:\bench",
-  [int]$Reps = 3
+  [int]$Reps = 3,
+  [string[]]$Packages = @("python3-notebook", "python3-jupyterlab", "python3-core", "grass-dev", "qgis-ltr-pdb")
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,7 +27,7 @@ function Best([scriptblock]$block, [bool]$clean) {
   $best
 }
 
-Get-ChildItem "$Work\mirror\x86_64\release" -Recurse -Filter *.tar.bz2 | Sort-Object Length | ForEach-Object {
+$Packages | ForEach-Object { Get-ChildItem "$Work\mirror\x86_64\release" -Recurse -Filter "$_-[0-9]*.tar.bz2" } | Sort-Object Length | ForEach-Object {
   $pkg = $_.FullName
   $one = Best { cmd /c "`"$sz`" e `"$pkg`" -so -mmt=1 -bso0 -bsp0 > NUL" } $false
   $four = Best { cmd /c "`"$sz`" e `"$pkg`" -so -mmt=4 -bso0 -bsp0 > NUL" } $false
