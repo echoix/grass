@@ -42,8 +42,10 @@ jobs:
       - name: Fetch pinned upstream
         shell: pwsh
         run: |
-          C:\cygwin64\bin\git.exe clone --no-checkout $env:UPSTREAM_REPO /cygdrive/c/up-src
-          C:\cygwin64\bin\git.exe -C /cygdrive/c/up-src checkout $env:UPSTREAM_SHA
+          git clone --no-checkout $env:UPSTREAM_REPO C:\up-src
+          # Windows git converts line endings by default; the autotools scripts need LF
+          git -C C:\up-src config core.autocrlf false
+          git -C C:\up-src checkout $env:UPSTREAM_SHA
 
       - name: Check out the OSGeo4W setup sources (icon, fork reference)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
