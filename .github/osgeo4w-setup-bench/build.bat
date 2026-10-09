@@ -8,8 +8,9 @@ set HERE=%~dp0
 rem The published osgeo4w-setup.exe is linked with MSVC 14.44 (Visual Studio
 rem 2022 17.14; see build-helpers vs2022env), so use that toolset, not the
 rem newest Visual Studio on the runner.
-set "PATH=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer;%PATH%"
-for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -version [17.0,17.99] -property installationPath`) do set VSDIR=%%i
+set VSDIR=
+for %%e in (Community Professional Enterprise BuildTools) do if exist "%ProgramFiles%\Microsoft Visual Studio\2022\%%e\VC\Auxiliary\Build\vcvars64.bat" set "VSDIR=%ProgramFiles%\Microsoft Visual Studio\2022\%%e"
+echo VSDIR=%VSDIR%
 if not defined VSDIR (
   echo Visual Studio 2022 not found
   exit /b 1
