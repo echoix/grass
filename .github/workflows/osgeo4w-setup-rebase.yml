@@ -155,5 +155,4 @@ jobs:
           if-no-files-found: warn
 
       - name: Stop the mirror server
-        if: ${{ always() }}
         cancel: mirror-server
