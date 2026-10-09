@@ -104,6 +104,12 @@ jobs:
           echo "MAKEFLAGS=-j$(nproc)" >> "${GITHUB_ENV}"
         shell: msys2 {0}
 
+      - name: Skip documentation generation (experiment)
+        shell: msys2 {0}
+        run: |
+          sed -i 's|^html: \$(HTMLDIR).*|html:|' include/Make/Html.make
+          git diff
+
       - name: Compile GRASS
         shell: msys2 {0}
         run: |
