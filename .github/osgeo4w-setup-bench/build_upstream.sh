@@ -20,7 +20,7 @@ if [ -n "$patches" ]; then
   git -C "$src" config user.name bench
   for p in "$patches"/*.diff; do
     echo "applying $p"
-    git -C "$src" apply --index "$p"
+    git -C "$src" apply --whitespace=nowarn "$p"
   done
 fi
 

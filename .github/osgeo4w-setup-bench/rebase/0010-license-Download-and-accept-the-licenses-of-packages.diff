@@ -1,0 +1,161 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:48:26 +0000
+Subject: [PATCH] license: Download and accept the licenses of packages that
+ have one
+
+
+diff --git a/download.cc b/download.cc
+index fbe36e5..12368bc 100644
+--- a/download.cc
++++ b/download.cc
+@@ -31,6 +31,8 @@
+ #include "msg.h"
+ #include "dialog.h"
+ #include "geturl.h"
++#include "license.h"
++#include "osgeo4w.h"
+ #include "state.h"
+ #include "LogFile.h"
+ #include "filemanip.h"
+@@ -285,6 +287,14 @@ do_download_thread (HINSTANCE h, HWND owner)
+   packagedb db;
+   const SolverTransactionList &t = db.solution.transactions();
+ 
++#ifdef OSGEO4W
++  if (!accept_package_licenses (t, feedback, owner))
++    {
++      Log (LOG_PLAIN) << "Not all licenses were accepted" << endLog;
++      Logger ().exit (1);
++    }
++#endif
++
+   /* calculate the total size of the download */
+   long long int total_download_bytes = 0;
+   for (SolverTransactionList::const_iterator i = t.begin (); i != t.end (); ++i)
+diff --git a/license.cc b/license.cc
+index 1264b89..542ce4a 100644
+--- a/license.cc
++++ b/license.cc
+@@ -2,6 +2,104 @@
+  * License files of OSGeo4W packages, see license.h.
+  */
+ 
++#include "win32.h"
++
++#include <fstream>
++#include <set>
++#include <sstream>
++
+ #include "license.h"
++#include "LogSingleton.h"
++#include "Feedback.h"
++#include "geturl.h"
++#include "io_stream.h"
++#include "libsolv.h"
++#include "mount.h"
++#include "osgeo4w.h"
++#include "package_db.h"
++#include "package_source.h"
++#include "state.h"
++#include "getopt++/BoolOption.h"
+ 
+ std::map<std::string, LicenseInfo> package_licenses;
++
++#ifdef OSGEO4W
++static std::string
++basename_of (const std::string &path)
++{
++  std::string::size_type s = path.find_last_of ("/\\");
++  return s == std::string::npos ? path : path.substr (s + 1);
++}
++
++/* The license of every package to install is downloaded into etc/licenses
++   (the files stay there for the user), and has to be accepted: with -k, or
++   by answering a message box.  The page which showed the license text in the
++   OSGeo4W setup of the past is not part of this port.  */
++bool
++accept_package_licenses (const SolverTransactionList &t, Feedback &feedback, HWND owner)
++{
++  std::set<std::string> asked;
++  bool all_accepted = true;
++
++  for (SolverTransactionList::const_iterator i = t.begin (); i != t.end (); ++i)
++    {
++      if (i->type != SolverTransaction::transInstall)
++        continue;
++
++      packageversion version = i->version;
++      std::map<std::string, LicenseInfo>::const_iterator l =
++        package_licenses.find (version.Name () + " " + version.Canonical_version ());
++      if (l == package_licenses.end ())
++        continue;
++
++      const LicenseInfo &info = l->second;
++      if (!asked.insert (info.path).second)
++        continue;
++
++      const std::string file = cygpath ("/etc/licenses/" + basename_of (info.path));
++      std::string text;
++      const packagesource::sitestype &sites = version.source ()->sites;
++      if (!sites.empty ())
++        {
++          io_stream::mkpath_p (PATH_TO_FILE, "file://" + file, 0);
++          if (get_url_to_file (sites[0].key + info.path, file, info.size, feedback))
++            Log (LOG_PLAIN) << "Could not download license " << sites[0].key + info.path << endLog;
++          else
++            {
++              std::ifstream in (file.c_str (), std::ios::binary);
++              std::stringstream ss;
++              ss << in.rdbuf ();
++              text = ss.str ();
++            }
++        }
++
++      Log (LOG_PLAIN) << "Package " << version.Name () << " has the license "
++                      << file << endLog;
++
++      if (AutoAcceptLicenseOption)
++        {
++          Log (LOG_PLAIN) << "License " << file << " accepted (--autoaccept)" << endLog;
++          continue;
++        }
++
++      if (unattended_mode != attended)
++        {
++          Log (LOG_PLAIN) << "License " << file << " of package " << version.Name ()
++                          << " not accepted: use --autoaccept to accept all licenses"
++                          << endLog;
++          all_accepted = false;
++          continue;
++        }
++
++      if (text.size () > 3000)
++        text = text.substr (0, 3000) + "\n[...]";
++      std::string question = "Package " + version.Name () + " is licensed as follows "
++        "(the full text is in " + file + "):\n\n" + text + "\n\nDo you accept the license?";
++      if (MessageBox (owner, question.c_str (), "OSGeo4W Setup - License",
++                      MB_YESNO | MB_ICONQUESTION | MB_TASKMODAL) != IDYES)
++        all_accepted = false;
++    }
++
++  return all_accepted;
++}
++#endif
+diff --git a/license.h b/license.h
+index f35ac84..337009d 100644
+--- a/license.h
++++ b/license.h
+@@ -22,4 +22,12 @@ struct LicenseInfo
+ /* keyed by "<package name> <version>" */
+ extern std::map<std::string, LicenseInfo> package_licenses;
+ 
++#include "win32.h"
++#include "libsolv.h"
++class Feedback;
++
++/* Downloads the licenses of the packages to install and asks for them to be
++   accepted.  Returns false if one was not.  */
++bool accept_package_licenses (const SolverTransactionList &, Feedback &, HWND);
++
+ #endif /* SETUP_LICENSE_H */

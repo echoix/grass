@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:47:49 +0000
+Subject: [PATCH] misc: Honour etc/reboot from post-install scripts and
+ -S/--safe
+
+
+diff --git a/AntiVirus.cc b/AntiVirus.cc
+index d3f0c62..c9b4884 100644
+--- a/AntiVirus.cc
++++ b/AntiVirus.cc
+@@ -160,6 +160,11 @@ AntiVirusPage::OnUnattended ()
+ void
+ detect ()
+ {
++#ifdef OSGEO4W
++    /* -S: skip administrative actions */
++    if (safe_mode)
++      return;
++#endif
+     // TODO: trim the access rights down
+     SCM = OpenSCManager (NULL, NULL, SC_MANAGER_ALL_ACCESS);
+ 
+diff --git a/postinstall.cc b/postinstall.cc
+index 32bc401..7086aad 100644
+--- a/postinstall.cc
++++ b/postinstall.cc
+@@ -21,6 +21,9 @@
+ #include "mount.h"
+ #include "script.h"
+ #include "state.h"
++#include "io_stream.h"
++#include "osgeo4w.h"
++#include "LogSingleton.h"
+ #include "FindVisitor.h"
+ #include "package_db.h"
+ #include "package_meta.h"
+@@ -246,6 +249,16 @@ do_postinstall_reflector (void *p)
+   {
+     std::string s = do_postinstall_thread ((HINSTANCE) context[0], (HWND) context[1]);
+ 
++#ifdef OSGEO4W
++    /* A script that finds a reboot is due leaves a file etc/reboot behind.  */
++    if (io_stream::exists ("cygfile:///etc/reboot"))
++      {
++        io_stream::remove ("cygfile:///etc/reboot");
++        Log (LOG_TIMESTAMP) << "A script detected that a reboot is due" << endLog;
++        rebootneeded = true;
++      }
++#endif
++
+     // Tell the postinstall results page the results string
+     PostInstallResults.SetResultsString(s);
+ 
