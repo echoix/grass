@@ -29,7 +29,24 @@ jobs:
           persist-credentials: false
           sparse-checkout: .github/osgeo4w-setup-bench
 
-      - name: Which libraries does MSYS2 have?
-        shell: cmd
-        run: >
-          C:\msys64\usr\bin\bash.exe -lc "pacman -Sy >/dev/null; for p in libsolv libgnurx libsystre libgcrypt zstd xz bzip2 zlib gcc cmake ninja; do echo == $p; pacman -Ss \"^mingw-w64-x86_64-$p\"; done; pacman -Ss solv | head"
+      # MSYS2 has no libsolv package, and upstream's own CI builds with Cygwin's
+      # mingw64 cross toolchain, so use that (it is the route upstream verifies).
+      - name: Install Cygwin with the mingw-w64 cross toolchain
+        shell: pwsh
+        run: |
+          curl.exe -fsSL -o C:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
+          $pkgs = "autoconf,automake,bison,flex,libtool,make,git,pkg-config,patch,mingw64-x86_64-bzip2,mingw64-x86_64-gcc-g++,mingw64-x86_64-headers,mingw64-x86_64-libgcrypt,mingw64-x86_64-libsolv,mingw64-x86_64-xz,mingw64-x86_64-zlib,mingw64-x86_64-zstd"
+          Start-Process C:\setup-x86_64.exe -Wait -ArgumentList "-q","-n","-N","-d","-O","-s","https://mirrors.kernel.org/sourceware/cygwin/","-R","C:\cygwin64","-l","C:\cygwin-pkgs","-P",$pkgs
+          C:\cygwin64\bin\bash.exe -lc "x86_64-w64-mingw32-g++ --version | head -1; pkg-config --modversion libsolv"
+
+      - name: Fetch pinned upstream
+        shell: pwsh
+        run: |
+          git clone --no-checkout $env:UPSTREAM_REPO C:\up-src
+          git -C C:\up-src checkout $env:UPSTREAM_SHA
+
+      - name: Build unmodified upstream
+        shell: pwsh
+        run: |
+          $ws = (C:\cygwin64\bin\cygpath.exe -u $env:GITHUB_WORKSPACE)
+          C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$ws/.github/osgeo4w-setup-bench/build_upstream.sh /cygdrive/c/up-src /cygdrive/c/up-build /cygdrive/c/up-setup.exe"

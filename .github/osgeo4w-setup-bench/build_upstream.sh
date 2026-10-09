@@ -21,7 +21,7 @@ fi
 
 cd "$src"
 x86_64-w64-mingw32-g++ --version | head -1
-export ACLOCAL_PATH=$(x86_64-w64-mingw32-g++ --print-sysroot)/mingw/share/aclocal:/mingw64/share/aclocal
+export ACLOCAL_PATH=$(x86_64-w64-mingw32-g++ --print-sysroot)/mingw/share/aclocal
 NOCONFIGURE=1 ./bootstrap.sh --host=x86_64-w64-mingw32
 
 rm -rf "$bld"
