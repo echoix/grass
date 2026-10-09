@@ -9,15 +9,18 @@ param(
 
 $ErrorActionPreference = "Stop"
 $root = "C:\o4w-bench-root"
+$cache = "C:\o4w-bench-cache"
 $results = @{}
 $failures = 0
 
 function Invoke-Setup([string]$variant, [string]$pkg) {
-  if (Test-Path $root) { cmd /c "rd /s /q `"$root`"" }
+  # setup keeps its package cache and its setup.log in the "local package
+  # directory" (-l), not in the root, so use a fresh one for every run.
+  foreach ($d in $root, $cache) { if (Test-Path $d) { cmd /c "rd /s /q `"$d`"" } }
   $exe = "$Work\setup\osgeo4w-setup-$variant.exe"
   $sw = [Diagnostics.Stopwatch]::StartNew()
   $p = Start-Process $exe -PassThru -ArgumentList @(
-    "-q", "-s", "http://127.0.0.1:8000/", "-O", "-R", $root, "-P", $pkg, "-k", "-n", "-N")
+    "-q", "-s", "http://127.0.0.1:8000/", "-O", "-R", $root, "-l", $cache, "-P", $pkg, "-k", "-n", "-N")
   if (-not $p.WaitForExit(300000)) {
     Write-Host "TIMEOUT: $variant $pkg, window title: '$($p.MainWindowTitle)'"
     Get-Process | Where-Object { $_.MainWindowTitle } | ForEach-Object { Write-Host "  window: $($_.ProcessName) '$($_.MainWindowTitle)'" }
@@ -25,11 +28,15 @@ function Invoke-Setup([string]$variant, [string]$pkg) {
     return $null
   }
   $total = $sw.Elapsed.TotalSeconds
-  $log = "$root\setup.log"
+  $log = "$cache\setup.log"
   $line = if (Test-Path $log) { Select-String -Path $log -Pattern "Extracted $pkg`: (\d+) entries in (\d+) ms" | Select-Object -First 1 }
   if (-not $line) {
     Write-Host "no extraction line for $variant $pkg (exit code $($p.ExitCode)); setup.log tail:"
     if (Test-Path $log) { Get-Content $log -Tail 25 | ForEach-Object { Write-Host "  $_" } }
+    foreach ($d in $cache, $root) {
+      Write-Host "  contents of ${d}:"
+      Get-ChildItem $d -Force -ErrorAction SilentlyContinue | Select-Object -First 15 | ForEach-Object { Write-Host "    $($_.Name) $($_.Length)" }
+    }
     return $null
   }
   [pscustomobject]@{ Entries = [int]$line.Matches[0].Groups[1].Value; Ms = [int]$line.Matches[0].Groups[2].Value; Total = $total }
@@ -60,7 +67,7 @@ for ($rep = 1; $rep -le $Reps; $rep++) {
     }
   }
 }
-if (Test-Path $root) { cmd /c "rd /s /q `"$root`"" }
+foreach ($d in $root, $cache) { if (Test-Path $d) { cmd /c "rd /s /q `"$d`"" } }
 
 function Get-Median($v) { $s = $v | Sort-Object; $s[[math]::Floor($s.Count / 2)] }
 $rows = @("| package | entries | variant | extraction min ms | extraction median ms | vs orig (median) | whole setup run, median s |", "|---|---|---|---|---|---|---|")
