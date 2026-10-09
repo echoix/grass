@@ -23,5 +23,5 @@ for %%O in (O1 O2) do (
     /I%BZ% "%HERE%bench.cpp" ^
     %BZ%\bzlib.c %BZ%\crctable.c %BZ%\blocksort.c %BZ%\compress.c ^
     %BZ%\decompress.c %BZ%\huffman.c %BZ%\randtable.c ^
-    /Fo:obj_%%O\ /Fe:bench_%%O.exe || exit /b 1
+    /Fo:obj_%%O\ /Fe:bench_%%O.exe /link user32.lib || exit /b 1
 )
