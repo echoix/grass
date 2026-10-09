@@ -35,10 +35,12 @@ jobs:
           sparse-checkout: src/setup
 
       - name: Install flex and bison
+        if: ${{ !contains(github.event.head_commit.message, '[7zip only]') }}
         shell: cmd
         run: C:\msys64\usr\bin\bash.exe -lc "pacman -Sy --noconfirm --needed bison flex"
 
       - name: Build the real setup (three variants)
+        if: ${{ !contains(github.event.head_commit.message, '[7zip only]') }}
         shell: pwsh
         run: .github/osgeo4w-setup-bench/build_setup.ps1 -Source "$env:GITHUB_WORKSPACE\osgeo4w" -Work C:\bench
 
@@ -63,6 +65,7 @@ jobs:
           throw "mirror server did not start"
 
       - name: Run the real setup variants
+        if: ${{ !contains(github.event.head_commit.message, '[7zip only]') }}
         shell: pwsh
         run: .github/osgeo4w-setup-bench/run_setup.ps1 -Work C:\bench
 

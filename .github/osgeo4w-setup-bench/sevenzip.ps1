@@ -1,40 +1,78 @@
-# Measures what the 7-Zip on the runner does with the same real .tar.bz2 packages:
-# decoding alone (single and multi-threaded) and decoding plus tar extraction.
+# Measures what 7-Zip (the version on the runner) does with the real .tar.bz2
+# packages, for the same dependency closures that run_setup.ps1 installs:
+#   - decode only, summed over all packages of a closure, with 1 and 4 threads
+#   - the same with stock bzip2 1.0.8 (Git for Windows' bzip2.exe, single thread)
+#   - for the target package alone: decode + tar extraction to disk through a pipe
+# All archives of a closure go to one 7z.exe process so that process start-up is
+# not counted per package. bzip2.exe is run once per package from a batch file.
 param(
   [string]$Work = "C:\bench",
-  [int]$Reps = 3,
+  [int]$Reps = 2,
   [string[]]$Packages = @("python3-notebook", "python3-jupyterlab", "python3-core", "grass-dev", "qgis-ltr-pdb")
 )
 
 $ErrorActionPreference = "Stop"
 $sz = "C:\Program Files\7-Zip\7z.exe"
+$bz = "C:\Program Files\Git\usr\bin\bzip2.exe"
 Write-Host "## 7-Zip"
 & $sz | Select-Object -First 2
 Write-Host "Codecs and formats of interest:"
 & $sz i | Select-String -Pattern "BZip2|GZip|Zstd|ZSTD|LZMA2|\bTar\b|XZ" | Select-Object -First 12
+Get-CimInstance Win32_Processor | ForEach-Object { Write-Host "$($_.Name), $($_.NumberOfLogicalProcessors) logical CPUs" }
 
-$dest = "$Work\sz-dest"
-$rows = @("| package | 7z decode, 1 thread s | 7z decode, 4 threads s | 7z decode + tar to disk s |", "|---|---|---|---|")
+$closures = Get-Content "$Work\mirror\closures.json" -Raw | ConvertFrom-Json -AsHashtable
+$paths = @{}
+$current = $null
+foreach ($l in [IO.File]::ReadLines("$Work\mirror\x86_64\setup.ini")) {
+  if ($l.StartsWith("@ ")) { $current = $l.Substring(2).Trim() }
+  elseif ($l.StartsWith("install:") -and $current -and -not $paths.ContainsKey($current)) {
+    $paths[$current] = "$Work\mirror\" + ($l.Split(" ")[1] -replace "/", "\")
+  }
+}
 
-function Best([scriptblock]$block, [bool]$clean) {
+function Best([scriptblock]$block) {
   $best = [double]::MaxValue
   for ($i = 0; $i -lt $Reps; $i++) {
-    if ($clean -and (Test-Path $dest)) { cmd /c "rd /s /q `"$dest`"" }
     $t = (Measure-Command $block).TotalSeconds
     if ($t -lt $best) { $best = $t }
   }
-  if ($clean -and (Test-Path $dest)) { cmd /c "rd /s /q `"$dest`"" }
   $best
 }
 
-$Packages | ForEach-Object { Get-ChildItem "$Work\mirror\x86_64\release" -Recurse -Filter "$_-[0-9]*.tar.bz2" } | Sort-Object Length | ForEach-Object {
-  $pkg = $_.FullName
-  $one = Best { cmd /c "`"$sz`" e `"$pkg`" -so -mmt=1 -bso0 -bsp0 > NUL" } $false
-  $four = Best { cmd /c "`"$sz`" e `"$pkg`" -so -mmt=4 -bso0 -bsp0 > NUL" } $false
-  $full = Best { cmd /c "`"$sz`" e `"$pkg`" -so -mmt=4 -bso0 -bsp0 | `"$sz`" x -si -ttar -o`"$dest`" -y -bso0 -bsp0" } $true
-  $row = "| $($_.Name) | $('{0:N2}' -f $one) | $('{0:N2}' -f $four) | $('{0:N2}' -f $full) |"
+function Invoke-7zDecode([string[]]$archives, [int]$threads) {
+  $a = @("e") + $archives + @("-so", "-mmt=$threads", "-bso0", "-bsp0")
+  Start-Process $sz -ArgumentList $a -NoNewWindow -Wait -RedirectStandardOutput NUL
+}
+
+$rows = @("| target | packages in closure | compressed MB | 7-Zip decode, 1 thread s | 7-Zip decode, 4 threads s | stock bzip2 1.0.8 decode s |", "|---|---|---|---|---|---|")
+foreach ($pkg in $Packages) {
+  $archives = @($closures[$pkg] | ForEach-Object { $paths[$_] } | Where-Object { $_ })
+  $mb = ($archives | ForEach-Object { (Get-Item $_).Length } | Measure-Object -Sum).Sum / 1MB
+  $one = Best { Invoke-7zDecode $archives 1 }
+  $four = Best { Invoke-7zDecode $archives 4 }
+  $bat = "$Work\bzip2-all.cmd"
+  $archives | ForEach-Object { "`"$bz`" -dc `"$_`" > NUL" } | Set-Content $bat -Encoding ascii
+  $stock = Best { cmd /c $bat }
+  $row = "| $pkg | $($archives.Count) | $('{0:N0}' -f $mb) | $('{0:N1}' -f $one) | $('{0:N1}' -f $four) | $('{0:N1}' -f $stock) |"
   Write-Host $row
   $rows += $row
 }
 $report = $rows -join "`n"
-if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## 7-Zip on the same packages`n`n$report" }
+if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## Decoding whole dependency closures`n`n$report" }
+
+# Target package alone: decode plus tar extraction to disk through a pipe.
+$dest = "$Work\sz-dest"
+$rows = @("| package | 7z decode+tar to disk, 4 threads s |", "|---|---|")
+foreach ($pkg in $Packages) {
+  $file = $paths[$pkg]
+  $t = Best {
+    if (Test-Path $dest) { cmd /c "rd /s /q `"$dest`"" }
+    cmd /c "`"$sz`" e `"$file`" -so -mmt=4 -bso0 -bsp0 | `"$sz`" x -si -ttar -o`"$dest`" -y -bso0 -bsp0"
+  }
+  if (Test-Path $dest) { cmd /c "rd /s /q `"$dest`"" }
+  $row = "| $pkg | $('{0:N1}' -f $t) |"
+  Write-Host $row
+  $rows += $row
+}
+$report = $rows -join "`n"
+if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## Target package alone, decode and extract to disk`n`n$report" }
