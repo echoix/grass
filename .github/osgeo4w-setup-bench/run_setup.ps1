@@ -12,6 +12,14 @@ $root = "C:\o4w-bench-root"
 $results = @{}
 $failures = 0
 
+# The mirror server lives and dies with this script, so it never depends on a
+# process surviving from an earlier workflow step.
+$server = Start-Process python -PassThru -WindowStyle Hidden -ArgumentList @(
+  "-m", "http.server", "8000", "--bind", "127.0.0.1", "--directory", "$Work\mirror")
+for ($i = 0; $i -lt 20; $i++) {
+  try { Invoke-WebRequest http://127.0.0.1:8000/x86_64/setup.ini -UseBasicParsing | Out-Null; break } catch { Start-Sleep -Milliseconds 500 }
+}
+
 function Invoke-Setup([string]$variant, [string]$pkg) {
   if (Test-Path $root) { cmd /c "rd /s /q `"$root`"" }
   $exe = "$Work\setup\osgeo4w-setup-$variant.exe"
@@ -35,47 +43,51 @@ function Invoke-Setup([string]$variant, [string]$pkg) {
   [pscustomobject]@{ Entries = [int]$line.Matches[0].Groups[1].Value; Ms = [int]$line.Matches[0].Groups[2].Value; Total = $total }
 }
 
-Write-Host "## Environment"
-Get-CimInstance Win32_Processor | ForEach-Object { Write-Host "$($_.Name), $($_.NumberOfLogicalProcessors) logical CPUs" }
-try { Write-Host "Defender real-time protection enabled: $(-not (Get-MpPreference).DisableRealtimeMonitoring)" } catch { }
+try {
+  Write-Host "## Environment"
+  Get-CimInstance Win32_Processor | ForEach-Object { Write-Host "$($_.Name), $($_.NumberOfLogicalProcessors) logical CPUs" }
+  try { Write-Host "Defender real-time protection enabled: $(-not (Get-MpPreference).DisableRealtimeMonitoring)" } catch { }
 
-# Interleave the variants in each repetition to spread out drift on the runner.
-for ($rep = 1; $rep -le $Reps; $rep++) {
-  foreach ($pkg in $Packages) {
-    foreach ($variant in $Variants) {
-      $r = Invoke-Setup $variant $pkg
-      if (-not $r) {
-        # Fail fast if the unattended setup does not work at all, instead of
-        # waiting for every remaining run to time out.
-        $failures++
-        if ($failures -ge 2) { throw "setup failed twice in a row, giving up" }
-      }
-      if ($r) {
-        $failures = 0
-        Write-Host "[$(Get-Date -Format HH:mm:ss)] rep $rep $pkg $variant entries=$($r.Entries) extract_ms=$($r.Ms) wall_s=$('{0:N1}' -f $r.Total)"
-        $k = "$pkg|$variant"
-        if (-not $results[$k]) { $results[$k] = @() }
-        $results[$k] += $r
+  # Interleave the variants in each repetition to spread out drift on the runner.
+  for ($rep = 1; $rep -le $Reps; $rep++) {
+    foreach ($pkg in $Packages) {
+      foreach ($variant in $Variants) {
+        $r = Invoke-Setup $variant $pkg
+        if (-not $r) {
+          # Fail fast if the unattended setup does not work at all, instead of
+          # waiting for every remaining run to time out.
+          $failures++
+          if ($failures -ge 2) { throw "setup failed twice in a row, giving up" }
+        }
+        if ($r) {
+          $failures = 0
+          Write-Host "[$(Get-Date -Format HH:mm:ss)] rep $rep $pkg $variant entries=$($r.Entries) extract_ms=$($r.Ms) wall_s=$('{0:N1}' -f $r.Total)"
+          $k = "$pkg|$variant"
+          if (-not $results[$k]) { $results[$k] = @() }
+          $results[$k] += $r
+        }
       }
     }
   }
-}
-if (Test-Path $root) { cmd /c "rd /s /q `"$root`"" }
+  if (Test-Path $root) { cmd /c "rd /s /q `"$root`"" }
 
-function Get-Median($v) { $s = $v | Sort-Object; $s[[math]::Floor($s.Count / 2)] }
-$rows = @("| package | entries | variant | extraction min ms | extraction median ms | vs orig (median) | whole setup run, median s |", "|---|---|---|---|---|---|---|")
-foreach ($pkg in $Packages) {
-  $base = $null
-  foreach ($variant in $Variants) {
-    $r = $results["$pkg|$variant"]
-    if (-not $r) { continue }
-    $ms = $r | ForEach-Object { $_.Ms }
-    $med = Get-Median $ms
-    if ($variant -eq $Variants[0]) { $base = $med }
-    $delta = if ($base) { '{0:+0.0;-0.0}%' -f (100.0 * ($med - $base) / $base) } else { "" }
-    $rows += "| $pkg | $($r[0].Entries) | $variant | $(($ms | Measure-Object -Minimum).Minimum) | $med | $delta | $('{0:N1}' -f (Get-Median ($r | ForEach-Object { $_.Total }))) |"
+  function Get-Median($v) { $s = $v | Sort-Object; $s[[math]::Floor($s.Count / 2)] }
+  $rows = @("| package | entries | variant | extraction min ms | extraction median ms | vs orig (median) | whole setup run, median s |", "|---|---|---|---|---|---|---|")
+  foreach ($pkg in $Packages) {
+    $base = $null
+    foreach ($variant in $Variants) {
+      $r = $results["$pkg|$variant"]
+      if (-not $r) { continue }
+      $ms = $r | ForEach-Object { $_.Ms }
+      $med = Get-Median $ms
+      if ($variant -eq $Variants[0]) { $base = $med }
+      $delta = if ($base) { '{0:+0.0;-0.0}%' -f (100.0 * ($med - $base) / $base) } else { "" }
+      $rows += "| $pkg | $($r[0].Entries) | $variant | $(($ms | Measure-Object -Minimum).Minimum) | $med | $delta | $('{0:N1}' -f (Get-Median ($r | ForEach-Object { $_.Total }))) |"
+    }
   }
+  $report = $rows -join "`n"
+  Write-Host $report
+  if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## Real setup.exe: extraction time per variant`n`n$report" }
+} finally {
+  if ($server -and -not $server.HasExited) { Stop-Process -Id $server.Id -Force }
 }
-$report = $rows -join "`n"
-Write-Host $report
-if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## Real setup.exe: extraction time per variant`n`n$report" }
