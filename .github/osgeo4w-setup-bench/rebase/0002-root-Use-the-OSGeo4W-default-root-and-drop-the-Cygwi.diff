@@ -1,0 +1,85 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:35:26 +0000
+Subject: [PATCH] root: Use the OSGeo4W default root and drop the Cygwin DLL
+ bitness check
+
+
+diff --git a/osgeo4w.h b/osgeo4w.h
+new file mode 100644
+index 0000000..cbe6ae7
+--- /dev/null
++++ b/osgeo4w.h
+@@ -0,0 +1,18 @@
++/*
++ * Adaptations of Cygwin's setup for the OSGeo4W installer.
++ *
++ * OSGEO4W is defined when building the OSGeo4W installer (see configure.ac,
++ * --enable-osgeo4w).  Cygwin-only code that OSGeo4W cannot use stays in the
++ * sources behind "#ifndef OSGEO4W" instead of being deleted.
++ */
++
++#ifndef SETUP_OSGEO4W_H
++#define SETUP_OSGEO4W_H
++
++#ifdef OSGEO4W
++#ifndef OSGEO4W_MIRROR_URL
++#define OSGEO4W_MIRROR_URL "https://download.osgeo.org/osgeo4w/ssl/mirrors.lst"
++#endif
++#endif
++
++#endif /* SETUP_OSGEO4W_H */
+diff --git a/root.cc b/root.cc
+index 83af9ea..95f8fb8 100644
+--- a/root.cc
++++ b/root.cc
+@@ -176,6 +176,7 @@ read_fileheader_machine_type(std::string fn)
+   return IMAGE_FILE_MACHINE_UNKNOWN;
+ }
+ 
++#ifndef OSGEO4W /* Cygwin only: refuses to mix 32 and 64 bit cygwin1.dll */
+ static int
+ directory_contains_wrong_version (HWND h)
+ {
+@@ -218,6 +219,7 @@ directory_contains_wrong_version (HWND h)
+         inst_ver, setup_ver);
+   return 1;
+ }
++#endif
+ 
+ bool
+ RootPage::OnMessageCmd (int id, HWND hwndctl, UINT code)
+@@ -257,12 +259,12 @@ RootPage::OnInit ()
+   if (((std::string)RootOption).size())
+     set_root_dir((std::string)RootOption);
+   if (!get_root_dir ().size())
+-    read_mounts (std::string ());
++    set_root_dir (get_default_root_dir (is_elevated ()));
+   orig_root_dir = get_root_dir();
+ 
+-  if (!nt_sec.isRunAsAdmin())
++  if (!is_elevated ())
+     {
+-      // disable IDC_ROOT_SYSTEM if not running as admin
++      // disable IDC_ROOT_SYSTEM if not running elevated
+       EnableWindow(GetDlgItem(IDC_ROOT_SYSTEM), FALSE);
+       root_scope = IDC_ROOT_USER;
+     }
+@@ -303,17 +305,10 @@ RootPage::OnNext ()
+     return -1;
+   else if (directory_has_spaces () && (IDNO == yesno (h, IDS_ROOT_SPACE)))
+     return -1;
+-  else if (directory_contains_wrong_version (h))
+-    return -1;
+ 
+   Log (LOG_PLAIN) << "root: " << get_root_dir ()
+     << (root_scope == IDC_ROOT_USER ? " user" : " system") << endLog;
+ 
+-  if (root_scope == IDC_ROOT_SYSTEM)
+-    nt_sec.setAdminGroup ();
+-  else
+-    nt_sec.resetPrimaryGroup ();
+-
+   return 0;
+ }
+ 

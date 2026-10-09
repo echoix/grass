@@ -1,0 +1,477 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:39:47 +0000
+Subject: [PATCH] options, script: OSGeo4W options, no shortcuts made by setup,
+ OSGEO4W_* environment for batch post-install scripts
+
+
+diff --git a/AntiVirus.cc b/AntiVirus.cc
+index cb8e8ee..d3f0c62 100644
+--- a/AntiVirus.cc
++++ b/AntiVirus.cc
+@@ -14,6 +14,7 @@
+  */
+ 
+ #include "AntiVirus.h"
++#include "osgeo4w.h"
+ 
+ #include "getopt++/BoolOption.h"
+ #include "LogFile.h"
+@@ -30,7 +31,7 @@
+ /* XXX: Split this into observer and model classes */
+ 
+ /* Default is to leave well enough alone */
+-static BoolOption DisableVirusOption (false, 'A', "disable-buggy-antivirus", IDS_HELPTEXT_DISABLE_ANTIVIRUS);
++static BoolOption DisableVirusOption (false, OSGEO4W_OPT_ANTIVIRUS, "disable-buggy-antivirus", IDS_HELPTEXT_DISABLE_ANTIVIRUS);
+ 
+ static bool KnownAVIsPresent = false;
+ static bool AVRunning = true;
+diff --git a/Makefile.am b/Makefile.am
+index e9d6ecf..27ea1bd 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -201,6 +201,7 @@ endif
+ 	IniDBBuilderPackage.cc \
+ 	IniDBBuilderPackage.h \
+ 	license.cc \
++	osgeo4w.cc \
+ 	license.h \
+ 	osgeo4w.h \
+ 	inilex.ll \
+diff --git a/choose.cc b/choose.cc
+index f1bdd9f..a4c250a 100644
+--- a/choose.cc
++++ b/choose.cc
+@@ -26,6 +26,7 @@
+    install packages, or to install packages that aren't installed by
+    default. */
+ 
++#include "osgeo4w.h"
+ #include "win32.h"
+ #include <commctrl.h>
+ #include <stdio.h>
+@@ -66,7 +67,7 @@ static BoolOption UpgradeAlsoOption (false, 'g', "upgrade-also", IDS_HELPTEXT_UP
+ static BoolOption CleanOrphansOption (false, 'o', "delete-orphans", IDS_HELPTEXT_DELETE_ORPHANS);
+ static BoolOption ForceCurrentOption (false, 'f', "force-current", IDS_HELPTEXT_FORCE_CURRENT);
+ static BoolOption PruneInstallOption (false, 'Y', "prune-install", IDS_HELPTEXT_PRUNE_INSTALL);
+-static BoolOption AllowTestOption (false, 't', "allow-test-packages", IDS_HELPTEXT_ALLOW_TEST);
++static BoolOption AllowTestOption (false, OSGEO4W_OPT_ALLOW_TEST, "allow-test-packages", IDS_HELPTEXT_ALLOW_TEST);
+ 
+ extern ThreeBarProgressPage Progress;
+ 
+diff --git a/crypto.cc b/crypto.cc
+index 96c5e60..1188baa 100644
+--- a/crypto.cc
++++ b/crypto.cc
+@@ -13,6 +13,7 @@
+  *
+  */
+ 
++#include "osgeo4w.h"
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+@@ -45,7 +46,7 @@
+ 
+ /*  Command-line options for specifying and controlling extra keys.  */
+ static StringArrayOption ExtraKeyOption ('K', "pubkey", IDS_HELPTEXT_PUBKEY);
+-static StringArrayOption SexprExtraKeyOption ('S', "sexpr-pubkey", IDS_HELPTEXT_SEXPR_PUBKEY);
++static StringArrayOption SexprExtraKeyOption (OSGEO4W_OPT_SEXPR_PUBKEY, "sexpr-pubkey", IDS_HELPTEXT_SEXPR_PUBKEY);
+ static BoolOption UntrustedKeysOption (false, 'u', "untrusted-keys", IDS_HELPTEXT_UNTRUSTED_KEYS);
+ static BoolOption KeepUntrustedKeysOption (false, 'U', "keep-untrusted-keys", IDS_HELPTEXT_KEEP_UNTRUSTED_KEYS);
+ static BoolOption EnableOldKeysOption (false, '\0', "old-keys", IDS_HELPTEXT_OLD_KEYS,
+diff --git a/desktop.cc b/desktop.cc
+index bc983a3..5010f0f 100644
+--- a/desktop.cc
++++ b/desktop.cc
+@@ -39,10 +39,16 @@
+ #include "io_stream.h"
+ #include "getopt++/BoolOption.h"
+ #include "LogFile.h"
++#include "osgeo4w.h"
+ 
+ BoolOption NoShortcutsOption (false, 'n', "no-shortcuts", IDS_HELPTEXT_NO_SHORTCUTS);
+ BoolOption NoStartMenuOption (false, 'N', "no-startmenu", IDS_HELPTEXT_NO_STARTMENU);
++#ifndef OSGEO4W
+ static BoolOption NoDesktopOption (false, 'd', "no-desktop", IDS_HELPTEXT_NO_DESKTOP);
++#else
++/* -d is kept as an option that does nothing: desktop shortcuts are opt-in */
++static BoolOption NoDesktopOption (false, 'd', "no-desktop", IDS_HELPTEXT_NO_DESKTOP);
++#endif
+ 
+ static ControlAdjuster::ControlInfo DesktopControlsInfo[] = {
+   {IDC_DESKTOP_SEPARATOR, 	CP_STRETCH, CP_BOTTOM},
+@@ -56,6 +62,7 @@ DesktopSetupPage::DesktopSetupPage ()
+   sizeProcessor.AddControlInfo (DesktopControlsInfo);
+ }
+ 
++#ifndef OSGEO4W /* Shortcuts are made by the OSGeo4W base package */
+ static void
+ make_link (const std::string& linkpath,
+            const std::string& title,
+@@ -86,6 +93,8 @@ make_link (const std::string& linkpath,
+ 	       icon.c_str(), fname.c_str());
+ }
+ 
++#endif
++
+ const std::string
+ startmenusuffix()
+ {
+@@ -97,6 +106,7 @@ startmenusuffix()
+     return "";
+ }
+ 
++#ifndef OSGEO4W
+ static const char *startmenudir()
+ {
+   return "/Cygwin";
+@@ -213,6 +223,7 @@ do_desktop_setup ()
+   if (root_desktop)
+     desktop_icon (TERMINALTITLE, target, "-i " TERMINALICON " -", terminalicon);
+ }
++#endif
+ 
+ static int da[] = { IDC_ROOT_DESKTOP, 0 };
+ static int ma[] = { IDC_ROOT_MENU, 0 };
+@@ -259,6 +270,7 @@ load_dialog (HWND h)
+   set_status (h);
+ }
+ 
++#ifndef OSGEO4W
+ static int
+ check_desktop (const std::string title, const std::string target)
+ {
+@@ -300,6 +312,7 @@ check_startmenu (const std::string title, const std::string target)
+ 
+   return IDC_ROOT_MENU;
+ }
++#endif
+ 
+ static void
+ save_dialog (HWND h)
+@@ -338,6 +351,10 @@ DesktopSetupPage::OnInit ()
+ void
+ DesktopSetupPage::OnActivate ()
+ {
++#ifdef OSGEO4W
++  root_menu = !NoShortcutsOption && !NoStartMenuOption && source != IDC_SOURCE_DOWNLOAD;
++  root_desktop = !NoShortcutsOption && DesktopOption && source != IDC_SOURCE_DOWNLOAD;
++#else
+   if (NoShortcutsOption || source == IDC_SOURCE_DOWNLOAD) 
+     {
+       root_desktop = root_menu = 0;
+@@ -364,6 +381,7 @@ DesktopSetupPage::OnActivate ()
+ 	  root_desktop = check_desktop (TERMINALTITLE, target);
+ 	}
+     }
++#endif
+ 
+   load_dialog (GetHWND ());
+ }
+@@ -381,8 +399,10 @@ DesktopSetupPage::OnFinish ()
+ {
+   HWND h = GetHWND ();
+   save_dialog (h);
++#ifndef OSGEO4W
+   if (source != IDC_SOURCE_DOWNLOAD)
+     do_desktop_setup ();
++#endif
+ 
+   return true;
+ }
+diff --git a/main.cc b/main.cc
+index 4629273..2f3c8a2 100644
+--- a/main.cc
++++ b/main.cc
+@@ -269,6 +269,10 @@ WinMain (HINSTANCE h,
+     else if (HelpOption)
+       help_option = true;
+ 
++#ifdef OSGEO4W
++    osgeo4w_process_options ();
++#endif
++
+     if (Arch.isPresent())
+       installArch = Arch;
+     else
+diff --git a/osgeo4w.cc b/osgeo4w.cc
+new file mode 100644
+index 0000000..da60632
+--- /dev/null
++++ b/osgeo4w.cc
+@@ -0,0 +1,74 @@
++/*
++ * Options and settings that only the OSGeo4W installer has, see osgeo4w.h.
++ */
++
++#ifdef OSGEO4W
++
++#include "win32.h"
++#include <shlobj.h>
++
++#include "getopt++/BoolOption.h"
++#include "getopt++/StringOption.h"
++
++#include "osgeo4w.h"
++#include "resource.h"
++#include "state.h"
++#include "mount.h"
++
++BoolOption AutoAcceptLicenseOption (false, 'k', "autoaccept", IDS_HELPTEXT_AUTOACCEPT);
++BoolOption DesktopOption (false, 'T', "desktop", IDS_HELPTEXT_DESKTOP);
++static BoolOption TestOption (false, 't', "test", IDS_HELPTEXT_TEST);
++static BoolOption SafeModeOption (false, 'S', "safe", IDS_HELPTEXT_SAFE);
++static StringOption MenuNameOption ("", 'm', "menu-name", IDS_HELPTEXT_MENU_NAME, false);
++/* OSGeo4W has no separate express mode in this version of setup; the options
++   are accepted so that existing command lines keep working.  */
++static BoolOption AdvancedOption (true, 'A', "advanced", IDS_HELPTEXT_ADVANCED);
++static BoolOption ExpressOption (false, 'E', "express", IDS_HELPTEXT_EXPRESS);
++
++bool safe_mode = false;
++std::string menu_name = "OSGeo4W";
++
++/* Called after the command line was parsed.  */
++void
++osgeo4w_process_options ()
++{
++  test_mode = TestOption;
++  safe_mode = SafeModeOption;
++  if (((std::string) MenuNameOption).size ())
++    menu_name = (std::string) MenuNameOption;
++}
++
++bool
++get_issystem ()
++{
++  return root_scope == IDC_ROOT_SYSTEM;
++}
++
++static std::string
++special_folder (int csidl)
++{
++  char path[MAX_PATH];
++  LPITEMIDLIST id;
++  if (FAILED (SHGetSpecialFolderLocation (NULL, csidl, &id)))
++    return "";
++  if (!SHGetPathFromIDList (id, path))
++    path[0] = '\0';
++  CoTaskMemFree (id);
++  return path;
++}
++
++std::string
++get_startmenu ()
++{
++  return special_folder (get_issystem () ? CSIDL_COMMON_PROGRAMS : CSIDL_PROGRAMS)
++    + "\\" + menu_name;
++}
++
++std::string
++get_desktop ()
++{
++  return special_folder (get_issystem () ? CSIDL_COMMON_DESKTOPDIRECTORY
++                                         : CSIDL_DESKTOPDIRECTORY);
++}
++
++#endif /* OSGEO4W */
+diff --git a/osgeo4w.h b/osgeo4w.h
+index 8cbeea1..ca83ec5 100644
+--- a/osgeo4w.h
++++ b/osgeo4w.h
+@@ -11,11 +11,36 @@
+ 
+ #ifdef OSGEO4W
+ #define SETUP_NAME "OSGeo4W"
++/* Short options: OSGeo4W setup always used -b for --disable-buggy-antivirus,
++   -t for --test, -m for --menu-name and -S for --safe.  Cygwin's setup has
++   since given these letters to other options, which lose their short form.  */
++#define OSGEO4W_OPT_ANTIVIRUS 'b'
++#define OSGEO4W_OPT_ALLOW_TEST '\0'
++#define OSGEO4W_OPT_MIRROR_MODE '\0'
++#define OSGEO4W_OPT_SEXPR_PUBKEY '\0'
++
+ #ifndef OSGEO4W_MIRROR_URL
+ #define OSGEO4W_MIRROR_URL "https://download.osgeo.org/osgeo4w/ssl/mirrors.lst"
+ #endif
+ #else
+ #define SETUP_NAME "Cygwin"
++#define OSGEO4W_OPT_ANTIVIRUS 'A'
++#define OSGEO4W_OPT_ALLOW_TEST 't'
++#define OSGEO4W_OPT_MIRROR_MODE 'm'
++#define OSGEO4W_OPT_SEXPR_PUBKEY 'S'
++#endif
++
++#ifdef OSGEO4W
++#include <string>
++class BoolOption;
++extern BoolOption AutoAcceptLicenseOption;
++extern BoolOption DesktopOption;
++extern bool safe_mode;
++extern std::string menu_name;
++void osgeo4w_process_options ();
++bool get_issystem ();
++std::string get_startmenu ();
++std::string get_desktop ();
+ #endif
+ 
+ #endif /* SETUP_OSGEO4W_H */
+diff --git a/package_db.cc b/package_db.cc
+index 9b74fc9..0a99184 100644
+--- a/package_db.cc
++++ b/package_db.cc
+@@ -18,6 +18,7 @@
+  * installed ones.
+  */
+ 
++#include "osgeo4w.h"
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+@@ -43,7 +44,7 @@
+ #include "csu_util/version_compare.h"
+ #include "getopt++/BoolOption.h"
+ 
+-static BoolOption MirrorOption (false, 'm', "mirror-mode", IDS_HELPTEXT_MIRROR_MODE);
++static BoolOption MirrorOption (false, OSGEO4W_OPT_MIRROR_MODE, "mirror-mode", IDS_HELPTEXT_MIRROR_MODE);
+ 
+ packagedb::packagedb ()
+ {
+diff --git a/res/en/res.rc b/res/en/res.rc
+index 6a39393..5d4db3c 100644
+--- a/res/en/res.rc
++++ b/res/en/res.rc
+@@ -657,6 +657,13 @@ BEGIN
+     IDS_HELPTEXT_ALLOW_UNSUPPORTED_WINDOWS "Allow old, unsupported Windows versions"
+     IDS_HELPTEXT_ARCH "Architecture to install (x86_64 or x86)"
+     IDS_HELPTEXT_AUTO_SITE "Automatically select download site, if possible"
++    IDS_HELPTEXT_AUTOACCEPT "Accept all package licenses"
++    IDS_HELPTEXT_TEST "Use setup_test.ini"
++    IDS_HELPTEXT_ADVANCED "Advanced install (default, ignored by this version)"
++    IDS_HELPTEXT_EXPRESS "Express install (ignored by this version)"
++    IDS_HELPTEXT_SAFE "Safe mode: skip some administrative actions"
++    IDS_HELPTEXT_MENU_NAME "Name of the start menu folder"
++    IDS_HELPTEXT_DESKTOP "Enable creation of desktop shortcuts"
+     IDS_HELPTEXT_CATEGORIES "Specify categories to install"
+     IDS_HELPTEXT_BUILD_DEPENDS "Specify packages to install the build requirements of"
+     IDS_HELPTEXT_COMPACTOS "Compress installed files with Compact OS (xpress4k, xpress8k, xpress16k, lzx)"
+diff --git a/resource.h b/resource.h
+index 5e851ae..2e4078a 100644
+--- a/resource.h
++++ b/resource.h
+@@ -161,6 +161,13 @@
+ #define IDS_HELPTEXT_NO_WRITE_REGISTRY   1548
+ #define IDS_HELPTEXT_BUILD_DEPENDS       1549
+ #define IDS_HELPTEXT_AUTO_SITE           1550
++#define IDS_HELPTEXT_AUTOACCEPT          1551
++#define IDS_HELPTEXT_TEST                1552
++#define IDS_HELPTEXT_ADVANCED            1553
++#define IDS_HELPTEXT_EXPRESS             1554
++#define IDS_HELPTEXT_SAFE                1555
++#define IDS_HELPTEXT_MENU_NAME           1556
++#define IDS_HELPTEXT_DESKTOP             1557
+ 
+ // Dialogs
+ 
+diff --git a/script.cc b/script.cc
+index fbc7e27..8a86306 100644
+--- a/script.cc
++++ b/script.cc
+@@ -38,10 +38,12 @@
+ #endif
+ #include "mklink2.h"
+ #include "desktop.h"
++#include "osgeo4w.h"
+ 
+ static std::string sh, dash;
+ static const char *cmd;
+ 
++#ifndef OSGEO4W /* Cygwin's script environment */
+ static void
+ sanitize_PATH ()
+ {
+@@ -107,7 +109,52 @@ modify_CYGWIN ()
+ 
+   SetEnvironmentVariable ("CYGWIN", cygwin.c_str());
+ }
++#endif
++
++#ifdef OSGEO4W
++/* Post-install scripts of OSGeo4W packages are batch files.  They run with the
++   environment of the user, with the installation's bin directory in front of
++   PATH, and are told where and how OSGeo4W is installed.  */
++void
++init_run_script ()
++{
++  static bool initialized;
++  if (initialized)
++    return;
++
++  initialized = true;
+ 
++  DWORD len = GetEnvironmentVariable ("PATH", NULL, 0);
++  std::string old_path (len, '\0');
++  if (len)
++    {
++      GetEnvironmentVariable ("PATH", &old_path[0], len);
++      old_path.resize (len - 1);
++    }
++  SetEnvironmentVariable ("PATH", backslash (cygpath ("/bin") + ";" + old_path).c_str ());
++
++  SetEnvironmentVariable ("OSGEO4W_ROOT", get_root_dir ().c_str ());
++  SetEnvironmentVariable ("OSGEO4W_SYSTEM_INSTALL", get_issystem () ? "1" : "0");
++  SetEnvironmentVariable ("OSGEO4W_STARTMENU", get_startmenu ().c_str ());
++  SetEnvironmentVariable ("OSGEO4W_DESKTOP", get_desktop ().c_str ());
++  SetEnvironmentVariable ("OSGEO4W_MENU_LINKS", root_menu ? "1" : "0");
++  SetEnvironmentVariable ("OSGEO4W_DESKTOP_LINKS", root_desktop ? "1" : "0");
++
++  /* C:\OSGeo4W -> /C/OSGeo4W, the root as MSYS sees it */
++  std::string msys = get_root_dir ();
++  if (msys.size () > 1 && msys[1] == ':')
++    {
++      msys[1] = msys[0];
++      msys[0] = '/';
++    }
++  for (std::string::iterator c = msys.begin (); c != msys.end (); ++c)
++    if (*c == '\\')
++      *c = '/';
++  SetEnvironmentVariable ("OSGEO4W_ROOT_MSYS", msys.c_str ());
++
++  cmd = "cmd.exe";
++}
++#else
+ void
+ init_run_script ()
+ {
+@@ -159,6 +206,7 @@ init_run_script ()
+   dash = backslash (cygpath ("/bin/dash.exe"));
+   cmd  = "cmd.exe";
+ }
++#endif
+ 
+ class OutputLog
+ {
+@@ -258,7 +306,7 @@ run (const char *cmdline)
+   memset (&pi, 0, sizeof (pi));
+   memset (&si, 0, sizeof (si));
+   si.cb = sizeof (si);
+-  si.lpTitle = (char *) "Cygwin Setup Post-Install Script";
++  si.lpTitle = (char *) SETUP_NAME " Setup Post-Install Script";
+   si.dwFlags = STARTF_USEPOSITION;
+ 
+   if (file_out.isValid ())
+diff --git a/state.cc b/state.cc
+index a970567..1b0117c 100644
+--- a/state.cc
++++ b/state.cc
+@@ -26,8 +26,8 @@ std::string local_dir;
+ 
+ int root_scope;
+ bool test_mode = false;
+-int root_menu;
+-int root_desktop;
++int root_menu = 1;
++int root_desktop = 0;
+ 
+ LANGID langid;
+ 

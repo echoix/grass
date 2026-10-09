@@ -1,0 +1,406 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:41:21 +0000
+Subject: [PATCH] branding: OSGeo4W name, icon, user agent, URLs and
+ --enable-osgeo4w
+
+
+diff --git a/Makefile.am b/Makefile.am
+index 27ea1bd..787eae7 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -28,7 +28,7 @@ AM_CFLAGS = $(BASECXXFLAGS) -Wmissing-declarations -Winline \
+ AM_YFLAGS = -d
+ AM_LFLAGS = -8
+ WINDRES = @WINDRES@
+-AM_CPPFLAGS = -D__USE_MINGW_ANSI_STDIO=1 -D_FILE_OFFSET_BITS=64 -DLZMA_API_STATIC \
++AM_CPPFLAGS = @OSGEO4W_CPPFLAGS@ -D__USE_MINGW_ANSI_STDIO=1 -D_FILE_OFFSET_BITS=64 -DLZMA_API_STATIC \
+ 	       -I$(srcdir)/libgetopt++/include \
+ 	       $(ZLIB_CFLAGS) $(LZMA_CFLAGS) $(ZSTD_CFLAGS) $(LIBCRYPT_CFLAGS) $(LIBSOLV_CFLAGS)
+ 
+@@ -354,7 +354,7 @@ po2rc:
+ res.o: setup.exe.manifest res/en/res.rc $(foreach l,$(LINGUAS),res/$l/res.rc)
+ 
+ .rc.o:
+-	$(AM_V_GEN)$(WINDRES) --codepage 65001 --include-dir $(srcdir) -o $@ $<
++	$(AM_V_GEN)$(WINDRES) --codepage 65001 @OSGEO4W_CPPFLAGS@ --include-dir $(srcdir) -o $@ $<
+ 
+ setup-src:
+ 	@ver=setup-$(VER);\
+diff --git a/configure.ac b/configure.ac
+index 5de367f..fbe6d39 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -95,5 +95,15 @@ AC_COMPILE_IFELSE(
+   [AC_MSG_RESULT([ok])],
+   [AC_MSG_FAILURE([Must not be built with a compiler which uses dwarf2 exception handling])])
+ 
++dnl OSGeo4W installer: Cygwin only code is disabled (see osgeo4w.h)
++AC_ARG_ENABLE([osgeo4w],
++  [AS_HELP_STRING([--enable-osgeo4w], [build the OSGeo4W installer instead of Cygwin setup])],
++  [], [enable_osgeo4w=yes])
++OSGEO4W_CPPFLAGS=
++if test "x$enable_osgeo4w" = "xyes"; then
++  OSGEO4W_CPPFLAGS="-DOSGEO4W=1"
++fi
++AC_SUBST(OSGEO4W_CPPFLAGS)
++
+ AC_CONFIG_FILES([Makefile tests/Makefile])
+ AC_OUTPUT
+diff --git a/nio-ie5.cc b/nio-ie5.cc
+index c2ee167..80db7b1 100644
+--- a/nio-ie5.cc
++++ b/nio-ie5.cc
+@@ -45,6 +45,18 @@ determine_default_useragent(void)
+   std::stringstream os;
+   os << "Windows NT " << OSMajorVersion() << "." << OSMinorVersion() << "." << OSBuildNumber();
+ 
++  typedef LANGID (WINAPI *PFNGETTHREADUILANGUAGE)();
++  PFNGETTHREADUILANGUAGE pfnGetThreadUILanguage = (PFNGETTHREADUILANGUAGE)GetProcAddress(GetModuleHandle("kernel32"), "GetThreadUILanguage");
++  std::stringstream langid;
++  if (pfnGetThreadUILanguage)
++    {
++      LANGID l = pfnGetThreadUILanguage();
++      langid << std::hex << std::setw(4) << std::setfill('0') << l;
++    }
++
++#ifdef OSGEO4W
++  default_useragent = std::string("OSGeo4W-Setup/") + setup_version + " (" + os.str () + ";Win64;" + langid.str () + ")";
++#else
+ #ifdef __x86_64__
+   USHORT processMachine = IMAGE_FILE_MACHINE_AMD64;
+ #else
+@@ -59,15 +71,6 @@ determine_default_useragent(void)
+   else
+     bitness = machine_name(processMachine);
+ 
+-  typedef LANGID (WINAPI *PFNGETTHREADUILANGUAGE)();
+-  PFNGETTHREADUILANGUAGE pfnGetThreadUILanguage = (PFNGETTHREADUILANGUAGE)GetProcAddress(GetModuleHandle("kernel32"), "GetThreadUILanguage");
+-  std::stringstream langid;
+-  if (pfnGetThreadUILanguage)
+-    {
+-      LANGID l = pfnGetThreadUILanguage();
+-      langid << std::hex << std::setw(4) << std::setfill('0') << l;
+-    }
+-
+   std::string symlinks = "";
+   if (nt_sec.hasSymlinkCreationRights())
+     symlinks.append("SymLinkPriv");
+@@ -79,6 +82,7 @@ determine_default_useragent(void)
+     }
+ 
+   default_useragent = std::string("Cygwin-Setup/") + setup_version + " (" + os.str() + ";" + bitness + ";" + langid.str() + ";" + symlinks + ")";
++#endif
+   Log (LOG_BABBLE) << "User-Agent: default is \"" << default_useragent << "\"" << endLog;
+ 
+   return default_useragent;
+diff --git a/res.rc b/res.rc
+index b4f3f49..ccbaa79 100644
+--- a/res.rc
++++ b/res.rc
+@@ -52,9 +52,16 @@ CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "setup.exe.manifest"
+ 
+ // Icon with lowest ID value placed first to ensure application icon
+ // remains consistent on all systems.
++#ifdef OSGEO4W
++/* osgeo.ico is copied from the OSGeo4W repository, src/setup/osgeo.ico */
++IDI_CYGWIN_SETUP        ICON    "osgeo.ico"
++IDI_CYGWIN              ICON    "osgeo.ico"
++IDI_CYGWIN_TERMINAL     ICON    "osgeo.ico"
++#else
+ IDI_CYGWIN_SETUP        ICON    "cygwin-setup.ico"
+ IDI_CYGWIN              ICON    "cygwin.ico"
+ IDI_CYGWIN_TERMINAL     ICON    "cygwin-terminal.ico"
++#endif
+ IDI_TREE_PLUS           ICON    "tree-plus.ico"
+ IDI_TREE_MINUS          ICON    "tree-minus.ico"
+ 
+@@ -63,9 +70,13 @@ IDI_TREE_MINUS          ICON    "tree-minus.ico"
+ // FILE
+ //
+ 
++#ifdef OSGEO4W
++OSGEO4W.ICON            FILE    "osgeo.ico"
++#else
+ CYGWIN-SETUP.ICON       FILE    "cygwin-setup.ico"
+ CYGWIN.ICON             FILE    "cygwin.ico"
+ CYGWIN-TERMINAL.ICON    FILE    "cygwin-terminal.ico"
++#endif
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ //
+diff --git a/res/en/res.rc b/res/en/res.rc
+index 5d4db3c..84a598a 100644
+--- a/res/en/res.rc
++++ b/res/en/res.rc
+@@ -7,7 +7,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+ 
+ IDD_SOURCE DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Choose Installation Type"
++CAPTION "OSGeo4W Setup - Choose Installation Type"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     CONTROL         "&Install from Internet\n(downloaded files will be kept for future re-use)",
+@@ -37,7 +37,7 @@ END
+ 
+ IDD_VIRUS DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Disable Virus Scanner?"
++CAPTION "OSGeo4W Setup - Disable Virus Scanner?"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     CONTROL         "&Disable Virus scanner",IDC_DISABLE_AV,"Button",
+@@ -49,15 +49,15 @@ BEGIN
+                     SETUP_STANDARD_DIALOG_W,1
+     LTEXT           "Choose whether to disable your virus scanner while installing.",IDC_STATIC_HEADER_TITLE,7,0,
+                     258,8,NOT WS_GROUP
+-    LTEXT           "Some Antivirus programs, notably McAfee, cause a blue screen on Windows XP computers during installation of Cygwin.", 
++    LTEXT           "Some Antivirus programs, notably McAfee, cause a blue screen on Windows XP computers during installation of OSGeo4W.", 
+                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
+-    LTEXT           "One that may be a problem has been detected. Cygwin setup can disable this during the installation process, and re-enable it when the install is complete.",
++    LTEXT           "One that may be a problem has been detected. OSGeo4W setup can disable this during the installation process, and re-enable it when the install is complete.",
+                     IDC_STATIC,21,32,239,24,NOT WS_GROUP
+ END
+ 
+ IDD_LOCAL_DIR DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Select Local Package Directory"
++CAPTION "OSGeo4W Setup - Select Local Package Directory"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     LTEXT           "Select Local Package Directory",IDC_STATIC_HEADER_TITLE,
+@@ -80,12 +80,12 @@ END
+ 
+ IDD_ROOT DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Choose Installation Directory"
++CAPTION "OSGeo4W Setup - Choose Installation Directory"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     LTEXT           "Select Root Install Directory",IDC_STATIC_HEADER_TITLE,
+                     7,0,258,8,NOT WS_GROUP
+-    LTEXT           "Select the directory where you want to install Cygwin.  "
++    LTEXT           "Select the directory where you want to install OSGeo4W.  "
+                     "Also choose a few installation parameters.",
+                     IDC_ROOTDIR_SUBTEXT,21,9,239,16,NOT WS_GROUP
+     ICON            IDI_CYGWIN,IDC_HEADICON,SETUP_HEADICON_X,0,21,20
+@@ -101,10 +101,10 @@ BEGIN
+                     BS_AUTORADIOBUTTON | WS_TABSTOP | WS_GROUP,13,89,130,8
+     CONTROL         "Just &Me",IDC_ROOT_USER,"Button",BS_AUTORADIOBUTTON | 
+                     WS_TABSTOP,13,130,130,8
+-    LTEXT           "Cygwin will be available to all users of the system.",
++    LTEXT           "OSGeo4W will be available to all users of the system.",
+                     IDC_ALLUSERS_TEXT,25,101,300,28
+-    LTEXT           "Cygwin will still be available to all users, but "
+-                    "Desktop Icons, Cygwin Menu Entries, and important "
++    LTEXT           "OSGeo4W will still be available to all users, but "
++                    "Desktop Icons, OSGeo4W Menu Entries, and important "
+                     "Installer information are only available to the current "
+                     "user.  Only select this if you lack Administrator "
+                     "privileges or if you have specific needs.",
+@@ -114,7 +114,7 @@ END
+ IDD_SITE DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+ EXSTYLE WS_EX_CONTROLPARENT
+-CAPTION "Cygwin Setup - Choose Download Site(s)"
++CAPTION "OSGeo4W Setup - Choose Download Site(s)"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     ICON            IDI_CYGWIN,IDC_HEADICON,SETUP_HEADICON_X,0,21,20
+@@ -137,7 +137,7 @@ END
+ 
+ IDD_NET DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Select Connection Type"
++CAPTION "OSGeo4W Setup - Select Connection Type"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     CONTROL         "Use &System Proxy Settings",IDC_NET_PRECONFIG,"Button",
+@@ -166,7 +166,7 @@ END
+ 
+ IDD_INSTATUS DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup"
++CAPTION "OSGeo4W Setup"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     LTEXT           "Installing...",IDC_INS_ACTION,45,55,205,8,SS_ENDELLIPSIS
+@@ -226,19 +226,19 @@ END
+ 
+ IDD_SPLASH DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup"
++CAPTION "OSGeo4W Setup"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+-    LTEXT           "Cygwin Net Release Setup Program",
++    LTEXT           "OSGeo4W Network Installer",
+                     IDC_STATIC_WELCOME_TITLE,115,1,195,24
+     LTEXT           "This setup program is used for the initial installation "
+-                    "of the Cygwin environment as well as all subsequent "
++                    "of the OSGeo4W environment as well as all subsequent "
+                     "updates. "
+                     "The pages that follow will guide you through the "
+                     "installation."
+                     "\n\n"
+                     "Please note that we only install a base set of packages by "
+-                    "default.  Cygwin provides a large number of packages "
++                    "default.  OSGeo4W provides a large number of packages "
+                     "spanning a wide variety of purposes."
+                     "\n\n"
+                     "You can always run this program at any time in "
+@@ -253,7 +253,7 @@ END
+ 
+ IDD_DESKTOP DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Installation Status and Create Icons"
++CAPTION "OSGeo4W Setup - Installation Status and Create Icons"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     CONTROL         "Create icon on &Desktop",IDC_ROOT_DESKTOP,"Button",
+@@ -263,7 +263,7 @@ BEGIN
+     ICON            IDI_CYGWIN,IDC_HEADICON,SETUP_HEADICON_X,0,21,20
+     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,
+                     SETUP_STANDARD_DIALOG_W,1
+-    LTEXT           "Tell setup if you want it to create a few icons for convenient access to the Cygwin environment.",
++    LTEXT           "Tell setup if you want it to create a few icons for convenient access to the OSGeo4W environment.",
+                     IDC_DESKTOP_HEADER_INSTALL,21,9,239,16,NOT WS_GROUP
+     LTEXT           "Create Icons",IDC_DESKTOP_HEADER_TITLE_INSTALL,7,0,258,8,NOT WS_GROUP
+     LTEXT           "Shows installation status in download-only mode.",
+@@ -272,7 +272,7 @@ BEGIN
+     CONTROL         "",IDC_DESKTOP_SEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                     0,135,SETUP_STANDARD_DIALOG_W,1
+     LTEXT           "Installation Status",IDC_STATUS_HEADER,7,140,258,8,NOT WS_GROUP
+-    LTEXT           "Cygwin installation completed successfully.",IDC_STATUS,
++    LTEXT           "OSGeo4W installation completed successfully.",IDC_STATUS,
+                     21,149,279,36,NOT WS_GROUP
+ END
+ 
+@@ -295,7 +295,7 @@ END
+ 
+ IDD_CHOOSE DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Select Packages"
++CAPTION "OSGeo4W Setup - Select Packages"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     LTEXT           "&View", IDC_CHOOSE_VIEWCAPTION, SETUP_VIEW_X, 33,
+@@ -335,7 +335,7 @@ END
+ 
+ IDD_PREREQ DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Resolving Dependencies"
++CAPTION "OSGeo4W Setup - Resolving Dependencies"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,
+@@ -356,7 +356,7 @@ END
+ 
+ IDD_CONFIRM DIALOG 0, 0, SETUP_STANDARD_DIALOG_DIMS
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Review and confirm changes"
++CAPTION "OSGeo4W Setup - Review and confirm changes"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,
+@@ -371,12 +371,12 @@ END
+ 
+ IDD_DROPPED DIALOG 0, 0, SETUP_STANDARD_DIALOG_W, 142
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Use dropped mirrors?"
++CAPTION "OSGeo4W Setup - Use dropped mirrors?"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     LTEXT           "Warning:",IDC_STATIC,7,8,40,8
+     LTEXT           "One or more mirrors you have selected is/are not on the "
+-                    "list of official Cygwin mirrors any more. "
++                    "list of official OSGeo4W mirrors any more. "
+                     "It/They may be out of date or missing some packages.\n"
+                     "This affects the following mirror(s):",
+                     IDC_STATIC,47,8,263,32
+@@ -419,7 +419,7 @@ END
+ 
+ IDD_POSTINSTALL DIALOG 0, 0, SETUP_STANDARD_DIALOG_W, 142
+ STYLE DS_MODALFRAME | DS_CENTER | DS_SHELLFONT | WS_CHILD | WS_CAPTION | WS_SYSMENU
+-CAPTION "Cygwin Setup - Running postinstall scripts"
++CAPTION "OSGeo4W Setup - Running postinstall scripts"
+ FONT 8, "MS Shell Dlg"
+ BEGIN
+     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,
+@@ -481,9 +481,9 @@ BEGIN
+     IDS_OLD_SETUPINI        "This setup.ini is older than the one you used last time you installed cygwin.  Proceed anyway?"
+     IDS_NOTHING_INSTALLED   "Nothing needed to be installed"
+     IDS_INSTALL_COMPLETE    "Installation Complete"
+-    IDS_REBOOT_REQUIRED     "In-use files have been replaced. You need to reboot as soon as possible to activate the new versions. Cygwin may operate incorrectly until you reboot."
++    IDS_REBOOT_REQUIRED     "In-use files have been replaced. You need to reboot as soon as possible to activate the new versions. OSGeo4W may operate incorrectly until you reboot."
+     IDS_ERR_OPEN_READ       "Can't open %s for reading: %s"
+-    IDS_ROOT_ABSOLUTE       "The install directory must be absolute, with both a drive letter and leading slash, like C:\\Cygwin"
++    IDS_ROOT_ABSOLUTE       "The install directory must be absolute, with both a drive letter and leading slash, like C:\\OSGeo4W"
+     IDS_DOWNLOAD_COMPLETE   "Download Complete"
+     IDS_NOLOGFILE           "Cannot open log file %s for writing"
+     IDS_UNINSTALL_COMPLETE  "Uninstalls complete."
+@@ -584,12 +584,12 @@ BEGIN
+     IDS_COLUMN_CATEGORIES "Categories"
+     IDS_COLUMN_SIZE "Size"
+     IDS_COLUMN_DESCR "Description"
+-    IDS_MBOX_CAPTION "Cygwin Setup"
++    IDS_MBOX_CAPTION "OSGeo4W Setup"
+     IDS_EXTRACTION_FAILED "Unable to extract /%s -- corrupt package?"
+     IDS_EXTRACTION_INUSE
+         "Unable to extract /%s -- error writing file\n\n"
+         "The file is in use or some other error occurred.\n\n"
+-        "Please stop all Cygwin processes and select ""Retry"", or "
++        "Please stop all OSGeo4W processes and select ""Retry"", or "
+         "select ""Continue"" to go on anyway (the file will be updated after a reboot).\n"
+     IDS_INSTALL_OLD_CYGWIN "An old version of cygwin1.dll was found here:\n%s\nDelete?"
+     IDS_INSTALL_DELETE_OLD_CYGWIN_FAILED "Couldn't delete file %s.\n"
+@@ -598,11 +598,11 @@ BEGIN
+                    "at your earliest convenience."
+     IDS_SHELLLINK_FAILED
+                     "CoCreateInstance failed with error 0x%x.\n"
+-                    "Setup will not be able to create Cygwin Icons "
++                    "Setup will not be able to create OSGeo4W Icons "
+                     "in the Start Menu or on the Desktop."
+-    IDS_UNSUPPORTED_WINDOWS_VERSION "Cygwin is not supported on this Windows version"
+-    IDS_UNSUPPORTED_WINDOWS_ARCH "Cygwin is not supported on 32-bit Windows"
+-    IDS_DEPRECATED_WINDOWS_VERSION "Cygwin support for this Windows version is deprecated, and will be removed in the next major version"
++    IDS_UNSUPPORTED_WINDOWS_VERSION "OSGeo4W is not supported on this Windows version"
++    IDS_UNSUPPORTED_WINDOWS_ARCH "OSGeo4W is not supported on 32-bit Windows"
++    IDS_DEPRECATED_WINDOWS_VERSION "OSGeo4W support for this Windows version is deprecated, and will be removed in the next major version"
+     IDS_MOUNT_REGISTRY_KEY_FAILED "Couldn't create registry key to store installation path"
+     IDS_NIO_ERROR "Internet Error: %s"
+     IDS_PREREQ_UNSOLVED_PROBLEMS
+@@ -614,11 +614,11 @@ BEGIN
+     IDS_MIXED_BITNESS_ERROR
+         "Target CPU mismatch"
+         "\n\n"
+-        "You're trying to install the %s version of Cygwin into a directory "
+-        "containing the %s version of Cygwin.  Continuing to do so would "
++        "You're trying to install the %s version of OSGeo4W into a directory "
++        "containing the %s version of OSGeo4W.  Continuing to do so would "
+         "break the existing installation."
+         "\n\n"
+-        "Either run setup-%s.exe to update your existing %s installation of Cygwin, "
++        "Either run setup-%s.exe to update your existing %s installation of OSGeo4W, "
+         "or choose another directory for your %s installation."
+     IDS_GET_SITELIST_ERROR
+           "Can't get list of download sites.\n"
+diff --git a/splash.cc b/splash.cc
+index 2309c38..d2f2452 100644
+--- a/splash.cc
++++ b/splash.cc
+@@ -19,8 +19,13 @@
+ #include "setup_version.h"
+ #include "resource.h"
+ #include "splash.h"
++#include "osgeo4w.h"
+ 
++#ifdef OSGEO4W
++#define SPLASH_URL "https://osgeo4w.osgeo.org"
++#else
+ #define SPLASH_URL "https://cygwin.com"
++#endif
+ #define SPLASH_COPYRIGHT L"Copyright © 2000-2026"
+ #define SPLASH_TRANSLATE_URL "https://cygwin.com/setup/translate"
+ 

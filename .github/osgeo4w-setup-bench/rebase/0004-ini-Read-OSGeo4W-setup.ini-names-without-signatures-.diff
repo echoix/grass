@@ -1,0 +1,274 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:38:15 +0000
+Subject: [PATCH] ini: Read OSGeo4W setup.ini names without signatures, take
+ the mirror list from OSGEO4W_MIRROR_URL and parse license lines
+
+
+diff --git a/IniDBBuilder.h b/IniDBBuilder.h
+index 3b89041..ce05696 100644
+--- a/IniDBBuilder.h
++++ b/IniDBBuilder.h
+@@ -45,6 +45,9 @@ public:
+   virtual void buildBeginProvides () = 0;
+   virtual void buildBeginConflicts () = 0;
+   virtual void buildMessage (const std::string&, const std::string&) = 0;
++  /* license: <path> <size> <md5>, an OSGeo4W extension to setup.ini */
++  virtual void buildPackageLicense (const std::string&, const std::string&,
++                                    char *) {};
+   virtual void buildSourceName (const std::string& ) = 0;
+   virtual void buildSourceNameVersion (const std::string& ) = 0;
+   virtual void buildPackageListNode (const std::string& ) = 0;
+diff --git a/IniDBBuilderPackage.cc b/IniDBBuilderPackage.cc
+index db50522..8023165 100644
+--- a/IniDBBuilderPackage.cc
++++ b/IniDBBuilderPackage.cc
+@@ -14,6 +14,8 @@
+  */
+ 
+ #include "IniDBBuilderPackage.h"
++#include "osgeo4w.h"
++#include "license.h"
+ 
+ #include "csu_util/version_compare.h"
+ 
+@@ -48,7 +50,11 @@ IniDBBuilderPackage::buildTimestamp (const std::string& time)
+ static std::string
+ setup_dl_url()
+ {
++#ifdef OSGEO4W
++  return "https://download.osgeo.org/osgeo4w/osgeo4w-setup.exe";
++#else
+   return "https://cygwin.com/setup-" + machine_name(WindowsProcessMachine()) +".exe";
++#endif
+ }
+ 
+ void
+@@ -356,6 +362,21 @@ IniDBBuilderPackage::buildPackageListOperatorVersion (const std::string& aVersio
+     }
+ }
+ 
++void
++IniDBBuilderPackage::buildPackageLicense (const std::string& path,
++                                          const std::string& size,
++                                          char *md5)
++{
++  /* The line follows version: and install:, so this is the version it is for.  */
++  LicenseInfo info;
++  info.path = path;
++  info.size = atoi (size.c_str ());
++  if (md5)
++    memcpy (info.md5, md5, sizeof info.md5);
++  package_licenses[name + " " + cbpv.version] = info;
++  delete[] md5;
++}
++
+ void
+ IniDBBuilderPackage::buildMessage (const std::string& _message_id, const std::string& _message_string)
+ {
+diff --git a/IniDBBuilderPackage.h b/IniDBBuilderPackage.h
+index a6cd478..103d100 100644
+--- a/IniDBBuilderPackage.h
++++ b/IniDBBuilderPackage.h
+@@ -54,6 +54,7 @@ public:
+   void buildBeginProvides ();
+   void buildBeginConflicts ();
+   void buildMessage (const std::string&, const std::string&);
++  void buildPackageLicense (const std::string&, const std::string&, char *);
+   void buildSourceName (const std::string& );
+   void buildSourceNameVersion (const std::string& );
+   void buildPackageListNode (const std::string& );
+diff --git a/Makefile.am b/Makefile.am
+index a0b0708..e9d6ecf 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -200,6 +200,9 @@ endif
+ 	IniDBBuilder.h \
+ 	IniDBBuilderPackage.cc \
+ 	IniDBBuilderPackage.h \
++	license.cc \
++	license.h \
++	osgeo4w.h \
+ 	inilex.ll \
+ 	iniparse.yy \
+ 	Feedback.h \
+diff --git a/gui/SitePage.cc b/gui/SitePage.cc
+index 11670a0..05a0fc8 100644
+--- a/gui/SitePage.cc
++++ b/gui/SitePage.cc
+@@ -42,7 +42,12 @@
+ #include "gui/GuiFeedback.h"
+ #include "SiteSpeedEstimator.h"
+ 
++#include "osgeo4w.h"
++#ifdef OSGEO4W
++#define MIRROR_LIST_URL OSGEO4W_MIRROR_URL
++#else
+ #define MIRROR_LIST_URL "https://cygwin.com/mirrors.lst"
++#endif
+ 
+ extern ThreeBarProgressPage Progress;
+ 
+diff --git a/ini.cc b/ini.cc
+index 1908547..c226ee2 100644
+--- a/ini.cc
++++ b/ini.cc
+@@ -19,6 +19,7 @@
+    is older than the one we used last time, and if so, warn the user. */
+ 
+ #include "ini.h"
++#include "osgeo4w.h"
+ 
+ #include "csu_util/rfc1738.h"
+ #include "csu_util/version_compare.h"
+@@ -54,7 +55,12 @@
+ unsigned int setup_timestamp = 0;
+ std::string ini_setup_version;
+ // TODO: use C++11x initializer lists instead and drop the literal array
++#ifdef OSGEO4W
++/* The OSGeo4W repository has x86_64/setup.ini.bz2 and x86_64/setup.ini only.  */
++static const std::string setup_exts[] = { "ini.bz2", "ini" };
++#else
+ static const std::string setup_exts[] = { "zst", "xz", "bz2", "ini" };
++#endif
+ IniList setup_ext_list (setup_exts,
+ 			setup_exts + (sizeof(setup_exts) / sizeof(*setup_exts)));
+ 
+@@ -70,6 +76,10 @@ std::string SetupArch()
+ 
+ std::string SetupBaseName()
+ {
++#ifdef OSGEO4W
++  if (test_mode && !SetupBaseNameOption.isPresent ())
++    return "setup_test";
++#endif
+   return SetupBaseNameOption;
+ }
+ 
+@@ -129,7 +139,14 @@ check_ini_sig (io_stream* ini_file, io_stream* ini_sig_file,
+      current setup and record the result.  On a failed signature check
+      the streams are invalidated so even if we tried to read in the
+      setup anyway there's be nothing to parse. */
++#ifdef OSGEO4W
++  /* The OSGeo4W setup.ini is not signed.  */
++  (void) ini_sig_file; (void) sig_fail; (void) site; (void) sig_name;
++  (void) feedback;
++  if (false)
++#else
+   if (!NoVerifyOption && ini_file)
++#endif
+     {
+       if (!ini_sig_file) {
+ 	// don't complain if the user installs from localdir and no
+@@ -239,7 +256,11 @@ do_remote_ini (Feedback &myFeedback)
+ 	  current_ini_ext = *ext;
+ 	  current_ini_name = n->url + SetupArch() + "/" + SetupBaseName() + "." + current_ini_ext;
+ 	  current_ini_sig_name = current_ini_name + ".sig";
++#ifdef OSGEO4W
++	  ini_sig_file = NULL;
++#else
+ 	  ini_sig_file = get_url_to_membuf (current_ini_sig_name, myFeedback);
++#endif
+ 	  ini_file = get_url_to_membuf (current_ini_name, myFeedback);
+ 	  ini_file = check_ini_sig (ini_file, ini_sig_file, sig_fail,
+ 				    n->url.c_str (), current_ini_sig_name.c_str (), myFeedback);
+diff --git a/inilex.ll b/inilex.ll
+index 40f8c5b..be1f2b7 100644
+--- a/inilex.ll
++++ b/inilex.ll
+@@ -118,6 +118,7 @@ B64	[a-zA-Z0-9_-]
+ "sdesc:"		return SDESC;
+ "ldesc:"		return LDESC;
+ "message:"		return MESSAGE;
++"license:"		return LICENSE;
+ "srcpkg:"|"Source:"	return SOURCEPACKAGE;
+ [bB]"uild-"[dD]"epends:"	return BUILDDEPENDS;
+ "replace-versions:"	return REPLACE_VERSIONS;
+diff --git a/iniparse.yy b/iniparse.yy
+index ca9b8a7..c914e35 100644
+--- a/iniparse.yy
++++ b/iniparse.yy
+@@ -59,6 +59,7 @@ extern int yylineno;
+ %token BUILDDEPENDS
+ %token OBSOLETES
+ %token MESSAGE
++%token LICENSE
+ %token ARCH RELEASE
+ 
+ %%
+@@ -123,6 +124,7 @@ singleitem /* non-empty */
+  | REPLACE_VERSIONS versionlist NL
+ 
+  | MESSAGE STRING STRING NL	{ iniBuilder->buildMessage ($2, $3); }
++ | LICENSE STRING STRING MD5 NL	{ iniBuilder->buildPackageLicense ($2, $3, $4); }
+  | error NL			{ yyerror (std::string("unrecognized line ")
+ 					  + stringify(yylineno)
+ 					  + " (do you have the latest setup?)");
+diff --git a/license.cc b/license.cc
+new file mode 100644
+index 0000000..1264b89
+--- /dev/null
++++ b/license.cc
+@@ -0,0 +1,7 @@
++/*
++ * License files of OSGeo4W packages, see license.h.
++ */
++
++#include "license.h"
++
++std::map<std::string, LicenseInfo> package_licenses;
+diff --git a/license.h b/license.h
+new file mode 100644
+index 0000000..f35ac84
+--- /dev/null
++++ b/license.h
+@@ -0,0 +1,25 @@
++/*
++ * License files of OSGeo4W packages.  setup.ini lines of the form
++ *
++ *   license: <path of the license file> <size> <md5>
++ *
++ * name a text a user has to accept before the package version is installed.
++ */
++
++#ifndef SETUP_LICENSE_H
++#define SETUP_LICENSE_H
++
++#include <map>
++#include <string>
++
++struct LicenseInfo
++{
++  std::string path;     /* relative to the mirror */
++  size_t size;
++  unsigned char md5[16];
++};
++
++/* keyed by "<package name> <version>" */
++extern std::map<std::string, LicenseInfo> package_licenses;
++
++#endif /* SETUP_LICENSE_H */
+diff --git a/state.cc b/state.cc
+index 7e07a59..a970567 100644
+--- a/state.cc
++++ b/state.cc
+@@ -25,6 +25,7 @@ int source;
+ std::string local_dir;
+ 
+ int root_scope;
++bool test_mode = false;
+ int root_menu;
+ int root_desktop;
+ 
+diff --git a/state.h b/state.h
+index 9c0e706..494c63f 100644
+--- a/state.h
++++ b/state.h
+@@ -43,6 +43,7 @@ extern std::string local_dir;
+ 
+ extern int root_text;
+ extern int root_scope;
++extern bool test_mode;
+ extern int root_menu;
+ extern int root_desktop;
+ 

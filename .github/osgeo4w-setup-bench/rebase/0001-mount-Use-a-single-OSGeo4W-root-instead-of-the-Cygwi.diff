@@ -1,0 +1,536 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:34:32 +0000
+Subject: [PATCH] mount: Use a single OSGeo4W root instead of the Cygwin mount
+ table
+
+
+diff --git a/mount.cc b/mount.cc
+index e1ed6d7..0e2eddb 100644
+--- a/mount.cc
++++ b/mount.cc
+@@ -1,6 +1,5 @@
+ /*
+- * Copyright (c) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+- * 2010, 2013 Red Hat, Inc.
++ * Copyright (c) 2000, 2001, 2002, 2003, 2006, 2008, 2013 Red Hat, Inc.
+  *
+  *     This program is free software; you can redistribute it and/or modify
+  *     it under the terms of the GNU General Public License as published by
+@@ -14,444 +13,108 @@
+  *
+  */
+ 
+-/* The purpose of this file is to hide all the details about accessing
+-   Cygwin's mount table.  If the format or location of the mount table
+-   changes, this is the file to change to match it. */
++/* The purpose of this file is to hold the installation root.  Unlike Cygwin,
++   OSGeo4W has no mount table, /etc/fstab or registry entry: there is exactly
++   one root directory and every POSIX style path handed to cygpath() lives
++   below it.  The Cygwin-only functions of the original interface are kept as
++   (mostly empty) stubs so that the rest of setup stays unchanged.  */
+ 
+-#include "ini.h"
+ #include "win32.h"
+-#include "filemanip.h"
+-#include "LogSingleton.h"
++#include "ini.h"
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <malloc.h>
+-
+-#define CYGWIN_INFO_CYGWIN_REGISTRY_NAME "Cygwin"
+-#define CYGWIN_INFO_CYGWIN_SETUP_REGISTRY_NAME "setup"
+ 
++#include "LogSingleton.h"
+ #include "mount.h"
+-#include "msg.h"
+ #include "resource.h"
+-#include "dialog.h"
+ #include "state.h"
+ 
+-#ifdef MAINTAINER_FEATURES
+-#include "getopt++/GetOption.h"
+-#include "getopt++/StringOption.h"
+-static StringOption CygwinRegistryNameOption (CYGWIN_INFO_CYGWIN_REGISTRY_NAME, '#', "override-registry-name", "Override registry name to allow parallel installs for testing purposes", false);
+-#undef CYGWIN_INFO_CYGWIN_REGISTRY_NAME
+-#define CYGWIN_INFO_CYGWIN_REGISTRY_NAME (((std::string)CygwinRegistryNameOption).c_str())
+-#endif
+-
+-/* Used when treating / and \ as equivalent. */
+-#define SLASH_P(ch) \
+-    ({ \
+-        char __c = (ch); \
+-        ((__c) == '/' || (__c) == '\\'); \
+-    })
+-
+-static struct mnt
+-{
+-  std::string native;
+-  std::string posix;
+-  int istext;
+-}
+-mount_table[255];
+-
+-struct mnt *root_here = NULL;
+-
+-void
+-create_install_root ()
+-{
+-  char buf[1000];
+-  HKEY key;
+-  DWORD disposition;
+-  DWORD rv;
+-
+-  snprintf (buf, sizeof(buf), "Software\\%s\\%s",
+-	    CYGWIN_INFO_CYGWIN_REGISTRY_NAME,
+-	    CYGWIN_INFO_CYGWIN_SETUP_REGISTRY_NAME);
+-  HKEY kr = (root_scope == IDC_ROOT_USER) ? HKEY_CURRENT_USER
+-					  : HKEY_LOCAL_MACHINE;
+-  do
+-    {
+-      rv = RegCreateKeyEx (kr, buf, 0, (char *)"Cygwin", 0,
+-			   KEY_ALL_ACCESS | SETUP_KEY_WOW64,
+-			   0, &key, &disposition);
+-      if (rv != ERROR_ACCESS_DENIED || kr != HKEY_LOCAL_MACHINE)
+-	break;
+-      Log (LOG_PLAIN) << "Access denied trying to create rootdir registry key"
+-		      << endLog;
+-      kr = HKEY_CURRENT_USER;
+-    }
+-  while (rv == ERROR_ACCESS_DENIED);
+-  if (rv == ERROR_SUCCESS)
+-    do
+-      {
+-	rv = RegSetValueEx (key, "rootdir", 0, REG_SZ,
+-			    (BYTE *) get_root_dir ().c_str (),
+-			    get_root_dir ().size () + 1);
+-	if (rv != ERROR_ACCESS_DENIED || kr != HKEY_LOCAL_MACHINE)
+-	  break;
+-	Log (LOG_PLAIN) << "Access denied trying to create rootdir registry value"
+-			<< endLog;
+-	kr = HKEY_CURRENT_USER;
+-      }
+-    while (rv == ERROR_ACCESS_DENIED);
+-  if (rv != ERROR_SUCCESS)
+-    mbox (NULL, IDS_MOUNT_REGISTRY_KEY_FAILED, MB_OK | MB_ICONWARNING);
+-  RegCloseKey (key);
+-
+-  Log (LOG_TIMESTAMP) << "Registry value set: HKEY_"
+-		      << (root_scope == IDC_ROOT_USER ? "CURRENT_USER\\"
+-						      : "LOCAL_MACHINE\\")
+-		      << buf << "\\rootdir = \"" << get_root_dir () << "\""
+-		      << endLog;
+-}
+-
+-inline char *
+-unconvert_slashes (char *in_name)
+-{
+-  char *name = in_name;
+-  while ((name = strchr (name, '/')) != NULL)
+-    *name++ = '\\';
+-  return in_name;
+-}
+-
+-inline char *
+-skip_ws (char *in)
+-{
+-  while (*in == ' ' || *in == '\t')
+-    ++in;
+-  return in;
+-}
++static std::string osgeo4w_root;
+ 
+-inline char *
+-find_ws (char *in)
++/* Whether the process runs elevated.  Upstream setup elevates itself and
++   checks the Administrators group; OSGeo4W decides on the process token and
++   never elevates, as a user install into %LOCALAPPDATA% is a normal case.  */
++int
++is_elevated ()
+ {
+-  while (*in && *in != ' ' && *in != '\t')
+-    ++in;
+-  return in;
+-}
++  HANDLE token;
++  if (!OpenProcessToken (GetCurrentProcess (), TOKEN_QUERY, &token))
++    return 0;
+ 
+-inline char *
+-conv_fstab_spaces (char *field)
+-{
+-  register char *sp = field;
+-  while ((sp = strstr (sp, "\\040")))
+-    {
+-      *sp++ = ' ';
+-      memmove (sp, sp + 3, strlen (sp + 3) + 1);
+-    }
+-  return field;
++  DWORD size;
++  TOKEN_ELEVATION elevation;
++  BOOL status = GetTokenInformation (token, TokenElevation, &elevation,
++                                     sizeof elevation, &size);
++  CloseHandle (token);
++  return status && elevation.TokenIsElevated != 0;
+ }
+ 
+-static bool got_usr_bin;
+-static bool got_usr_lib;
+-
+-static bool
+-from_fstab_line (mnt *m, char *line)
++/* OSGeo4W installs for all users into %SYSTEMDRIVE%\OSGeo4W when elevated,
++   and for the current user into %LOCALAPPDATA%\Programs\OSGeo4W otherwise.  */
++std::string
++get_default_root_dir (bool elevated)
+ {
+-  char *native_path, *posix_path, *fs_type;
++  std::string r;
+ 
+-  /* First field: Native path. */
+-  char *c = skip_ws (line);
+-  if (!*c || *c == '#')
+-    return false;
+-  char *cend = find_ws (c);
+-  *cend = '\0';
+-  native_path = conv_fstab_spaces (c);
+-  /* Second field: POSIX path. */
+-  c = skip_ws (cend + 1);
+-  if (!*c)
+-    return false;
+-  cend = find_ws (c);
+-  *cend = '\0';
+-  posix_path = conv_fstab_spaces (c);
+-  /* Third field: FS type. */
+-  c = skip_ws (cend + 1);
+-  if (!*c)
+-    return false;
+-  cend = find_ws (c);
+-  *cend = '\0';
+-  fs_type = c;
+-
+-  if (strcmp (fs_type, "cygdrive"))
++  if (!elevated && getenv ("LOCALAPPDATA"))
+     {
+-      for (mnt *sm = mount_table; sm < m; ++sm)
+-	if (sm->posix == std::string (posix_path))
+-	  {
+-	    sm->native = std::string (unconvert_slashes (native_path));
+-	    return false;
+-	  }
+-      m->posix = std::string (posix_path);
+-      m->native = std::string (unconvert_slashes (native_path));
+-      if (!strcmp (posix_path, "/usr/bin"))
+-	got_usr_bin = true;
+-      else if (!strcmp (posix_path, "/usr/lib"))
+-	got_usr_lib = true;
++      r = getenv ("LOCALAPPDATA");
++      r += "\\Programs\\OSGeo4W";
++      return r;
+     }
+-  return true;
+-}
+-
+-#define BUFSIZE 65536
+-#define LFSTAB L"\\etc\\fstab"
+-
+-static bool
+-from_fstab (mnt *m, const std::string& in_path)
+-{
+-  char buf[BUFSIZE];
+-  WCHAR path[in_path.size () + sizeof (LFSTAB)];
+ 
+-  mklongpath (path, in_path.c_str (), sizeof (path) / sizeof (WCHAR));
+-  wcscat (path, LFSTAB);
+-  HANDLE h = CreateFileW (path, GENERIC_READ, FILE_SHARE_READ, NULL,
+-                          OPEN_EXISTING,
+-			  FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS,
+-			  NULL);
+-  if (h == INVALID_HANDLE_VALUE)
+-    return false;
+-  char *got = buf;
+-  DWORD len = 0;
+-  /* Using BUFSIZE-2 leaves space to append two \0. */
+-  while (ReadFile (h, got, BUFSIZE - 2 - (got - buf), &len, NULL))
+-    {
+-      char *end;
+-
+-      /* Set end marker. */
+-      got[len] = got[len + 1] = '\0';
+-      /* Set len to the absolute len of bytes in buf. */
+-      len += got - buf;
+-      /* Reset got to start reading at the start of the buffer again. */
+-      got = buf;
+-      while (got < buf + len && (end = strchr (got, '\n')))
+-        {
+-          end[end[-1] == '\r' ? -1 : 0] = '\0';
+-          if (from_fstab_line (m, got))
+-            ++m;
+-          got = end + 1;
+-        }
+-      if (len < BUFSIZE - 1)
+-        break;
+-      /* We have to read once more.  Move remaining bytes to the start of
+-         the buffer and reposition got so that it points to the end of
+-         the remaining bytes. */
+-      len = buf + len - got;
+-      memmove (buf, got, len);
+-      got = buf + len;
+-      buf[len] = buf[len + 1] = '\0';
+-    }
+-  if (got > buf && from_fstab_line (m, got))
+-    ++m;
+-  CloseHandle (h);
+-  return true;
++  r = getenv ("SYSTEMDRIVE") ? getenv ("SYSTEMDRIVE") : "C:";
++  r += "\\OSGeo4W";
++  return r;
+ }
+ 
+-static void
+-add_usr_mnts (struct mnt *m)
++void
++create_install_root ()
+ {
+-  /* Set default /usr/bin and /usr/lib */
+-  if (!got_usr_bin)
+-    {
+-      m->posix = "/usr/bin";
+-      m->native = root_here->native + "\\bin";
+-      ++m;
+-    }
+-  if (!got_usr_lib)
+-    {
+-      m->posix = "/usr/lib";
+-      m->native = root_here->native + "\\lib";
+-    }
++  /* Cygwin records the root in the registry; OSGeo4W does not.  */
+ }
+ 
+ void
+ read_mounts (const std::string val)
+ {
+-  DWORD posix_path_size;
+-  struct mnt *m = mount_table;
+-  char buf[10000];
+-
+-  root_here = NULL;
+-  for (mnt * m1 = mount_table; m1->posix.size (); m1++)
+-    {
+-      m1->posix.clear();
+-      m1->native.clear();
+-    }
+-  got_usr_bin = got_usr_lib = false;
+-
+-  if (val.size ())
+-    {
+-      /* Cygwin rootdir always < MAX_PATH. */
+-      char rootdir[MAX_PATH + 1];
+-
+-      if (GetFullPathName (val.c_str (), MAX_PATH + 1, rootdir, NULL))
+-	{
+-	  m->native = rootdir;
+-	  m->posix = "/";
+-	  root_here = m;
+-	  add_usr_mnts (++m);
+-	}
+-    }
+-  else
+-    {
+-      /* Always check HKEY_LOCAL_MACHINE first. */
+-      for (int isuser = 0; isuser <= 1; isuser++)
+-	{
+-	  snprintf (buf, sizeof(buf), "Software\\%s\\%s",
+-		   CYGWIN_INFO_CYGWIN_REGISTRY_NAME,
+-		   CYGWIN_INFO_CYGWIN_SETUP_REGISTRY_NAME);
+-	  HKEY key = isuser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE;
+-	  if (RegOpenKeyEx (key, buf, 0, KEY_ALL_ACCESS | SETUP_KEY_WOW64,
+-			    &key) != ERROR_SUCCESS)
+-	    continue;
+-	  DWORD type;
+-	  /* Cygwin rootdir always < MAX_PATH. */
+-	  char aBuffer[MAX_PATH + 1];
+-	  posix_path_size = MAX_PATH;
+-	  if (RegQueryValueEx
+-	      (key, "rootdir", 0, &type, (BYTE *) aBuffer,
+-	       &posix_path_size) == ERROR_SUCCESS)
+-	    {
+-	      m->native = std::string (aBuffer);
+-	      m->posix = "/";
+-	      root_here = m++;
+-	      from_fstab (m, root_here->native);
+-	      add_usr_mnts (m);
+-	      break;
+-	    }
+-	  RegCloseKey (key);
+-	}
+-    }
+-
+-  /*
+-    The default root directory: for historical reasons (you could already have a
+-    x86 install in cygwin), it's always cygwin64 for an x86_64 install.
+-
+-    It isn't critical that these are unique by arch, as we'll later check and
+-    warn if it already contains a cygwin install for a different arch.
+-  */
+-  if (!root_here)
+-    {
+-      /* Affected path always < MAX_PATH. */
+-      char windir[MAX_PATH];
+-      GetSystemWindowsDirectory (windir, sizeof (windir));
+-      windir[2] = 0;
+-
+-      std::string rootdir;
+-      if (installArch == IMAGE_FILE_MACHINE_AMD64)
+-        rootdir = "\\cygwin64";
+-      else if (WowNativeMachine() == installArch)
+-        rootdir = "\\cygwin";
+-      else if (installArch == IMAGE_FILE_MACHINE_I386)
+-          if (WowNativeMachine() == IMAGE_FILE_MACHINE_AMD64)
+-            rootdir = "\\cygwin";
+-          else
+-            rootdir = "\\cygwin32";
+-      else
+-        rootdir = "\\cygwin_" + machine_name(installArch);
+-
+-      m->native = std::string (windir) + rootdir;
+-      m->posix = "/";
+-      root_here = m;
+-      add_usr_mnts (++m);
+-    }
++  /* There is no mount table to read.  Only an explicitly given root counts.  */
++  if (!val.empty ())
++    set_root_dir (val);
+ }
+ 
+-// set default root_scope: USER if only HKEY_CURRENT_USER registry key exists,
+-// otherwise SYSTEM.
+-void set_default_root_scope()
++void
++set_default_root_scope ()
+ {
+-  root_scope = IDC_ROOT_SYSTEM;
+-
+-  char buf[10000];
+-  for (int isuser = 0; isuser <= 1; isuser++)
+-    {
+-      snprintf (buf, sizeof(buf), "Software\\%s\\%s",
+-                CYGWIN_INFO_CYGWIN_REGISTRY_NAME,
+-                CYGWIN_INFO_CYGWIN_SETUP_REGISTRY_NAME);
+-      HKEY key = isuser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE;
+-      if (RegOpenKeyEx (key, buf, 0, KEY_ALL_ACCESS | SETUP_KEY_WOW64,
+-                        &key) == ERROR_SUCCESS)
+-        {
+-          RegCloseKey (key);
+-          root_scope = isuser ? IDC_ROOT_USER : IDC_ROOT_SYSTEM;
+-          break;
+-        }
+-    }
++  root_scope = is_elevated () ? IDC_ROOT_SYSTEM : IDC_ROOT_USER;
+ }
+ 
+ void
+ set_root_dir (const std::string val)
+ {
+-  read_mounts (val);
++  if (val == osgeo4w_root)
++    return;
++  if (osgeo4w_root.empty ())
++    Log (LOG_PLAIN) << "Setting root to " << val << endLog;
++  else
++    Log (LOG_PLAIN) << "Switching root from " << osgeo4w_root << " to " << val << endLog;
++  osgeo4w_root = val;
+ }
+ 
+-static std::string empty;
+-
+ const std::string &
+ get_root_dir ()
+ {
+-  return root_here ? root_here->native : empty;
+-}
+-
+-/* Return non-zero if PATH1 is a prefix of PATH2.
+-   Both are assumed to be of the same path style and / vs \ usage.
+-   Neither may be "".
+-
+-   Examples:
+-   /foo/ is a prefix of /foo  <-- may seem odd, but desired
+-   /foo is a prefix of /foo/
+-   / is a prefix of /foo/bar
+-   / is not a prefix of foo/bar
+-   foo/ is a prefix foo/bar
+-   /foo is not a prefix of /foobar
+-*/
+-
+-static int
+-path_prefix_p (const std::string path1, const std::string path2)
+-{
+-  size_t len1 = path1.size ();
+-  /* Handle case where PATH1 has trailing '/' and when it doesn't.  */
+-  if (len1 > 0 && SLASH_P (path1.c_str ()[len1 - 1]))
+-    --len1;
+-
+-  if (len1 == 0)
+-    return SLASH_P (path2.c_str ()[0])
+-      && !SLASH_P (path2.c_str ()[1]);
+-
+-  if (casecompare(path1, path2, len1) != 0)
+-    return 0;
+-
+-  return SLASH_P (path2.c_str ()[len1]) || path2.size () == len1
+-    || path1.c_str ()[len1 - 1] == ':';
++  return osgeo4w_root;
+ }
+ 
+ std::string
+-cygpath (const std::string& thePath)
++cygpath (const std::string &thePath)
+ {
+-  size_t max_len = 0;
+-  struct mnt *m, *match = NULL;
+-  for (m = mount_table; m->posix.size (); m++)
+-    {
+-      size_t n = m->posix.size ();
+-      if (n <= max_len || !path_prefix_p (m->posix, thePath))
+-	continue;
+-      max_len = n;
+-      match = m;
+-    }
+-
+-  if (!match)
+-    return std::string();
+-
+-  std::string native;
+-  if (max_len == thePath.size ())
+-    {
+-      native = match->native;
+-    }
+-  else if (match->posix.size () > 1)
+-    native = match->native + thePath.substr(max_len, std::string::npos);
+-  else
+-    native = match->native + "/" + thePath.substr(max_len, std::string::npos);
+-  return native;
++  if (osgeo4w_root.empty ())
++    return std::string ();
++  if (thePath.empty () || thePath == "/")
++    return osgeo4w_root;
++  if (thePath[0] == '/' || thePath[0] == '\\')
++    return osgeo4w_root + thePath;
++  return osgeo4w_root + "/" + thePath;
+ }
+diff --git a/mount.h b/mount.h
+index b0ff251..37d7f61 100644
+--- a/mount.h
++++ b/mount.h
+@@ -20,6 +20,8 @@
+ 
+ #define SETUP_KEY_WOW64 ((installArch != IMAGE_FILE_MACHINE_I386) ? KEY_WOW64_64KEY : KEY_WOW64_32KEY)
+ 
++int is_elevated ();
++std::string get_default_root_dir (bool elevated);
+ void create_install_root ();
+ void read_mounts (const std::string);
+ void set_default_root_scope();

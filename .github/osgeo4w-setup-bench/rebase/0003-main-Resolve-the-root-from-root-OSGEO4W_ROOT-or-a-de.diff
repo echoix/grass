@@ -1,0 +1,109 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:36:01 +0000
+Subject: [PATCH] main: Resolve the root from --root, OSGEO4W_ROOT or a default
+ and never self-elevate
+
+
+diff --git a/main.cc b/main.cc
+index d1101a9..4629273 100644
+--- a/main.cc
++++ b/main.cc
+@@ -75,6 +75,8 @@
+ #include "ConnectionSetting.h"
+ #include "KeysSetting.h"
+ #include "SiteSetting.h"
++#include "osgeo4w.h"
++#include "mount.h"
+ 
+ #include <wincon.h>
+ #include <fstream>
+@@ -120,6 +122,7 @@ static BoolOption VersionOption (false, 'V', "version", IDS_HELPTEXT_VERSION);
+ BoolOption UnsupportedOption (false, '\0', "allow-unsupported-windows", IDS_HELPTEXT_ALLOW_UNSUPPORTED_WINDOWS);
+ static BoolOption DeprecatedOption (false, 'w', "no-warn-deprecated-windows", IDS_HELPTEXT_NO_WARN_DEPRECATED_WINDOWS);
+ static StringChoiceOption SymlinkTypeOption(symlink_types, '\0', "symlink-type", IDS_HELPTEXT_SYMLINK_TYPE, false, SymlinkTypeMagic);
++extern StringOption RootOption;
+ static StringOption GuiLangOption ("", '\0', "lang", IDS_HELPTEXT_LANG);
+ 
+ static void inline
+@@ -294,13 +297,36 @@ WinMain (HINSTANCE h,
+        supposed to elevate. */
+     nt_sec.initialiseWellKnownSIDs ();
+     /* Check if we have to elevate. */
++#ifdef OSGEO4W
++    /* OSGeo4W never elevates itself: it installs for the current user unless
++       it was started elevated.  */
++    bool elevate = false;
++#else
+     bool elevate = !output_only && OSMajorVersion () >= 6
+ 		   && !NoAdminOption && !nt_sec.isRunAsAdmin ();
++#endif
+     std::string elevate_extra_args;
+ 
+     if (unattended_mode || output_only || !elevate)
+       set_cout ();
+ 
++#ifdef OSGEO4W
++    /* The installation root is --root, else OSGEO4W_ROOT, else a default which
++       depends on whether we run elevated.  An explicitly given root also holds
++       the log files until the local package directory is known.  */
++    if (!output_only)
++      {
++        std::string root = RootOption;
++        if (root.empty () && getenv ("OSGEO4W_ROOT"))
++          root = getenv ("OSGEO4W_ROOT");
++        if (root.empty ())
++          root = get_default_root_dir (is_elevated ());
++        else
++          local_dir = root;
++        set_root_dir (root);
++      }
++#endif
++
+     /* Start logging only if we don't elevate.  Same for setting default
+        security settings. */
+     LogSingleton::SetInstance (*LogFile::createLogFile ());
+@@ -313,7 +339,7 @@ WinMain (HINSTANCE h,
+ 	Logger ().setFile (LOG_BABBLE, local_dir + sep + "setup.log.full",
+ 			   false);
+ 	Logger ().setFile (0, local_dir + sep + "setup.log", true);
+-	Log (LOG_PLAIN) << "Starting cygwin install, version "
++	Log (LOG_PLAIN) << "Starting " << SETUP_NAME << " install, version "
+ 			<< setup_version << endLog;
+       }
+ 
+@@ -336,7 +362,7 @@ WinMain (HINSTANCE h,
+       {
+         if (invalid_option)
+           Log (LOG_PLAIN) << "\n" << LoadStringUtf8(IDS_HELPTEXT_ERROR) << "\n" << endLog;
+-        Log (LOG_PLAIN) << "Cygwin setup " << setup_version << endLog;
++        Log (LOG_PLAIN) << SETUP_NAME << " setup " << setup_version << endLog;
+         Log (LOG_PLAIN) << "\n" << LoadStringUtf8(IDS_HELPTEXT_HEADER) << "\n" << endLog;
+ 	GetOption::GetInstance ().ParameterUsage (Log (LOG_PLAIN), LoadStringUtf8);
+ 	Log (LOG_PLAIN) << endLog;
+@@ -347,7 +373,7 @@ WinMain (HINSTANCE h,
+ 
+     if (VersionOption)
+       {
+-        Log (LOG_PLAIN) << "Cygwin setup " << setup_version << endLog;
++        Log (LOG_PLAIN) << SETUP_NAME << " setup " << setup_version << endLog;
+         Logger ().exit (0, false);
+         goto finish_up;
+       }
+diff --git a/osgeo4w.h b/osgeo4w.h
+index cbe6ae7..8cbeea1 100644
+--- a/osgeo4w.h
++++ b/osgeo4w.h
+@@ -10,9 +10,12 @@
+ #define SETUP_OSGEO4W_H
+ 
+ #ifdef OSGEO4W
++#define SETUP_NAME "OSGeo4W"
+ #ifndef OSGEO4W_MIRROR_URL
+ #define OSGEO4W_MIRROR_URL "https://download.osgeo.org/osgeo4w/ssl/mirrors.lst"
+ #endif
++#else
++#define SETUP_NAME "Cygwin"
+ #endif
+ 
+ #endif /* SETUP_OSGEO4W_H */

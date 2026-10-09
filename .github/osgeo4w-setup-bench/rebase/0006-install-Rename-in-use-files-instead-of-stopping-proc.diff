@@ -1,0 +1,177 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:40:29 +0000
+Subject: [PATCH] install: Rename in-use files instead of stopping processes,
+ skip Cygwin directories, and keep writing INSTALLED.DB 2
+
+
+diff --git a/install.cc b/install.cc
+index 578ff7f..3b13079 100644
+--- a/install.cc
++++ b/install.cc
+@@ -63,6 +63,7 @@
+ #include "Exception.h"
+ #include "processlist.h"
+ #include "gui/GuiFeedback.h"
++#include "osgeo4w.h"
+ 
+ extern ThreeBarProgressPage Progress;
+ 
+@@ -121,6 +122,10 @@ class Installer
+   private:
+     bool extract_replace_on_reboot(archive *, const std::string&,
+                                    const std::string&, std::string);
++#ifdef OSGEO4W
++    bool replace_inuse_file(archive *, const std::string&,
++                            const std::string&, const std::string&);
++#endif
+     bool _installOne (packagemeta &pkgm,
+                       const std::string& prefixURL,
+                       const std::string& prefixPath,
+@@ -395,6 +400,48 @@ create_allow_protected_renames ()
+   RegCloseKey (key);
+ }
+ 
++#ifdef OSGEO4W
++/* Renames the file "fn" which is in use to "fn.<time>", extracts the new file
++   in its place and has the old copy removed at the next reboot if we are
++   elevated.  Returns true if the new file was extracted.  */
++bool
++Installer::replace_inuse_file (archive *tarstream, const std::string& prefixURL,
++                               const std::string& prefixPath,
++                               const std::string& fn)
++{
++  const std::string s = prefixURL + prefixPath + fn;
++  const std::string suffix = "." + std::to_string (time (NULL));
++  const std::string d = s + suffix;
++
++  if (io_stream::exists (d) && io_stream::remove (d) != 0)
++    Log (LOG_BABBLE) << "Old copy " << d << " of in-use file could not be removed."
++                     << endLog;
++
++  if (io_stream::move (s, d) != 0)
++    {
++      Log (LOG_BABBLE) << "In-use file " << s << " could not be renamed to "
++                       << d << endLog;
++      return false;
++    }
++  Log (LOG_BABBLE) << "In-use file " << s << " renamed to " << d << endLog;
++
++  if (archive::extract_file (tarstream, prefixURL, prefixPath) != archive::extract_ok)
++    return false;
++
++  if (is_elevated () && !NoReplaceOnReboot)
++    {
++      /* Clean up the old copy on the next reboot.  */
++      const std::string w = cygpath (prefixPath + fn + suffix);
++      WCHAR wname[w.size () + 7];
++      mklongpath (wname, w.c_str (), w.size () + 7);
++      if (!MoveFileExW (wname, NULL, MOVEFILE_DELAY_UNTIL_REBOOT))
++        Log (LOG_TIMESTAMP) << "Unable to schedule reboot removal of file " << d
++                            << " (Win32 Error " << GetLastError () << ")" << endLog;
++    }
++  return true;
++}
++#endif
++
+ bool
+ Installer::extract_replace_on_reboot (archive *tarstream, const std::string& prefixURL,
+                                       const std::string& prefixPath, std::string fn)
+@@ -625,6 +672,14 @@ Installer::_installOne (packagemeta &pkgm,
+             {
+ 	    case archive::extract_inuse: // in use
+               {
++#ifdef OSGEO4W
++                /* Rename the file in use out of the way and extract the new
++                   one.  If that fails, fall back to replacing it on reboot,
++                   without ever stopping the processes that use it.  */
++                if (replace_inuse_file (tarstream, prefixURL, prefixPath, fn))
++                  break;
++                ignoreInUseErrors = true;
++#endif
+                 if (!ignoreInUseErrors)
+                   {
+                     // convert the file name to long UNC form
+@@ -772,6 +827,7 @@ Installer::_installOne (packagemeta &pkgm,
+   return error_in_this_package;
+ }
+ 
++#ifndef OSGEO4W /* Cygwin only: offers to delete cygwin1.dll in the system directory */
+ static void
+ check_for_old_cygwin (HWND owner)
+ {
+@@ -801,6 +857,7 @@ check_for_old_cygwin (HWND owner)
+ 
+   return;
+ }
++#endif
+ 
+ static void
+ do_install_thread (HINSTANCE h, HWND owner)
+@@ -815,6 +872,7 @@ do_install_thread (HINSTANCE h, HWND owner)
+                        std::string("file://") + std::string(get_root_dir()),
+ 		       0755);
+ 
++#ifndef OSGEO4W /* OSGeo4W packages create the directories they need */
+   for (i = 0; Installer::StandardDirs[i].name; i++)
+   {
+     std::string p = cygpath (Installer::StandardDirs[i].name);
+@@ -826,6 +884,9 @@ do_install_thread (HINSTANCE h, HWND owner)
+   /* Create /var/run/utmp */
+   io_stream *utmp = io_stream::open ("cygfile:///var/run/utmp", "wb", 0666);
+   delete utmp;
++#else
++  (void) i;
++#endif
+ 
+   Installer myInstaller;
+   myInstaller.initDialog();
+@@ -980,8 +1041,10 @@ do_install_thread (HINSTANCE h, HWND owner)
+ 	  err);
+     }
+ 
++#ifndef OSGEO4W
+   if (!myInstaller.errors)
+     check_for_old_cygwin (owner);
++#endif
+   if (num_installs == 0 && num_uninstalls == 0)
+     {
+       if (!unattended_mode)
+diff --git a/package_db.cc b/package_db.cc
+index 0a99184..4753915 100644
+--- a/package_db.cc
++++ b/package_db.cc
+@@ -35,6 +35,7 @@
+ #include "filemanip.h"
+ #include "package_version.h"
+ #include "package_db.h"
++#include "osgeo4w.h"
+ #include "package_meta.h"
+ #include "Exception.h"
+ #include "Generic.h"
+@@ -313,7 +314,16 @@ packagedb::flush ()
+   if (!ndb)
+     return errno ? errno : 1;
+ 
++#ifdef OSGEO4W
++  /* Keep writing INSTALLED.DB 2: the OSGeo4W setup of the past reads nothing
++     else, and exits when it finds version 3.  The price is that the user_picked
++     flag of version 3 is not recorded.  */
++  const int installed_db_version = 2;
++  ndb->write ("INSTALLED.DB 2\n", strlen ("INSTALLED.DB 2\n"));
++#else
++  const int installed_db_version = 3;
+   ndb->write ("INSTALLED.DB 3\n", strlen ("INSTALLED.DB 3\n"));
++#endif
+   for (packagedb::packagecollection::iterator i = packages.begin ();
+        i != packages.end (); ++i)
+     {
+@@ -329,7 +339,7 @@ packagedb::flush ()
+ 	  std::string line;
+ 	  line = pkgm.name + " " +
+ 	    pkgm.name + "-" + std::string(pkgm.installed.Canonical_version()) + ".tar.bz2 " +
+-	    (pkgm.user_picked ? "1" : "0") + "\n";
++	    ((installed_db_version == 3 && pkgm.user_picked) ? "1" : "0") + "\n";
+ 	  ndb->write (line.c_str(), line.size());
+ 	}
+     }

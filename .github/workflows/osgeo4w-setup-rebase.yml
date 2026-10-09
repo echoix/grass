@@ -22,7 +22,7 @@ env:
 jobs:
   smoke:
     runs-on: windows-2022
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -45,8 +45,38 @@ jobs:
           C:\cygwin64\bin\git.exe clone --no-checkout $env:UPSTREAM_REPO /cygdrive/c/up-src
           C:\cygwin64\bin\git.exe -C /cygdrive/c/up-src checkout $env:UPSTREAM_SHA
 
+      - name: Check out the OSGeo4W setup sources (icon, fork reference)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: jef-n/OSGeo4W
+          ref: 2a4fef009d86d52b35e25c43954d817cfec79e8e
+          path: osgeo4w
+          persist-credentials: false
+          sparse-checkout: src/setup
+
       - name: Build unmodified upstream
+        if: ${{ contains(github.event.head_commit.message, '[build pristine]') }}
         shell: pwsh
         run: |
           $ws = (C:\cygwin64\bin\cygpath.exe -u $env:GITHUB_WORKSPACE)
           C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$ws/.github/osgeo4w-setup-bench/build_upstream.sh /cygdrive/c/up-src /cygdrive/c/up-build /cygdrive/c/up-setup.exe"
+
+      - name: Apply the OSGeo4W patch series and build (R0 sources)
+        shell: pwsh
+        run: |
+          # the icon is binary and lives in the OSGeo4W repository
+          Copy-Item osgeo4w\src\setup\osgeo.ico C:\up-src\osgeo.ico
+          $ws = (C:\cygwin64\bin\cygpath.exe -u $env:GITHUB_WORKSPACE)
+          C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$ws/.github/osgeo4w-setup-bench/build_upstream.sh /cygdrive/c/up-src /cygdrive/c/rb-build /cygdrive/c/rb-setup.exe $ws/.github/osgeo4w-setup-bench/rebase"
+
+      - name: Keep build outputs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: rebase-build
+          path: |
+            C:\rb-setup.exe
+            C:\up-setup.exe
+            C:\rb-build\make.log
+            C:\rb-build\config.log
+          if-no-files-found: warn
