@@ -18,7 +18,7 @@ concurrency:
 jobs:
   bench:
     runs-on: windows-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -41,6 +41,8 @@ jobs:
         shell: pwsh
         run: |
           python -m pip install --quiet zstandard
-          $out = python .github/osgeo4w-setup-bench/formats.py (Get-ChildItem C:\bench\pkgs\*.tar.bz2).FullName
+          # The debug symbol package is too large to recompress in memory.
+          $pkgs = (Get-ChildItem C:\bench\pkgs\*.tar.bz2 | Where-Object { $_.Name -notlike "*-pdb-*" }).FullName
+          $out = python .github/osgeo4w-setup-bench/formats.py $pkgs
           $out
           Add-Content $env:GITHUB_STEP_SUMMARY "## Format comparison`n`n$($out -join "`n")"

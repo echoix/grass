@@ -37,7 +37,8 @@ function Invoke-Bench([string]$exe, [string[]]$benchArgs, [bool]$extract) {
 
 function Add-Row($pkg, $defender, $label, $r) {
   $files = if ($r.Info -match 'files=(\d+)') { $Matches[1] } else { "" }
-  $script:rows += "| $($pkg.Name) | $defender | $label | $files | $('{0:N2}' -f $r.Min) | $('{0:N2}' -f $r.Median) |"
+  $mb = if ($r.Info -match 'bytes=(\d+)') { '{0:N0}' -f ([double]$Matches[1] / 1MB) } else { "" }
+  $script:rows += "| $($pkg.Name) | $defender | $label | $files | $mb | $('{0:N2}' -f $r.Min) | $('{0:N2}' -f $r.Median) |"
   Write-Host $script:rows[-1]
 }
 
@@ -71,8 +72,10 @@ foreach ($state in $states) {
       Add-Row $pkg $defLabel "decompress only, 4K reads, built /$exe" $r
     }
     foreach ($case in $extractCases) {
-      # Only the baseline and the combined cases are repeated with Defender off.
-      if ($state -eq $false -and $case.Label -notmatch "baseline|64K reads \+ 64K") { continue }
+      # Only the baseline and the combined cases are repeated with Defender
+      # off, and for the few-huge-files control package.
+      $short = $state -eq $false -or $pkg.Name -like "*-pdb-*"
+      if ($short -and $case.Label -notmatch "baseline|64K reads \+ 64K") { continue }
       $a = @("extract", $pkg.FullName, $dest) + $case.Args
       $r = Invoke-Bench "$Work\bench_$($case.Exe).exe" $a $true
       Add-Row $pkg $defLabel "extract: $($case.Label)" $r
@@ -81,7 +84,7 @@ foreach ($state in $states) {
 }
 if ($states.Count -gt 1) { Set-Defender $defenderStart }
 
-$header = @("| package | Defender | case | files | min s | median s |", "|---|---|---|---|---|---|")
+$header = @("| package | Defender | case | files | MB out | min s | median s |", "|---|---|---|---|---|---|---|")
 $report = ($header + $rows) -join "`n"
 Write-Host $report
 if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## Extraction timings`n`n$report" }

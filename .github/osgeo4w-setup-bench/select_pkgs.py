@@ -1,4 +1,9 @@
-"""Download a few real OSGeo4W packages to benchmark the setup extraction."""
+"""Download real OSGeo4W packages to benchmark the setup extraction.
+
+Package size says little about extraction cost: a few huge files (debug
+symbols) are cheap per byte, while many small files (Python packages, JupyterLab
+assets, development trees) are dominated by per-file work. Both kinds are used.
+"""
 
 import bz2
 import os
@@ -7,6 +12,15 @@ import urllib.request
 
 BASE = "https://download.osgeo.org/osgeo4w/v2/"
 OUT = sys.argv[1]
+
+WANTED = [
+    "python3-jupyterlab",  # small download, very many small files
+    "python3-notebook",  # small download, many small files
+    "python3-core",  # Python standard library
+    "grass-dev",  # development build with many files
+    "qgis-ltr-pdb",  # control: large download, few huge files
+]
+
 os.makedirs(OUT, exist_ok=True)
 
 with urllib.request.urlopen(BASE + "x86_64/setup.ini.bz2") as resp:
@@ -21,23 +35,11 @@ for block in text.split("\n@ ")[1:]:
             break
         if line.startswith("install:"):
             _, path, size = line.split()[:3]
-            if path.endswith(".tar.bz2"):
-                packages[name] = (path, int(size))
+            packages[name] = (path, int(size))
             break
 
-chosen = {}
-if "python3-core" in packages:
-    chosen["python3-core"] = packages["python3-core"]
-limit = 200 * 1024 * 1024
-candidates = [
-    (size, name)
-    for name, (path, size) in packages.items()
-    if size <= limit and not name.endswith(("-debug", "-src"))
-]
-for size, name in sorted(candidates, reverse=True)[:1]:
-    chosen[name] = packages[name]
-
-for name, (path, size) in chosen.items():
+for name in WANTED:
+    path, size = packages[name]
     dest = os.path.join(OUT, os.path.basename(path))
     print(f"{name}: {path} ({size / 1e6:.1f} MB)", flush=True)
     urllib.request.urlretrieve(BASE + path, dest)
