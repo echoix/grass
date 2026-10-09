@@ -42,7 +42,7 @@ jobs:
       - name: Fetch pinned upstream
         shell: pwsh
         run: |
-          git clone --no-checkout $env:UPSTREAM_REPO C:\up-src
+          git -c core.autocrlf=false clone --no-checkout $env:UPSTREAM_REPO C:\up-src
           git -C C:\up-src checkout $env:UPSTREAM_SHA
 
       - name: Build unmodified upstream
