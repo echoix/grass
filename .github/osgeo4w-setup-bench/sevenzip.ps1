@@ -39,12 +39,12 @@ function Best([scriptblock]$block) {
   $best
 }
 
-# Runs one 7z.exe decoding all archives to stdout and discards the output. The
-# output is read here, so nothing is written to disk. Fails loudly: an earlier
-# version silently measured 0 s because 7z.exe had exited with an error.
-function Invoke-7zDecode([string[]]$archives, [int]$threads) {
+# Decodes one archive with 7z.exe to stdout and drains the output in-process, so
+# nothing is written to disk. Fails loudly: an earlier version silently measured
+# 0 s because 7z.exe had exited with nothing to do.
+function Invoke-7zDecode([string]$archive, [int]$threads) {
   $psi = [Diagnostics.ProcessStartInfo]::new($sz)
-  foreach ($a in @("e") + $archives + @("-so", "-mmt=$threads")) { $psi.ArgumentList.Add($a) }
+  foreach ($a in @("e", $archive, "-so", "-mmt=$threads")) { $psi.ArgumentList.Add($a) }
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
   $psi.UseShellExecute = $false
@@ -55,21 +55,35 @@ function Invoke-7zDecode([string[]]$archives, [int]$threads) {
   $stream = $p.StandardOutput.BaseStream
   while (($n = $stream.Read($buf, 0, $buf.Length)) -gt 0) { $bytes += $n }
   $p.WaitForExit()
-  if ($p.ExitCode -ne 0 -or $bytes -lt 1MB) {
-    throw "7z.exe exit code $($p.ExitCode), $bytes bytes of output: $($err.Result)"
+  if ($p.ExitCode -ne 0 -or $bytes -lt 1KB) {
+    throw "7z.exe exit code $($p.ExitCode), $bytes bytes of output for ${archive}: $($err.Result)"
   }
 }
 
-$rows = @("| target | packages in closure | compressed MB | 7-Zip decode, 1 thread s | 7-Zip decode, 4 threads s | stock bzip2 1.0.8 decode s |", "|---|---|---|---|---|---|")
+# 7z.exe only takes several archives through a wildcard, so the closure is hard
+# linked into one directory and decoded by a single process.
+function Invoke-7zDecodeGlob([string]$glob, [int]$threads) {
+  Invoke-7zDecode $glob $threads
+}
+
+$rows = @("| target | packages in closure | compressed MB | 7-Zip decode, 1 thread s | 7-Zip decode, 4 threads s | 7-Zip decode, 4 threads, one process s | stock bzip2 1.0.8 decode s |", "|---|---|---|---|---|---|---|")
 foreach ($pkg in $Packages) {
   $archives = @($closures[$pkg] | ForEach-Object { $paths[$_] } | Where-Object { $_ })
   $mb = ($archives | ForEach-Object { (Get-Item $_).Length } | Measure-Object -Sum).Sum / 1MB
-  $one = Best { Invoke-7zDecode $archives 1 }
-  $four = Best { Invoke-7zDecode $archives 4 }
+  # One repetition: whole closures are long and decode times vary little.
+  $one = (Measure-Command { foreach ($a in $archives) { Invoke-7zDecode $a 1 } }).TotalSeconds
+  $four = (Measure-Command { foreach ($a in $archives) { Invoke-7zDecode $a 4 } }).TotalSeconds
+  $glob = "n/a"
+  $dir = "$Work\closure-$pkg"
+  try {
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    foreach ($a in $archives) { New-Item -ItemType HardLink -Path "$dir\$(Split-Path $a -Leaf)" -Target $a | Out-Null }
+    $glob = '{0:N1}' -f (Measure-Command { Invoke-7zDecodeGlob "$dir\*.tar.bz2" 4 }).TotalSeconds
+  } catch { Write-Host "single-process variant failed: $_" }
   $bat = "$Work\bzip2-all.cmd"
   $archives | ForEach-Object { "`"$bz`" -dc `"$_`" > NUL" } | Set-Content $bat -Encoding ascii
-  $stock = Best { cmd /c $bat }
-  $row = "| $pkg | $($archives.Count) | $('{0:N0}' -f $mb) | $('{0:N1}' -f $one) | $('{0:N1}' -f $four) | $('{0:N1}' -f $stock) |"
+  $stock = (Measure-Command { cmd /c $bat }).TotalSeconds
+  $row = "| $pkg | $($archives.Count) | $('{0:N0}' -f $mb) | $('{0:N1}' -f $one) | $('{0:N1}' -f $four) | $glob | $('{0:N1}' -f $stock) |"
   Write-Host $row
   $rows += $row
 }
