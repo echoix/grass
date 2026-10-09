@@ -1,0 +1,52 @@
+name: OSGeo4W setup on Cygwin base benchmark
+
+on:
+  push:
+    branches:
+      - claude/osgeo4w-setup-rebase
+    paths:
+      - .github/workflows/osgeo4w-setup-rebase.yml
+      - .github/osgeo4w-setup-bench/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UPSTREAM_REPO: https://sourceware.org/git/cygwin-apps/setup.git
+  UPSTREAM_SHA: 3b156c26b5ee2b1d8381b8080122c230bfa2294b
+
+jobs:
+  smoke:
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/osgeo4w-setup-bench
+
+      - name: Install the mingw-w64 toolchain and libraries (MSYS2)
+        shell: cmd
+        run: >
+          C:\msys64\usr\bin\bash.exe -lc "pacman -Sy --noconfirm --needed
+          base-devel autoconf automake libtool bison flex git
+          mingw-w64-x86_64-gcc mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsolv
+          mingw-w64-x86_64-zstd mingw-w64-x86_64-xz mingw-w64-x86_64-bzip2
+          mingw-w64-x86_64-zlib mingw-w64-x86_64-libgcrypt mingw-w64-x86_64-libgnurx"
+
+      - name: Fetch pinned upstream
+        shell: pwsh
+        run: |
+          git clone --no-checkout $env:UPSTREAM_REPO C:\up-src
+          git -C C:\up-src checkout $env:UPSTREAM_SHA
+
+      - name: Build unmodified upstream
+        shell: cmd
+        env:
+          MSYSTEM: MINGW64
+          CHERE_INVOKING: "1"
+        run: C:\msys64\usr\bin\bash.exe -lc "$(cygpath -u '%GITHUB_WORKSPACE%')/.github/osgeo4w-setup-bench/build_upstream.sh /c/up-src /c/up-build /c/up-setup.exe"
