@@ -42,8 +42,8 @@ jobs:
       - name: Fetch pinned upstream
         shell: pwsh
         run: |
-          git -c core.autocrlf=false clone --no-checkout $env:UPSTREAM_REPO C:\up-src
-          git -C C:\up-src checkout $env:UPSTREAM_SHA
+          C:\cygwin64\bin\git.exe clone --no-checkout $env:UPSTREAM_REPO /cygdrive/c/up-src
+          C:\cygwin64\bin\git.exe -C /cygdrive/c/up-src checkout $env:UPSTREAM_SHA
 
       - name: Build unmodified upstream
         shell: pwsh

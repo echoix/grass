@@ -5,6 +5,9 @@
 # usage: build_upstream.sh <source dir> <build dir> <output exe> [patch dir]
 set -euo pipefail
 
+# Only Cygwin's own tools: the runner image has other mingw-w64 toolchains on PATH.
+export PATH=/usr/bin:/usr/local/bin:/bin
+
 src=$1
 bld=$2
 out=$3
