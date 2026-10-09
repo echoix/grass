@@ -104,39 +104,12 @@ jobs:
           echo "MAKEFLAGS=-j$(nproc)" >> "${GITHUB_ENV}"
         shell: msys2 {0}
 
-      - name: Restore ccache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: D:\ccache
-          key: ccache-${{ matrix.os }}-${{ github.sha }}
-          restore-keys: |
-            ccache-${{ matrix.os }}-
-
       - name: Compile GRASS
-        id: compile
         shell: msys2 {0}
         run: |
-          ccache --zero-stats
           .github/workflows/build_osgeo4w.sh
-          ccache --show-stats
         env:
           MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
-          CC: ccache gcc
-          CXX: ccache g++
-          CCACHE_DIR: D:\ccache
-          CCACHE_MAXSIZE: 500M
-          # The compiler is freshly installed on every run, so its modification
-          # time cannot be used to detect a changed compiler.
-          CCACHE_COMPILERCHECK: content
-
-      - name: Save ccache
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        # Save right after the build, so that failing tests do not lose it.
-        # Do not write to the cache on pull_request events to prevent cache poisoning.
-        if: ${{ steps.compile.outcome == 'success' && github.event_name != 'pull_request' }}
-        with:
-          path: D:\ccache
-          key: ccache-${{ matrix.os }}-${{ github.sha }}
 
       - name: Print installed versions
         if: always()
