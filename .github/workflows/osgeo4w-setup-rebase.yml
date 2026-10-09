@@ -29,24 +29,7 @@ jobs:
           persist-credentials: false
           sparse-checkout: .github/osgeo4w-setup-bench
 
-      - name: Install the mingw-w64 toolchain and libraries (MSYS2)
+      - name: Which libraries does MSYS2 have?
         shell: cmd
         run: >
-          C:\msys64\usr\bin\bash.exe -lc "pacman -Sy --noconfirm --needed
-          base-devel autoconf automake libtool bison flex git
-          mingw-w64-x86_64-gcc mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsolv
-          mingw-w64-x86_64-zstd mingw-w64-x86_64-xz mingw-w64-x86_64-bzip2
-          mingw-w64-x86_64-zlib mingw-w64-x86_64-libgcrypt mingw-w64-x86_64-libgnurx"
-
-      - name: Fetch pinned upstream
-        shell: pwsh
-        run: |
-          git clone --no-checkout $env:UPSTREAM_REPO C:\up-src
-          git -C C:\up-src checkout $env:UPSTREAM_SHA
-
-      - name: Build unmodified upstream
-        shell: cmd
-        env:
-          MSYSTEM: MINGW64
-          CHERE_INVOKING: "1"
-        run: C:\msys64\usr\bin\bash.exe -lc "$(cygpath -u '%GITHUB_WORKSPACE%')/.github/osgeo4w-setup-bench/build_upstream.sh /c/up-src /c/up-build /c/up-setup.exe"
+          C:\msys64\usr\bin\bash.exe -lc "pacman -Sy >/dev/null; for p in libsolv libgnurx libsystre libgcrypt zstd xz bzip2 zlib gcc cmake ninja; do echo == $p; pacman -Ss \"^mingw-w64-x86_64-$p\"; done; pacman -Ss solv | head"
