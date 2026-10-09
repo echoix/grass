@@ -12,7 +12,8 @@ set VSDIR=
 for %%e in (Community Professional Enterprise BuildTools) do if exist "%ProgramFiles%\Microsoft Visual Studio\2022\%%e\VC\Auxiliary\Build\vcvars64.bat" set "VSDIR=%ProgramFiles%\Microsoft Visual Studio\2022\%%e"
 echo VSDIR=%VSDIR%
 if not defined VSDIR (
-  echo Visual Studio 2022 not found
+  echo Visual Studio 2022 not found, installed versions:
+  dir /b "%ProgramFiles%\Microsoft Visual Studio"
   exit /b 1
 )
 dir /b "%VSDIR%\VC\Tools\MSVC"
