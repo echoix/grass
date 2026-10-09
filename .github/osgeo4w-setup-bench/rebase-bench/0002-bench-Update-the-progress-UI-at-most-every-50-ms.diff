@@ -1,0 +1,56 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 9 Oct 2026 22:45:05 +0000
+Subject: [PATCH] bench: Update the progress UI at most every 50 ms
+
+
+diff --git a/install.cc b/install.cc
+index 327c461..54909ae 100644
+--- a/install.cc
++++ b/install.cc
+@@ -67,6 +67,10 @@
+ 
+ extern ThreeBarProgressPage Progress;
+ 
++#ifndef UI_UPDATE_INTERVAL_MS
++#define UI_UPDATE_INTERVAL_MS 50
++#endif
++
+ static off_t total_bytes = 0;
+ static off_t total_bytes_sofar = 0;
+ static off_t package_bytes = 0;
+@@ -665,6 +669,7 @@ Installer::_installOne (packagemeta &pkgm,
+   bool error_in_this_package = false;
+   bool ignoreInUseErrors = false;
+   bool ignoreExtractErrors = unattended_mode;
++  DWORD last_ui_update = GetTickCount () - UI_UPDATE_INTERVAL_MS;
+ 
+   std::string fn;
+   while ((fn = tarstream->next_file_name ()).size ())
+@@ -687,7 +692,15 @@ Installer::_installOne (packagemeta &pkgm,
+           continue;
+         }
+ 
+-      Progress.SetText3 (canonicalfn.c_str ());
++      /* Progress updates are synchronous calls into the GUI thread.  Doing
++         them for every file costs about a millisecond per file, so update at
++         most once per interval.  */
++      const bool update_ui = GetTickCount () - last_ui_update >= UI_UPDATE_INTERVAL_MS;
++      if (update_ui)
++        {
++          last_ui_update = GetTickCount ();
++          Progress.SetText3 (canonicalfn.c_str ());
++        }
+       Log (LOG_BABBLE) << "Installing file " << prefixURL << prefixPath
+           << fn << endLog;
+       if (lst)
+@@ -856,7 +869,8 @@ Installer::_installOne (packagemeta &pkgm,
+ 
+           break;
+         }
+-      progress (pkgfile->tell ());
++      if (update_ui)
++        progress (pkgfile->tell ());
+       num_installs++;
+     }
+ 

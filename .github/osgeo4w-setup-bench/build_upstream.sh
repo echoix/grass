@@ -7,6 +7,8 @@ set -euo pipefail
 
 # Only Cygwin's own tools: the runner image has other mingw-w64 toolchains on PATH.
 export PATH=/usr/bin:/usr/local/bin:/bin
+# the checkout was made by Windows git, as a different user than Cygwin sees
+git config --global --add safe.directory "*"
 
 src=$1
 bld=$2
