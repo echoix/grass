@@ -10,6 +10,7 @@ param(
 $ErrorActionPreference = "Stop"
 $root = "C:\o4w-bench-root"
 $results = @{}
+$failures = 0
 
 function Invoke-Setup([string]$variant, [string]$pkg) {
   if (Test-Path $root) { cmd /c "rd /s /q `"$root`"" }
@@ -17,8 +18,9 @@ function Invoke-Setup([string]$variant, [string]$pkg) {
   $sw = [Diagnostics.Stopwatch]::StartNew()
   $p = Start-Process $exe -PassThru -ArgumentList @(
     "-q", "-s", "http://127.0.0.1:8000/", "-O", "-R", $root, "-P", $pkg, "-k", "-n", "-N")
-  if (-not $p.WaitForExit(900000)) {
+  if (-not $p.WaitForExit(300000)) {
     Write-Host "TIMEOUT: $variant $pkg, window title: '$($p.MainWindowTitle)'"
+    Get-Process | Where-Object { $_.MainWindowTitle } | ForEach-Object { Write-Host "  window: $($_.ProcessName) '$($_.MainWindowTitle)'" }
     $p.Kill()
     return $null
   }
@@ -42,7 +44,14 @@ for ($rep = 1; $rep -le $Reps; $rep++) {
   foreach ($pkg in $Packages) {
     foreach ($variant in $Variants) {
       $r = Invoke-Setup $variant $pkg
+      if (-not $r) {
+        # Fail fast if the unattended setup does not work at all, instead of
+        # waiting for every remaining run to time out.
+        $failures++
+        if ($failures -ge 2) { throw "setup failed twice in a row, giving up" }
+      }
       if ($r) {
+        $failures = 0
         Write-Host "[$(Get-Date -Format HH:mm:ss)] rep $rep $pkg $variant entries=$($r.Entries) extract_ms=$($r.Ms) wall_s=$('{0:N1}' -f $r.Total)"
         $k = "$pkg|$variant"
         if (-not $results[$k]) { $results[$k] = @() }
