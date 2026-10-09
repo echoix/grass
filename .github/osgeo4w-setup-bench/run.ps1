@@ -63,12 +63,21 @@ Get-CimInstance Win32_Processor | ForEach-Object { Write-Host "$($_.Name), $($_.
 Get-Volume -DriveLetter C | ForEach-Object { Write-Host "C: $($_.FileSystemType) $([math]::Round($_.Size / 1GB)) GB" }
 Write-Host "Defender real-time protection enabled at start: $(Get-Defender)"
 
+# Hosted runners may have real-time protection off (it was off on windows-2022),
+# so try to measure both states and only keep the ones that really took effect.
 $defenderStart = Get-Defender
-$states = @($defenderStart)
-if ($defenderStart -eq $true) { $states += $false }
+$states = @()
+if ($defenderStart -is [bool]) {
+  foreach ($want in @($true, $false)) {
+    Set-Defender $want
+    if ((Get-Defender) -eq $want) { $states += $want } else { Write-Host "Defender state $want not reachable" }
+  }
+  Set-Defender $defenderStart
+}
+if ($states.Count -eq 0) { $states = @($defenderStart) }
 
 foreach ($state in $states) {
-  if ($state -ne $defenderStart) { Set-Defender $state }
+  if ($state -is [bool]) { Set-Defender $state }
   $defLabel = if ($state -eq $true) { "on" } elseif ($state -eq $false) { "off" } else { "unknown" }
 
   foreach ($pkg in $pkgs) {
@@ -80,9 +89,9 @@ foreach ($state in $states) {
       Add-Row $pkg $defLabel "decompress only, 4K reads, built /$exe" $r
     }
     foreach ($case in $extractCases) {
-      # Only the baseline and the combined cases are repeated with Defender
-      # off, and for the few-huge-files control package.
-      $short = $state -eq $false -or $pkg.Name -like "*-pdb-*"
+      # The few-huge-files control package only needs the baseline and the
+      # combined cases; the other packages run the full matrix in every state.
+      $short = $pkg.Name -like "*-pdb-*"
       if ($short -and $case.Label -notmatch "baseline|64K reads \+ 64K") { continue }
       $a = @("extract", $pkg.FullName, $dest) + $case.Args
       $r = Invoke-Bench "$Work\bench_$($case.Exe).exe" $a $true
@@ -90,7 +99,7 @@ foreach ($state in $states) {
     }
   }
 }
-if ($states.Count -gt 1) { Set-Defender $defenderStart }
+if ($defenderStart -is [bool]) { Set-Defender $defenderStart }
 
 $header = @("| package | Defender | case | files | MB out | min s | median s |", "|---|---|---|---|---|---|---|")
 $report = ($header + $rows) -join "`n"
