@@ -30,16 +30,16 @@ index 0000000..cbe6ae7
 +
 +#endif /* SETUP_OSGEO4W_H */
 diff --git a/root.cc b/root.cc
-index 83af9ea..95f8fb8 100644
+index 83af9ea..c162665 100644
 --- a/root.cc
 +++ b/root.cc
-@@ -176,6 +176,7 @@ read_fileheader_machine_type(std::string fn)
-   return IMAGE_FILE_MACHINE_UNKNOWN;
+@@ -152,6 +152,7 @@ directory_has_spaces ()
+   return 0;
  }
  
 +#ifndef OSGEO4W /* Cygwin only: refuses to mix 32 and 64 bit cygwin1.dll */
- static int
- directory_contains_wrong_version (HWND h)
+ static USHORT
+ read_fileheader_machine_type(std::string fn)
  {
 @@ -218,6 +219,7 @@ directory_contains_wrong_version (HWND h)
          inst_ver, setup_ver);
