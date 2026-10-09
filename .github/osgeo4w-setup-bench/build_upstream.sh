@@ -2,7 +2,7 @@
 # Builds Cygwin's setup (pinned upstream SHA, plus an optional patch series)
 # with the MSYS2 mingw-w64 toolchain, running in an MSYS2 MINGW64 shell.
 #
-# usage: build_upstream.sh <source dir> <build dir> <output exe> [patch dir]
+# usage: build_upstream.sh <source dir> <build dir> <output exe> [patch dir or file]...
 set -euo pipefail
 
 # Only Cygwin's own tools: the runner image has other mingw-w64 toolchains on PATH.
@@ -13,14 +13,16 @@ git config --global --add safe.directory "*"
 src=$1
 bld=$2
 out=$3
-patches=${4:-}
+shift 3
 
-if [ -n "$patches" ]; then
-  git -C "$src" config user.email bench@example.invalid
-  git -C "$src" config user.name bench
-  for p in "$patches"/*.diff; do
-    echo "applying $p"
-    git -C "$src" apply --whitespace=nowarn "$p"
+# the remaining arguments are patch directories and patch files, applied in order
+if [ $# -gt 0 ]; then
+  for p in "$@"; do
+    if [ -d "$p" ]; then list=$(ls "$p"/*.diff | sort); else list=$p; fi
+    for f in $list; do
+      echo "applying $f"
+      git -C "$src" apply --whitespace=nowarn "$f"
+    done
   done
 fi
 

@@ -18,16 +18,28 @@ concurrency:
 env:
   UPSTREAM_REPO: https://sourceware.org/git/cygwin-apps/setup.git
   UPSTREAM_SHA: 3b156c26b5ee2b1d8381b8080122c230bfa2294b
+  # commit tags: [build only] stops after the builds, [no parity] skips the
+  # parity tests, [no bench] skips the benchmark, [no fork] skips the MSVC and
+  # mingw-w64 builds of the fork
 
 jobs:
-  smoke:
+  bench:
     runs-on: windows-2022
-    timeout-minutes: 90
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           sparse-checkout: .github/osgeo4w-setup-bench
+
+      - name: Check out the OSGeo4W setup sources (the fork)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: jef-n/OSGeo4W
+          ref: 2a4fef009d86d52b35e25c43954d817cfec79e8e
+          path: osgeo4w
+          persist-credentials: false
+          sparse-checkout: src/setup
 
       # MSYS2 has no libsolv package, and upstream's own CI builds with Cygwin's
       # mingw64 cross toolchain, so use that (it is the route upstream verifies).
@@ -46,39 +58,102 @@ jobs:
           # Windows git converts line endings by default; the autotools scripts need LF
           git -C C:\up-src config core.autocrlf false
           git -C C:\up-src checkout $env:UPSTREAM_SHA
-
-      - name: Check out the OSGeo4W setup sources (icon, fork reference)
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: jef-n/OSGeo4W
-          ref: 2a4fef009d86d52b35e25c43954d817cfec79e8e
-          path: osgeo4w
-          persist-credentials: false
-          sparse-checkout: src/setup
-
-      - name: Build unmodified upstream
-        if: ${{ contains(github.event.head_commit.message, '[build pristine]') }}
-        shell: pwsh
-        run: |
-          $ws = (C:\cygwin64\bin\cygpath.exe -u $env:GITHUB_WORKSPACE)
-          C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$ws/.github/osgeo4w-setup-bench/build_upstream.sh /cygdrive/c/up-src /cygdrive/c/up-build /cygdrive/c/up-setup.exe"
-
-      - name: Apply the OSGeo4W patch series and build (R0 sources)
-        shell: pwsh
-        run: |
-          # the icon is binary and lives in the OSGeo4W repository
           Copy-Item osgeo4w\src\setup\osgeo.ico C:\up-src\osgeo.ico
-          $ws = (C:\cygwin64\bin\cygpath.exe -u $env:GITHUB_WORKSPACE)
-          C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$ws/.github/osgeo4w-setup-bench/build_upstream.sh /cygdrive/c/up-src /cygdrive/c/rb-build /cygdrive/c/rb-setup.exe $ws/.github/osgeo4w-setup-bench/rebase"
+          # one tree per build: the series alone, plus timing, plus timing and UI throttle
+          Copy-Item C:\up-src C:\up-src-timing -Recurse
+          Copy-Item C:\up-src C:\up-src-throttle -Recurse
 
-      - name: Keep build outputs
+      - name: Build the rebased setup (timing and throttle variants)
+        shell: pwsh
+        run: |
+          $ws = (C:\cygwin64\bin\cygpath.exe -u $env:GITHUB_WORKSPACE)
+          $b = "$ws/.github/osgeo4w-setup-bench"
+          New-Item -ItemType Directory -Force C:\bench\setup | Out-Null
+          # R-timing: the OSGeo4W patch series plus the extraction timing
+          C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$b/build_upstream.sh /cygdrive/c/up-src-timing /cygdrive/c/rb-timing-build /cygdrive/c/bench/setup/rb-timing.exe $b/rebase $b/rebase-bench/0001-*.diff"
+          # R-throttle: additionally the 50 ms UI throttle
+          C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$b/build_upstream.sh /cygdrive/c/up-src-throttle /cygdrive/c/rb-throttle-build /cygdrive/c/bench/setup/rb-throttle.exe $b/rebase $b/rebase-bench/0001-*.diff $b/rebase-bench/0002-*.diff"
+
+      - name: Build the fork with mingw-w64 (same compiler as the rebased builds)
+        if: ${{ !contains(github.event.head_commit.message, '[no fork]') }}
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $ws = (C:\cygwin64\bin\cygpath.exe -u $env:GITHUB_WORKSPACE)
+          $b = "$ws/.github/osgeo4w-setup-bench"
+          C:\cygwin64\bin\bash.exe --noprofile --norc -eo pipefail -c "$b/build_fork_mingw.sh $ws/osgeo4w /cygdrive/c/fork-mingw /cygdrive/c/bench/setup/fork-mingw.exe $b/patches/0001-setup-log-extraction-time.diff $b/patches-fork-mingw/0001-setup-build-with-mingw-w64.diff"
+
+      - name: Build the fork with MSVC 14.44 (reference)
+        if: ${{ !contains(github.event.head_commit.message, '[no fork]') }}
+        shell: pwsh
+        run: |
+          C:\msys64\usr\bin\bash.exe -lc "pacman -Sy --noconfirm --needed bison flex"
+          .github/osgeo4w-setup-bench/build_setup.ps1 -Source "$env:GITHUB_WORKSPACE\osgeo4w" -Work C:\bench
+
+      - name: Compiler and flags used
+        if: ${{ always() }}
+        shell: pwsh
+        run: |
+          Get-ChildItem C:\bench\setup | ForEach-Object { "$($_.Name) $($_.Length) bytes sha256 $((Get-FileHash $_.FullName).Hash)" }
+          C:\cygwin64\bin\bash.exe -lc "x86_64-w64-mingw32-g++ --version | head -1; grep -m1 '^CXXFLAGS' /cygdrive/c/rb-timing-build/Makefile; grep -m1 '^AM_CXXFLAGS' /cygdrive/c/rb-timing-build/Makefile; x86_64-w64-mingw32-pkg-config --modversion libsolv"
+
+      - name: Download the real packages into a local mirror
+        if: ${{ !contains(github.event.head_commit.message, '[build only]') }}
+        shell: pwsh
+        run: python .github/osgeo4w-setup-bench/make_mirror.py C:\bench\mirror python3-notebook python3-jupyterlab python3-core grass-dev qgis-ltr-pdb
+
+      # Runs for the rest of the job; stopped by the cancel step below.
+      - name: Serve the mirror
+        id: mirror-server
+        background: true
+        continue-on-error: true
+        shell: pwsh
+        run: python -m http.server 8000 --bind 127.0.0.1 --directory C:\bench\mirror
+
+      - name: Wait for the mirror server
+        if: ${{ !contains(github.event.head_commit.message, '[build only]') }}
+        shell: pwsh
+        run: |
+          for ($i = 0; $i -lt 30; $i++) {
+            try { (Invoke-WebRequest http://127.0.0.1:8000/x86_64/setup.ini -UseBasicParsing).StatusCode; exit 0 } catch { Start-Sleep -Seconds 1 }
+          }
+          throw "mirror server did not start"
+
+      - name: Parity with the fork
+        if: ${{ !contains(github.event.head_commit.message, '[build only]') && !contains(github.event.head_commit.message, '[no parity]') }}
+        continue-on-error: true
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/parity.ps1 -Work C:\bench
+
+      - name: Benchmark
+        if: ${{ !contains(github.event.head_commit.message, '[build only]') && !contains(github.event.head_commit.message, '[no bench]') }}
+        shell: pwsh
+        run: |
+          $variants = @("F0", "F1", "F0m", "R0", "R1", "R2", "R3", "R2s")
+          # only variants that passed the parity tests may get a speed number
+          if (Test-Path C:\bench\parity-ok.txt) {
+            $ok = @(Get-Content C:\bench\parity-ok.txt)
+            $variants = $variants | Where-Object { $_ -like "F*" -or $ok -contains $_ -or ($_ -in @("R1", "R3", "R2s") -and $ok -contains "R2") }
+          }
+          .github/osgeo4w-setup-bench/run_setup.ps1 -Work C:\bench -Variants $variants
+
+      - name: Keep logs and results
         if: ${{ always() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: rebase-build
+          name: rebase-results
           path: |
-            C:\rb-setup.exe
-            C:\up-setup.exe
-            C:\rb-build\make.log
-            C:\rb-build\config.log
+            C:\bench\setup
+            C:\bench\parity
+            C:\bench\parity-ok.txt
+            C:\bench\results.jsonl
+            C:\bench\report.md
+            C:\bench\mirror\closures.json
+            C:\rb-timing-build\make.log
+            C:\rb-timing-build\config.log
+            C:\fork-mingw\build\make.log
           if-no-files-found: warn
+
+      - name: Stop the mirror server
+        if: ${{ always() }}
+        cancel: mirror-server
