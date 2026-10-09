@@ -5,8 +5,18 @@ setlocal enabledelayedexpansion
 set WORK=%1
 set HERE=%~dp0
 
-for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath`) do set VSDIR=%%i
-call "%VSDIR%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+rem The published osgeo4w-setup.exe is linked with MSVC 14.44 (Visual Studio
+rem 2022 17.14; see build-helpers vs2022env), so use that toolset, not the
+rem newest Visual Studio on the runner.
+for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -version "[17.0,18.0)" -property installationPath`) do set VSDIR=%%i
+if not defined VSDIR (
+  echo Visual Studio 2022 not found
+  exit /b 1
+)
+dir /b "%VSDIR%\VC\Tools\MSVC"
+call "%VSDIR%\VC\Auxiliary\Build\vcvars64.bat" -vcvars_ver=14.44 || exit /b 1
+cl 2>&1 | findstr /i "Version"
+link 2>&1 | findstr /i "Version"
 
 mkdir %WORK% 2>nul
 cd /d %WORK%
