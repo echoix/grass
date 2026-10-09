@@ -1,0 +1,28 @@
+diff --git a/src/setup/install.cc b/src/setup/install.cc
+index f45dd53..80a996c 100644
+--- a/src/setup/install.cc
++++ b/src/setup/install.cc
+@@ -290,6 +290,9 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+   package_bytes = source.size;
+   log (LOG_PLAIN) << "Extracting from " << source.Cached () << endLog;
+ 
++  DWORD extract_start = GetTickCount ();
++  unsigned long extracted_entries = 0;
++
+   std::string fn;
+   while ((fn = tarstream->next_file_name ()).size ())
+     {
+@@ -435,8 +438,13 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+         }
+       progress (pkgfile->tell ());
+       num_installs++;
++      extracted_entries++;
+     }
+ 
++  log (LOG_PLAIN) << "Extracted " << pkgm.name << ": " << extracted_entries
++                  << " entries in " << (GetTickCount () - extract_start)
++                  << " ms" << endLog;
++
+   if (lst)
+     delete lst;
+   delete tarstream;

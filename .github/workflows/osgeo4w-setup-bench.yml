@@ -18,55 +18,46 @@ concurrency:
 jobs:
   bench:
     runs-on: windows-2022
-    timeout-minutes: 180
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           sparse-checkout: .github/osgeo4w-setup-bench
 
-      - name: Build harness
-        id: build
+      - name: Check out the real OSGeo4W setup sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: jef-n/OSGeo4W
+          ref: 2a4fef009d86d52b35e25c43954d817cfec79e8e
+          path: osgeo4w
+          persist-credentials: false
+          sparse-checkout: src/setup
+
+      - name: Install flex and bison
         shell: cmd
-        run: .github\osgeo4w-setup-bench\build.bat C:\bench
+        run: C:\msys64\usr\bin\bash.exe -lc "pacman -Sy --noconfirm --needed bison flex"
 
-      - name: Download packages
-        id: download
+      - name: Build the real setup (three variants)
+        id: build
         shell: pwsh
-        run: python .github/osgeo4w-setup-bench/select_pkgs.py C:\bench\pkgs
+        run: .github/osgeo4w-setup-bench/build_setup.ps1 -Source "$env:GITHUB_WORKSPACE\osgeo4w" -Work C:\bench
 
-      - name: Benchmark python3-notebook
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.download.outcome == 'success' }}
-        shell: pwsh
-        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package python3-notebook
-
-      - name: Benchmark python3-jupyterlab
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.download.outcome == 'success' }}
-        shell: pwsh
-        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package python3-jupyterlab
-
-      - name: Benchmark python3-core
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.download.outcome == 'success' }}
-        shell: pwsh
-        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package python3-core
-
-      - name: Benchmark grass-dev
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.download.outcome == 'success' }}
-        shell: pwsh
-        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package grass-dev
-
-      - name: Benchmark qgis-ltr-pdb
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.download.outcome == 'success' }}
-        shell: pwsh
-        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package qgis-ltr-pdb
-
-      - name: Compare compression formats
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.download.outcome == 'success' }}
+      - name: Create the local mirror and start the server
+        id: mirror
         shell: pwsh
         run: |
-          python -m pip install --quiet zstandard
-          # The debug symbol package is too large to recompress in memory.
-          $pkgs = (Get-ChildItem C:\bench\pkgs\*.tar.bz2 | Where-Object { $_.Name -notlike "*-pdb-*" }).FullName
-          $out = python .github/osgeo4w-setup-bench/formats.py $pkgs
-          $out
-          Add-Content $env:GITHUB_STEP_SUMMARY "## Format comparison`n`n$($out -join "`n")"
+          python .github/osgeo4w-setup-bench/make_mirror.py C:\bench\mirror python3-notebook python3-jupyterlab python3-core grass-dev qgis-ltr-pdb
+          Start-Process python -ArgumentList '-m', 'http.server', '8000', '--bind', '127.0.0.1', '--directory', 'C:\bench\mirror' -WindowStyle Hidden
+          Start-Sleep -Seconds 3
+          (Invoke-WebRequest http://127.0.0.1:8000/x86_64/setup.ini -UseBasicParsing).Content.Split("`n").Count
+
+      - name: Run the real setup variants
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.mirror.outcome == 'success' }}
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/run_setup.ps1 -Work C:\bench
+
+      - name: 7-Zip on the same packages
+        if: ${{ !cancelled() && steps.mirror.outcome == 'success' }}
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/sevenzip.ps1 -Work C:\bench
