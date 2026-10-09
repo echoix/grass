@@ -37,7 +37,7 @@ jobs:
           curl.exe -fsSL -o C:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
           $pkgs = "autoconf,automake,bison,flex,libtool,make,git,pkg-config,patch,mingw64-x86_64-bzip2,mingw64-x86_64-gcc-g++,mingw64-x86_64-headers,mingw64-x86_64-libgcrypt,mingw64-x86_64-libsolv,mingw64-x86_64-xz,mingw64-x86_64-zlib,mingw64-x86_64-zstd"
           Start-Process C:\setup-x86_64.exe -Wait -ArgumentList "-q","-n","-N","-d","-O","-s","https://mirrors.kernel.org/sourceware/cygwin/","-R","C:\cygwin64","-l","C:\cygwin-pkgs","-P",$pkgs
-          C:\cygwin64\bin\bash.exe -lc "x86_64-w64-mingw32-g++ --version | head -1; pkg-config --modversion libsolv"
+          C:\cygwin64\bin\bash.exe -lc "x86_64-w64-mingw32-g++ --version | head -1; x86_64-w64-mingw32-pkg-config --modversion libsolv"
 
       - name: Fetch pinned upstream
         shell: pwsh
