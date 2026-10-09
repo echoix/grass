@@ -39,9 +39,25 @@ function Best([scriptblock]$block) {
   $best
 }
 
+# Runs one 7z.exe decoding all archives to stdout and discards the output. The
+# output is read here, so nothing is written to disk. Fails loudly: an earlier
+# version silently measured 0 s because 7z.exe had exited with an error.
 function Invoke-7zDecode([string[]]$archives, [int]$threads) {
-  $a = @("e") + $archives + @("-so", "-mmt=$threads", "-bso0", "-bsp0")
-  Start-Process $sz -ArgumentList $a -NoNewWindow -Wait -RedirectStandardOutput NUL
+  $psi = [Diagnostics.ProcessStartInfo]::new($sz)
+  foreach ($a in @("e") + $archives + @("-so", "-mmt=$threads")) { $psi.ArgumentList.Add($a) }
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError = $true
+  $psi.UseShellExecute = $false
+  $p = [Diagnostics.Process]::Start($psi)
+  $err = $p.StandardError.ReadToEndAsync()
+  $bytes = 0L
+  $buf = New-Object byte[] 1048576
+  $stream = $p.StandardOutput.BaseStream
+  while (($n = $stream.Read($buf, 0, $buf.Length)) -gt 0) { $bytes += $n }
+  $p.WaitForExit()
+  if ($p.ExitCode -ne 0 -or $bytes -lt 1MB) {
+    throw "7z.exe exit code $($p.ExitCode), $bytes bytes of output: $($err.Result)"
+  }
 }
 
 $rows = @("| target | packages in closure | compressed MB | 7-Zip decode, 1 thread s | 7-Zip decode, 4 threads s | stock bzip2 1.0.8 decode s |", "|---|---|---|---|---|---|")
