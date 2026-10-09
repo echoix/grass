@@ -1,5 +1,5 @@
 diff --git a/src/setup/install.cc b/src/setup/install.cc
-index f45dd53..80a996c 100644
+index f45dd53..1c57653 100644
 --- a/src/setup/install.cc
 +++ b/src/setup/install.cc
 @@ -290,6 +290,9 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
@@ -12,16 +12,25 @@ index f45dd53..80a996c 100644
    std::string fn;
    while ((fn = tarstream->next_file_name ()).size ())
      {
-@@ -435,8 +438,13 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+@@ -435,8 +438,22 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
          }
        progress (pkgfile->tell ());
        num_installs++;
 +      extracted_entries++;
      }
  
++  unsigned long extract_ms = GetTickCount () - extract_start;
 +  log (LOG_PLAIN) << "Extracted " << pkgm.name << ": " << extracted_entries
-+                  << " entries in " << (GetTickCount () - extract_start)
-+                  << " ms" << endLog;
++                  << " entries in " << extract_ms << " ms" << endLog;
++  /* The log is only written when setup exits, so also append the result to a
++     file as soon as it is known, for benchmarking.  */
++  if (const char *timing_file = getenv ("OSGEO4W_EXTRACT_TIMING_FILE"))
++    if (FILE *f = fopen (timing_file, "a"))
++      {
++        fprintf (f, "Extracted %s: %lu entries in %lu ms\n", pkgm.name.c_str (),
++                 extracted_entries, extract_ms);
++        fclose (f);
++      }
 +
    if (lst)
      delete lst;

@@ -1,5 +1,5 @@
 diff --git a/src/setup/install.cc b/src/setup/install.cc
-index 80a996c..c42e0dc 100644
+index 1c57653..483a6d5 100644
 --- a/src/setup/install.cc
 +++ b/src/setup/install.cc
 @@ -196,6 +196,13 @@ int _custom_MessageBox(HWND hWnd, LPCTSTR szText, LPCTSTR szCaption, UINT uType)
