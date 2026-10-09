@@ -1,9 +1,8 @@
-param([string]$Work = "C:\bench")
+param([string]$Work = "C:\bench", [Parameter(Mandatory = $true)][string]$Package)
 
 $ErrorActionPreference = "Stop"
-$pkgs = Get-ChildItem "$Work\pkgs\*.tar.bz2" | Sort-Object Length
+$pkgs = Get-ChildItem "$Work\pkgs\$Package-[0-9]*.tar.bz2"
 $dest = "$Work\dest"
-$reps = 3
 $rows = @()
 
 function Get-Defender {
@@ -19,18 +18,24 @@ function Set-Defender([bool]$on) {
   Write-Host "Defender real-time protection enabled: $(Get-Defender)"
 }
 
+# cmd's rd is far faster than Remove-Item on trees with many files.
+function Remove-Dest {
+  if (Test-Path $dest) { cmd /c "rd /s /q `"$dest`"" }
+}
+
 function Invoke-Bench([string]$exe, [string[]]$benchArgs, [bool]$extract) {
   $secs = @()
   $info = ""
   for ($i = 0; $i -lt $reps; $i++) {
-    if ($extract -and (Test-Path $dest)) { Remove-Item -Recurse -Force $dest }
+    if ($extract) { Remove-Dest }
     $out = & $exe @benchArgs
     if ($LASTEXITCODE -ne 0) { throw "$exe failed: $out" }
     $line = $out | Where-Object { $_ -like "RESULT*" } | Select-Object -First 1
     $secs += [double]($line -replace '.*secs=', '')
     $info = $line
+    Write-Host "[$(Get-Date -Format HH:mm:ss)] rep $($i + 1)/$reps $line"
   }
-  if ($extract -and (Test-Path $dest)) { Remove-Item -Recurse -Force $dest }
+  if ($extract) { Remove-Dest }
   $sorted = $secs | Sort-Object
   return [pscustomobject]@{ Min = $sorted[0]; Median = $sorted[[int][math]::Floor($sorted.Count / 2)]; Info = $info }
 }
@@ -67,6 +72,9 @@ foreach ($state in $states) {
   $defLabel = if ($state -eq $true) { "on" } elseif ($state -eq $false) { "off" } else { "unknown" }
 
   foreach ($pkg in $pkgs) {
+    # Fewer repetitions for big packages to keep the whole job bounded.
+    $reps = if ($pkg.Length -gt 30MB) { 2 } else { 3 }
+    Write-Host "=== $($pkg.Name) ($([math]::Round($pkg.Length / 1MB)) MB, $reps reps, Defender $defLabel)"
     foreach ($exe in @("O1", "O2")) {
       $r = Invoke-Bench "$Work\bench_$exe.exe" @("decomp", $pkg.FullName, "--in", "4096") $false
       Add-Row $pkg $defLabel "decompress only, 4K reads, built /$exe" $r
@@ -87,4 +95,4 @@ if ($states.Count -gt 1) { Set-Defender $defenderStart }
 $header = @("| package | Defender | case | files | MB out | min s | median s |", "|---|---|---|---|---|---|---|")
 $report = ($header + $rows) -join "`n"
 Write-Host $report
-if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## Extraction timings`n`n$report" }
+if ($env:GITHUB_STEP_SUMMARY) { Add-Content $env:GITHUB_STEP_SUMMARY "## Extraction timings: $Package`n`n$report" }

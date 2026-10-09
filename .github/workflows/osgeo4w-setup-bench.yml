@@ -33,11 +33,33 @@ jobs:
         shell: pwsh
         run: python .github/osgeo4w-setup-bench/select_pkgs.py C:\bench\pkgs
 
-      - name: Benchmark extraction
+      - name: Benchmark python3-notebook
+        if: ${{ !cancelled() }}
         shell: pwsh
-        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench
+        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package python3-notebook
+
+      - name: Benchmark python3-jupyterlab
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package python3-jupyterlab
+
+      - name: Benchmark python3-core
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package python3-core
+
+      - name: Benchmark grass-dev
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package grass-dev
+
+      - name: Benchmark qgis-ltr-pdb
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/run.ps1 -Work C:\bench -Package qgis-ltr-pdb
 
       - name: Compare compression formats
+        if: ${{ !cancelled() }}
         shell: pwsh
         run: |
           python -m pip install --quiet zstandard
