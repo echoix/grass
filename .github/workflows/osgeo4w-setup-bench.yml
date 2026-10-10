@@ -42,6 +42,14 @@ jobs:
         shell: pwsh
         run: .github/osgeo4w-setup-bench/build_setup.ps1 -Source "$env:GITHUB_WORKSPACE\osgeo4w" -Work C:\bench
 
+      - name: Upload the setup variants
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: osgeo4w-setup-variants
+          path: C:\bench\setup\*.exe
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Download the real packages into a local mirror
         shell: pwsh
         run: python .github/osgeo4w-setup-bench/make_mirror.py C:\bench\mirror python3-notebook python3-core grass-dev qgis-ltr-pdb
