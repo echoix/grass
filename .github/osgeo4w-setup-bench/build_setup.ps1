@@ -66,9 +66,9 @@ function Build([string]$name, [string]$define) {
   Copy-Item "$bdir\osgeo4w-setup.exe" "$Work\setup\osgeo4w-setup-$name.exe"
 }
 
-function Build-Variant([string]$name, [string[]]$patches) {
+function Build-Variant([string]$name, [string[]]$extra) {
   git checkout -- src/setup
-  foreach ($p in @("0001-setup-log-extraction-time.diff") + $patches) {
+  foreach ($p in @("0001-setup-log-extraction-time.diff") + $extra) {
     git apply "$Patches\$p"
     if ($LASTEXITCODE -ne 0) { throw "patch $p failed for $name" }
   }
