@@ -13,6 +13,7 @@ import pytest
 import grass.script as gs
 from grass.exceptions import CalledModuleError
 from grass.app.data import MapsetLockingException
+from grass.app.runtime import RuntimePaths
 
 RUNTIME_GISBASE_SHOULD_BE_PRESENT = "Runtime (GISBASE) should be present"
 SESSION_FILE_NOT_DELETED = "Session file not deleted"
@@ -467,6 +468,39 @@ def test_grass_path_types_in_setup(tmp_path, path_type):
     gs.setup.setup_runtime_env(grass_path, env=env)
     # At least before FHS, GISBASE is the way to detect an active runtime.
     assert "GISBASE" in env
+
+
+def test_runtime_env_with_only_gisbase_is_not_active():
+    """GISBASE on PATH without the resource directory variables is not enough"""
+    gisbase = gs.setup.get_install_path()
+    env = os.environ.copy()
+    for name in RuntimePaths.env_variable_names():
+        env.pop(name, None)
+    env["GISBASE"] = gisbase
+    env["PATH"] = os.pathsep.join([os.path.join(gisbase, "bin"), env["PATH"]])
+    assert not gs.setup.runtime_env_is_active(env=env)
+    gs.setup.ensure_runtime_env(env=env)
+    assert gs.setup.runtime_env_is_active(env=env)
+    assert Path(env["GRASS_ETCDIR"]).is_dir()
+
+
+def test_setup_runtime_env_uses_gisbase_from_env(tmp_path):
+    """Resource paths are derived from GISBASE, not from the build-time prefix"""
+    paths = RuntimePaths(env={})
+    relocated_prefix = tmp_path / "relocated"
+    try:
+        relocated_prefix.symlink_to(paths.prefix, target_is_directory=True)
+    except OSError:
+        pytest.skip("Creating symbolic links is not permitted")
+    gisbase = os.path.normpath(
+        relocated_prefix / os.path.relpath(paths.gisbase, paths.prefix)
+    )
+    env = os.environ.copy()
+    env["GISBASE"] = gisbase
+    gs.setup.setup_runtime_env(env=env)
+    assert env["GISBASE"] == gisbase
+    assert Path(env["GRASS_ETCDIR"]).is_relative_to(relocated_prefix)
+    assert Path(env["GRASS_ETCDIR"]).is_dir()
 
 
 @pytest.mark.parametrize("variable", ["GRASS_REGION", "WIND_OVERRIDE", "GRASS_MASK"])
