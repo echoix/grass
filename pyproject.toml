@@ -829,6 +829,7 @@ disable = [
     "W1510",  # 'subprocess.run' used without explicitly defining the value for 'check'. (subprocess-run-check)
     "W1514",  # Using open without explicitly specifying an encoding (unspecified-encoding)
     "W4701",  # Iterated list '%s' is being modified inside for loop body, consider iterating through a copy of it instead. (modified-iterating-list)
+    "W4902",  # Using deprecated method %s (deprecated-method)
     # "RP0402", # Report: Imports checker: Modules dependencies graph
 
     "similarities", # too long to run
