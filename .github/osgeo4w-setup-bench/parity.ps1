@@ -36,7 +36,7 @@ function Remove-Tree([string]$dir) {
 }
 
 # Runs setup to its end.  Returns exit code, seconds, and whether it had to be killed.
-function Invoke-Full([string]$variant, [string]$root, [string[]]$extra, [string]$tag, [int]$timeoutSec = 1200, [string]$site = "http://127.0.0.1:8000/") {
+function Invoke-Full([string]$variant, [string]$root, [string[]]$extra, [string]$tag, [int]$timeoutSec = 420, [string]$site = "http://127.0.0.1:8000/") {
   $cache = "$Work\parity-cache-$tag"
   Remove-Tree $cache
   $timing = "$out\timing-$tag.txt"
@@ -51,7 +51,7 @@ function Invoke-Full([string]$variant, [string]$root, [string[]]$extra, [string]
   $killed = $false
   if (-not $p.WaitForExit($timeoutSec * 1000)) {
     $killed = $true
-    Say "  $tag: setup still running after $timeoutSec s, window title '$($p.MainWindowTitle)'; killing"
+    Say "  ${tag}: setup still running after $timeoutSec s, window title '$($p.MainWindowTitle)'; killing"
     Get-Process | Where-Object { $_.MainWindowTitle } | ForEach-Object { Say "    window: $($_.ProcessName) '$($_.MainWindowTitle)'" }
     taskkill /T /F /PID $p.Id | Out-Null
   }

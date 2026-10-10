@@ -15,6 +15,7 @@ param(
   [string]$Work = "C:\bench",
   [int]$Reps = 3,
   [string[]]$Packages = @("python3-notebook", "python3-jupyterlab", "python3-core", "grass-dev", "qgis-ltr-pdb"),
+  [int]$TimeoutSec = 300,
   [string[]]$Variants = @("F0", "F1", "F0m", "R0", "R1", "R2", "R3", "R2s")
 )
 
@@ -53,6 +54,34 @@ function Remove-Tree([string]$dir) {
   }
 }
 
+# What is on screen when setup does not make progress: a screenshot and the
+# text of the windows of the process (a modal message box shows up here).
+function Save-Diag([string]$variant, [string]$pkg, $proc) {
+  $dir = "$Work\diag"
+  New-Item -ItemType Directory -Force $dir | Out-Null
+  $base = "$dir\$variant-$pkg"
+  try {
+    Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+    $b = [Windows.Forms.SystemInformation]::VirtualScreen
+    $bmp = New-Object Drawing.Bitmap $b.Width, $b.Height
+    [Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [Drawing.Point]::Empty, $b.Size)
+    $bmp.Save("$base.png")
+  } catch { Write-Host "  screenshot failed: $_" }
+  try {
+    Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes
+    $root = [Windows.Automation.AutomationElement]::RootElement
+    $cond = New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::ProcessIdProperty), $proc.Id
+    $lines = foreach ($w in $root.FindAll([Windows.Automation.TreeScope]::Children, $cond)) {
+      "window '$($w.Current.Name)' class $($w.Current.ClassName)"
+      foreach ($e in $w.FindAll([Windows.Automation.TreeScope]::Descendants, [Windows.Automation.Condition]::TrueCondition)) {
+        "  $($e.Current.ControlType.ProgrammaticName) '$($e.Current.Name)'"
+      }
+    }
+    $lines | Set-Content "$base.txt"
+    $lines | Select-Object -First 40 | ForEach-Object { Write-Host "  ui: $_" }
+  } catch { Write-Host "  ui dump failed: $_" }
+}
+
 function Invoke-Setup([string]$variant, [string]$pkg) {
   $expected = $closures[$pkg].Count
   # Use a fresh local package directory (-l, the download cache) for every run,
@@ -67,7 +96,7 @@ function Invoke-Setup([string]$variant, [string]$pkg) {
     "-q", "-s", "http://127.0.0.1:8000/", "-O", "-R", $root, "-l", $cache, "-P", $pkg, "-k", "-n", "-N")
   foreach ($k in $specs[$variant].env.Keys) { Remove-Item "env:$k" }
   $lines = @()
-  while ($sw.Elapsed.TotalSeconds -lt 900) {
+  while ($sw.Elapsed.TotalSeconds -lt $TimeoutSec) {
     if (Test-Path $timingFile) {
       $lines = @(Select-String -Path $timingFile -Pattern "^Extracted (\S+): (\d+) entries in (\d+) ms")
       if ($lines.Count -ge $expected) { break }
@@ -85,6 +114,14 @@ function Invoke-Setup([string]$variant, [string]$pkg) {
     }
     foreach ($log in "$root\var\log\setup.log", "$root\var\log\setup.log.full") {
       if (Test-Path $log) { Write-Host "  tail of ${log}:"; Get-Content $log -Tail 25 | ForEach-Object { Write-Host "    $_" } }
+    }
+  }
+  if ($lines.Count -lt $expected -and -not $p.HasExited) {
+    Save-Diag $variant $pkg $p
+    # ask politely first, so that setup writes its log when it exits
+    [void]$p.CloseMainWindow(); [void]$p.WaitForExit(15000)
+    foreach ($log in "$root\var\log\setup.log", "$root\var\log\setup.log.full") {
+      if (Test-Path $log) { Write-Host "  tail of ${log}:"; Get-Content $log -Tail 40 | ForEach-Object { Write-Host "    $_" } }
     }
   }
   if (-not $p.HasExited) { taskkill /T /F /PID $p.Id | Out-Null }

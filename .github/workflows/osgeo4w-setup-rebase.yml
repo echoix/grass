@@ -146,6 +146,7 @@ jobs:
             C:\bench\setup
             C:\bench\parity
             C:\bench\parity-ok.txt
+            C:\bench\diag
             C:\bench\results.jsonl
             C:\bench\report.md
             C:\bench\mirror\closures.json

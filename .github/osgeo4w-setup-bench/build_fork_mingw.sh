@@ -25,6 +25,8 @@ cd "$work"
 rm -rf fork
 mkdir -p fork/src
 cp -r "$osgeo4w/src/setup" fork/src/setup
+# Windows git checked the sources out with CRLF; the patches have LF
+grep -rlI $'\r' fork/src | xargs -r sed -i 's/\r$//'
 cd fork
 git init -q .
 for p in "$@"; do
