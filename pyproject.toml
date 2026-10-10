@@ -747,7 +747,6 @@ disable = [
     "E0602",  # Undefined variable %r (undefined-variable)
     "E0606",  # Possibly using variable %r before assignment (possibly-used-before-assignment)
     "E0611",  # No name %r in module %r (no-name-in-module)
-    "E0633",  # Attempting to unpack a non-sequence%s (unpacking-non-sequence)
     "E0704",  # The raise statement is not inside an except clause (misplaced-bare-raise)
     "E1003",  # Bad first argument %r given to super() (bad-super-call)
     "E1101",  # Instance of %r has no %r member (no-member)
@@ -755,11 +754,8 @@ disable = [
     "E1111",  # Assigning result of a function call, where the function has no return (assignment-from-no-return)
     "E1120",  # No value for argument %r in constructor call (no-value-for-parameter)
     "E1121",  # (too-many-function-args)
-    "E1123",  # Unexpected keyword argument %r in %s call (unexpected-keyword-arg)
-    "E1124",  # Argument %r passed by position and keyword in %s call (redundant-keyword-arg)
     "E1126",  # Sequence index is not an int, slice, or instance with __index__ (invalid-sequence-index)
     "E1128",  # Assigning result of a function call, where the function returns None (assignment-from-none)
-    "E1133",  # Non-iterable value %s is used in an iterating context (not-an-iterable)
     "E1136",  # Value '%s' is unsubscriptable (unsubscriptable-object)
     "E1137",  # %r does not support item assignment (unsupported-assignment-operation)
     "E1307",  # Argument %r does not match format type %r (bad-string-format-type)
@@ -819,7 +815,6 @@ disable = [
     "W0621",  # Redefining name %r from outer scope (line %s) (redefined-outer-name)
     "W0622",  # Redefining built-in %r (redefined-builtin)
     "W0631",  # Using possibly undefined loop variable %r (undefined-loop-variable)
-    "W0632",  # Possible unbalanced tuple unpacking with sequence %s: left side has %d label%s, right side has %d value%s (unbalanced-tuple-unpacking)
     "W0640",  # Cell variable %s defined in loop (cell-var-from-loop)
     "W0641",  # Possibly unused variable %r (possibly-unused-variable)
     "W0702",  # No exception type(s) specified (bare-except)
@@ -834,7 +829,6 @@ disable = [
     "W1510",  # 'subprocess.run' used without explicitly defining the value for 'check'. (subprocess-run-check)
     "W1514",  # Using open without explicitly specifying an encoding (unspecified-encoding)
     "W4701",  # Iterated list '%s' is being modified inside for loop body, consider iterating through a copy of it instead. (modified-iterating-list)
-    "W4902",  # Using deprecated method %s (deprecated-method)
     # "RP0402", # Report: Imports checker: Modules dependencies graph
 
     "similarities", # too long to run
