@@ -1,0 +1,26 @@
+diff --git a/src/setup/compress_bz.cc b/src/setup/compress_bz.cc
+index 3b89f00..da2df32 100644
+--- a/src/setup/compress_bz.cc
++++ b/src/setup/compress_bz.cc
+@@ -88,7 +88,7 @@ compress_bz::read (void *buffer, size_t len)
+ 
+       if (strm.avail_in == 0 && rlen > 0)
+ 	{
+-	  rlen = original->read (buf, 4096);
++	  rlen = original->read (buf, sizeof buf);
+ 	  if (rlen < 0)
+ 	    {
+               lasterr = original->error ();
+diff --git a/src/setup/compress_bz.h b/src/setup/compress_bz.h
+index 2d319e8..df6b29b 100644
+--- a/src/setup/compress_bz.h
++++ b/src/setup/compress_bz.h
+@@ -60,7 +60,7 @@ private:
+   bz_stream strm;
+   int initialisedOk;
+   int endReached;
+-  char buf[4096];
++  char buf[64 * 1024];
+   int writing;
+   size_t position;
+ };

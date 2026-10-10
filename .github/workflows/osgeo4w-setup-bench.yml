@@ -1,0 +1,70 @@
+name: OSGeo4W setup extraction benchmark
+
+on:
+  push:
+    branches:
+      - claude/magical-newton-55x0u9
+    paths:
+      - .github/workflows/osgeo4w-setup-bench.yml
+      - .github/osgeo4w-setup-bench/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bench:
+    runs-on: windows-2022
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/osgeo4w-setup-bench
+
+      - name: Check out the real OSGeo4W setup sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: jef-n/OSGeo4W
+          ref: 2a4fef009d86d52b35e25c43954d817cfec79e8e
+          path: osgeo4w
+          persist-credentials: false
+          sparse-checkout: src/setup
+
+      - name: Install flex and bison
+        shell: cmd
+        run: C:\msys64\usr\bin\bash.exe -lc "pacman -Sy --noconfirm --needed bison flex"
+
+      - name: Build the real setup (four variants)
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/build_setup.ps1 -Source "$env:GITHUB_WORKSPACE\osgeo4w" -Work C:\bench
+
+      - name: Download the real packages into a local mirror
+        shell: pwsh
+        run: python .github/osgeo4w-setup-bench/make_mirror.py C:\bench\mirror python3-notebook python3-core grass-dev qgis-ltr-pdb
+
+      # Runs for the rest of the job; stopped by the cancel step below.
+      - name: Serve the mirror
+        id: mirror-server
+        background: true
+        continue-on-error: true
+        shell: pwsh
+        run: python -m http.server 8000 --bind 127.0.0.1 --directory C:\bench\mirror
+
+      - name: Wait for the mirror server
+        shell: pwsh
+        run: |
+          for ($i = 0; $i -lt 30; $i++) {
+            try { (Invoke-WebRequest http://127.0.0.1:8000/x86_64/setup.ini -UseBasicParsing).StatusCode; exit 0 } catch { Start-Sleep -Seconds 1 }
+          }
+          throw "mirror server did not start"
+
+      - name: Run the real setup variants
+        shell: pwsh
+        run: .github/osgeo4w-setup-bench/run_setup.ps1 -Work C:\bench
+
+      - name: Stop the mirror server
+        cancel: mirror-server

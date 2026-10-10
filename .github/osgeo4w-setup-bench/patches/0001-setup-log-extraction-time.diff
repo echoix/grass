@@ -1,0 +1,37 @@
+diff --git a/src/setup/install.cc b/src/setup/install.cc
+index f45dd53..1c57653 100644
+--- a/src/setup/install.cc
++++ b/src/setup/install.cc
+@@ -290,6 +290,9 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+   package_bytes = source.size;
+   log (LOG_PLAIN) << "Extracting from " << source.Cached () << endLog;
+ 
++  DWORD extract_start = GetTickCount ();
++  unsigned long extracted_entries = 0;
++
+   std::string fn;
+   while ((fn = tarstream->next_file_name ()).size ())
+     {
+@@ -435,8 +438,22 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+         }
+       progress (pkgfile->tell ());
+       num_installs++;
++      extracted_entries++;
+     }
+ 
++  unsigned long extract_ms = GetTickCount () - extract_start;
++  log (LOG_PLAIN) << "Extracted " << pkgm.name << ": " << extracted_entries
++                  << " entries in " << extract_ms << " ms" << endLog;
++  /* The log is only written when setup exits, so also append the result to a
++     file as soon as it is known, for benchmarking.  */
++  if (const char *timing_file = getenv ("OSGEO4W_EXTRACT_TIMING_FILE"))
++    if (FILE *f = fopen (timing_file, "a"))
++      {
++        fprintf (f, "Extracted %s: %lu entries in %lu ms\n", pkgm.name.c_str (),
++                 extracted_entries, extract_ms);
++        fclose (f);
++      }
++
+   if (lst)
+     delete lst;
+   delete tarstream;

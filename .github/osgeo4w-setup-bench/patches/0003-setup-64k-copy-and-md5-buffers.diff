@@ -1,0 +1,31 @@
+diff --git a/src/setup/install.cc b/src/setup/install.cc
+index f45dd53..8ae72b1 100644
+--- a/src/setup/install.cc
++++ b/src/setup/install.cc
+@@ -676,7 +676,7 @@ void md5_one (const packagesource& pkgsource)
+     Progress.SetText4 (Window::loadRString(IDS_PROGRESS).c_str());
+     Progress.SetBar1 (0);
+ 
+-    unsigned char buffer[16384];
++    unsigned char buffer[64 * 1024];
+     ssize_t count;
+     while ((count = thefile->read (buffer, sizeof buffer)) > 0)
+     {
+diff --git a/src/setup/io_stream.cc b/src/setup/io_stream.cc
+index a169a04..e0ac497 100644
+--- a/src/setup/io_stream.cc
++++ b/src/setup/io_stream.cc
+@@ -165,11 +165,11 @@ ssize_t io_stream::copy (io_stream * in, io_stream * out)
+   if (!in || !out)
+     return -1;
+   char
+-    buffer[16384];
++    buffer[64 * 1024];
+   ssize_t
+     countin,
+     countout;
+-  while ((countin = in->read (buffer, 16384)) > 0)
++  while ((countin = in->read (buffer, sizeof buffer)) > 0)
+     {
+       countout = out->write (buffer, countin);
+       if (countout != countin)

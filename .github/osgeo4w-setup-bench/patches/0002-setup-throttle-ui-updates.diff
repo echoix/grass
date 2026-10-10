@@ -1,0 +1,49 @@
+diff --git a/src/setup/install.cc b/src/setup/install.cc
+index 1c57653..483a6d5 100644
+--- a/src/setup/install.cc
++++ b/src/setup/install.cc
+@@ -196,6 +196,13 @@ int _custom_MessageBox(HWND hWnd, LPCTSTR szText, LPCTSTR szCaption, UINT uType)
+ #undef MessageBox
+ #define MessageBox _custom_MessageBox
+ 
++/* Progress updates are synchronous calls into the GUI thread.  Doing them for
++   every file costs about a millisecond per file, which adds up for packages
++   with thousands of small files, so update at most once per interval.  */
++#ifndef UI_UPDATE_INTERVAL_MS
++#define UI_UPDATE_INTERVAL_MS 50
++#endif
++
+ /* install one source at a given prefix. */
+ void
+ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+@@ -291,13 +298,19 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+   log (LOG_PLAIN) << "Extracting from " << source.Cached () << endLog;
+ 
+   DWORD extract_start = GetTickCount ();
++  DWORD last_ui_update = extract_start - UI_UPDATE_INTERVAL_MS;
+   unsigned long extracted_entries = 0;
+ 
+   std::string fn;
+   while ((fn = tarstream->next_file_name ()).size ())
+     {
+       std::string canonicalfn = prefixPath + fn;
+-      Progress.SetText3 (canonicalfn.c_str ());
++      bool update_ui = GetTickCount () - last_ui_update >= UI_UPDATE_INTERVAL_MS;
++      if (update_ui)
++        {
++          last_ui_update = GetTickCount ();
++          Progress.SetText3 (canonicalfn.c_str ());
++        }
+       log (LOG_BABBLE) << "Installing file " << prefixURL << prefixPath
+           << fn << endLog;
+       if (lst)
+@@ -436,7 +449,8 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
+           // We're done with this file
+           break;
+         }
+-      progress (pkgfile->tell ());
++      if (update_ui)
++        progress (pkgfile->tell ());
+       num_installs++;
+       extracted_entries++;
+     }
