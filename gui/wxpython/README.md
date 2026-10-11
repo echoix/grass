@@ -61,9 +61,9 @@ Update of module description strings in `./xml/menudata.xml`:
 
 - in a GRASS session, run `./tools/update_menudata.py`
 
-From this (updated) `./xml/menudata.xml`, the gettext strings are generated
-via Makefile and stored into the file `menustrings.py`.
-
 While generating the po files in `../../locale/po/` by `../../locale/Makefile`,
 all `.py` files are parsed and the strings are stored in
-`../../locale/po/grasswxpy_XX.po`.
+`../../locale/po/grasswxpy_XX.po`. The labels, help texts and descriptions in
+the menu definitions (`./xml/toolboxes.xml`, `./xml/wxgui_items.xml` and
+`./xml/menudata_*.xml`) are extracted with the ITS rules in
+`../../locale/its/`.

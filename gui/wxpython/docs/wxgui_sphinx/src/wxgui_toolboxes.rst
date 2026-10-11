@@ -69,8 +69,6 @@ GRASS directory (``.grass8``) in user home directory
         wxgui_items [label="wxgui_items.xml in distribution", shape="note", URL="#wxgui-items-file"];
         module_items [label="module_items.xml in distribution", shape="note", URL="#module-items-file"];
 
-        menustrings [label="menustrings.py\n(used for translations)", shape="note"];
-
         module_items -> menudata;
         wxgui_items -> menudata;
         main_menu -> menudata;
@@ -83,10 +81,7 @@ GRASS directory (``.grass8``) in user home directory
         umain_menu -> umenudata;
         utoolboxes -> umenudata;
 
-        menudata -> menustrings;
-
         // guimenu [label="Main menu in wxGUI", shape="box3d"];
-        // menustrings -> guimenu;
         // menudata -> guimenu;
         // umenudata -> guimenu;
     }

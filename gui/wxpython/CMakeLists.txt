@@ -163,26 +163,6 @@ if(NOT WITH_FHS)
     )
 
     set_target_properties(build_module_tree_menudata PROPERTIES FOLDER GUI)
-
-    add_custom_target(
-        build_menustrings
-        ALL
-        COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
-            ${CMAKE_CURRENT_SOURCE_DIR}/core/menutree.py "manager" >>
-            ${CMAKE_CURRENT_SOURCE_DIR}/menustrings.py
-        COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
-            ${CMAKE_CURRENT_SOURCE_DIR}/core/menutree.py "module_tree" >>
-            ${CMAKE_CURRENT_SOURCE_DIR}/menustrings.py
-        COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
-            ${CMAKE_CURRENT_SOURCE_DIR}/core/menutree.py "psmap" >>
-            ${CMAKE_CURRENT_SOURCE_DIR}/menustrings.py
-        DEPENDS build_module_tree_menudata gui_images
-    )
-
-    set_target_properties(build_menustrings PROPERTIES FOLDER GUI)
 endif() # NOT WITH_FHS
 
 install(DIRECTORY "${OUTDIR}/${WXPYTHON_DIR}/xml" DESTINATION "${WXPYTHON_DIR}")
