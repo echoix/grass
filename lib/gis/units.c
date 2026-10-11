@@ -215,9 +215,11 @@ static const char *units_name(int units, int plural, int square, int localize)
         if (square)
             return plural
                        // GTC: localized area units
-                       ? (localize ? _("square kilometers") : "square kilometers")
+                       ? (localize ? _("square kilometers")
+                                   : "square kilometers")
                        // GTC: localized area units
-                       : (localize ? _("square kilometer") : "square kilometer");
+                       : (localize ? _("square kilometer")
+                                   : "square kilometer");
         else
             return plural
                        // GTC: localized units
