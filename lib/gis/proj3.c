@@ -133,6 +133,33 @@ const char *G_database_projection_name(void)
 }
 
 /*!
+   \brief Get projection name for the current location in English
+
+   Same as G_database_projection_name(), but never translated, so the result
+   is suitable for machine-readable output (JSON, shell style).
+
+   \return projection name
+ */
+const char *G_database_projection_name_untranslated(void)
+{
+    int n;
+    const char *name;
+
+    switch (n = G_projection()) {
+    case PROJECTION_XY:
+    case PROJECTION_UTM:
+    case PROJECTION_LL:
+        return G_projection_name_untranslated(n);
+    }
+
+    name = lookup_proj("name");
+    if (!name)
+        return "Unknown projection";
+
+    return name;
+}
+
+/*!
    \brief Conversion to meters
 
    Returns a factor which converts the grid unit to meters (by
@@ -161,7 +188,8 @@ double G_database_units_to_meters_factor(void)
     if (buf)
         sscanf(buf, "%lf", &factor);
     if (factor <= 0.0) {
-        unit = G_database_unit_name(0);
+        /* the table has English names, so the translated name does not match */
+        unit = G_get_units_name_untranslated(G_database_unit(), 0, FALSE);
         for (n = 0; table[n].unit; n++)
             if (equal(unit, table[n].unit)) {
                 factor = table[n].factor;

@@ -108,7 +108,9 @@ void print_window(struct Cell_head *window, int print_flag, int flat_flag,
 
     /* flag.print & flag.gprint */
     if (print_flag & PRINT_REG) {
-        prj = G_database_projection_name();
+        /* machine-readable output must not depend on the locale */
+        prj = format == PLAIN ? G_database_projection_name()
+                              : G_database_projection_name_untranslated();
         if (!prj && format != JSON)
             prj = "** unknown **";
 

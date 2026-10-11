@@ -178,6 +178,188 @@ int G_is_units_type_temporal(int units)
     return 0;
 }
 
+static const char *units_name(int units, int plural, int square, int localize)
+{
+    switch (units) {
+    case U_UNKNOWN:
+        if (square)
+            return plural
+                       // GTC: localized area units
+                       ? (localize ? _("square units") : "square units")
+                       // GTC: localized area units
+                       : (localize ? _("square unit") : "square unit");
+        else
+            return plural
+                       // GTC: localized units
+                       ? (localize ? _("units") : "units")
+                       // GTC: localized units
+                       : (localize ? _("unit") : "unit");
+        break;
+
+    case U_METERS:
+        if (square)
+            return plural
+                       // GTC: localized area units
+                       ? (localize ? _("square meters") : "square meters")
+                       // GTC: localized area units
+                       : (localize ? _("square meter") : "square meter");
+        else
+            return plural
+                       // GTC: localized units
+                       ? (localize ? _("meters") : "meters")
+                       // GTC: localized units
+                       : (localize ? _("meter") : "meter");
+        break;
+
+    case U_KILOMETERS:
+        if (square)
+            return plural
+                       // GTC: localized area units
+                       ? (localize ? _("square kilometers") : "square kilometers")
+                       // GTC: localized area units
+                       : (localize ? _("square kilometer") : "square kilometer");
+        else
+            return plural
+                       // GTC: localized units
+                       ? (localize ? _("kilometers") : "kilometers")
+                       // GTC: localized units
+                       : (localize ? _("kilometer") : "kilometer");
+        break;
+
+    case U_ACRES:
+        if (square)
+            return plural
+                       // GTC: localized area units
+                       ? (localize ? _("acres") : "acres")
+                       // GTC: localized area units
+                       : (localize ? _("acre") : "acre");
+        else
+            return units_name(G_database_unit(), plural, square, localize);
+        break;
+
+    case U_HECTARES:
+        if (square)
+            return plural
+                       // GTC: localized area units
+                       ? (localize ? _("hectares") : "hectares")
+                       // GTC: localized area units
+                       : (localize ? _("hectare") : "hectare");
+        else
+            return units_name(G_database_unit(), plural, square, localize);
+        break;
+
+    case U_MILES:
+        if (square)
+            return plural
+                       // GTC: localized area units
+                       ? (localize ? _("square miles") : "square miles")
+                       // GTC: localized area units
+                       : (localize ? _("square mile") : "square mile");
+        else
+            return plural
+                       // GTC: localized units
+                       ? (localize ? _("miles") : "miles")
+                       // GTC: localized units
+                       : (localize ? _("mile") : "mile");
+        break;
+
+    case U_FEET:
+        if (square)
+            return plural
+                       // GTC: localized area units, do not confuse with US feet
+                       ? (localize ? _("square feet") : "square feet")
+                       // GTC: localized area units, do not confuse with US foot
+                       : (localize ? _("square foot") : "square foot");
+        else
+            return plural
+                       // GTC: localized units, do not confuse with US feet
+                       ? (localize ? _("feet") : "feet")
+                       // GTC: localized units, do not confuse with US foot
+                       : (localize ? _("foot") : "foot");
+        break;
+
+    case U_USFEET:
+        if (square)
+            return plural
+                       // GTC: localized area units, do not confuse with feet
+                       ? (localize ? _("square US feet") : "square US feet")
+                       // GTC: localized area units, do not confuse with foot
+                       : (localize ? _("square US foot") : "square US foot");
+        else
+            return plural
+                       // GTC: localized units, do not confuse with feet
+                       ? (localize ? _("US feet") : "US feet")
+                       // GTC: localized units, do not confuse with foot
+                       : (localize ? _("US foot") : "US foot");
+        break;
+
+    case U_DEGREES:
+        if (square)
+            return plural
+                       // GTC: localized area units
+                       ? (localize ? _("square degrees") : "square degrees")
+                       // GTC: localized area units
+                       : (localize ? _("square degree") : "square degree");
+        else
+            return plural
+                       // GTC: localized units
+                       ? (localize ? _("degrees") : "degrees")
+                       // GTC: localized units
+                       : (localize ? _("degree") : "degree");
+        break;
+
+    case U_YEARS:
+        return plural
+                   // GTC: localized time units
+                   ? (localize ? _("years") : "years")
+                   // GTC: localized time units
+                   : (localize ? _("year") : "year");
+        break;
+
+    case U_MONTHS:
+        return plural
+                   // GTC: localized time units
+                   ? (localize ? _("months") : "months")
+                   // GTC: localized time units
+                   : (localize ? _("month") : "month");
+        break;
+
+    case U_DAYS:
+        return plural
+                   // GTC: localized time units
+                   ? (localize ? _("days") : "days")
+                   // GTC: localized time units
+                   : (localize ? _("day") : "day");
+        break;
+
+    case U_HOURS:
+        return plural
+                   // GTC: localized time units
+                   ? (localize ? _("hours") : "hours")
+                   // GTC: localized time units
+                   : (localize ? _("hour") : "hour");
+        break;
+
+    case U_MINUTES:
+        return plural
+                   // GTC: localized time units
+                   ? (localize ? _("minutes") : "minutes")
+                   // GTC: localized time units
+                   : (localize ? _("minute") : "minute");
+        break;
+
+    case U_SECONDS:
+        return plural
+                   // GTC: localized time units
+                   ? (localize ? _("seconds") : "seconds")
+                   // GTC: localized time units
+                   : (localize ? _("second") : "second");
+        break;
+    }
+
+    return NULL;
+}
+
 /*!
    \brief Get localized units name
 
@@ -190,6 +372,9 @@ int G_is_units_type_temporal(int units)
    - U_FEET
    - U_USFEET
 
+   The name is translated, so it is meant for messages and other text for
+   people. Use G_get_units_name_untranslated() for machine-readable output.
+
    \param units units code
    \param plural plural form if true
    \param square area units if true
@@ -199,186 +384,26 @@ int G_is_units_type_temporal(int units)
  */
 const char *G_get_units_name(int units, int plural, int square)
 {
-    switch (units) {
-    case U_UNKNOWN:
-        if (square)
-            return plural
-                       // GTC: localized area units
-                       ? _("square units")
-                       // GTC: localized area units
-                       : _("square unit");
-        else
-            return plural
-                       // GTC: localized units
-                       ? _("units")
-                       // GTC: localized units
-                       : _("unit");
-        break;
+    return units_name(units, plural, square, 1);
+}
 
-    case U_METERS:
-        if (square)
-            return plural
-                       // GTC: localized area units
-                       ? _("square meters")
-                       // GTC: localized area units
-                       : _("square meter");
-        else
-            return plural
-                       // GTC: localized units
-                       ? _("meters")
-                       // GTC: localized units
-                       : _("meter");
-        break;
+/*!
+   \brief Get units name in English, independent of the locale
 
-    case U_KILOMETERS:
-        if (square)
-            return plural
-                       // GTC: localized area units
-                       ? _("square kilometers")
-                       // GTC: localized area units
-                       : _("square kilometer");
-        else
-            return plural
-                       // GTC: localized units
-                       ? _("kilometers")
-                       // GTC: localized units
-                       : _("kilometer");
-        break;
+   Same as G_get_units_name(), but never translated, so the result is suitable
+   for machine-readable output (JSON, shell style) and for comparison with
+   names which G_units() recognizes.
 
-    case U_ACRES:
-        if (square)
-            return plural
-                       // GTC: localized area units
-                       ? _("acres")
-                       // GTC: localized area units
-                       : _("acre");
-        else
-            return G_get_units_name(G_units(G_database_unit_name(1)), plural,
-                                    square);
-        break;
+   \param units units code
+   \param plural plural form if true
+   \param square area units if true
 
-    case U_HECTARES:
-        if (square)
-            return plural
-                       // GTC: localized area units
-                       ? _("hectares")
-                       // GTC: localized area units
-                       : _("hectare");
-        else
-            return G_get_units_name(G_units(G_database_unit_name(1)), plural,
-                                    square);
-        break;
-
-    case U_MILES:
-        if (square)
-            return plural
-                       // GTC: localized area units
-                       ? _("square miles")
-                       // GTC: localized area units
-                       : _("square mile");
-        else
-            return plural
-                       // GTC: localized units
-                       ? _("miles")
-                       // GTC: localized units
-                       : _("mile");
-        break;
-
-    case U_FEET:
-        if (square)
-            return plural
-                       // GTC: localized area units, do not confuse with US feet
-                       ? _("square feet")
-                       // GTC: localized area units, do not confuse with US foot
-                       : _("square foot");
-        else
-            return plural
-                       // GTC: localized units, do not confuse with US feet
-                       ? _("feet")
-                       // GTC: localized units, do not confuse with US foot
-                       : _("foot");
-        break;
-
-    case U_USFEET:
-        if (square)
-            return plural
-                       // GTC: localized area units, do not confuse with feet
-                       ? _("square US feet")
-                       // GTC: localized area units, do not confuse with foot
-                       : _("square US foot");
-        else
-            return plural
-                       // GTC: localized units, do not confuse with feet
-                       ? _("US feet")
-                       // GTC: localized units, do not confuse with foot
-                       : _("US foot");
-        break;
-
-    case U_DEGREES:
-        if (square)
-            return plural
-                       // GTC: localized area units
-                       ? _("square degrees")
-                       // GTC: localized area units
-                       : _("square degree");
-        else
-            return plural
-                       // GTC: localized units
-                       ? _("degrees")
-                       // GTC: localized units
-                       : _("degree");
-        break;
-
-    case U_YEARS:
-        return plural
-                   // GTC: localized time units
-                   ? _("years")
-                   // GTC: localized time units
-                   : _("year");
-        break;
-
-    case U_MONTHS:
-        return plural
-                   // GTC: localized time units
-                   ? _("months")
-                   // GTC: localized time units
-                   : _("month");
-        break;
-
-    case U_DAYS:
-        return plural
-                   // GTC: localized time units
-                   ? _("days")
-                   // GTC: localized time units
-                   : _("day");
-        break;
-
-    case U_HOURS:
-        return plural
-                   // GTC: localized time units
-                   ? _("hours")
-                   // GTC: localized time units
-                   : _("hour");
-        break;
-
-    case U_MINUTES:
-        return plural
-                   // GTC: localized time units
-                   ? _("minutes")
-                   // GTC: localized time units
-                   : _("minute");
-        break;
-
-    case U_SECONDS:
-        return plural
-                   // GTC: localized time units
-                   ? _("seconds")
-                   // GTC: localized time units
-                   : _("second");
-        break;
-    }
-
-    return NULL;
+   \return units name
+   \return NULL if units not found
+ */
+const char *G_get_units_name_untranslated(int units, int plural, int square)
+{
+    return units_name(units, plural, square, 0);
 }
 
 /*!
@@ -404,7 +429,7 @@ const char *G_get_units_name(int units, int plural, int square)
 int G_units(const char *units_name)
 {
     if (units_name == NULL) {
-        return G_units(G_database_unit_name(1));
+        return G_database_unit();
     }
 
     if (strcasecmp(units_name, "meter") == 0 ||
