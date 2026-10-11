@@ -44,6 +44,7 @@ jobs:
           LANG: C.UTF-8
         run: |
           export PATH="${GITHUB_WORKSPACE}/build/output/bin:${PATH}"
+          mkdir -p "${GRASS_CONFIG_DIR}"
           # A fixed project path keeps the screenshots identical between runs.
           grass -e -c XY /tmp/grassdata/screenshots
           xvfb-run -s "-screen 0 1600x1200x24" \
