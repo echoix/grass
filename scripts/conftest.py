@@ -55,3 +55,15 @@ def xy_empty_dataset_session(tmp_path):
     ):
         tools.g_region(s=0, n=5, w=0, e=6, res=1)
         yield session
+
+
+@pytest.fixture(scope="session", autouse=True)
+def english_messages():
+    """Keep messages in English for tests which check them
+
+    The tests are written for English messages, so they would fail in a
+    translated locale, e.g., when running on a system which is not English.
+    """
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        monkeypatch.setenv("LANGUAGE", "C")
+        yield
