@@ -30,11 +30,14 @@ import builtins
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
 from pathlib import Path
 
+# ImageMagick's tool which reads the screen.
+IMPORT = shutil.which("import")
 PLACEHOLDER = re.compile(r"%(?:\([^)]*\))?[-#0 +]*\d*(?:\.\d+)?[sdifgxXr%]|\{[^{}]*\}")
 
 
@@ -215,7 +218,7 @@ def grab(window, path):
     rect = window.GetScreenRect()
     subprocess.run(
         [
-            "import",
+            IMPORT,
             "-window",
             "root",
             "-crop",
@@ -366,6 +369,9 @@ def main():
         help="scenario to capture (default: all)",
     )
     args = parser.parse_args()
+
+    if not IMPORT:
+        sys.exit("The import tool of ImageMagick is required to read the screen.")
 
     sys.path.insert(0, os.path.join(os.environ["GISBASE"], "gui", "wxpython"))
     import grass  # noqa: F401  Installs the translation function.
