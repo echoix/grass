@@ -12,11 +12,11 @@
   <its:translateRule selector="//label | //help | //description" translate="yes"/>
   <!--
     Translator comments in a mechanical key=value form: "type" is the kind of
-    string, with its interpretation in parentheses, and the other keys are what is specific to it. They are built from
-    the XML itself, so they stay in sync. A label gets its help text, a help
-    text gets its label and a tool menu item gets the tool name, which tells
-    the translators what the item does, e.g. whether a word is a noun or a
-    verb.
+    string, with its interpretation in parentheses, and the other keys are
+    what is specific to it. They are built from the XML itself, so they stay
+    in sync. A label gets its help text, a help text gets its label and a tool
+    menu item gets the tool name, which tells the translators what the item
+    does, e.g. whether a word is a noun or a verb.
   -->
   <its:locNoteRule selector="//toolbox/label | //menu/label"
                    locNoteType="description">

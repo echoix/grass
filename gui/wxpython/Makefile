@@ -33,6 +33,8 @@ ifndef CROSS_COMPILING
 	-$(MAKE) $(DSTDIR)/xml/module_items.xml
 	-$(MAKE) xml/menudata.xml
 	-$(MAKE) xml/module_tree_menudata.xml
+	-$(MAKE) $(DSTDIR)/xml/menudata.xml
+	-$(MAKE) $(DSTDIR)/xml/module_tree_menudata.xml
 endif
 	$(MAKE) parsubdirs
 

@@ -147,6 +147,7 @@ if(NOT WITH_FHS)
 
     add_custom_target(
         build_module_tree_menudata
+        ALL
         COMMAND
             ${grass_env_command} ${PYTHON_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/toolboxes.py "module_tree" >
