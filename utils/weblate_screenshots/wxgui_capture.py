@@ -17,7 +17,7 @@ one) keeps the screenshots identical between runs:
     grass -e -c XY /tmp/grassdata/screenshots
     xvfb-run -s "-screen 0 1600x1200x24" \
         grass /tmp/grassdata/screenshots/PERMANENT --exec \
-        python3 locale/screenshots/wxgui_capture.py \
+        python3 utils/weblate_screenshots/wxgui_capture.py \
         --pot locale/templates/grasswxpy.pot --output shots
 
 The output directory gets one PNG file per screenshot and manifest.json
