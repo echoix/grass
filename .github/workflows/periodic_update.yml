@@ -101,6 +101,8 @@ jobs:
       - name: Configure grass with the packages needed for the menu strings
         # wxPython is needed to generate the menu strings, and the tools
         # that are not built get a placeholder instead of their description.
+        # Ubuntu 24.04 does not package PDAL or libLAS, so the point cloud
+        # import and export tools still get the placeholder.
         run: |
           ./configure \
             --with-cairo \
