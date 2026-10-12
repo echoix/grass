@@ -165,14 +165,14 @@ int main(int argc, char *argv[])
         Vect_open_old2(&Map, opt.vect->answer,
                        print_flag->answer ? "" : G_mapset(), opt.field->answer);
     if (open_level < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.vect->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.vect->answer);
 
     field = Vect_get_field_number(&Map, opt.field->answer);
 
     Fi = Vect_get_field(&Map, field);
     if (!print_flag->answer) {
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
 
         /* Open driver */

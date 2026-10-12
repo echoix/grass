@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
     if (parm.input->answer) {
         Vect_set_open_level(2); /* topology required */
         if (2 > Vect_open_old2(&In, parm.input->answer, "", parm.field->answer))
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           parm.input->answer);
 
         if (parm.field->answer)
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 
     /* create new vector map */
     if (-1 == Vect_open_new(&Out, output, flag.z->answer ? WITH_Z : WITHOUT_Z))
-        G_fatal_error(_("Unable to create vector map <%s>"), output);
+        G_fatal_error(_("Unable to create vector map <%s>."), output);
     Vect_set_error_handler_io(NULL, &Out);
 
     /* Do we need to write random values into attribute table? */
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
             Fi_input = Vect_get_field2(&In, parm.field->answer);
             if (Fi_input == NULL)
                 G_fatal_error(
-                    _("Database connection not defined for layer <%s>"),
+                    _("Database connection not defined for layer <%s>."),
                     parm.field->answer);
             driver_input = db_start_driver_open_database(
                 Fi_input->driver, Vect_subst_var(Fi_input->database, &In));
@@ -291,7 +291,8 @@ int main(int argc, char *argv[])
         db_append_string(&sql, ")");
 
         if (db_execute_immediate(driver, &sql) != DB_OK) {
-            G_fatal_error(_("Unable to create table: %s"), db_get_string(&sql));
+            G_fatal_error(_("Unable to create table: '%s'."),
+                          db_get_string(&sql));
         }
 
         /* Create index */
@@ -547,7 +548,7 @@ int main(int argc, char *argv[])
 
                     G_debug(3, "%s", db_get_string(&sql));
                     if (db_execute_immediate(driver, &sql) != DB_OK) {
-                        G_fatal_error(_("Unable to insert new row: %s"),
+                        G_fatal_error(_("Unable to insert new row: '%s'."),
                                       db_get_string(&sql));
                     }
                 }
@@ -703,7 +704,7 @@ int main(int argc, char *argv[])
 
                 G_debug(3, "%s", db_get_string(&sql));
                 if (db_execute_immediate(driver, &sql) != DB_OK) {
-                    G_fatal_error(_("Unable to insert new row: %s"),
+                    G_fatal_error(_("Unable to insert new row: '%s'."),
                                   db_get_string(&sql));
                 }
             }

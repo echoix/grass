@@ -53,7 +53,7 @@
 # %end
 # %flag
 # % key: g
-# % label: Print stats in shell script style [deprecated]
+# % label: Print in shell script style [deprecated]
 # % description: This flag is deprecated and will be removed in a future release. Use format=shell instead.
 # %end
 

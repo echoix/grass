@@ -94,11 +94,12 @@ int update_dbcolors(const char *rast_name, const char *vector_map, int field,
 
     /* open vector map and database driver */
     if (Vect_open_old(&Map, vector_map, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), vector_map);
+        G_fatal_error(_("Unable to open vector map <%s>."), vector_map);
 
     db_CatValArray_init(&cvarr);
     if ((Fi = Vect_get_field(&Map, field)) == NULL)
-        G_fatal_error(_("Database connection not defined for layer %d"), field);
+        G_fatal_error(_("Database connection not defined for layer %d."),
+                      field);
 
     if ((Driver = db_start_driver_open_database(Fi->driver, Fi->database)) ==
         NULL)
@@ -115,7 +116,7 @@ int update_dbcolors(const char *rast_name, const char *vector_map, int field,
                       Fi->table);
 
     if (nrec < 0)
-        G_fatal_error(_("No records selected from table <%s>"), Fi->table);
+        G_fatal_error(_("No records selected from table <%s>."), Fi->table);
 
     G_debug(3, "nrec = %d", nrec);
 
@@ -264,11 +265,11 @@ int update_labels(const char *rast_name, const char *vector_map, int field,
         /* open vector map and database driver */
         Vect_set_open_level(1);
         if (Vect_open_old(&Map, vector_map, G_find_vector2(vector_map, "")) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), vector_map);
+            G_fatal_error(_("Unable to open vector map <%s>."), vector_map);
 
         db_CatValArray_init(&cvarr);
         if (!(Fi = Vect_get_field(&Map, field)))
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
 
         Vect_close(&Map);
@@ -284,7 +285,7 @@ int update_labels(const char *rast_name, const char *vector_map, int field,
                           Fi->table);
 
         if (nrec < 0)
-            G_fatal_error(_("No records selected from table <%s>"), Fi->table);
+            G_fatal_error(_("No records selected from table <%s>."), Fi->table);
 
         G_debug(3, "nrec = %d", nrec);
 
@@ -294,7 +295,7 @@ int update_labels(const char *rast_name, const char *vector_map, int field,
         /* get column type */
         if ((col_type = db_column_Ctype(Driver, Fi->table, label_column)) ==
             -1) {
-            G_fatal_error(_("Column <%s> not found"), label_column);
+            G_fatal_error(_("Column <%s> not found."), label_column);
         }
 
         /* for each attribute */
@@ -492,11 +493,12 @@ int update_labels(const char *rast_name, const char *vector_map, int field,
             Vect_set_open_level(1);
             if (Vect_open_old(&Map, vector_map,
                               G_find_vector2(vector_map, "")) < 0)
-                G_fatal_error(_("Unable to open vector map <%s>"), vector_map);
+                G_fatal_error(_("Unable to open vector map <%s>."), vector_map);
 
             db_CatValArray_init(&cvarr);
             if (!(Fi = Vect_get_field(&Map, field)))
-                G_fatal_error(_("Database connection not defined for layer %d"),
+                G_fatal_error(_("Database connection not defined for layer "
+                                "%d."),
                               field);
 
             Vect_close(&Map);
@@ -514,7 +516,7 @@ int update_labels(const char *rast_name, const char *vector_map, int field,
                               label_column, Fi->table);
 
             if (nrec < 0)
-                G_fatal_error(_("No records selected from table <%s>"),
+                G_fatal_error(_("No records selected from table <%s>."),
                               Fi->table);
 
             G_debug(3, "nrec = %d", nrec);
@@ -525,7 +527,7 @@ int update_labels(const char *rast_name, const char *vector_map, int field,
             /* get column type */
             if ((col_type = db_column_Ctype(Driver, Fi->table, label_column)) ==
                 -1) {
-                G_fatal_error(_("Column <%s> not found"), label_column);
+                G_fatal_error(_("Column <%s> not found."), label_column);
             }
 
             /* close the database driver */

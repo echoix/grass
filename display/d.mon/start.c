@@ -46,7 +46,8 @@ char *start(const char *name, const char *output, int width, int height,
         }
         if (!update && access(output_name, F_OK) == 0) {
             if (G_get_overwrite()) {
-                G_warning(_("File <%s> already exists and will be overwritten"),
+                G_warning(_("File '%s' already exists and will be "
+                            "overwritten."),
                           output_name);
                 D_setup_unity(0);
                 D_erase("white");
@@ -75,10 +76,11 @@ char *start(const char *name, const char *output, int width, int height,
         /* check if file exists */
         if (!update && access(output_name, F_OK) == 0) {
             if (G_get_overwrite()) {
-                G_warning(_("File <%s> already exists and will be overwritten"),
+                G_warning(_("File '%s' already exists and will be "
+                            "overwritten."),
                           output_name);
                 if (0 != unlink(output_name))
-                    G_fatal_error(_("Unable to delete <%s>"), output_name);
+                    G_fatal_error(_("Unable to delete <%s>."), output_name);
             }
         }
     }

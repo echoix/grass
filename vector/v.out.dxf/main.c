@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(2);
     if (Vect_open_old2(&In, input->answer, "", field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), input->answer);
 
     dxf_open(dxf_file); /* open output */
 

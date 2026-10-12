@@ -420,9 +420,9 @@ int main(int argc, char *argv[])
     if (flag.gprint->answer) {
         print_flag |= PRINT_SH;
 
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=shell instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "shell");
     }
 
     if (flag.lprint->answer)
@@ -506,7 +506,7 @@ int main(int argc, char *argv[])
                 G_fatal_error(_("Raster map name too long: <%s>"), *rast_ptr);
             mapset = G_find_raster2(rast_name, "");
             if (!mapset)
-                G_fatal_error(_("Raster map <%s> not found"), rast_name);
+                G_fatal_error(_("Raster map <%s> not found."), rast_name);
             Rast_get_cellhd(rast_name, mapset, &temp_window);
             if (!first) {
                 window = temp_window;
@@ -536,7 +536,7 @@ int main(int argc, char *argv[])
 
         update_file = true;
         if ((mapset = G_find_raster3d(name, "")) == NULL)
-            G_fatal_error(_("3D raster map <%s> not found"), name);
+            G_fatal_error(_("3D raster map <%s> not found."), name);
 
         if (Rast3d_read_region_map(name, mapset, &win) < 0)
             G_fatal_error(_("Unable to read header of 3D raster map <%s@%s>"),
@@ -573,7 +573,7 @@ int main(int argc, char *argv[])
                 Vect_close(&Map);
                 Vect_set_open_level(1); /* no topology */
                 if (Vect_open_old(&Map, vect_name, mapset) < 1)
-                    G_fatal_error(_("Unable to open vector map <%s>"),
+                    G_fatal_error(_("Unable to open vector map <%s>."),
                                   vect_name);
             }
 
@@ -894,7 +894,7 @@ int main(int argc, char *argv[])
         update_file = true;
         mapset = G_find_raster2(name, "");
         if (!mapset)
-            G_fatal_error(_("Raster map <%s> not found"), name);
+            G_fatal_error(_("Raster map <%s> not found."), name);
         zoom(&window, name, mapset);
     }
 
@@ -903,7 +903,7 @@ int main(int argc, char *argv[])
         update_file = true;
         mapset = G_find_raster2(name, "");
         if (!mapset)
-            G_fatal_error(_("Raster map <%s> not found"), name);
+            G_fatal_error(_("Raster map <%s> not found."), name);
         Rast_get_cellhd(name, mapset, &temp_window);
         Rast_align_window(&window, &temp_window);
     }

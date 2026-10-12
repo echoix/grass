@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 
         /* create vector map */
         if (Vect_open_new(&Map, output, 1) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"), output);
+            G_fatal_error(_("Unable to create vector map <%s>."), output);
 
         Vect_set_map_name(&Map, output);
 

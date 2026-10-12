@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
         fp = stdout;
     }
     else if (NULL == (fp = fopen(outfile, "w")))
-        G_fatal_error(_("Unable to open file <%s>"), outfile);
+        G_fatal_error(_("Unable to open file '%s'."), outfile);
 
     /* Get Raster Type */
     data_type = Rast_get_map_type(fd);

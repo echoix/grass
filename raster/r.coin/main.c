@@ -113,9 +113,9 @@ int main(int argc, char *argv[])
     map2name = parm.map2->answer;
 
     if (!G_find_raster2(map1name, ""))
-        G_fatal_error(_("Raster map <%s> not found"), map1name);
+        G_fatal_error(_("Raster map <%s> not found."), map1name);
     if (!G_find_raster2(map2name, ""))
-        G_fatal_error(_("Raster map <%s> not found"), map2name);
+        G_fatal_error(_("Raster map <%s> not found."), map2name);
 
     make_coin();
     print_coin(*parm.units->answer, flag.w->answer ? 132 : 80, 0);

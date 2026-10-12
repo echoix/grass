@@ -403,7 +403,7 @@ int main(int argc, char **argv)
     snprintf(in[0].name, sizeof(in[0].name), "%s", x_opt->answer);
 
     if ((in[0].fp = fopen(in[0].full_name, "r")) == NULL)
-        G_fatal_error(_("Unable to open input file <%s>"), in[0].full_name);
+        G_fatal_error(_("Unable to open input file '%s'."), in[0].full_name);
 
     num_y_files = 0;
 
@@ -421,7 +421,8 @@ int main(int argc, char **argv)
         snprintf(in[j].name, sizeof(in[j].name), "%s", name);
 
         if ((in[j].fp = fopen(in[j].full_name, "r")) == NULL)
-            G_fatal_error(_("Unable to open input file <%s>"), in[j].full_name);
+            G_fatal_error(_("Unable to open input file '%s'."),
+                          in[j].full_name);
 
         num_y_files++;
         if (num_y_files > 10)
@@ -720,7 +721,8 @@ int main(int argc, char **argv)
     for (i = 0; i <= num_y_files; i++) {
         if ((in[i].fp = fopen(in[i].full_name, "r")) == NULL) {
             D_close_driver();
-            G_fatal_error(_("Unable to open input file <%s>"), in[i].full_name);
+            G_fatal_error(_("Unable to open input file '%s'."),
+                          in[i].full_name);
         }
     }
 

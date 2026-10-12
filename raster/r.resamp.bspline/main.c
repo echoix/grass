@@ -212,8 +212,8 @@ int main(int argc, char *argv[])
 
     G_verbose_message(_("spline step in ew direction %g"), stepE);
     G_verbose_message(_("spline step in ns direction %g"), stepN);
-    G_verbose_message(_("adjusted EW splines %d"), nsplx_adj);
-    G_verbose_message(_("adjusted NS splines %d"), nsply_adj);
+    G_verbose_message(_("Adjusted EW splines %d"), nsplx_adj);
+    G_verbose_message(_("Adjusted NS splines %d"), nsply_adj);
 
     /* calculate number of subregions */
     edgeE = dims.ew_size - dims.overlap - 2 * dims.edge_v;
@@ -478,7 +478,7 @@ int main(int argc, char *argv[])
 
     if (grid_opt->answer) {
         if (0 > Vect_open_new(&Grid, grid_opt->answer, WITH_Z))
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           grid_opt->answer);
 
         Points = Vect_new_line_struct();
@@ -539,7 +539,7 @@ int main(int argc, char *argv[])
             subregion_col++;
             subregion++;
             if (nsubregions > 1)
-                G_message(_("subregion %d of %d"), subregion, nsubregions);
+                G_message(_("Subregion %d of %d"), subregion, nsubregions);
 
             last_overlap_box.E = overlap_box.E;
             last_general_box.E = general_box.E;

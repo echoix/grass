@@ -36,7 +36,7 @@ int vect_to_rast(const char *vector_map, const char *raster_map,
     G_verbose_message(_("Loading data..."));
     Vect_set_open_level(2);
     if (Vect_open_old2(&Map, vector_map, "", field_name) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), vector_map);
+        G_fatal_error(_("Unable to open vector map <%s>."), vector_map);
 
     field = Vect_get_field_number(&Map, field_name);
 
@@ -50,7 +50,7 @@ int vect_to_rast(const char *vector_map, const char *raster_map,
     case USE_ATTR:
         db_CatValArray_init(&cvarr);
         if (!(Fi = Vect_get_field(&Map, field)))
-            G_fatal_error(_("Database connection not defined for layer <%s>"),
+            G_fatal_error(_("Database connection not defined for layer <%s>."),
                           field_name);
 
         if ((Driver = db_start_driver_open_database(Fi->driver,
@@ -64,7 +64,7 @@ int vect_to_rast(const char *vector_map, const char *raster_map,
 
         if ((nrec = db_select_CatValArray(Driver, Fi->table, Fi->key, column,
                                           where, &cvarr)) == -1)
-            G_fatal_error(_("Column <%s> not found"), column);
+            G_fatal_error(_("Column <%s> not found."), column);
         G_debug(3, "nrec = %d", nrec);
 
         ctype = cvarr.ctype;
@@ -74,7 +74,7 @@ int vect_to_rast(const char *vector_map, const char *raster_map,
                           db_sqltype_name(ctype));
 
         if (nrec < 0)
-            G_fatal_error(_("No records selected from table <%s>"), Fi->table);
+            G_fatal_error(_("No records selected from table <%s>."), Fi->table);
 
         G_debug(1, "%d records selected from table", nrec);
 

@@ -30,14 +30,14 @@ int stats(void)
     }
     mmapset = G_find_raster2(mname, "");
     if (mmapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), maps[0]);
+        G_fatal_error(_("Raster map <%s> not found."), maps[0]);
 
     if (G_strlcpy(rname, maps[0], sizeof(rname)) >= sizeof(rname)) {
         G_fatal_error(_("Raster map name <%s> is too long"), maps[0]);
     }
     rmapset = G_find_raster2(rname, "");
     if (rmapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), maps[1]);
+        G_fatal_error(_("Raster map <%s> not found."), maps[1]);
 
     stats_file = G_tempfile();
 

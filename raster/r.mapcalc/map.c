@@ -510,7 +510,7 @@ int open_map(const char *name, int mod, int row, int col, int thread_num)
 
     mapset = G_find_raster2(name, "");
     if (!mapset)
-        G_fatal_error(_("Raster map <%s> not found"), name);
+        G_fatal_error(_("Raster map <%s> not found."), name);
 
     switch (mod) {
     case 'M':
@@ -814,7 +814,7 @@ void prepare_region_from_maps(expression **map_list, int type, int num_maps)
         mapset = G_find_raster2(rast_name, "");
 
         if (!mapset)
-            G_fatal_error(_("Raster map <%s> not found"), rast_name);
+            G_fatal_error(_("Raster map <%s> not found."), rast_name);
 
         G_debug(1, "Setting region from raster map: %s@%s", rast_name, mapset);
 

@@ -429,10 +429,10 @@ int main(int argc, char *argv[])
 
     nbands = atoi(parm.bands->answer);
     if (nbands < 1)
-        G_fatal_error(_("Option %s must be > 0"), parm.bands->key);
+        G_fatal_error(_("Option <%s> must be > 0."), parm.bands->key);
     hbytes = atoi(parm.hbytes->answer);
     if (hbytes < 0)
-        G_fatal_error(_("Option %s must be >= 0"), parm.hbytes->key);
+        G_fatal_error(_("Option <%s> must be >= 0."), parm.hbytes->key);
 
     if (G_strcasecmp(parm.order->answer, "big") == 0)
         order = 0;
@@ -542,14 +542,14 @@ int main(int argc, char *argv[])
         if (num_bounds > 0) {
             if (!G_scan_northing(parm.north->answer, &cellhd.north,
                                  cellhd.proj))
-                G_fatal_error(_("Illegal north coordinate <%s>"),
+                G_fatal_error(_("Illegal north coordinate <%s>."),
                               parm.north->answer);
             if (!G_scan_northing(parm.south->answer, &cellhd.south,
                                  cellhd.proj))
                 G_fatal_error(_("Illegal south coordinate <%s>"),
                               parm.south->answer);
             if (!G_scan_easting(parm.east->answer, &cellhd.east, cellhd.proj))
-                G_fatal_error(_("Illegal east coordinate <%s>"),
+                G_fatal_error(_("Illegal east coordinate <%s>."),
                               parm.east->answer);
             if (!G_scan_easting(parm.west->answer, &cellhd.west, cellhd.proj))
                 G_fatal_error(_("Illegal west coordinate <%s>"),

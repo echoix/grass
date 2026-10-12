@@ -68,7 +68,7 @@ def main():
 
     gfile = grass.find_file(name=infile, element="cell", mapset=mapset)
     if not gfile["name"]:
-        grass.fatal(_("Raster map <%s> not found") % infile)
+        grass.fatal(_("Raster map <%s> not found.") % infile)
 
     parent_dir = Path(outfile).parent
     if os.path.exists(outfile):  # noqa: PTH110 # Problem with tests, the way a permission error occurs when checking

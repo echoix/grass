@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(1);
     if (Vect_open_old2(&In, in_opt->answer, "", "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     use3d = (Vect_is_3d(&In) && (flag_use3d->answer || ortho->answer));
 
@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
         if (strcmp(rfile->answer, "-")) {
             fp = fopen(rfile->answer, "w");
             if (!fp)
-                G_fatal_error(_("Unable to open file '%s' for writing"),
+                G_fatal_error(_("Unable to open file '%s' for writing."),
                               rfile->answer);
         }
         else
@@ -199,8 +199,7 @@ int main(int argc, char *argv[])
         select_target_env();
 
         if (G_find_vector2(out_opt->answer, G_mapset())) {
-            G_warning(_("The vector map <%s> already exists."),
-                      out_opt->answer);
+            G_warning(_("Vector map <%s> already exists."), out_opt->answer);
             G_warning(_("Target project: <%s>"), G_location());
             G_warning(_("Target mapset: <%s>"), G_mapset());
             G_fatal_error(_("Rectification cancelled."));
@@ -213,7 +212,7 @@ int main(int argc, char *argv[])
     select_target_env();
 
     if (Vect_open_new(&Out, out_opt->answer, Vect_is_3d(&In)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
 
     Vect_copy_head_data(&In, &Out);
     Vect_hist_copy(&In, &Out);

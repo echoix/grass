@@ -135,7 +135,7 @@ int sliding_averaging(struct line_pnts *Points, double slide, int look_ahead,
 
     res = G_malloc(sizeof(POINT) * (n + half));
     if (!res) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
 
@@ -220,7 +220,7 @@ int distance_weighting(struct line_pnts *Points, double slide, int look_ahead,
 
     res = (POINT *)G_malloc(sizeof(POINT) * (n + half));
     if (!res) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
 
@@ -362,7 +362,7 @@ int chaiken(struct line_pnts *Points, double thresh, int loop_support,
     }
 
     if (point_list_copy_to_line_pnts(head, Points) == -1) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
     }
     point_list_free(head);
 
@@ -518,7 +518,7 @@ int hermite(struct line_pnts *Points, double step, double angle_thresh,
     point_list_add(last, p0);
 
     if (point_list_copy_to_line_pnts(head, Points) == -1)
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
 
     point_list_free(head);
 
@@ -563,31 +563,31 @@ int snakes(struct line_pnts *Points, double alpha, double beta,
     }
 
     if (!matrix_init(n + 2 * plus, n + 2 * plus, &g)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
     if (!matrix_init(n + 2 * plus, 1, &xcoord)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
     if (!matrix_init(n + 2 * plus, 1, &ycoord)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
     if (!matrix_init(n + 2 * plus, 1, &zcoord)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
     if (!matrix_init(n + 2 * plus, 1, &xout)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
     if (!matrix_init(n + 2 * plus, 1, &yout)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
     if (!matrix_init(n + 2 * plus, 1, &zout)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
 

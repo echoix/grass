@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
        lib/vector/Vlib/open.c
      */
     if (1 > Vect_open_old(&In, old->answer, mapset))
-        G_fatal_error(_("Unable to open vector map <%s>"), old->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), old->answer);
 
     /* Check if old vector is 3D. We should preserve 3D data. */
     if (Vect_is_3d(&In))
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
     /* Open new vector for reading/writing */
     if (0 > Vect_open_new(&Out, new->answer, open3d)) {
-        G_fatal_error(_("Unable to create vector map <%s>"), new->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), new->answer);
     }
 
     /* Set error handler for output vector map */
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     /* Let's get vector layers db connections information */
     Fi = Vect_get_field(&In, 1);
     if (!Fi) {
-        G_fatal_error(_("Database connection not defined for layer %d"), 1);
+        G_fatal_error(_("Database connection not defined for layer %d."), 1);
     }
 
     /* Output information useful for debugging

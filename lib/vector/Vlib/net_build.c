@@ -147,7 +147,7 @@ int Vect_net_ttb_build_graph(struct Map_info *Map, int ltype, int afield,
         G_fatal_error(_("Turntable field < 1"));
     Fi = Vect_get_field(Map, tfield);
     if (Fi == NULL)
-        G_fatal_error(_("Database connection not defined for layer %d"),
+        G_fatal_error(_("Database connection not defined for layer %d."),
                       tfield);
 
     /* Open database */
@@ -198,7 +198,7 @@ int Vect_net_ttb_build_graph(struct Map_info *Map, int ltype, int afield,
 
         Fi = Vect_get_field(Map, nfield);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           nfield);
 
         driver = db_start_driver_open_database(Fi->driver, Fi->database);
@@ -491,7 +491,7 @@ int Vect_net_ttb_build_graph(struct Map_info *Map, int ltype, int afield,
             G_fatal_error(_("Arc field < 1"));
         Fi = Vect_get_field(Map, afield);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           afield);
 
         /* Open database */
@@ -788,7 +788,7 @@ int Vect_net_build_graph(struct Map_info *Map, int ltype, int afield,
             G_fatal_error(_("Arc field < 1"));
         Fi = Vect_get_field(Map, afield);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           afield);
 
         /* Open database */
@@ -965,7 +965,7 @@ int Vect_net_build_graph(struct Map_info *Map, int ltype, int afield,
 
         Fi = Vect_get_field(Map, nfield);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           nfield);
 
         driver = db_start_driver_open_database(Fi->driver, Fi->database);

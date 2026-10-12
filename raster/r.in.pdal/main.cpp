@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
                _("Coefficient of variance of point values in cell"),
                _("Median value of point values in cell"),
                _("Mode value of point values in cell"),
-               _("pth (nth) percentile of point values in cell"),
+               _("Pth (nth) percentile of point values in cell"),
                _("Skewness of point values in cell"),
                _("Trimmed mean of point values in cell"),
                _("Maximum number of points in cell per source ID"),
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
     pth_opt->type = TYPE_INTEGER;
     pth_opt->required = NO;
     pth_opt->options = "1-100";
-    pth_opt->description = _("pth percentile of the values");
+    pth_opt->description = _("Pth percentile of the values");
     pth_opt->guisection = _("Statistic");
 
     Option *trim_opt = G_define_option();

@@ -115,7 +115,8 @@ int NetA_get_node_costs(struct Map_info *In, int layer, char *column,
 
     Fi = Vect_get_field(In, layer);
     if (Fi == NULL)
-        G_fatal_error(_("Database connection not defined for layer %d"), layer);
+        G_fatal_error(_("Database connection not defined for layer %d."),
+                      layer);
 
     driver = db_start_driver_open_database(Fi->driver, Fi->database);
     if (driver == NULL)

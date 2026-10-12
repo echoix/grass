@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
         G_fatal_error(_("Unable to set predetermined vector open level"));
 
     if (1 > Vect_open_old(&In, input->answer, NULL))
-        G_fatal_error(_("Unable to open vector map <%s>"), input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), input->answer);
 
     /* Check if old vector is 3D. We should preserve 3D data. */
     is3d = WITHOUT_Z;
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 
     clayer = atoi(lyr_opt->answer);
     if (clayer < 1)
-        G_fatal_error(_("Option %s must be positive"), lyr_opt->key);
+        G_fatal_error(_("Option <%s> must be positive."), lyr_opt->key);
 
     clmethod = CL_DBSCAN;
     if (!strcmp(method_opt->answer, "dbscan2"))
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
     /* Open new vector for reading/writing */
     if (0 > Vect_open_new(&Out, output->answer, is3d)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), output->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), output->answer);
     }
 
     /* Copy header and history data from old to new map */

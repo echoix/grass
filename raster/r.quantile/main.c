@@ -343,7 +343,7 @@ int main(int argc, char *argv[])
 
     if (opt.file->answer != NULL && strcmp(opt.file->answer, "-") != 0) {
         if (NULL == freopen(opt.file->answer, "w", stdout)) {
-            G_fatal_error(_("Unable to open file <%s> for writing"),
+            G_fatal_error(_("Unable to open file '%s' for writing."),
                           opt.file->answer);
         }
     }

@@ -36,7 +36,7 @@ int load_rasters3d(const struct GParams *params, nv_data *data)
     for (i = 0; i < nvol; i++) {
         mapset = G_find_raster3d(params->volume->answers[i], "");
         if (mapset == NULL) {
-            G_fatal_error(_("3d raster map <%s> not found"),
+            G_fatal_error(_("3D raster map <%s> not found."),
                           params->volume->answers[i]);
         }
         char *mname =
@@ -126,7 +126,7 @@ int add_isosurfs(const struct GParams *params, nv_data *data G_UNUSED)
             mapset = G_find_raster3d(params->isosurf_color_map->answers[i], "");
 
             if (mapset == NULL) {
-                G_fatal_error(_("3d raster map <%s> not found"),
+                G_fatal_error(_("3D raster map <%s> not found."),
                               params->isosurf_color_map->answers[i]);
             }
 

@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     /* open bin file for writing */
     fp1 = fopen(outfile, "wb");
     if (NULL == fp1)
-        G_fatal_error(_("Unable to open output file <%s>"), outfile);
+        G_fatal_error(_("Unable to open output file '%s'."), outfile);
 
     /* Check Endian State of Host Computer */
     if (G_is_little_endian())

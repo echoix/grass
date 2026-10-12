@@ -62,7 +62,7 @@ geopoint *Gp_load_sites(const char *name, int *nsites, int *has_z)
 
     Vect_set_open_level(1);
     if (Vect_open_old(&map, name, "") == -1) {
-        G_fatal_error(_("Unable to open vector map <%s>"),
+        G_fatal_error(_("Unable to open vector map <%s>."),
                       G_fully_qualified_name(name, mapset));
     }
 
@@ -202,13 +202,13 @@ int Gp_load_sites_thematic(geosite *gp, struct Colors *colors)
 
     Vect_set_open_level(1);
     if (Vect_open_old(&Map, gp->filename, "") == -1) {
-        G_fatal_error(_("Unable to open vector map <%s>"),
+        G_fatal_error(_("Unable to open vector map <%s>."),
                       G_fully_qualified_name(gp->filename, mapset));
     }
 
     Fi = Vect_get_field(&Map, gp->tstyle->layer);
     if (!Fi) {
-        G_warning(_("Database connection not defined for layer %d"),
+        G_warning(_("Database connection not defined for layer %d."),
                   gp->tstyle->layer);
     }
     else {

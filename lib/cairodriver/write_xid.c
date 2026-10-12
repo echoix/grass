@@ -10,7 +10,7 @@ void cairo_write_xid(void)
 
     fp = fopen(ca.file_name, "w");
     if (!fp)
-        G_fatal_error(_("Unable to open output file <%s>"), ca.file_name);
+        G_fatal_error(_("Unable to open output file '%s'."), ca.file_name);
 
     snprintf(buf, sizeof(buf), "0x%08lx\n", (unsigned long)ca.win);
 

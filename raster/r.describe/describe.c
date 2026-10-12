@@ -88,7 +88,7 @@ int describe(const char *name, int compact, char *no_data_str, int range,
     nrows = Rast_window_rows();
     ncols = Rast_window_cols();
 
-    G_verbose_message(_("Reading <%s> ..."), name);
+    G_verbose_message(_("Reading <%s>..."), name);
     for (row = 0; row < nrows; row++) {
         G_percent(row, nrows, 2);
         (*get_row)(fd, b = buf, row);

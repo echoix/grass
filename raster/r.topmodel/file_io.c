@@ -25,7 +25,7 @@ void read_input(void)
 
     /* Read parameters file */
     if ((fp = fopen(file.params, "r")) == NULL)
-        G_fatal_error(_("Unable to open input file <%s>"), file.params);
+        G_fatal_error(_("Unable to open input file '%s'."), file.params);
 
     for (; !feof(fp);) {
         get_line(fp, buf);
@@ -133,7 +133,7 @@ void read_input(void)
 
     /* Read topographic index statistics file */
     if ((fp = fopen(file.topidxstats, "r")) == NULL)
-        G_fatal_error(_("Unable to open input file <%s>"), file.topidxstats);
+        G_fatal_error(_("Unable to open input file '%s'."), file.topidxstats);
 
     topidxstats.atb = NULL;
     topidxstats.Aatb_r = NULL;
@@ -158,7 +158,7 @@ void read_input(void)
 
     /* Read input file */
     if ((fp = fopen(file.input, "r")) == NULL)
-        G_fatal_error(_("Unable to open input file <%s>"), file.input);
+        G_fatal_error(_("Unable to open input file '%s'."), file.input);
 
     for (; !feof(fp);) {
         get_line(fp, buf);

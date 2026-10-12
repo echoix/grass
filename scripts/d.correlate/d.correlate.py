@@ -40,7 +40,7 @@ def main():
 
     for map in layers:
         if not gcore.find_file(map, element="cell")["file"]:
-            gcore.fatal(_("Raster map <%s> not found") % map)
+            gcore.fatal(_("Raster map <%s> not found.") % map)
 
     try:
         gcore.write_command(

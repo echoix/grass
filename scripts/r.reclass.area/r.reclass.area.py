@@ -369,7 +369,7 @@ def rmarea(
 def main() -> None:
     """Run area filtering."""
     if not gs.find_file(options["input"])["name"]:
-        gs.fatal(_("Raster map <%s> not found") % options["input"])
+        gs.fatal(_("Raster map <%s> not found.") % options["input"])
 
     # Check for unsupported locations
     resolution = check_projection()

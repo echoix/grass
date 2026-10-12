@@ -12,7 +12,7 @@ int write_img(unsigned char **img, float **goodness, int ncols, int nrows,
     int row, col;
     FCELL *fcellbuf = NULL;
 
-    G_important_message(_("Writing output raster map(s)..."));
+    G_important_message(_("Writing output raster maps..."));
 
     /* write goodness of fit */
     if (parms->goodness_map)

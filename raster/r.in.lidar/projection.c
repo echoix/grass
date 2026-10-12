@@ -131,8 +131,7 @@ void projection_check_wkt(struct Cell_head cellhd, struct Cell_head loc_wind,
                                    loc_proj_units, proj_info, proj_units, err);
     }
     else if (verbose) {
-        G_message(_(
-            "Coordinate reference system of input dataset and current project "
-            "appear to match"));
+        G_message(_("Coordinate reference system of input dataset and current "
+                    "project appear to match."));
     }
 }

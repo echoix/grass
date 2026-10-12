@@ -273,7 +273,7 @@ int parse_layer(char *s)
     mapset = G_find_raster2(name, "");
 
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), s);
+        G_fatal_error(_("Raster map <%s> not found."), s);
 
     n = nlayers++;
     layers = (LAYER *)G_realloc(layers, nlayers * sizeof(LAYER));

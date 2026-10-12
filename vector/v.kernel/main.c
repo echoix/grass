@@ -320,7 +320,7 @@ int main(int argc, char **argv)
     /* Open input vector */
     Vect_set_open_level(2);
     if (Vect_open_old(&In, in_opt->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     if (net_opt->answer) {
         int nlines, line;
@@ -333,13 +333,14 @@ int main(int argc, char **argv)
         Vect_set_open_level(2);
 
         if (Vect_open_old(&Net, net_opt->answer, "") < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), net_opt->answer);
+            G_fatal_error(_("Unable to open vector map <%s>."),
+                          net_opt->answer);
 
         Vect_net_build_graph(&Net, GV_LINES, 0, 0, NULL, NULL, NULL, 0, 0);
 
         if (!flag_q->answer) {
             if (Vect_open_new(&Out, net_out_opt->answer, 0) < 0)
-                G_fatal_error(_("Unable to create vector map <%s>"),
+                G_fatal_error(_("Unable to create vector map <%s>."),
                               net_out_opt->answer);
             Vect_hist_command(&Out);
         }

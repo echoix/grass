@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
         _("Creates raster maps from ASCII polygon/line/point data files.");
 
     input = G_define_standard_option(G_OPT_F_INPUT);
-    input->description = _("Name of input file; or \"-\" to read from stdin");
+    input->description = _("Name of input file (or \"-\" to read from stdin)");
 
     output = G_define_standard_option(G_OPT_R_OUTPUT);
 

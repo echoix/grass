@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
     zrange_opt->type = TYPE_DOUBLE;
     zrange_opt->required = NO;
     zrange_opt->key_desc = "min,max";
-    zrange_opt->description = _("Filter range for z data (min,max)");
+    zrange_opt->description = _("Filter range for Z data (min,max)");
     zrange_opt->guisection = _("Advanced Input");
 
     zscale_opt = G_define_option();
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
     zscale_opt->type = TYPE_DOUBLE;
     zscale_opt->required = NO;
     zscale_opt->answer = "1.0";
-    zscale_opt->description = _("Scale to apply to z data");
+    zscale_opt->description = _("Scale to apply to Z data");
     zscale_opt->guisection = _("Advanced Input");
 
     vcol_opt = G_define_option();
@@ -532,8 +532,8 @@ int main(int argc, char *argv[])
 
             if (dsize != (size_t)rows * (cols + 1))
                 G_fatal_error(
-                    _("Unable to process the whole map at once. "
-                      "Please set the %s option to some value lower than 100."),
+                    _("Unable to process the whole map at once. Please set "
+                      "the <%s> option to some value lower than 100."),
                     percent_opt->key);
         }
         /* allocate memory (test for enough before we start) */
@@ -582,7 +582,7 @@ int main(int argc, char *argv[])
     else {
         from_stdin = FALSE;
         if ((in_fp = fopen(infile, "r")) == NULL)
-            G_fatal_error(_("Unable to open input file <%s>"), infile);
+            G_fatal_error(_("Unable to open input file '%s'."), infile);
     }
 
     can_seek = fseek(in_fp, 0L, SEEK_SET) == 0;
@@ -648,7 +648,7 @@ int main(int argc, char *argv[])
     /* main binning loop(s) */
     for (pass = 1; pass <= npasses; pass++) {
         if (npasses > 1)
-            G_message(_("Pass #%d (of %d) ..."), pass, npasses);
+            G_message(_("Pass #%d (of %d)..."), pass, npasses);
 
         if (can_seek) {
             rewind(in_fp);

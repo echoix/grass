@@ -41,7 +41,7 @@ static XID read_xid(const char *filename)
 
     fp = fopen(filename, "r");
     if (!fp)
-        G_fatal_error(_("Unable to open input file <%s>"), filename);
+        G_fatal_error(_("Unable to open input file '%s'."), filename);
 
     if (!fgets(buf, sizeof(buf), fp))
         G_fatal_error(_("Unable to read input file <%s>"), filename);
@@ -61,7 +61,7 @@ static void write_xid(const char *filename, XID xid)
 
     fp = fopen(filename, "w");
     if (!fp)
-        G_fatal_error(_("Unable to open output file <%s>"), filename);
+        G_fatal_error(_("Unable to open output file '%s'."), filename);
 
     snprintf(buf, sizeof(buf), "0x%08lx\n", (unsigned long)xid);
 

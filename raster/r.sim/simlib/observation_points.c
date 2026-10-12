@@ -39,7 +39,8 @@ void create_observation_points(ObservationPoints *points)
     Vect_set_open_level(1);
 
     if (Vect_open_old(&Map, points->observation, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), points->observation);
+        G_fatal_error(_("Unable to open vector map <%s>."),
+                      points->observation);
 
     Vect_rewind(&Map);
 

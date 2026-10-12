@@ -60,7 +60,7 @@ int main(int argc, char **argv)
         In = (struct Map_info *)G_malloc(sizeof(struct Map_info));
         Vect_set_open_level(2);
         if (Vect_open_old(In, opt.input->answer, "") == -1)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           opt.input->answer);
     }
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
             if (Vect_open_old(Points, opt.points->answer, "") == -1) {
                 if (In)
                     Vect_close(In);
-                G_fatal_error(_("Unable to open vector map <%s>"),
+                G_fatal_error(_("Unable to open vector map <%s>."),
                               opt.points->answer);
             }
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
                 /* open input file */
                 if (strcmp(opt.file->answer, "-")) {
                     if ((file_arcs = fopen(opt.file->answer, "r")) == NULL) {
-                        G_fatal_error(_("Unable to open file <%s>"),
+                        G_fatal_error(_("Unable to open file '%s'."),
                                       opt.file->answer);
                     }
                 }
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
         /* create output map */
         Out = (struct Map_info *)G_malloc(sizeof(struct Map_info));
         if (!Out)
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
         is3d = WITHOUT_Z;
         if (In)
             is3d = Vect_is_3d(In);

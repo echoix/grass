@@ -31,7 +31,7 @@ CELL *read_map(const char *name, int nomask, int nrows, int ncols)
     fd = Rast_open_old(name, "");
 
     /* read the map */
-    G_message(_("Reading <%s> ... "), name);
+    G_message(_("Reading <%s>..."), name);
 
     if (nomask)
         get_row = Rast_get_c_row_nomask;

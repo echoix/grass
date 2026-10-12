@@ -116,7 +116,8 @@ int cross_correlation(struct Map_info *Map, double passWE, double passNS)
 
             Fi = Vect_get_field(Map, bspline_field);
             if (Fi == NULL)
-                G_fatal_error(_("Database connection not defined for layer %d"),
+                G_fatal_error(_("Database connection not defined for layer "
+                                "%d."),
                               bspline_field);
 
             driver_cats =
@@ -137,7 +138,7 @@ int cross_correlation(struct Map_info *Map, double passWE, double passNS)
                 G_fatal_error(_("Column type not supported"));
 
             if (nrec < 0)
-                G_fatal_error(_("No records selected from table <%s> "),
+                G_fatal_error(_("No records selected from table <%s>."),
                               Fi->table);
 
             G_debug(1, "%d records selected from table", nrec);

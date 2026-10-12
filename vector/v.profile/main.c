@@ -364,7 +364,7 @@ int main(int argc, char *argv[])
         }
 
         if (ascii == NULL) {
-            G_fatal_error(_("Unable to open file <%s>"), file_opt->answer);
+            G_fatal_error(_("Unable to open file '%s'."), file_opt->answer);
         }
     }
     else {
@@ -406,7 +406,7 @@ int main(int argc, char *argv[])
 
     /* Open existing vector map for reading */
     if (Vect_open_old(&In, old_map->answer, mapset) < 1)
-        G_fatal_error(_("Unable to open vector map <%s>"), old_map->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), old_map->answer);
 
     /* Process input as 3D only if it's required */
     if (!no_z_flag->answer && Vect_is_3d(&In))
@@ -434,7 +434,7 @@ int main(int argc, char *argv[])
     if (inline_map->answer != NULL) {
         /* If we get here, pro_mapset is initialized */
         if (1 > Vect_open_old(&Pro, inline_map->answer, pro_mapset))
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           inline_map->answer);
         if (inline_where->answer != NULL) {
             Fpro = Vect_get_field(&Pro, pro_layer);
@@ -588,7 +588,7 @@ int main(int argc, char *argv[])
         /* Open new vector for reading/writing */
         if (0 > Vect_open_new(&Out, new_map->answer, WITHOUT_Z)) {
             Vect_close(&In);
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           new_map->answer);
         }
 

@@ -173,7 +173,7 @@ int Rast__open_old(const char *name, const char *mapset)
     mapset = xmapset;
 
     if (!G_find_raster2(name, mapset))
-        G_fatal_error(_("Raster map <%s> not found"),
+        G_fatal_error(_("Raster map <%s> not found."),
                       G_fully_qualified_name(name, mapset));
 
     /* Check for reclassification */
@@ -855,7 +855,7 @@ int Rast_map_is_fp(const char *name, const char *mapset)
 
     xmapset = G_find_raster2(name, mapset);
     if (!xmapset)
-        G_fatal_error(_("Raster map <%s> not found"),
+        G_fatal_error(_("Raster map <%s> not found."),
                       G_fully_qualified_name(name, mapset));
 
     G_file_name(path, "fcell", name, xmapset);
@@ -892,7 +892,7 @@ RASTER_MAP_TYPE Rast_map_type(const char *name, const char *mapset)
             G_fatal_error(_("Raster map <%s> not found in mapset <%s>"), name,
                           mapset);
         else
-            G_fatal_error(_("Raster map <%s> not found"), name);
+            G_fatal_error(_("Raster map <%s> not found."), name);
     }
 
     G_file_name(path, "fcell", name, xmapset);
@@ -945,7 +945,7 @@ RASTER_MAP_TYPE Rast__check_fp_type(const char *name, const char *mapset)
 
     xmapset = G_find_raster2(name, mapset);
     if (!xmapset)
-        G_fatal_error(_("Raster map <%s> not found"),
+        G_fatal_error(_("Raster map <%s> not found."),
                       G_fully_qualified_name(name, mapset));
 
     G_file_name_misc(path, "cell_misc", FORMAT_FILE, name, xmapset);

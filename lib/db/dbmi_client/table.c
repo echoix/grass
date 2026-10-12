@@ -111,7 +111,7 @@ int db_get_table_number_of_rows(dbDriver *driver, dbString *sql)
     dbCursor cursor;
 
     if (db_open_select_cursor(driver, sql, &cursor, DB_SEQUENTIAL) != DB_OK) {
-        G_warning(_("Unable to open select cursor: '%s'"), db_get_string(sql));
+        G_warning(_("Unable to open select cursor: '%s'."), db_get_string(sql));
         db_close_database_shutdown_driver(driver);
         return -1;
     }

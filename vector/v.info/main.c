@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         Vect_close(&Map);
         Vect_set_open_level(1); /* no topology */
         if (Vect_open_old2(&Map, input_opt, "", field_opt) < 1)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           Vect_get_full_name(&Map));
 
         /* level one info not needed for history, title, columns */

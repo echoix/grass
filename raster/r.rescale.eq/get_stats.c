@@ -16,7 +16,7 @@ int get_stats(const char *name, struct Cell_stats *statf)
     cell = Rast_allocate_c_buf();
 
     Rast_init_cell_stats(statf);
-    G_message(_("Reading %s ..."), name);
+    G_message(_("Reading <%s>..."), name);
     for (row = 0; row < nrows; row++) {
         G_percent(row, nrows, 2);
         Rast_get_c_row(fd, cell, row);

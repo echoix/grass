@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
     }
 
     if (Vect_open_new(&Map, new->answer, zcoor) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), new->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), new->answer);
 
     Vect_set_error_handler_io(NULL, &Map);
     Vect_hist_command(&Map);
@@ -422,7 +422,7 @@ int main(int argc, char *argv[])
             /* Create table */
             G_debug(3, "%s", db_get_string(&sql));
             if (db_execute_immediate(driver, &sql) != DB_OK) {
-                G_fatal_error(_("Unable to create table: %s"),
+                G_fatal_error(_("Unable to create table: '%s'."),
                               db_get_string(&sql));
             }
 

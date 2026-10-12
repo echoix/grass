@@ -42,7 +42,7 @@ int NetA_init_distinct(dbDriver *driver, dbString *sql, int **lengths,
     dbValue *value;
 
     if (db_open_select_cursor(driver, sql, &cursor, DB_SEQUENTIAL) != DB_OK) {
-        G_warning(_("Unable to open select cursor: %s"), db_get_string(sql));
+        G_warning(_("Unable to open select cursor: '%s'."), db_get_string(sql));
         return -1;
     }
     /*TODO: check column types */
@@ -65,11 +65,11 @@ int NetA_init_distinct(dbDriver *driver, dbString *sql, int **lengths,
     *lengths = (int *)G_calloc(count, sizeof(int));
     *ids = (int *)G_calloc(count, sizeof(int));
     if (!*lengths || !*ids) {
-        G_warning(_("Out of memory"));
+        G_warning(_("Out of memory."));
         return -1;
     }
     if (db_open_select_cursor(driver, sql, &cursor, DB_SEQUENTIAL) != DB_OK) {
-        G_warning(_("Unable to open select cursor: %s"), db_get_string(sql));
+        G_warning(_("Unable to open select cursor: '%s'."), db_get_string(sql));
         return -1;
     }
     count = index = 0;
@@ -132,7 +132,7 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
 
     Fi = Vect_get_field(In, route_layer);
     if (Fi == NULL)
-        G_fatal_error(_("Database connection not defined for layer %d"),
+        G_fatal_error(_("Database connection not defined for layer %d."),
                       route_layer);
 
     driver = db_start_driver_open_database(Fi->driver, Fi->database);
@@ -167,7 +167,7 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
     if (!timetable->route_stops || !timetable->route_times ||
         !timetable->stop_routes || !timetable->stop_times ||
         !timetable->walk_length) {
-        G_warning(_("Out of memory"));
+        G_warning(_("Out of memory."));
         return 2;
     }
 
@@ -177,7 +177,7 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
         timetable->route_times[i] =
             (int *)G_calloc(timetable->route_length[i], sizeof(int));
         if (!timetable->route_stops[i] || !timetable->route_times[i]) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return 2;
         }
 
@@ -190,7 +190,7 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
         timetable->stop_times[i] =
             (int *)G_calloc(timetable->stop_length[i], sizeof(int));
         if (!timetable->stop_routes[i] || !timetable->stop_times[i]) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return 2;
         }
         timetable->walk_length[i] = 0;
@@ -202,7 +202,8 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
     db_set_string(&sql, buf);
 
     if (db_open_select_cursor(driver, &sql, &cursor, DB_SEQUENTIAL) != DB_OK) {
-        G_warning(_("Unable to open select cursor: %s"), db_get_string(&sql));
+        G_warning(_("Unable to open select cursor: '%s'."),
+                  db_get_string(&sql));
         return 1;
     }
 
@@ -241,7 +242,7 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
 
         if (db_open_select_cursor(driver, &sql, &cursor, DB_SEQUENTIAL) !=
             DB_OK) {
-            G_warning(_("Unable to open select cursor: %s"),
+            G_warning(_("Unable to open select cursor: '%s'."),
                       db_get_string(&sql));
             return 1;
         }
@@ -273,7 +274,7 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
             timetable->walk_times[i] =
                 (int *)G_calloc(timetable->walk_length[i], sizeof(int));
             if (!timetable->walk_stops[i] || !timetable->walk_times[i]) {
-                G_warning(_("Out of memory"));
+                G_warning(_("Out of memory."));
                 return 2;
             }
             timetable->walk_length[i] = 0;
@@ -281,7 +282,7 @@ int NetA_init_timetable_from_db(struct Map_info *In, int route_layer,
 
         if (db_open_select_cursor(driver, &sql, &cursor, DB_SEQUENTIAL) !=
             DB_OK) {
-            G_warning(_("Unable to open select cursor: %s"),
+            G_warning(_("Unable to open select cursor: '%s'."),
                       db_get_string(&sql));
             return 1;
         }
@@ -407,7 +408,7 @@ int NetA_timetable_shortest_path(neta_timetable *timetable, int from_stop,
 
     if (!result->dst || !result->prev_stop || !result->prev_route ||
         !result->prev_conn) {
-        G_warning(_("Out of memory"));
+        G_warning(_("Out of memory."));
         return -1;
     }
 
@@ -418,7 +419,7 @@ int NetA_timetable_shortest_path(neta_timetable *timetable, int from_stop,
         result->prev_conn[i] = (int *)G_calloc(timetable->stops, sizeof(int));
         if (!result->dst[i] || !result->prev_stop[i] ||
             !result->prev_route[i] || !result->prev_conn[i]) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return -1;
         }
     }

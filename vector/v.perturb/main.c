@@ -154,7 +154,7 @@ int main(int argc, char **argv)
     /* Open input */
     Vect_set_open_level(2);
     if (Vect_open_old_head2(&In, parm.in->answer, "", parm.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), parm.in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), parm.in->answer);
 
     field = Vect_get_field_number(&In, parm.field->answer);
 
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 
     /* Open output */
     if (Vect_open_new(&Out, parm.out->answer, out_is_3d) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), parm.out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), parm.out->answer);
     /* TODO: Add also optional z perturb support */
 
     Vect_hist_copy(&In, &Out);
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
     Vect_close(&In);
     Vect_set_open_level(1);
     if (Vect_open_old2(&In, parm.in->answer, "", parm.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), parm.in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), parm.in->answer);
 
     i = 0;
     line = 0;

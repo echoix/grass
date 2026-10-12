@@ -395,7 +395,7 @@ int merge_small_clumps(int *in_fd, int nin, DCELL *rng, int diag, int minsize,
         /* temp file for input map(s) */
         bname = G_tempfile();
         if ((bfd = open(bname, O_RDWR | O_CREAT | O_EXCL, 0600)) < 0)
-            G_fatal_error(_("Unable to open temp file"));
+            G_fatal_error(_("Unable to open temp file."));
 
         inbuf = G_malloc(sizeof(DCELL *) * nin);
         for (i = 0; i < nin; i++)

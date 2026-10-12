@@ -482,7 +482,7 @@ int points_to_bin(FILE *ascii, int rowlen, struct Map_info *Map,
             G_debug(3, "%s", db_get_string(&sql));
 
             if (db_execute_immediate(driver, &sql) != DB_OK) {
-                G_fatal_error(_("Unable to insert new record: %s"),
+                G_fatal_error(_("Unable to insert new record: '%s'."),
                               db_get_string(&sql));
             }
         }

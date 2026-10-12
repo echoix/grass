@@ -25,7 +25,7 @@ int get_conz_points(struct Ortho_Image_Group *group)
         strcat(msg, _(" Run OPTION 7 of i.ortho.photo again!\n"));
         break;
     case 0:
-        strcat(msg, _("No active Control Points!"));
+        strcat(msg, _("No active control points."));
         strcat(msg, _(" Can not generate the transformation equation."));
         strcat(msg, _(" Run OPTION 7 of i.ortho.photo!\n"));
         break;

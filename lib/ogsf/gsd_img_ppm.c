@@ -48,7 +48,7 @@ int GS_write_ppm(const char *name)
     }
 
     if (NULL == (fp = fopen(name, "w"))) {
-        G_warning(_("Unable to open file <%s> for writing"), name);
+        G_warning(_("Unable to open file '%s' for writing."), name);
         return (1);
     }
 
@@ -93,7 +93,7 @@ int GS_write_zoom(const char *name, unsigned int xsize, unsigned int ysize)
     }
 
     if (NULL == (fp = fopen(name, "w"))) {
-        G_warning(_("Unable to open file <%s> for writing"), name);
+        G_warning(_("Unable to open file '%s' for writing."), name);
         return (1);
     }
 

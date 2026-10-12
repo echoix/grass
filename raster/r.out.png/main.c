@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
     if (do_stdout)
         fp = stdout;
     else if (NULL == (fp = fopen(outfile, "w")))
-        G_fatal_error(_("Unable to open output file <%s>"), outfile);
+        G_fatal_error(_("Unable to open output file '%s'."), outfile);
 
     png_ptr =
         png_create_write_struct(PNG_LIBPNG_VER_STRING, &pnmtopng_jmpbuf_struct,
