@@ -47,6 +47,9 @@ class Mallinfo2(ctypes.Structure):
 
 def bytes_in_use():
     """Return the number of bytes allocated with malloc and not freed"""
+    if not sys.platform.startswith("linux"):
+        print("mallinfo2 of glibc is available only on Linux")
+        sys.exit(NOT_SUPPORTED)
     try:
         mallinfo2 = ctypes.CDLL(None).mallinfo2
     except (AttributeError, OSError):
