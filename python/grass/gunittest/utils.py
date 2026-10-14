@@ -55,6 +55,11 @@ def do_doctest_gettext_workaround() -> None:
     This should be considered for the future. The second option is to define
     dummy underscore function and one other function which creates the right
     environment to satisfy all. This is done by this function.
+
+    The default display hook assigns the last printed value to ``_`` in builtins,
+    replacing the gettext function. The display hook is replaced both in
+    ``sys.displayhook`` and in ``sys.__displayhook__`` because doctest sets
+    ``sys.displayhook`` to ``sys.__displayhook__`` before running each example.
     """
 
     def new_displayhook(string: str | None) -> None:
@@ -67,6 +72,7 @@ def do_doctest_gettext_workaround() -> None:
         return string
 
     sys.displayhook = new_displayhook
+    sys.__displayhook__ = new_displayhook
 
     import builtins
 
