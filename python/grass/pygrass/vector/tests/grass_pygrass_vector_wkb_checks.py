@@ -153,10 +153,10 @@ def check_all_functions_work_repeatedly():
     a_line = line()
     for _ in range(500):
         wkb = a_line.to_wkb()
-        assert wkb[0] in (0, 1)
+        assert wkb[0] in {0, 1}
         assert len(wkb) == 41
         wkb = area.to_wkb()
-        assert wkb[0] in (0, 1)
+        assert wkb[0] in {0, 1}
         assert len(wkb) == AREA_WKB_SIZES[0]
         areas = vector.areas_to_wkb_list()
         assert [len(wkb) for _, _, wkb in areas] == AREA_WKB_SIZES
