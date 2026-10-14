@@ -8,7 +8,7 @@ import grass.gunittest.case
 import grass.gunittest.main
 import grass.gunittest.utils
 
-import grass.pygrass.modules as gmodules
+from grass.pygrass.modules.grid import grid, patch, split
 
 
 # doctest does not allow changing the base classes of test case, skip test case
@@ -31,8 +31,9 @@ def load_tests(loader, tests, ignore):
     # TODO: ultimate solution is not to use _ as a builtin in lib/python
     # for now it is the only place where it works
     grass.gunittest.utils.do_doctest_gettext_workaround()
-
-    # tests.addTests(doctest.DocTestSuite(gmodules.shortcuts))
+    tests.addTests(doctest.DocTestSuite(grid))
+    tests.addTests(doctest.DocTestSuite(patch))
+    tests.addTests(doctest.DocTestSuite(split))
     return tests
 
 
