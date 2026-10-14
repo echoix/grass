@@ -1747,13 +1747,22 @@ class AbstractSpaceTimeDataset(AbstractDataset):
 
         .. code-block:: pycon
 
-            >>> import grass.script as gs
+            >>> import grass.temporal as tgis
+            >>> strds = tgis.SpaceTimeRasterDataset("test@PERMANENT")
             >>> where = None
-            >>> spatial_extent = gs.parse_command("g.region", flags="ug3")
-            >>> _update_where_statement_by_spatial_extent(
+            >>> spatial_extent = {
+            ...     "n": "1",
+            ...     "s": "0",
+            ...     "e": "1",
+            ...     "w": "0",
+            ...     "b": "0",
+            ...     "t": "1",
+            ...     "projection": "1",
+            ... }
+            >>> strds._update_where_statement_by_spatial_extent(
             ...     where, spatial_extent, "overlaps"
             ... )
-            ((north > 0 AND south < 1 AND east > 0 AND west < 1))
+            '((north > 0 AND south < 1 AND east > 0 AND west < 1))'
         """
 
         # initialized WHERE statement
