@@ -37,11 +37,9 @@ def db_describe(table, env=None, **args):
       .. code-block:: pycon
 
         >>> run_command("g.copy", vector="firestations,myfirestations")
-        0
         >>> db_describe("myfirestations")  # doctest: +ELLIPSIS
-        {'nrows': 71, 'cols': [['cat', 'INTEGER', '20'], ... 'ncols': 22}
+        {'ncols': 22, 'nrows': 71, 'cols': [['cat', 'INTEGER', '20'], ...]}
         >>> run_command("g.remove", flags="f", type="vector", name="myfirestations")
-        0
 
     :param str table: table name
     :param list args:
@@ -83,11 +81,9 @@ def db_table_exist(table, env=None, **args):
     (check db_connection()).
 
     >>> run_command("g.copy", vector="firestations,myfirestations")
-    0
     >>> db_table_exist("myfirestations")
     True
     >>> run_command("g.remove", flags="f", type="vector", name="myfirestations")
-    0
 
     :param str table: table name
     :param args:
@@ -119,8 +115,8 @@ def db_connection(force=False, env=None):
     :Example:
       .. code-block:: pycon
 
-        >>> db_connection()
-        {'group': '', 'schema': '', 'driver': 'sqlite', 'database': '$GISDBASE/$LOCATION_NAME/$MAPSET/sqlite/sqlite.db'}
+        >>> db_connection(force=True)
+        {'driver': 'sqlite', 'database': '$GISDBASE/$LOCATION_NAME/$MAPSET/sqlite/sqlite.db', 'schema': '', 'group': ''}
 
     :param force: True to set up default DB connection if not defined
     :param env: environment
@@ -150,7 +146,6 @@ def db_select(sql=None, filename=None, table=None, env=None, **args):
       .. code-block:: pycon
 
         >>> run_command("g.copy", vector="firestations,myfirestations")
-        0
         >>> db_select(sql="SELECT cat,CITY FROM myfirestations WHERE cat < 4")
         (('1', 'Morrisville'), ('2', 'Morrisville'), ('3', 'Apex'))
 
@@ -161,7 +156,6 @@ def db_select(sql=None, filename=None, table=None, env=None, **args):
         >>> db_select(table="myfirestations")  # doctest: +ELLIPSIS
         (('1', '24', 'Morrisville #3', ... 'HS2A', '1.37'))
         >>> run_command("g.remove", flags="f", type="vector", name="myfirestations")
-        0
 
     :param str sql: SQL statement to perform (or None)
     :param str filename: name of file with SQL statements (or None)
@@ -208,12 +202,10 @@ def db_table_in_vector(table, mapset=".", env=None):
     It returns None if no vectors are connected to the table.
 
     >>> run_command("g.copy", vector="firestations,myfirestations")
-    0
-    >>> db_table_in_vector("myfirestations")
-    ['myfirestations@user1']
+    >>> db_table_in_vector("myfirestations")  # doctest: +ELLIPSIS
+    ['myfirestations@...']
     >>> db_table_in_vector("mfirestations")
     >>> run_command("g.remove", flags="f", type="vector", name="myfirestations")
-    0
 
     :param str table: name of table to query
     :param env: environment

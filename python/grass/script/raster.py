@@ -85,7 +85,7 @@ def raster_info(map, env=None):
       .. code-block:: pycon
 
         >>> raster_info("elevation")  # doctest: +ELLIPSIS
-        {'creator': '"helena"', 'cols': '1500' ... 'south': 215000.0}
+        {'north': 228500.0, 'south': 215000.0, ... 'cols': '1500', ... 'creator': '"helena"', ...}
 
     :param str map: map name
     :param env: environment
@@ -246,7 +246,7 @@ def raster_what(map, coord, env=None, localized=False):
     """Interface to r.what
 
     >>> raster_what("elevation", [[640000, 228000]])
-    [{'elevation': {'color': '255:214:000', 'label': '', 'value': '102.479'}}]
+    [{'elevation': {'value': '102.479', 'label': '', 'color': '255:214:000'}}]
 
     :param str map: the map name
     :param list coord: a list of list containing all the point that you want to query
@@ -302,9 +302,12 @@ class MaskManager:
     raster which represents the mask. The mask is deactivated at the end of the
     context by the context manager and the raster is removed.
 
+    >>> import grass.script as gs
+    >>> gs.run_command("g.region", raster="elevation")
     >>> with gs.MaskManager():
-    ...     gs.run_command("r.mask", raster="state_boundary")
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.run_command("r.mask", raster="lakes")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["n"]
+    36011
 
     The *mask_name* can be a name of an existing raster map and in that case,
     that raster map is used directly as is. If the raster map does not exist,
@@ -314,19 +317,22 @@ class MaskManager:
     The mask is disabled at the end of the context, but the raster map is not
     removed.
 
-    >>> with gs.MaskManager(mask_name="state_boundary"):
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    >>> with gs.MaskManager(mask_name="lakes@PERMANENT"):
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["n"]
+    36011
 
     Example using explicit activate and deactivate:
 
     >>> manager = gs.MaskManager()
-    >>> manager.activate()
+    >>> manager.activate()  # doctest: +ELLIPSIS
+    <...MaskManager object at ...>
     >>> try:
     ...     # Create mask with r.mask
-    ...     gs.run_command("r.mask", raster="state_boundary")
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.run_command("r.mask", raster="lakes")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["n"]
     ... finally:
     ...     manager.deactivate()
+    36011
 
 
     Note the difference between using the name of an existing raster map directly
@@ -353,11 +359,11 @@ class MaskManager:
 
     >>> with gs.MaskManager() as manager:
     ...     gs.run_command(
-                "r.mapcalc", expression=f"{manager.mask_name} = row() < col()"
-            )
+    ...         "r.mapcalc", expression=f"{manager.mask_name} = row() < col()"
+    ...     )
     ...     gs.run_command(
-                "r.mapcalc", expression=f"masked_elevation = elevation"
-            )
+    ...         "r.mapcalc", expression="masked_elevation = elevation", overwrite=True
+    ...     )
 
     In the background, this class manages the `GRASS_MASK` environment variable.
     It modifies the current system environment or the one provided. It does not
@@ -375,7 +381,10 @@ class MaskManager:
     ...         env=manager.env,
     ...     )
     ...     gs.run_command(
-    ...         "r.mapcalc", expression=f"masked_elevation = elevation", env=manager.env
+    ...         "r.mapcalc",
+    ...         expression="masked_elevation = elevation",
+    ...         overwrite=True,
+    ...         env=manager.env,
     ...     )
     """
 
@@ -471,31 +480,47 @@ class RegionManager:
 
     Example with explicit region parameters:
 
+    >>> import grass.script as gs
+    >>> gs.run_command("g.region", raster="elevation")
     >>> with gs.RegionManager(n=226000, s=222000, w=634000, e=638000):
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    160000
 
     Example matching a raster map's region:
 
     >>> with gs.RegionManager(raster="elevation"):
-    ...     gs.run_command("r.slope.aspect", elevation="elevation", slope="slope")
+    ...     gs.run_command(
+    ...         "r.slope.aspect", elevation="elevation", slope="slope", overwrite=True
+    ...     )
 
     Example using g.region:
 
     >>> with gs.RegionManager():
     ...     gs.run_command("g.region", n=226000, s=222000, w=634000, e=638000)
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    160000
 
     Example using a saved region:
 
-    >>> gs.run_command("g.region", save="study_area", s=1000, n=1100, w=1000, e=1100)
+    >>> gs.run_command(
+    ...     "g.region",
+    ...     save="study_area",
+    ...     s=1000,
+    ...     n=1100,
+    ...     w=1000,
+    ...     e=1100,
+    ...     overwrite=True,
+    ... )
     >>> with gs.RegionManager(region="study_area"):
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    100
 
     Example using :py:meth:`~grass.script.raster.RegionManager.set_region`:
 
     >>> with gs.RegionManager() as manager:
     ...     manager.set_region(n=226000, s=222000, w=634000, e=638000)
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    160000
 
     Example using :py:meth:`~grass.script.raster.RegionManager.save` to store the temporarily
     modified region under a persistent name so it can be reused after the context exits:
@@ -506,9 +531,12 @@ class RegionManager:
     Example using explicit activate and deactivate:
 
     >>> manager = gs.RegionManager(raster="elevation")
-    >>> manager.activate()
+    >>> manager.activate()  # doctest: +ELLIPSIS
+    <...RegionManager object at ...>
     >>> try:
-    ...     gs.run_command("r.slope.aspect", elevation="elevation", slope="slope")
+    ...     gs.run_command(
+    ...         "r.slope.aspect", elevation="elevation", slope="slope", overwrite=True
+    ...     )
     ... finally:
     ...     manager.deactivate()
 
@@ -614,26 +642,40 @@ class RegionManagerEnv:
 
     Example with explicit region parameters:
 
+    >>> import grass.script as gs
+    >>> gs.run_command("g.region", raster="elevation")
     >>> with gs.RegionManagerEnv(n=226000, s=222000, w=634000, e=638000):
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    160000
 
     Example using a saved region:
 
-    >>> gs.run_command("g.region", save="study_area", s=1000, n=1100, w=1000, e=1100)
+    >>> gs.run_command(
+    ...     "g.region",
+    ...     save="study_area",
+    ...     s=1000,
+    ...     n=1100,
+    ...     w=1000,
+    ...     e=1100,
+    ...     overwrite=True,
+    ... )
     >>> with gs.RegionManagerEnv(region="study_area"):
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    100
 
     Example with :py:meth:`.set_region`:
 
     >>> with gs.RegionManagerEnv() as manager:
     ...     manager.set_region(n=226000, s=222000, w=634000, e=638000)
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    64
 
     This is identical to:
 
     >>> with gs.RegionManagerEnv() as manager:
     ...     manager.env["GRASS_REGION"] = gs.region_env()
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
+    1010600
 
     Example using :py:meth:`.save`: to store the temporarily modified region under
     a persistent name so it can be reused after the context exits:
@@ -644,12 +686,14 @@ class RegionManagerEnv:
     Example using explicit activate and deactivate:
 
     >>> manager = gs.RegionManagerEnv(raster="elevation")
-    >>> manager.activate()
+    >>> manager.activate()  # doctest: +ELLIPSIS
+    <...RegionManagerEnv object at ...>
     >>> try:
     ...     manager.set_region(n=226000, s=222000, w=634000, e=638000)
-    ...     gs.parse_command("r.univar", map="elevation", format="json")
+    ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
     ... finally:
     ...     manager.deactivate()
+    160000
 
     .. caution::
 
