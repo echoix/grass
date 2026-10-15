@@ -33,6 +33,17 @@ def load_tests(loader, tests, ignore):
     grass.gunittest.utils.do_doctest_gettext_workaround()
     # this should be called at some top level
     tests.addTests(doctest.DocTestSuite(garray))
+    for name in (
+        "core",
+        "db",
+        "imagery",
+        "raster",
+        "raster3d",
+        "task",
+        "utils",
+        "vector",
+    ):
+        tests.addTests(doctest.DocTestSuite(f"grass.script.{name}"))
     return tests
 
 
