@@ -9,14 +9,6 @@ import grass.gunittest.main
 import grass.gunittest.utils
 
 import grass.script.array as garray
-import grass.script.core as gcore
-import grass.script.db as gdb
-import grass.script.imagery as gimagery
-import grass.script.raster as graster
-import grass.script.raster3d as graster3d
-import grass.script.task as gtask
-import grass.script.utils as gutils
-import grass.script.vector as gvector
 
 
 # doctest does not allow changing the base classes of test case, skip test case
@@ -41,14 +33,17 @@ def load_tests(loader, tests, ignore):
     grass.gunittest.utils.do_doctest_gettext_workaround()
     # this should be called at some top level
     tests.addTests(doctest.DocTestSuite(garray))
-    tests.addTests(doctest.DocTestSuite(gcore))
-    tests.addTests(doctest.DocTestSuite(gdb))
-    tests.addTests(doctest.DocTestSuite(gimagery))
-    tests.addTests(doctest.DocTestSuite(graster))
-    tests.addTests(doctest.DocTestSuite(graster3d))
-    tests.addTests(doctest.DocTestSuite(gtask))
-    tests.addTests(doctest.DocTestSuite(gutils))
-    tests.addTests(doctest.DocTestSuite(gvector))
+    for name in (
+        "core",
+        "db",
+        "imagery",
+        "raster",
+        "raster3d",
+        "task",
+        "utils",
+        "vector",
+    ):
+        tests.addTests(doctest.DocTestSuite(f"grass.script.{name}"))
     return tests
 
 
