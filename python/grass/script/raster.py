@@ -84,8 +84,9 @@ def raster_info(map, env=None):
     :Example:
       .. code-block:: pycon
 
-        >>> raster_info("elevation")  # doctest: +ELLIPSIS
-        {'north': 228500.0, 'south': 215000.0, ... 'cols': '1500', ... 'creator': '"helena"', ...}
+        >>> raster_info("elevation")  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+        {'north': 228500.0, 'south': 215000.0, ... 'cols': '1500', ... 'creator':
+         '"helena"', ...}
 
     :param str map: map name
     :param env: environment
@@ -361,9 +362,7 @@ class MaskManager:
     ...     gs.run_command(
     ...         "r.mapcalc", expression=f"{manager.mask_name} = row() < col()"
     ...     )
-    ...     gs.run_command(
-    ...         "r.mapcalc", expression="masked_elevation = elevation", overwrite=True
-    ...     )
+    ...     gs.run_command("r.mapcalc", expression="masked_elevation = elevation")
 
     In the background, this class manages the `GRASS_MASK` environment variable.
     It modifies the current system environment or the one provided. It does not
@@ -382,8 +381,7 @@ class MaskManager:
     ...     )
     ...     gs.run_command(
     ...         "r.mapcalc",
-    ...         expression="masked_elevation = elevation",
-    ...         overwrite=True,
+    ...         expression="masked_elevation_env = elevation",
     ...         env=manager.env,
     ...     )
     """
@@ -489,9 +487,7 @@ class RegionManager:
     Example matching a raster map's region:
 
     >>> with gs.RegionManager(raster="elevation"):
-    ...     gs.run_command(
-    ...         "r.slope.aspect", elevation="elevation", slope="slope", overwrite=True
-    ...     )
+    ...     gs.run_command("r.slope.aspect", elevation="elevation", slope="slope")
 
     Example using g.region:
 
@@ -502,15 +498,7 @@ class RegionManager:
 
     Example using a saved region:
 
-    >>> gs.run_command(
-    ...     "g.region",
-    ...     save="study_area",
-    ...     s=1000,
-    ...     n=1100,
-    ...     w=1000,
-    ...     e=1100,
-    ...     overwrite=True,
-    ... )
+    >>> gs.run_command("g.region", save="study_area", s=1000, n=1100, w=1000, e=1100)
     >>> with gs.RegionManager(region="study_area"):
     ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
     100
@@ -535,7 +523,7 @@ class RegionManager:
     <...RegionManager object at ...>
     >>> try:
     ...     gs.run_command(
-    ...         "r.slope.aspect", elevation="elevation", slope="slope", overwrite=True
+    ...         "r.slope.aspect", elevation="elevation", slope="slope_activated"
     ...     )
     ... finally:
     ...     manager.deactivate()
@@ -651,15 +639,9 @@ class RegionManagerEnv:
     Example using a saved region:
 
     >>> gs.run_command(
-    ...     "g.region",
-    ...     save="study_area",
-    ...     s=1000,
-    ...     n=1100,
-    ...     w=1000,
-    ...     e=1100,
-    ...     overwrite=True,
+    ...     "g.region", save="study_area_env", s=1000, n=1100, w=1000, e=1100
     ... )
-    >>> with gs.RegionManagerEnv(region="study_area"):
+    >>> with gs.RegionManagerEnv(region="study_area_env"):
     ...     gs.parse_command("r.univar", map="elevation", format="json")["cells"]
     100
 
