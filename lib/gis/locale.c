@@ -12,11 +12,14 @@
  */
 
 #include <grass/config.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
 #include <grass/glocale.h>
 #include <grass/gis.h>
+
+#include "resource_dirs.h"
 
 #if defined(HAVE_LIBINTL_H) && defined(USE_NLS)
 #define NO_NLS_UNUSED
@@ -37,14 +40,24 @@ void G_init_locale(void)
 #ifdef LC_MESSAGES
     setlocale(LC_MESSAGES, "");
 #endif
-    const char *gisbase = getenv("GISBASE");
+    /* Not using G_locale_dir(): its G_fatal_error() would translate the
+       message and re-enter G_init_locale(), recursing without bound. */
+    const char *localedir = getenv("GRASS_LOCALEDIR");
+    char fallback[GPATH_MAX];
 
-    if (gisbase && *gisbase) {
-        char localedir[GPATH_MAX];
+    if (!localedir || !*localedir) {
+        /* Same fallback as G_locale_dir(). */
+        const char *gisbase = getenv("GISBASE");
 
-        strcpy(localedir, gisbase);
-        strcat(localedir, "/locale");
+        localedir = NULL;
+        if (gisbase && *gisbase) {
+            snprintf(fallback, sizeof(fallback), "%s/%s", gisbase,
+                     GRASS_LOCALEDIR_REL);
+            localedir = fallback;
+        }
+    }
 
+    if (localedir) {
         bindtextdomain("grasslibs", localedir);
         bindtextdomain("grassmods", localedir);
     }

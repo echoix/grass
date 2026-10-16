@@ -5,6 +5,23 @@ if(NOT WIN32)
 endif()
 
 set(grass_gis_DEFS "-DGRASS_VERSION_DATE=\"${GRASS_VERSION_DATE}\"")
+# Resource directories relative to GISBASE, used when the corresponding
+# GRASS_*DIR variable is not set (see resource_dirs.h).
+foreach(
+    dir
+    COLORSDIR
+    ETCBINDIR
+    ETCDIR
+    FONTSDIR
+    LOCALEDIR
+)
+    cmake_path(
+        RELATIVE_PATH GRASS_INSTALL_${dir}
+        BASE_DIRECTORY "${GISBASE_DIR}"
+        OUTPUT_VARIABLE rel_dir
+    )
+    list(APPEND grass_gis_DEFS "-DGRASS_${dir}_REL=\"${rel_dir}\"")
+endforeach()
 if(MSVC)
     set(grass_gis_DEFS "${grass_gis_DEFS};-D_USE_MATH_DEFINES=1")
     set(gislib_INCLUDES "${PROJECT_SOURCE_DIR}/msvc")
