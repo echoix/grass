@@ -504,7 +504,6 @@ class RasterAbstractBase:
         """
         if self.is_open():
             fatal("You cannot change the region if map is open")
-            raise
         region = Region()
         if rastname == "":
             rastname = self.name
@@ -523,7 +522,6 @@ class RasterAbstractBase:
         """
         if self.is_open():
             fatal("You cannot change the region if map is open")
-            raise
         self._set_raster_window(region)
 
     def _set_raster_window(self, region):
