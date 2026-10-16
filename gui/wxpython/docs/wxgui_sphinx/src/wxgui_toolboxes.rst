@@ -32,25 +32,31 @@ Files related to toolboxes
 GRASS source code contains these XML files:
 
 * ``gui/wxpython/xml/main_menu.xml``
+* ``gui/wxpython/xml/module_tree.xml``
 * ``gui/wxpython/xml/toolboxes.xml``
 * ``gui/wxpython/xml/wxgui_items.xml``
 
 
-GRASS distribution contains these XML files:
+GRASS distribution contains these XML files in ``gui/wxpython/xml``
+(relative to the GRASS installation directory):
 
-* ``etc/gui/wxpython/xml/main_menu.xml``
-* ``etc/gui/wxpython/xml/toolboxes.xml``
-* ``etc/gui/wxpython/xml/wxgui_items.xml``
-* ``etc/gui/wxpython/xml/module_items.xml`` (generated during compilation)
-* ``etc/gui/wxpython/xml/menudata.xml`` (generated during compilation)
+* ``main_menu.xml``
+* ``module_tree.xml``
+* ``toolboxes.xml``
+* ``wxgui_items.xml``
+* ``module_items.xml`` (generated during compilation)
+* ``menudata.xml`` (generated during compilation)
+* ``module_tree_menudata.xml`` (generated during compilation)
 
 
 GRASS directory (``.grass8``) in user home directory
 (i.e., ``$HOME`` on Unix) contains these XML files:
 
 * ``toolboxes/main_menu.xml`` (created by user)
+* ``toolboxes/module_tree.xml`` (created by user)
 * ``toolboxes/toolboxes.xml`` (created by user)
 * ``toolboxes/menudata.xml`` (generated on wxGUI startup)
+* ``toolboxes/module_tree_menudata.xml`` (generated on wxGUI startup)
 
 
 .. graphviz::
@@ -69,8 +75,6 @@ GRASS directory (``.grass8``) in user home directory
         wxgui_items [label="wxgui_items.xml in distribution", shape="note", URL="#wxgui-items-file"];
         module_items [label="module_items.xml in distribution", shape="note", URL="#module-items-file"];
 
-        menustrings [label="menustrings.py\n(used for translations)", shape="note"];
-
         module_items -> menudata;
         wxgui_items -> menudata;
         main_menu -> menudata;
@@ -83,10 +87,7 @@ GRASS directory (``.grass8``) in user home directory
         umain_menu -> umenudata;
         utoolboxes -> umenudata;
 
-        menudata -> menustrings;
-
         // guimenu [label="Main menu in wxGUI", shape="box3d"];
-        // menustrings -> guimenu;
         // menudata -> guimenu;
         // umenudata -> guimenu;
     }
@@ -97,11 +98,15 @@ Other files
 
 GRASS source code contains these XML files:
 
-* ``gui/wxpython/xml/menudata_gmodeler.xml``
+* ``gui/wxpython/xml/menudata_modeler.xml``
 * ``gui/wxpython/xml/menudata_psmap.xml``
+* ``gui/wxpython/xml/menudata_pyedit.xml``
 
-In GRASS distribution these XML files are in the ``etc/gui/wxpython/xml``
-directory.
+These files are already in the ``menudata`` format. In GRASS distribution
+they are in the same ``gui/wxpython/xml`` directory.
+
+How the strings of all these files are extracted for translation is described
+in ``doc/development/wxgui_menus.md`` in the source code.
 
 
 Generation of files and menu
@@ -371,7 +376,7 @@ You should validate your XML before running wxGUI, e.g. using ``xmllint``
     xmllint --noout --dtdvalid toolboxes.dtd toolboxes.xml
 
 You can find ``toolboxes.dtd`` and ``main_menu.dtd`` in your GRASS directory,
-in ``etc/gui/wxpython/xml`` subdirectory. Depending on the validator,
+in ``gui/wxpython/xml`` subdirectory. Depending on the validator,
 you might need to add DTD file to the drectory with the XML file.
 
 If you will provide an invalid, not well formed or empty file loading of

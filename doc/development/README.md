@@ -22,3 +22,7 @@ maintaining GRASS.
 ## C API
 
 - [GRASS Programmer's manual](https://grass.osgeo.org/programming8/)
+
+## wxGUI
+
+- [wxGUI menus and their translation](wxgui_menus.md)
