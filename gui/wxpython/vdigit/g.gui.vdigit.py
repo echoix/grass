@@ -119,11 +119,11 @@ def main():
                 % options["map"]
             )
         else:
-            gs.verbose(_("New vector map <%s> created") % options["map"])
+            gs.verbose(_("Vector map <%s> created.") % options["map"])
             try:
                 gs.run_command("v.edit", map=options["map"], tool="create", quiet=True)
             except CalledModuleError:
-                gs.fatal(_("Unable to create new vector map <%s>") % options["map"])
+                gs.fatal(_("Unable to create vector map <%s>.") % options["map"])
 
     # allow immediate rendering
     driver = UserSettings.Get(group="display", key="driver", subkey="type")

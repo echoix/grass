@@ -124,7 +124,7 @@ int input_wkt(char *wktfile)
         G_squeeze(buff);
     }
     else
-        G_fatal_error(_("Unable to open file '%s' for reading"), wktfile);
+        G_fatal_error(_("Unable to open file '%s' for reading."), wktfile);
 
     projwkt = G_store(buff);
 

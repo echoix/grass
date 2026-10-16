@@ -295,7 +295,7 @@ int check_map(const struct GParams *params, int index, int vlines, int *field,
         return 1;
 
     if (1 > Vect_open_old(&Map, map, ""))
-        G_fatal_error(_("Unable to open vector map <%s>"), map);
+        G_fatal_error(_("Unable to open vector map <%s>."), map);
     Vect_set_error_handler_io(&Map, NULL);
 
     if (with_z)

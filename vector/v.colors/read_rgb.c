@@ -20,7 +20,8 @@ void rgb2colr(struct Map_info *Map, int layer, const char *rgb_column,
 
     fi = Vect_get_field(Map, layer);
     if (!fi)
-        G_fatal_error(_("Database connection not defined for layer %d"), layer);
+        G_fatal_error(_("Database connection not defined for layer %d."),
+                      layer);
 
     driver = db_start_driver_open_database(fi->driver, fi->database);
     if (!driver)

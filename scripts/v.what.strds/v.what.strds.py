@@ -223,7 +223,7 @@ def main():
         pymap.open("r")
     except Exception:
         dbif.close()
-        gs.fatal(_("Unable to create vector map <%s>") % output)
+        gs.fatal(_("Unable to create vector map <%s>.") % output)
 
     if len(pymap.dblinks) == 0:
         try:

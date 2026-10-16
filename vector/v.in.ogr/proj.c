@@ -251,7 +251,7 @@ void check_projection(struct Cell_head *cellhd, GDALDatasetH hDS, int layer,
 
             if (0 != G_make_location_crs(outloc, cellhd, proj_info, proj_units,
                                          srid, wkt)) {
-                G_fatal_error(_("Unable to create new project <%s>"), outloc);
+                G_fatal_error(_("Unable to create new project <%s>."), outloc);
             }
             G_message(_("Project <%s> created"), outloc);
 
@@ -423,8 +423,8 @@ void check_projection(struct Cell_head *cellhd, GDALDatasetH hDS, int layer,
                 msg_fn = G_message;
             else
                 msg_fn = G_verbose_message;
-            msg_fn(_("Coordinate reference system of input dataset and current "
-                     "project appear to match"));
+            msg_fn(_("Coordinate reference system of input dataset and "
+                     "current project appear to match."));
 
             if (check_only) {
                 GDALClose(hDS);

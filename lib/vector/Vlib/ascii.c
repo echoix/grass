@@ -324,7 +324,7 @@ int Vect_read_ascii_head(FILE *dascii, struct Map_info *Map)
         else if (strncmp(buff, "MAP THRESH:", 11) == 0)
             Vect_set_thresh(Map, atof(ptr));
         else {
-            G_warning(_("Unknown keyword <%s> in vector head"), buff);
+            G_warning(_("Unknown keyword <%s> in vector head."), buff);
         }
     }
     /* NOTREACHED */
@@ -416,7 +416,7 @@ int Vect_write_ascii(FILE *ascii, FILE *att, struct Map_info *Map, int ver,
     if (field > 0 && (where || column_names)) {
         Fi = Vect_get_field(Map, field);
         if (!Fi) {
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
         }
 
@@ -487,7 +487,7 @@ int Vect_write_ascii(FILE *ascii, FILE *att, struct Map_info *Map, int ver,
                             }
                         }
                         if (!found) {
-                            G_warning(_("Column <%s> does not exist"),
+                            G_warning(_("Column <%s> does not exist."),
                                       column_names[i]);
                             G_important_message(_("Available columns:"));
                             for (j = 0; j < ncols; j++) {

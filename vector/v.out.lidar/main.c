@@ -68,7 +68,7 @@ static void open_database(struct Map_info *vector, int field, dbDriver **driver,
     if (f_info_tmp == NULL) {
         /* not ideal message since we don't know the original name of
          * the field in case of OGR */
-        G_fatal_error(_("Database connection not defined for layer <%d>"),
+        G_fatal_error(_("Database connection not defined for layer %d."),
                       field);
     }
 
@@ -465,8 +465,8 @@ int main(int argc, char **argv)
     G_add_keyword(_("LIDAR"));
     G_add_keyword(_("points"));
     module->label = _("Exports vector points as LAS point cloud");
-    module->description = _("Converts LAS LiDAR point clouds to a GRASS"
-                            " vector map with libLAS");
+    module->description = _("Converts LAS LiDAR point clouds to a GRASS "
+                            "vector map with libLAS.");
 
     map_opt = G_define_standard_option(G_OPT_V_INPUT);
 
@@ -600,7 +600,7 @@ int main(int argc, char **argv)
      */
 
     if (Vect_open_old2(&vinput, map_opt->answer, "", field_opt->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_opt->answer);
     int layer = Vect_get_field_number(&vinput, field_opt->answer);
 
     struct cat_list *allowed_cats = NULL;

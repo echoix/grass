@@ -111,7 +111,7 @@ int Segment_open(SEGMENT *SEG, char *fname, off_t nrows, off_t ncols, int srows,
             return -5;
         }
         else {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return -6;
         }
     }

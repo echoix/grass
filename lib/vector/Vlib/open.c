@@ -295,7 +295,7 @@ int Vect__open_old(struct Map_info *Map, const char *name, const char *mapset,
 
             G_debug(1, "Vector format: %d (non-native)", format);
             if (format < 0) {
-                G_fatal_error(_("Unable to open vector map <%s>"),
+                G_fatal_error(_("Unable to open vector map <%s>."),
                               Vect_get_full_name(Map));
                 return -1;
             }
@@ -436,7 +436,7 @@ int Vect__open_old(struct Map_info *Map, const char *name, const char *mapset,
             if (level >= 2) { /* support files opened */
                 dig_free_plus(&(Map->plus));
             }
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           Vect_get_full_name(Map));
             return -1;
         }

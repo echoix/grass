@@ -55,7 +55,7 @@ static void write_segment_db(struct field_info *finfo, dbDriver *driver,
     db_append_string(sql, ")");
 
     if (db_execute_immediate(driver, sql) != DB_OK) {
-        G_fatal_error(_("Unable to insert new record: '%s'"),
+        G_fatal_error(_("Unable to insert new record: '%s'."),
                       db_get_string(sql));
     }
 }

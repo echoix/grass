@@ -56,7 +56,7 @@ int NetA_articulation_points(dglGraph_s *graph, struct ilist *articulation_list)
     current_edge = (dglInt32_t **)G_calloc(nnodes + 1, sizeof(dglInt32_t *));
     mark = (int *)G_calloc(nnodes + 1, sizeof(int));
     if (!tin || !min_tin || !parent || !stack || !current || !mark) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 

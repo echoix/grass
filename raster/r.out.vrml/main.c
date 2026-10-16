@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
         if (is_fp) {
             if (Rast_read_fp_range(rast_el->answer, "", &fp_range) != 1) {
                 G_fatal_error(
-                    _("Range info for [%s] not available (run r.support)"),
+                    _("Range info for <%s> not available (run r.support)."),
                     rast_el->answer);
             }
             Rast_get_fp_range_min_max(&fp_range, &dmin, &dmax);
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
         else {
             if (Rast_read_range(rast_el->answer, "", &range) == -1) {
                 G_fatal_error(
-                    _("Range info for <%s> not available (run r.support)"),
+                    _("Range info for <%s> not available (run r.support)."),
                     rast_el->answer);
             }
             Rast_get_range_min_max(&range, &cmin, &cmax);
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
         /* open file for writing VRML */
         G_message(_("Opening %s for writing... "), outfile);
         if (NULL == (vout = fopen(outfile, "w"))) {
-            G_fatal_error(_("Unable to open output file <%s>"), outfile);
+            G_fatal_error(_("Unable to open output file '%s'."), outfile);
         }
     }
 

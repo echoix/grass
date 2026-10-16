@@ -55,7 +55,7 @@ label_t *labels_init(struct params *p, int *n_labels)
 
     /* open vector for read only */
     if (Vect_open_old(&Map, p->map->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), p->map->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), p->map->answer);
 
     label_sz = Vect_get_num_primitives(&Map, legal_types);
 
@@ -84,7 +84,7 @@ label_t *labels_init(struct params *p, int *n_labels)
 
     /* initialize FT 2 library */
     if (FT_Init_FreeType(&library))
-        G_fatal_error(_("Unable to initialise FreeType"));
+        G_fatal_error(_("Unable to initialise FreeType."));
     font_cap = find_font_from_freetypecap(p->font->answer);
     if (font_cap == NULL)
         G_fatal_error(_("Unable to find font '%s'\n"), p->font->answer);

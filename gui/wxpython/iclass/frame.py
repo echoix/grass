@@ -696,7 +696,7 @@ class IClassMapPanel(DoubleMapPanel):
 
         # open vector map to be imported
         if digitClass.OpenMap(vector, update=False) is None:
-            GError(parent=self, message=_("Unable to open vector map <%s>") % vector)
+            GError(parent=self, message=_("Unable to open vector map <%s>.") % vector)
             return None
 
         # copy features to the temporary map

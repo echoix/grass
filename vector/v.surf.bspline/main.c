@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
                     dist);
         }
         else {
-            fprintf(stdout, _("No points in current region"));
+            fprintf(stdout, _("No points in current region."));
         }
 
         Vect_close(&In);
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
         grid = FALSE;
 
         if (0 > Vect_open_new(&Out, out_opt->answer, WITH_Z))
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           out_opt->answer);
 
         /* Copy vector Head File */

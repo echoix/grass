@@ -82,7 +82,7 @@ int db__driver_list_databases(dbString *dbpath, int npaths, dbHandle **dblist,
 
     list = db_alloc_handle_array(rec_num);
     if (list == NULL) {
-        db_d_append_error(_("Out of memory"));
+        db_d_append_error(_("Out of memory."));
         db_d_report_error();
         return DB_FAILED;
     }

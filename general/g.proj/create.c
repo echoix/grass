@@ -22,7 +22,7 @@ void create_location(const char *location)
                       strerror(errno));
     else
         /* Shouldn't happen */
-        G_fatal_error(_("Unable to create project <%s>"), location);
+        G_fatal_error(_("Unable to create new project <%s>."), location);
 
     G_message(_("You can switch to the new project by\n`%s=%s`"),
               "g.mapset mapset=PERMANENT project", location);

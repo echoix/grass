@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
     fd = (int *)G_malloc(region.depths * sizeof(int));
 
     if (fd == NULL)
-        fatal_error(map, NULL, 0, _("Out of memory"));
+        fatal_error(map, NULL, 0, _("Out of memory."));
 
     name = NULL;
 
@@ -288,7 +288,7 @@ int main(int argc, char *argv[])
                                         globalG3dMapType, maxSize);
 
     if (map == NULL)
-        fatal_error(map, fd, opencells, _("Error opening 3D raster map"));
+        fatal_error(map, fd, opencells, _("Error opening 3D raster map."));
 
     /*if requested set the Mask on */
     if (param.mask->answer) {
@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
         Rast3d_fatal_error("Error flushing tiles with Rast3d_flush_all_tiles");
     /* Close files and exit */
     if (!Rast3d_close(map))
-        Rast3d_fatal_error(_("Error closing 3d raster map"));
+        Rast3d_fatal_error(_("Error closing 3D raster map."));
 
     map = NULL;
 

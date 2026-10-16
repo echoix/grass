@@ -75,7 +75,7 @@ def main():
     # is there a simpler way of testing for --overwrite?
     dbffile = input + ".dbf"
     if Path(dbffile).exists() and not gcore.overwrite():
-        gcore.fatal(_("File <%s> already exists") % dbffile)
+        gcore.fatal(_("File '%s' already exists.") % dbffile)
 
     if olayer:
         try:

@@ -38,7 +38,7 @@ int stop(const char *name)
             continue;
         snprintf(file_path, sizeof(file_path), "%s/%s", mon_path, dp->d_name);
         if (unlink(file_path) == -1)
-            G_warning(_("Unable to delete file <%s>"), file_path);
+            G_warning(_("Unable to delete file '%s'."), file_path);
     }
     closedir(dirp);
 
@@ -63,7 +63,7 @@ int stop_wx(const char *name)
 
     fp = fopen(pid_file, "r");
     if (!fp) {
-        G_warning(_("Unable to open file <%s>"), pid_file);
+        G_warning(_("Unable to open file '%s'."), pid_file);
         return 1;
     }
     pid = NULL;
@@ -72,7 +72,7 @@ int stop_wx(const char *name)
     fclose(fp);
 
     if (!pid) {
-        G_warning(_("Unable to read file <%s>"), pid_file);
+        G_warning(_("Unable to read file '%s'."), pid_file);
         return 1;
     }
 

@@ -522,7 +522,7 @@ int main(int argc, char *argv[])
                         : (maptype == FCELL_TYPE ? "FCELL" : "??"))));
 
     if (flag_f->answer)
-        G_verbose_message(_("Forcing raster export"));
+        G_verbose_message(_("Forcing raster export."));
 
     /* if GDAL datatype set by user and export not forced, do checks */
     if (type->answer && !flag_f->answer) {

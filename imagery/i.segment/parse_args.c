@@ -199,7 +199,7 @@ int parse_args(int argc, char *argv[], struct globals *globals)
             }
             mapset = G_find_raster(name, "");
             if (!mapset)
-                G_fatal_error(_("Raster map <%s> not found"),
+                G_fatal_error(_("Raster map <%s> not found."),
                               group->answers[bands]);
             /* Add input to group. */
             I_add_file_to_group_ref(name, mapset, &globals->Ref);
@@ -210,7 +210,7 @@ int parse_args(int argc, char *argv[], struct globals *globals)
     else {
         /* input is group. Try to read group file */
         if (!I_get_group_ref(group->answers[0], &globals->Ref))
-            G_fatal_error(_("Group <%s> not found in the current mapset"),
+            G_fatal_error(_("Group <%s> not found in current mapset."),
                           group->answers[0]);
 
         if (globals->Ref.nfiles <= 0)
@@ -286,12 +286,12 @@ int parse_args(int argc, char *argv[], struct globals *globals)
     /* consider shape */
     globals->radio_weight = atof(radio_weight->answer);
     if (globals->radio_weight <= 0)
-        G_fatal_error(_("Option '%s' must be > 0"), radio_weight->key);
+        G_fatal_error(_("Option <%s> must be > 0."), radio_weight->key);
     if (globals->radio_weight > 1)
         G_fatal_error(_("Option '%s' must be <= 1"), radio_weight->key);
     globals->smooth_weight = atof(smooth_weight->answer);
     if (globals->smooth_weight < 0)
-        G_fatal_error(_("Option '%s' must be >= 0"), smooth_weight->key);
+        G_fatal_error(_("Option <%s> must be >= 0."), smooth_weight->key);
     if (globals->smooth_weight > 1)
         G_fatal_error(_("Option '%s' must be <= 1"), smooth_weight->key);
 #else

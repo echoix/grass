@@ -190,7 +190,7 @@ size_t init_event_list_in_memory(AEvent *eventList, char *rastName,
 
     mapset = G_find_raster(rastName, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map [%s] not found"), rastName);
+        G_fatal_error(_("Raster map <%s> not found."), rastName);
 
     /*open map */
     int infd;
@@ -416,7 +416,7 @@ AMI_STREAM<AEvent> *init_event_list(char *rastName, Viewpoint *vp,
 
     mapset = G_find_raster(rastName, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map [%s] not found"), rastName);
+        G_fatal_error(_("Raster map <%s> not found."), rastName);
 
     /*open map */
     int infd;
@@ -685,7 +685,7 @@ void save_vis_elev_to_GRASS(Grid *visgrid, char *elevfname, char *visfname,
 
     mapset = G_find_raster(elevfname, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map [%s] not found"), elevfname);
+        G_fatal_error(_("Raster map <%s> not found."), elevfname);
 
     /*open elevation map */
     int elevfd;

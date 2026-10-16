@@ -25,7 +25,7 @@
 # % guisection: Dissolving
 # %end
 # %option G_OPT_V_FIELD
-# % label: Layer number or name.
+# % label: Layer number or name
 # % required: no
 # % guisection: Dissolving
 # %end
@@ -603,7 +603,7 @@ def main():
         try:
             coltype = gs.vector_columns(input_vector, layer)[column]
         except KeyError:
-            gs.fatal(_("Column <%s> not found") % column)
+            gs.fatal(_("Column <%s> not found.") % column)
 
         if coltype["type"] not in {"INTEGER", "SMALLINT", "CHARACTER", "TEXT"}:
             gs.fatal(_("Key column must be of type integer or string"))

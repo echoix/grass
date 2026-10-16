@@ -70,7 +70,7 @@ void parse(int argc, char *argv[], struct Parms *parms)
     name = parms->map1.name = maps->answers[0];
     mapset = parms->map1.mapset = G_find_raster2(name, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), name);
+        G_fatal_error(_("Raster map <%s> not found."), name);
     if (Rast_map_type(name, mapset) != CELL_TYPE)
         G_fatal_error(_("Raster map <%s> is not CELL"), name);
 
@@ -79,7 +79,7 @@ void parse(int argc, char *argv[], struct Parms *parms)
     name = parms->map2.name = maps->answers[1];
     mapset = parms->map2.mapset = G_find_raster2(name, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), name);
+        G_fatal_error(_("Raster map <%s> not found."), name);
     if (Rast_map_type(name, mapset) != CELL_TYPE)
         G_fatal_error(_("Raster map <%s> is not CELL"), name);
 

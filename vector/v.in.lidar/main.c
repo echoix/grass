@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
     zrange_opt->type = TYPE_DOUBLE;
     zrange_opt->required = NO;
     zrange_opt->key_desc = "min,max";
-    zrange_opt->description = _("Filter range for z data (min,max)");
+    zrange_opt->description = _("Filter range for Z data (min,max)");
     zrange_opt->guisection = _("Selection");
 
     filter_opt = G_define_option();
@@ -515,7 +515,7 @@ int main(int argc, char *argv[])
         else {
             if (0 != G_make_location(outloc_opt->answer, &cellhd, proj_info,
                                      proj_units)) {
-                G_fatal_error(_("Unable to create new project <%s>"),
+                G_fatal_error(_("Unable to create new project <%s>."),
                               outloc_opt->answer);
             }
             G_message(_("Project <%s> created"), outloc_opt->answer);
@@ -549,7 +549,7 @@ int main(int argc, char *argv[])
                     _("Vector map <%s> already exists and will be overwritten"),
                     out_opt->answer);
             else
-                G_fatal_error(_("Vector map <%s> already exists"),
+                G_fatal_error(_("Vector map <%s> already exists."),
                               out_opt->answer);
         }
     }
@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
     /* strip any @mapset from vector output name */
     G_find_vector(buf, G_mapset());
     if (Vect_open_new(&Map, out_opt->answer, 1) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
 
     Vect_hist_command(&Map);
 

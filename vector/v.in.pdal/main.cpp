@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
     zrange_opt->type = TYPE_DOUBLE;
     zrange_opt->required = NO;
     zrange_opt->key_desc = "min,max";
-    zrange_opt->description = _("Filter range for z data (min,max)");
+    zrange_opt->description = _("Filter range for Z data (min,max)");
     zrange_opt->guisection = _("Selection");
 
     Option *filter_opt = G_define_option();
@@ -468,7 +468,7 @@ int main(int argc, char *argv[])
     // the overwrite warning comes quite late in the execution
     // but that's good enough
     if (Vect_open_new(&output_vector, out_opt->answer, 1) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
     Vect_hist_command(&output_vector);
 
     // this is just for sure, we test the individual dimensions before

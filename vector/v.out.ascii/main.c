@@ -86,14 +86,14 @@ int main(int argc, char *argv[])
     else {
         Vect_set_open_level(1); /* topology not needed */
         if (Vect_open_old2(&Map, input, "", field_name) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), input);
+            G_fatal_error(_("Unable to open vector map <%s>."), input);
         if (Vect_maptype(&Map) != GV_FORMAT_NATIVE) {
             /* require topological level for external formats
                centroids are read from topo */
             Vect_close(&Map);
             Vect_set_open_level(2);
             if (Vect_open_old2(&Map, input, "", field_name) < 0)
-                G_fatal_error(_("Unable to open vector map <%s>"), input);
+                G_fatal_error(_("Unable to open vector map <%s>."), input);
         }
     }
 
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
         }
 
         if (ascii == NULL) {
-            G_fatal_error(_("Unable to open file <%s>"), output);
+            G_fatal_error(_("Unable to open file '%s'."), output);
         }
     }
     else {

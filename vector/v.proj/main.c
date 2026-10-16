@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
         G_debug(1, "Open old: location: %s mapset : %s", G_location_path(),
                 G_mapset());
         if (Vect_open_old(&Map, map_name, mapset) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), map_name);
+            G_fatal_error(_("Unable to open vector map <%s>."), map_name);
 
         /* need to set the region to the input vector
          * for PROJ to select the appropriate pipeline */
@@ -480,7 +480,7 @@ int main(int argc, char *argv[])
             G_mapset());
 
     if (Vect_open_new(&Out_Map, omap_name, Vect_is_3d(&Map)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), omap_name);
+        G_fatal_error(_("Unable to create vector map <%s>."), omap_name);
 
     Vect_set_error_handler_io(
         NULL, &Out_Map); /* register standard i/o error handler */

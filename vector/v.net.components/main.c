@@ -32,7 +32,7 @@ int insert_new_record(dbDriver *driver, struct field_info *Fi, dbString *sql,
 
     if (db_execute_immediate(driver, sql) != DB_OK) {
         db_close_database_shutdown_driver(driver);
-        G_fatal_error(_("Cannot insert new record: %s"), db_get_string(sql));
+        G_fatal_error(_("Cannot insert new record: '%s'."), db_get_string(sql));
         return 0;
     };
     return 1;
@@ -138,13 +138,13 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2);
 
     if (1 > Vect_open_old(&In, map_in->answer, ""))
-        G_fatal_error(_("Unable to open vector map <%s>"), map_in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_in->answer);
 
     with_z = Vect_is_3d(&In);
 
     if (0 > Vect_open_new(&Out, map_out->answer, with_z)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), map_out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), map_out->answer);
     }
 
     /* parse filter option and select appropriate lines */
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
     component = (int *)G_calloc(nnodes + 1, sizeof(int));
     covered = (char *)G_calloc(nnodes + 1, sizeof(char));
     if (!component || !covered) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         exit(EXIT_FAILURE);
     }
     /* Create table */
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 
     if (db_execute_immediate(driver, &sql) != DB_OK) {
         db_close_database_shutdown_driver(driver);
-        G_fatal_error(_("Unable to create table: '%s'"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table: '%s'."), db_get_string(&sql));
     }
 
     if (db_create_index2(driver, Fi->table, GV_KEY_COLUMN) != DB_OK)
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 
     if (db_grant_on_table(driver, Fi->table, DB_PRIV_SELECT,
                           DB_GROUP | DB_PUBLIC) != DB_OK)
-        G_fatal_error(_("Cannot grant privileges on table <%s>"), Fi->table);
+        G_fatal_error(_("Cannot grant privileges on table <%s>."), Fi->table);
 
     db_begin_transaction(driver);
 

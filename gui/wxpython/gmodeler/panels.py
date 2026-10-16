@@ -700,7 +700,7 @@ class ModelerPanel(wx.Panel, MainPageBase):
             except OSError:
                 wx.MessageBox(
                     parent=self,
-                    message=_("Unable to open file <%s> for writing.") % filename,
+                    message=_("Unable to open file '%s' for writing.") % filename,
                     caption=_("Error"),
                     style=wx.OK | wx.ICON_ERROR | wx.CENTRE,
                 )

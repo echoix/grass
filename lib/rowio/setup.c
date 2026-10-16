@@ -54,13 +54,13 @@ int Rowio_setup(ROWIO *R, int fd, int nrows, int len,
 
     R->rcb = (struct ROWIO_RCB *)G_malloc(nrows * sizeof(struct ROWIO_RCB));
     if (R->rcb == NULL) {
-        G_warning(_("Out of memory"));
+        G_warning(_("Out of memory."));
         return -1;
     }
     for (i = 0; i < nrows; i++) {
         R->rcb[i].buf = G_malloc(len);
         if (R->rcb[i].buf == NULL) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return -1;
         }
         R->rcb[i].row = -1; /* mark not used */

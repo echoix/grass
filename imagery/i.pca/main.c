@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
             strcpy(name, opt_in->answers[i]);
             mapset = G_find_raster(name, "");
             if (!mapset)
-                G_fatal_error(_("Raster map <%s> not found"),
+                G_fatal_error(_("Raster map <%s> not found."),
                               opt_in->answers[i]);
             /* Add input to group. */
             I_add_file_to_group_ref(name, mapset, &ref);
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     else {
         /* Maybe input is group. Try to read group file */
         if (I_get_group_ref(opt_in->answer, &ref) != 1)
-            G_fatal_error(_("Group <%s> not found"), opt_in->answer);
+            G_fatal_error(_("Group <%s> not found."), opt_in->answer);
     }
     bands = ref.nfiles;
 

@@ -59,7 +59,7 @@ static void create_table(struct Map_info *flowline_vec,
     db_begin_transaction(drvr);
     /* Create table */
     if (db_execute_immediate(drvr, &sql) != DB_OK) {
-        G_fatal_error(_("Unable to create table: %s"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table: '%s'."), db_get_string(&sql));
     }
     if (db_create_index2(drvr, fi->table, fi->key) != DB_OK)
         G_warning(_("Unable to create index for table <%s>, key <%s>"),
@@ -81,7 +81,7 @@ static void check_vector_input_maps(struct Option *vector_opt,
         for (i = 0; i < 3; i++) {
             if (vector_opt->answers[i] != NULL) {
                 if (NULL == G_find_raster3d(vector_opt->answers[i], ""))
-                    Rast3d_fatal_error(_("3D raster map <%s> not found"),
+                    Rast3d_fatal_error(_("3D raster map <%s> not found."),
                                        vector_opt->answers[i]);
             }
             else {
@@ -377,7 +377,7 @@ int main(int argc, char *argv[])
         fl_cats = Vect_new_cats_struct();
         fl_points = Vect_new_line_struct();
         if (Vect_open_new(&fl_map, flowlines_opt->answer, TRUE) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           flowlines_opt->answer);
 
         Vect_hist_command(&fl_map);
@@ -392,7 +392,7 @@ int main(int argc, char *argv[])
     /* open vector map of seeds */
     if (seed_opt->answer) {
         if (Vect_open_old2(&seed_Map, seed_opt->answer, "", "1") < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           seed_opt->answer);
         if (!Vect_is_3d(&seed_Map))
             G_fatal_error(_("Vector map <%s> is not 3D"), seed_opt->answer);

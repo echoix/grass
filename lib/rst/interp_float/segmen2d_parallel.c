@@ -69,21 +69,21 @@ int IL_interp_segments_2d_parallel(
     for (i_cnt = 0; i_cnt < threads; i_cnt++) {
         if (!(matrix[i_cnt] =
                   G_alloc_matrix(params->KMAX2 + 1, params->KMAX2 + 1))) {
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
             return -1;
         }
     }
 
     for (i_cnt = 0; i_cnt < threads; i_cnt++) {
         if (!(indx[i_cnt] = G_alloc_ivector(params->KMAX2 + 1))) {
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
             return -1;
         }
     }
 
     for (i_cnt = 0; i_cnt < threads; i_cnt++) {
         if (!(b[i_cnt] = G_alloc_vector(params->KMAX2 + 3))) {
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
             return -1;
         }
     }
@@ -91,7 +91,7 @@ int IL_interp_segments_2d_parallel(
     for (i_cnt = 0; i_cnt < threads; i_cnt++) {
         if (!(A[i_cnt] = G_alloc_vector(
                   (params->KMAX2 + 2) * (params->KMAX2 + 2) + 1))) {
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
             return -1;
         }
     }
@@ -254,7 +254,7 @@ int IL_interp_segments_2d_parallel(
                     if (!(point = (struct triple *)G_malloc(
                               sizeof(struct triple) *
                               data_local[tid]->n_points))) {
-                        G_warning(_("Out of memory"));
+                        G_warning(_("Out of memory."));
                         some_thread_failed = -1;
                         continue;
                     }

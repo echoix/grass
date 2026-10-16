@@ -91,10 +91,10 @@ int G_check_input_output_name(const char *input, const char *output, int error)
 
     if (mapset == NULL) {
         if (error == G_FATAL_EXIT) {
-            G_fatal_error(_("Raster map <%s> not found"), input);
+            G_fatal_error(_("Raster map <%s> not found."), input);
         }
         else if (error == G_FATAL_PRINT) {
-            G_warning(_("Raster map <%s> not found"), input);
+            G_warning(_("Raster map <%s> not found."), input);
             return 1;
         }
         else { /* G_FATAL_RETURN */

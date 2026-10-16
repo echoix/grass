@@ -49,7 +49,7 @@ void fatal_error(void *map, int elevfd, int outfd, char *errorMsg)
 
     if (map != NULL) {
         if (!Rast3d_close(map))
-            Rast3d_fatal_error(_("Unable to close 3D raster map"));
+            Rast3d_fatal_error(_("Unable to close 3D raster map."));
     }
 
     /*unopen the output map */
@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
     G_debug(3, "Open 3D raster map %s", param.input->answer);
 
     if (NULL == G_find_raster3d(param.input->answer, ""))
-        Rast3d_fatal_error(_("3D raster map <%s> not found"),
+        Rast3d_fatal_error(_("3D raster map <%s> not found."),
                            param.input->answer);
 
     /* Figure out the region from the map */

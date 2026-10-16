@@ -96,7 +96,7 @@ char **G_ls2(const char *dir, int *num_files)
     int n = 0;
 
     if ((dfd = opendir(dir)) == NULL)
-        G_fatal_error(_("Unable to open directory %s"), dir);
+        G_fatal_error(_("Unable to open directory '%s'."), dir);
 
     while ((dp = readdir(dfd)) != NULL) {
         if (dp->d_name[0] == '.') /* Don't list hidden files */

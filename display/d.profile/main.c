@@ -70,7 +70,7 @@ static void get_map_range(void)
         struct FPRange fprange;
 
         if (Rast_read_fp_range(mapname, "", &fprange) <= 0)
-            G_fatal_error(_("Unable to read FP range for %s"), mapname);
+            G_fatal_error(_("Unable to read FP range for <%s>."), mapname);
 
         Rast_get_fp_range_min_max(&fprange, &min, &max);
     }

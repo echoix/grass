@@ -59,7 +59,7 @@ int open_files(void)
         n = I_read_signatures(fd, &in_sig);
         fclose(fd);
         if (n < 0)
-            G_fatal_error(_("Unable to read signature file <%s>"), insigfile);
+            G_fatal_error(_("Unable to read signature file '%s'."), insigfile);
 
         if (in_sig.nsigs > 255)
             G_fatal_error(_("<%s> has too many signatures (limit is 255)"),

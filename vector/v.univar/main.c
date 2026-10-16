@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
     shell_flag = G_define_flag();
     shell_flag->key = 'g';
-    shell_flag->label = _("Print the stats in shell script style [deprecated]");
+    shell_flag->label = _("Print in shell script style [deprecated]");
     shell_flag->description = _(
         "This flag is deprecated and will be removed in a future release. Use "
         "format=shell instead.");
@@ -170,9 +170,9 @@ int main(int argc, char *argv[])
     }
 
     if (shell_flag->answer) {
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=shell instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "shell");
         if (format == JSON) {
             G_fatal_error(_("The -g flag cannot be used with format=json. "
                             "Please select only one output format."));
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
     /* open input vector */
     Vect_set_open_level(2);
     if (Vect_open_old2(&Map, map_opt->answer, "", field_opt->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_opt->answer);
 
     ofield = Vect_get_field_number(&Map, field_opt->answer);
 
@@ -265,7 +265,7 @@ void select_from_geometry(void)
         }
         Fi = Vect_get_field(&Map, ofield);
         if (!Fi) {
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           ofield);
         }
 

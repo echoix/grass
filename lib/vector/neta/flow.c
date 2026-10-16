@@ -63,7 +63,7 @@ int NetA_flow(dglGraph_s *graph, struct ilist *source_list,
     is_source = (char *)G_calloc(nnodes + 3, sizeof(char));
     is_sink = (char *)G_calloc(nnodes + 3, sizeof(char));
     if (!queue || !prev || !is_source || !is_sink) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 
@@ -186,7 +186,7 @@ int NetA_min_cut(dglGraph_s *graph, struct ilist *source_list,
     queue = (dglInt32_t *)G_calloc(nnodes + 3, sizeof(dglInt32_t));
     visited = (char *)G_calloc(nnodes + 3, sizeof(char));
     if (!queue || !visited) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 

@@ -41,7 +41,7 @@ int open_map(MAPS *rast)
     mapset = (char *)G_find_raster2(rast->elevname, "");
 
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), rast->elevname);
+        G_fatal_error(_("Raster map <%s> not found."), rast->elevname);
 
     rast->fd = Rast_open_old(rast->elevname, mapset);
     Rast_get_cellhd(rast->elevname, mapset, &cellhd);

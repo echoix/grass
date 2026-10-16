@@ -493,7 +493,7 @@ class WMSBase:
         """
         temp_file = gs.tempfile()
         if temp_file is None:
-            gs.fatal(_("Unable to create temporary files"))
+            gs.fatal(_("Unable to create temporary files."))
 
         # list of created tempfiles for destructor
         self.temp_files_to_cleanup.append(temp_file)

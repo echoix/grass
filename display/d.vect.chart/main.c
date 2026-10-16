@@ -328,7 +328,7 @@ int main(int argc, char **argv)
     /* open vector */
     Vect_set_open_level(2);
     if (Vect_open_old(&Map, map_opt->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_opt->answer);
 
     ctype = CTYPE_PIE;
     if (ctype_opt->answer[0] == 'b')

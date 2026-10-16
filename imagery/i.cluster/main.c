@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 
     /* check all the inputs */
     if (!I_find_group(group)) {
-        G_fatal_error(_("Group <%s> not found in current mapset"), group);
+        G_fatal_error(_("Group <%s> not found in current mapset."), group);
     }
     if (!I_find_subgroup(group, subgroup)) {
         G_fatal_error(_("Subgroup <%s> in group <%s> not found"), subgroup,
@@ -356,7 +356,7 @@ int main(int argc, char *argv[])
             G_date(), HOST_NEWLINE);
     fclose(report);
 
-    G_done_msg(_("File <%s> created."), outsigfile);
+    G_done_msg(_("File '%s' created."), outsigfile);
 
     exit(EXIT_SUCCESS);
 }

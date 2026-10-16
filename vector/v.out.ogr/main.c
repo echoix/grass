@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
         Vect_set_open_level(2);
         if (Vect_open_old2(&In, options.input->answer, "",
                            options.field->answer) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           options.input->answer);
 
         if (strcmp(options.type->answer, "auto") == 0) {

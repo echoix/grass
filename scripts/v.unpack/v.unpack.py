@@ -30,7 +30,7 @@
 # %flag
 # % key: o
 # % label: Override projection check (use current projects's CRS)
-# % description: Assume that the dataset has same coordinate reference system as the current project
+# % description: Assume that the dataset has the same coordinate reference system as the current project
 # % guisection: Output settings
 # %end
 # %flag
@@ -66,7 +66,7 @@ def main():
 
     # check if the input file exists
     if not Path(infile).exists():
-        grass.fatal(_("File <%s> not found") % infile)
+        grass.fatal(_("File '%s' not found.") % infile)
 
     # copy the files to tmp dir
     input_base = os.path.basename(infile)
@@ -104,7 +104,7 @@ def main():
     gfile = grass.find_file(name=map_name, element="vector", mapset=".")
     overwrite = os.getenv("GRASS_OVERWRITE")
     if gfile["file"] and overwrite != "1":
-        grass.fatal(_("Vector map <%s> already exists") % map_name)
+        grass.fatal(_("Vector map <%s> already exists.") % map_name)
     elif overwrite == "1" and gfile["file"]:
         grass.warning(
             _("Vector map <%s> already exists and will be overwritten") % map_name
@@ -264,7 +264,7 @@ def main():
                 )
             except CalledModuleError:
                 grass.fatal(
-                    _("Unable to connect table <%s> to vector map <%s>")
+                    _("Unable to connect table <%s> to vector map <%s>.")
                     % (to_table, map_name)
                 )
 

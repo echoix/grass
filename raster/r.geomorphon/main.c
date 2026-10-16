@@ -247,12 +247,12 @@ int main(int argc, char **argv)
         if (oneoff) {
             if (!G_scan_easting(par_coords->answers[0], &oneoff_easting,
                                 G_projection()))
-                G_fatal_error(_("Illegal east coordinate <%s>"),
+                G_fatal_error(_("Illegal east coordinate <%s>."),
                               par_coords->answers[0]);
             oneoff_col = Rast_easting_to_col(oneoff_easting, &window);
             if (!G_scan_northing(par_coords->answers[1], &oneoff_northing,
                                  G_projection()))
-                G_fatal_error(_("Illegal north coordinate <%s>"),
+                G_fatal_error(_("Illegal north coordinate <%s>."),
                               par_coords->answers[1]);
             oneoff_row = Rast_northing_to_row(oneoff_northing, &window);
             if (oneoff_row < 0 || oneoff_row >= nrows || oneoff_col < 0 ||

@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     if (file_opt->answer) {
         /* open input file */
         if ((in_file = fopen(file_opt->answer, "r")) == NULL)
-            G_fatal_error(_("Unable to open input file <%s>"),
+            G_fatal_error(_("Unable to open input file '%s'."),
                           file_opt->answer);
     }
 
@@ -123,11 +123,11 @@ int main(int argc, char **argv)
 
     Vect_set_open_level(2);
     if (Vect_open_old(&In, in_opt->answer, mapset) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     /* Open output segments */
     if (Vect_open_new(&Out, out_opt->answer, Vect_is_3d(&In)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
 
     db_init_handle(&rshandle);
     db_init_string(&rsstmt);
@@ -186,7 +186,7 @@ int main(int argc, char **argv)
             /* OK, write point */
             line = find_line(&In, lfield, lcat1);
             if (line == 0) {
-                G_warning(_("Unable to find line of cat [%d]"), lcat1);
+                G_warning(_("Unable to find line of cat %d."), lcat1);
                 break;
             }
 
@@ -272,7 +272,7 @@ int main(int argc, char **argv)
                     map_offset2);
             line = find_line(&In, lfield, lcat1);
             if (line == 0) {
-                G_warning(_("Unable to find line of cat [%d]"), lcat1);
+                G_warning(_("Unable to find line of cat %d."), lcat1);
                 break;
             }
 

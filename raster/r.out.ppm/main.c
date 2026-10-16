@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
     if (do_stdout)
         G_done_msg("%s", "");
     else
-        G_done_msg(_("File <%s> created"), ofile);
+        G_done_msg(_("File '%s' created."), ofile);
 
     return (EXIT_SUCCESS);
 }

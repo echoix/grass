@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
     if (output->answer) {
         ascii = fopen(output->answer, "w");
         if (ascii == NULL) {
-            G_fatal_error(_("Unable to open file <%s>"), output->answer);
+            G_fatal_error(_("Unable to open file '%s'."), output->answer);
         }
     }
     else {

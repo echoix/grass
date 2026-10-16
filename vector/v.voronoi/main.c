@@ -187,7 +187,7 @@ int main(int argc, char **argv)
     /* open files */
     Vect_set_open_level(2);
     if (Vect_open_old2(&In, opt.in->answer, "", opt.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.in->answer);
 
     Field = Vect_get_field_number(&In, opt.field->answer);
 
@@ -212,12 +212,12 @@ int main(int argc, char **argv)
             G_fatal_error(_("Unable to create temporary vector map"));
 
         if (Vect_open_new(&Out2, opt.out->answer, 0) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           opt.out->answer);
     }
     else {
         if (Vect_open_new(&Out, opt.out->answer, 0) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           opt.out->answer);
     }
 

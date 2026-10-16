@@ -145,7 +145,7 @@ def main():
         if raster:
             # check if input raster exists
             if not gs.find_file(raster)["file"]:
-                gs.fatal(_("Raster map <%s> not found") % raster)
+                gs.fatal(_("Raster map <%s> not found.") % raster)
 
             if maskcats != "*" and not remove:
                 if gs.raster_info(raster)["datatype"] != "CELL":

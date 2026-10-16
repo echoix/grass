@@ -75,8 +75,8 @@ int parse_command_line(int argc, char *argv[])
           "* sqrt(PI * area))"),
         _("fractal dimension of boundary defining a polygon, calculated as fd "
           "= 2 * (log(perimeter) / log(area))"),
-        _("perimeter length of an area"), _("line length"),
-        _("number of features for each category"),
+        _("Perimeter length of an area"), _("line length"),
+        _("Number of features for each category"),
         _("point coordinates, X,Y or X,Y,Z"),
         _("line/boundary starting point coordinates, X,Y or X,Y,Z"),
         _("line/boundary end point coordinates, X,Y or X,Y,Z"),

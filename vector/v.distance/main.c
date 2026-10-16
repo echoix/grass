@@ -391,7 +391,7 @@ int main(int argc, char *argv[])
     /* Open 'from' vector */
     Vect_set_open_level(2);
     if (Vect_open_old2(&From, opt.from->answer, "", opt.from_field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.from->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.from->answer);
 
     from_field = Vect_get_field_number(&From, opt.from_field->answer);
     /* in 3D features may not be found */
@@ -414,7 +414,7 @@ int main(int argc, char *argv[])
     /* Open 'to' vector */
     Vect_set_open_level(2);
     if (Vect_open_old2(&To, opt.to->answer, "", opt.to_field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.to->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.to->answer);
     /* in 3D features may not be found */
     if (Vect_is_3d(&To))
         G_warning(_("Input vector map <%s> is 3D"), opt.to->answer);
@@ -439,7 +439,7 @@ int main(int argc, char *argv[])
     /* Open output vector */
     if (create_map) {
         if (Vect_open_new(&Out, opt.out->answer, WITHOUT_Z) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           opt.out->answer);
 
         Vect_hist_command(&Out);
@@ -550,7 +550,7 @@ int main(int argc, char *argv[])
     if (update_table) {
         Fi = Vect_get_field(&From, from_field);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer <%s>"),
+            G_fatal_error(_("Database connection not defined for layer <%s>."),
                           opt.from_field->answer);
 
         driver = db_start_driver_open_database(Fi->driver, Fi->database);
@@ -583,7 +583,7 @@ int main(int argc, char *argv[])
 
         toFi = Vect_get_field(&To, to_field);
         if (toFi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           to_field);
 
         to_driver = db_start_driver_open_database(toFi->driver, toFi->database);
@@ -632,7 +632,7 @@ int main(int argc, char *argv[])
                 Fi = Vect_get_field(&From, from_field);
                 if (Fi == NULL)
                     G_fatal_error(
-                        _("Database connection not defined for layer <%s>"),
+                        _("Database connection not defined for layer <%s>."),
                         opt.from_field->answer);
 
                 driver =
@@ -847,7 +847,7 @@ int main(int argc, char *argv[])
                             Near =
                                 (NEAR *)G_realloc(Near, anear * sizeof(NEAR));
                             if (!Near)
-                                G_fatal_error(_("Out of memory!"));
+                                G_fatal_error(_("Out of memory."));
                         }
                         near = &(Near[count]);
 
@@ -926,7 +926,7 @@ int main(int argc, char *argv[])
                             Near =
                                 (NEAR *)G_realloc(Near, anear * sizeof(NEAR));
                             if (!Near)
-                                G_fatal_error(_("Out of memory!"));
+                                G_fatal_error(_("Out of memory."));
                         }
                         near = &(Near[count]);
 
@@ -1139,7 +1139,7 @@ int main(int argc, char *argv[])
                             Near =
                                 (NEAR *)G_realloc(Near, anear * sizeof(NEAR));
                             if (!Near)
-                                G_fatal_error(_("Out of memory!"));
+                                G_fatal_error(_("Out of memory."));
                         }
                         near = &(Near[count]);
 
@@ -1472,7 +1472,7 @@ int main(int argc, char *argv[])
         G_debug(3, "SQL: %s", db_get_string(&stmt));
 
         if (db_execute_immediate(driver, &stmt) != DB_OK)
-            G_fatal_error(_("Unable to create table: '%s'"),
+            G_fatal_error(_("Unable to create table: '%s'."),
                           db_get_string(&stmt));
 
         if (db_grant_on_table(driver, opt.table->answer, DB_PRIV_SELECT,

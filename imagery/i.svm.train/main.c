@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
     char name_labels[GNAME_MAX + GMAPSET_MAX];
     strcpy(name_labels, opt_labels->answer);
     if ((mapset_labels = G_find_raster(name_labels, "")) == NULL) {
-        G_fatal_error(_("Raster map <%s> not found"), opt_labels->answer);
+        G_fatal_error(_("Raster map <%s> not found."), opt_labels->answer);
     }
 
     if (G_unqualified_name(opt_sigfile->answer, G_mapset(), name_sigfile,

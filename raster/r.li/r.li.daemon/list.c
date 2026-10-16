@@ -29,10 +29,10 @@ void insertNode(struct list *l, msg mess)
 
     new = G_malloc(sizeof(struct node));
     if (new == NULL)
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
     new->m = G_malloc(sizeof(msg));
     if (new->m == NULL)
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
     memcpy(new->m, &mess, sizeof(msg));
     new->next = new->prev = NULL;
 

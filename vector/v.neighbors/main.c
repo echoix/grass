@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
     /* open input vector */
     Vect_set_open_level(2);
     if (Vect_open_old2(&In, in_opt->answer, "", field_opt->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     field = Vect_get_field_number(&In, field_opt->answer);
     pcat_list = NULL;
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
     if (strcmp(method_opt->answer, "count") != 0) {
         Fi = Vect_get_field(&In, field);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
 
         driver = db_start_driver_open_database(Fi->driver, Fi->database);

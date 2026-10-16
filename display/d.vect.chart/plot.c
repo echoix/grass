@@ -31,7 +31,8 @@ int plot(int ctype, struct Map_info *Map, int type, int field, char *columns,
 
     Fi = Vect_get_field(Map, field);
     if (Fi == NULL)
-        G_fatal_error(_("Database connection not defined for layer %d"), field);
+        G_fatal_error(_("Database connection not defined for layer %d."),
+                      field);
 
     /* Open driver */
     driver = db_start_driver_open_database(Fi->driver, Fi->database);
@@ -81,7 +82,7 @@ int plot(int ctype, struct Map_info *Map, int type, int field, char *columns,
 
         if (db_open_select_cursor(driver, &sql, &cursor, DB_SEQUENTIAL) !=
             DB_OK) {
-            G_warning(_("Unable to open select cursor: '%s'"), buf);
+            G_warning(_("Unable to open select cursor: '%s'."), buf);
             return 1;
         }
 

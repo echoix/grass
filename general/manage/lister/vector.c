@@ -29,7 +29,7 @@ static int lister(const char *name, const char *mapset, char *title)
     *title = 0;
     if (*name) {
         if (Vect_open_old_head(&Map, name, mapset) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), name);
+            G_fatal_error(_("Unable to open vector map <%s>."), name);
         strcpy(title, Vect_get_map_name(&Map));
         Vect_close(&Map);
     }

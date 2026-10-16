@@ -255,7 +255,7 @@ int NetA_find_path(dglGraph_s *graph, int from, int to, int *edges,
     queue = (dglInt32_t *)G_calloc(nnodes + 1, sizeof(dglInt32_t));
     vis = (char *)G_calloc(nnodes + 1, sizeof(char));
     if (!prev || !queue || !vis) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
     Vect_reset_list(list);

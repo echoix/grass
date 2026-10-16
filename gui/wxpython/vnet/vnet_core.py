@@ -276,7 +276,7 @@ class VNETManager:
             dlg = wx.MessageDialog(
                 parent=self.guiparent,
                 message=_(
-                    "Vector map %s already exists. " + "Do you want to overwrite it?"
+                    "Vector map <%s> already exists. Do you want to overwrite it?"
                 )
                 % (existsMap["fullname"]),
                 caption=_("Overwrite vector map"),
@@ -352,7 +352,7 @@ class VNETManager:
             dlg = wx.MessageDialog(
                 parent=self.guiparent,
                 message=_(
-                    "Vector map %s already exists. " + "Do you want to overwrite it?"
+                    "Vector map <%s> already exists. Do you want to overwrite it?"
                 )
                 % (existsMap["fullname"]),
                 caption=_("Overwrite vector map"),

@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 
     old_mapset = G_find_raster2(parm.input->answer, "");
     if (old_mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), parm.input->answer);
+        G_fatal_error(_("Raster map <%s> not found."), parm.input->answer);
 
     if (strcmp(parm.input->answer, parm.output->answer) == 0 &&
         strcmp(old_mapset, G_mapset()) == 0)
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     if (tty) {
         fprintf(
             stderr,
-            _("Enter rule(s), \"end\" when done, \"help\" if you need it\n"));
+            _("Enter rules, \"end\" when done, \"help\" if you need it.\n"));
         if (map_type == FCELL_TYPE)
             fprintf(stderr, _("FCELL: Data range is %.7g to %.7g\n"),
                     (double)min, (double)max);
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 
     if (!any) {
         if (tty)
-            G_fatal_error(_("No rules specified. Raster map <%s> not created"),
+            G_fatal_error(_("No rules specified. Raster map <%s> not created."),
                           parm.output->answer);
         else
             G_fatal_error(_("No rules specified"));

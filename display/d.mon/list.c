@@ -125,7 +125,7 @@ void list_cmd(const char *name, FILE *fd_out)
     G_file_name(cmd_file, mon_path, "cmd", G_mapset());
     fd = fopen(cmd_file, "r");
     if (!fd)
-        G_fatal_error(_("Unable to open file '%s'"), cmd_file);
+        G_fatal_error(_("Unable to open file '%s'."), cmd_file);
 
     while (G_getl2(buf, sizeof(buf) - 1, fd) != 0) {
         fprintf(fd_out, "%s\n", buf);

@@ -68,7 +68,7 @@ def main():
         if mapName:
             gfile = gs.find_file(name=mapName)
             if not gfile["name"]:
-                gs.fatal(_("Raster map <%s> not found") % mapName)
+                gs.fatal(_("Raster map <%s> not found.") % mapName)
 
     app = wx.App()
 

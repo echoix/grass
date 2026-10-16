@@ -652,7 +652,7 @@ class AboutWindow(wx.Frame):
         self.statswin.SetAutoLayout(True)
 
         if not jsStats:
-            Debug.msg(5, _("File <%s> not found") % fname)
+            Debug.msg(5, _("File '%s' not found.") % fname)
             statsSizer = wx.BoxSizer(wx.VERTICAL)
             statstext = StaticText(
                 self.statswin, id=wx.ID_ANY, label=_("%s file missing") % fname
