@@ -37,6 +37,7 @@ int main(int argc, char **argv)
     double length, area, f, sq_f;
     int i, npoints;
     const char *units_name, *sq_units_name;
+    int unit_id;
     enum OutputFormat format;
     G_JSON_Value *root_value = NULL;
     G_JSON_Object *root_object = NULL;
@@ -114,14 +115,18 @@ int main(int argc, char **argv)
         y[i] = atof(coords->answers[2 * i + 1]);
     }
 
-    /* determine units */
-    if (G_projection() == PROJECTION_LL && !units->answer) {
-        units_name = G_get_units_name(U_METERS, 1, 0);
-        sq_units_name = G_get_units_name(U_METERS, 1, 1);
+    /* determine units; only the plain output is for people, so only it gets
+     * translated names */
+    unit_id = (G_projection() == PROJECTION_LL && !units->answer)
+                  ? U_METERS
+                  : G_units(units->answer);
+    if (format == PLAIN) {
+        units_name = G_get_units_name(unit_id, 1, 0);
+        sq_units_name = G_get_units_name(unit_id, 1, 1);
     }
     else {
-        units_name = G_get_units_name(G_units(units->answer), 1, 0);
-        sq_units_name = G_get_units_name(G_units(units->answer), 1, 1);
+        units_name = G_get_units_name_untranslated(unit_id, 1, 0);
+        sq_units_name = G_get_units_name_untranslated(unit_id, 1, 1);
     }
     f = G_meters_to_units_factor(G_units(units->answer));
     sq_f = G_meters_to_units_factor_sq(G_units(units->answer));

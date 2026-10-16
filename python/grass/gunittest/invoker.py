@@ -166,6 +166,8 @@ class GrassTestFilesInvoker:
         env["GISRC"] = gisrc
         # percentage in plain format is 0...10...20... ...100
         env["GRASS_MESSAGE_FORMAT"] = "plain"
+        # tests check English messages, whatever the locale of the caller
+        env["LANGUAGE"] = "C"
 
         stdout_path = os.path.join(cwd, "stdout.txt")
         stderr_path = os.path.join(cwd, "stderr.txt")
