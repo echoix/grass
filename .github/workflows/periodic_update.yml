@@ -176,4 +176,4 @@ jobs:
     # captured in a separate workflow (also run for changes to it).
     permissions:
       contents: read
-    uses: ./.github/workflows/wxgui_screenshots.yml
+    uses: $/.github/workflows/wxgui_screenshots.yml
