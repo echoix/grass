@@ -8,7 +8,8 @@ uploaded to Weblate as visual context for the strings.
 
 Strings are found without OCR: the translation function is wrapped to learn
 which msgid produced each piece of text, and the widget tree of the captured
-window is walked to collect the text actually shown.
+window is walked to collect the text actually drawn (no tooltips, nothing
+hidden or scrolled out of view).
 
 Run in a GRASS session with a display, e.g., using Xvfb. The screen is read
 with ImageMagick's import tool. A fixed project path (rather than a temporary
@@ -21,7 +22,8 @@ one) keeps the screenshots identical between runs:
         --pot locale/templates/grasswxpy.pot --output shots
 
 The output directory gets one PNG file per screenshot and manifest.json
-listing the messages shown in each of them.
+listing the messages shown in each of them, with their source locations
+(file:line) from the template as Weblate shows them.
 """
 
 import argparse
@@ -42,31 +44,39 @@ PLACEHOLDER = re.compile(r"%(?:\([^)]*\))?[-#0 +]*\d*(?:\.\d+)?[sdifgxXr%]|\{[^{
 
 
 def read_pot(path):
-    """Return the set of (msgctxt, msgid) pairs in a gettext template.
+    """Return a map of (msgctxt, msgid) pairs to their source locations.
 
-    The msgctxt is None for messages without a context.
+    The msgctxt is None for messages without a context. The locations are the
+    file:line references of the template, as Weblate shows them.
     """
-    entries = set()
+    entries = {}
     fields = {}
+    locations = []
     current = None
 
     def flush():
         if fields.get("msgid"):
-            entries.add((fields.get("msgctxt"), fields["msgid"]))
+            entries[fields.get("msgctxt"), fields["msgid"]] = list(locations)
         fields.clear()
+        locations.clear()
 
     for line in Path(path).read_text(encoding="utf-8").splitlines():
         line = line.strip()
         keyword, _sep, value = line.partition(" ")
-        if keyword in {"msgctxt", "msgid"}:
-            if keyword == "msgctxt" or "msgid" in fields:
+        if not line:
+            flush()
+            current = None
+        elif keyword == "#:":
+            locations.extend(value.split())
+        elif keyword in {"msgctxt", "msgid"}:
+            if "msgid" in fields:
                 flush()
             current = keyword
             fields[current] = ast.literal_eval(value)
         elif line.startswith('"') and current:
             fields[current] += ast.literal_eval(line)
         else:
-            # Comments, plural forms, and msgstr end the msgctxt and msgid.
+            # Other comments, plural forms, and msgstr end the msgctxt and msgid.
             current = None
     flush()
     return entries
@@ -87,11 +97,13 @@ def normalize(text):
 class Recorder:
     """Wrap translation functions to map rendered text back to messages.
 
-    Messages are (msgctxt, msgid) pairs as returned by read_pot().
+    Messages are (msgctxt, msgid) pairs, the keys of the map returned by
+    read_pot().
     """
 
     def __init__(self, known):
         self.known = known
+        self.by_exact_text = {}
         self.by_text = {}
         self.patterns = {}
 
@@ -120,6 +132,7 @@ class Recorder:
     def record(self, message, result):
         if message not in self.known:
             return
+        self.by_exact_text.setdefault(result, set()).add(message)
         self.by_text.setdefault(normalize(result), set()).add(message)
         if PLACEHOLDER.search(result) and message not in self.patterns:
             parts = PLACEHOLDER.split(normalize(result))
@@ -131,7 +144,13 @@ class Recorder:
             self.patterns[message] = re.compile(f"^{regex}$", re.DOTALL)
 
     def lookup(self, text):
-        """Return messages which could have produced the text."""
+        """Return messages which could have produced the text.
+
+        An exact match wins over a normalized one, so that, e.g., a "&File"
+        menu does not also match a "File" label elsewhere.
+        """
+        if text in self.by_exact_text:
+            return set(self.by_exact_text[text])
         key = normalize(text)
         if not key:
             return set()
@@ -143,33 +162,51 @@ class Recorder:
         return found
 
 
-def visible_texts(window):
-    """Yield (kind, text) for text shown by the window and its children."""
+def visible_texts(window, clip=None):
+    """Yield (kind, text) for text drawn by the window and its children.
+
+    Only text drawn on screen is collected: tooltips, labels of icon-only
+    toolbar tools, and widgets hidden or scrolled out of view by their
+    parents are left out. The clip is the visible screen area of the parent.
+    """
     import wx
     import wx.aui
-    import wx.lib.agw.flatnotebook as fnb
+    from core.globalvar import FN
+    from gui_core.wrap import CustomTreeCtrl
 
-    if not window.IsShown():
+    if not window.IsShownOnScreen():
         return
-    if isinstance(window, wx.TopLevelWindow):
-        yield "title", window.GetTitle()
-        if isinstance(window, wx.Frame) and window.GetMenuBar():
+    rect = window.GetScreenRect()
+    if clip is not None:
+        rect = rect.Intersect(clip)
+        if rect.IsEmpty():
+            return
+    if isinstance(window, wx.Frame):
+        # The title is drawn by the window manager, not in the screenshot.
+        if window.GetMenuBar():
             menubar = window.GetMenuBar()
             for i in range(menubar.GetMenuCount()):
                 yield "menu", menubar.GetMenuLabel(i)
-        if isinstance(window, wx.Frame) and window.GetStatusBar():
+        if window.GetStatusBar():
             statusbar = window.GetStatusBar()
             for i in range(statusbar.GetFieldsCount()):
                 yield "statusbar", statusbar.GetStatusText(i)
-    elif isinstance(window, (wx.Notebook, wx.aui.AuiNotebook, fnb.FlatNotebook)):
+    elif isinstance(window, FN.FlatNotebook):
+        if hasattr(window, "GetAGWWindowStyleFlag"):
+            style = window.GetAGWWindowStyleFlag()
+        else:
+            style = window.GetWindowStyleFlag()
+        single = style & FN.FNB_HIDE_ON_SINGLE_TAB and window.GetPageCount() == 1
+        if not (style & FN.FNB_HIDE_TABS or single):
+            for i in range(window.GetPageCount()):
+                yield "tab", window.GetPageText(i)
+    elif isinstance(window, (wx.Notebook, wx.aui.AuiNotebook)):
         for i in range(window.GetPageCount()):
             yield "tab", window.GetPageText(i)
     elif isinstance(window, wx.ToolBar):
-        for i in range(window.GetToolsCount()):
-            tool = window.GetToolByPos(i)
-            yield "tooltip", tool.GetShortHelp()
-            if tool.GetLabel():
-                yield "label", tool.GetLabel()
+        if window.HasFlag(wx.TB_TEXT):
+            for i in range(window.GetToolsCount()):
+                yield "label", window.GetToolByPos(i).GetLabel()
     elif isinstance(window, wx.RadioBox):
         yield "label", window.GetLabel()
         for i in range(window.GetCount()):
@@ -181,20 +218,47 @@ def visible_texts(window):
         else:
             yield "label", window.GetStringSelection()
     elif isinstance(window, wx.TextCtrl):
-        yield "label", window.GetValue()
-        yield "label", window.GetHint()
+        # The hint is drawn only while the field is empty.
+        yield "label", window.GetValue() or window.GetHint()
+    elif isinstance(window, (wx.TreeCtrl, CustomTreeCtrl)):
+        yield from (("label", text) for text in tree_texts(window))
     elif isinstance(window, wx.ListCtrl) and window.InReportView():
         for i in range(window.GetColumnCount()):
             yield "label", window.GetColumn(i).GetText()
     elif isinstance(window, wx.Control):
         yield "label", window.GetLabel()
 
-    tooltip = window.GetToolTipText()
-    if tooltip:
-        yield "tooltip", tooltip
+    if isinstance(window, wx.TopLevelWindow):
+        # The screenshot covers the whole window, including bars outside
+        # its client area.
+        client = rect
+    else:
+        client = wx.Rect(window.ClientToScreen(wx.Point(0, 0)), window.GetClientSize())
+        client = client.Intersect(rect)
     for child in window.GetChildren():
         if not isinstance(child, wx.TopLevelWindow):
-            yield from visible_texts(child)
+            yield from visible_texts(child, client)
+
+
+def tree_texts(tree, item=None):
+    """Yield the text of the tree items scrolled into view."""
+
+    def valid(item):
+        # CustomTreeCtrl gives None where wx.TreeCtrl gives an invalid item.
+        return item is not None and item.IsOk()
+
+    if item is None:
+        item = tree.GetRootItem()
+        if not valid(item):
+            return
+    if tree.IsVisible(item):
+        yield tree.GetItemText(item)
+    # A hidden root item is always expanded.
+    if item == tree.GetRootItem() or tree.IsExpanded(item):
+        child, cookie = tree.GetFirstChild(item)
+        while valid(child):
+            yield from tree_texts(tree, child)
+            child, cookie = tree.GetNextChild(item, cookie)
 
 
 def settle(seconds=0.5):
@@ -267,15 +331,18 @@ class Capture:
             if not messages:
                 unmatched.add(text)
             for message in messages:
-                # Prefer the kind under which the string is visible as text.
-                if strings.get(message) != "label":
-                    strings[message] = kind
+                strings.setdefault(message, kind)
         self.records.append(
             {
                 "name": name,
                 "file": path.name,
                 "strings": [
-                    {"msgctxt": context, "msgid": msgid, "kind": kind}
+                    {
+                        "msgctxt": context,
+                        "msgid": msgid,
+                        "kind": kind,
+                        "locations": self.recorder.known[context, msgid],
+                    }
                     for (context, msgid), kind in sorted(
                         strings.items(), key=lambda item: (item[0][0] or "", item[0][1])
                     )
