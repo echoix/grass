@@ -21,14 +21,20 @@ one) keeps the screenshots identical between runs:
         python3 utils/weblate_screenshots/wxgui_capture.py \
         --pot locale/templates/grasswxpy.pot --output shots
 
+Tooltips are not drawn, so each tool of icon-only toolbars gets a copy of
+the screenshot with the tool framed, linked to its tooltip. The tool tree is
+captured with each category expanded in turn, page by page.
+
 The output directory gets one PNG file per screenshot and manifest.json
 listing the messages shown in each of them, with their source locations
-(file:line) from the template as Weblate shows them.
+(file:line) from the template as Weblate shows them. Screenshots of a
+framed tool also give the screenshot they are based on and the frame.
 """
 
 import argparse
 import ast
 import builtins
+import io
 import json
 import os
 import re
@@ -147,7 +153,9 @@ class Recorder:
         """Return messages which could have produced the text.
 
         An exact match wins over a normalized one, so that, e.g., a "&File"
-        menu does not also match a "File" label elsewhere.
+        menu does not also match a "File" label elsewhere. Text made of parts
+        separated by several spaces, such as "Color tables   [r.colors]" in
+        the tool tree, is otherwise looked up part by part.
         """
         if text in self.by_exact_text:
             return set(self.by_exact_text[text])
@@ -159,6 +167,10 @@ class Recorder:
             found = {
                 message for message, regex in self.patterns.items() if regex.match(key)
             }
+        if not found:
+            parts = re.split(r"\s{2,}", text.strip())
+            if len(parts) > 1:
+                found = set().union(*(self.lookup(part) for part in parts))
         return found
 
 
@@ -240,8 +252,18 @@ def visible_texts(window, clip=None):
             yield from visible_texts(child, client)
 
 
+def item_in_view(tree, item):
+    """Tell if a tree item is entirely in view, not cut at the top or bottom."""
+    if not tree.IsVisible(item):
+        return False
+    rect = tree.GetBoundingRect(item)
+    return rect is not None and 0 <= rect.GetTop() <= rect.GetBottom() < (
+        tree.GetClientSize().height
+    )
+
+
 def tree_texts(tree, item=None):
-    """Yield the text of the tree items scrolled into view."""
+    """Yield the text of the tree items entirely in view."""
 
     def valid(item):
         # CustomTreeCtrl gives None where wx.TreeCtrl gives an invalid item.
@@ -251,7 +273,7 @@ def tree_texts(tree, item=None):
         item = tree.GetRootItem()
         if not valid(item):
             return
-    if tree.IsVisible(item):
+    if item_in_view(tree, item):
         yield tree.GetItemText(item)
     # A hidden root item is always expanded.
     if item == tree.GetRootItem() or tree.IsExpanded(item):
@@ -271,16 +293,13 @@ def settle(seconds=0.5):
         time.sleep(0.02)
 
 
-def grab(window, path):
-    """Save the on-screen area of a top-level window as a PNG file.
+def read_screen(rect):
+    """Return the PNG data of a screen rectangle.
 
     The screen is read with ImageMagick because wx.ScreenDC returns stale
     content with GTK 3.
     """
-    window.Raise()
-    settle()
-    rect = window.GetScreenRect()
-    subprocess.run(
+    return subprocess.run(
         [
             IMPORT,
             "-window",
@@ -288,10 +307,86 @@ def grab(window, path):
             "-crop",
             f"{rect.width}x{rect.height}+{rect.x}+{rect.y}",
             "+repage",
-            str(path),
+            "png:-",
         ],
+        capture_output=True,
         check=True,
-    )
+    ).stdout
+
+
+def grab(window, path, target=None):
+    """Save the on-screen area of a window, or of a part of it, as a PNG file.
+
+    The window is the top-level window to raise, and the target the widget
+    to capture, by default the whole window.
+    """
+    window.Raise()
+    settle()
+    Path(path).write_bytes(read_screen((target or window).GetScreenRect()))
+
+
+def icon_toolbars(window):
+    """Yield the shown toolbars in the window which draw no tool labels."""
+    import wx
+    from wx.lib.agw import aui
+
+    for child in window.GetChildren():
+        if not child.IsShownOnScreen() or isinstance(child, wx.TopLevelWindow):
+            continue
+        if isinstance(child, wx.ToolBar):
+            if not child.HasFlag(wx.TB_TEXT):
+                yield child
+        elif isinstance(child, aui.AuiToolBar):
+            if not child.GetAGWWindowStyleFlag() & aui.AUI_TB_TEXT:
+                yield child
+        else:
+            yield from icon_toolbars(child)
+
+
+def tool_rects(toolbar):
+    """Yield (tool, screen rectangle) for the tools of a toolbar.
+
+    wx.ToolBar does not give the position of its tools with GTK, so each
+    tool is found by toggling its enabled state, which redraws its icon,
+    and comparing the toolbar before and after.
+    """
+    import wx
+    from PIL import Image, ImageChops
+    from wx.lib.agw import aui
+
+    if isinstance(toolbar, aui.AuiToolBar):
+        for index in range(toolbar.GetToolCount()):
+            tool = toolbar.FindToolByIndex(index)
+            if tool.GetKind() not in {wx.ITEM_NORMAL, wx.ITEM_CHECK, wx.ITEM_RADIO}:
+                continue
+            rect = toolbar.GetToolRect(tool.GetId())
+            # Tools in the overflow menu have no rectangle.
+            if not rect.IsEmpty():
+                position = toolbar.ClientToScreen(rect.GetPosition())
+                yield tool, wx.Rect(position, rect.GetSize())
+        return
+
+    rect = toolbar.GetScreenRect()
+
+    def image():
+        return Image.open(io.BytesIO(read_screen(rect))).convert("RGB")
+
+    before = image()
+    for index in range(toolbar.GetToolsCount()):
+        tool = toolbar.GetToolByPos(index)
+        if tool.IsSeparator() or tool.IsControl():
+            continue
+        enabled = toolbar.GetToolEnabled(tool.GetId())
+        toolbar.EnableTool(tool.GetId(), not enabled)
+        settle(0.2)
+        changed = ImageChops.difference(before, image()).getbbox()
+        toolbar.EnableTool(tool.GetId(), enabled)
+        settle(0.2)
+        if changed:
+            # Frame the whole height of the toolbar, with a small margin.
+            left = max(changed[0] - 3, 0)
+            right = min(changed[2] + 3, rect.width)
+            yield tool, wx.Rect(rect.x + left, rect.y, right - left, rect.height)
 
 
 def slug(text):
@@ -304,11 +399,22 @@ class Capture:
         self.output = Path(output)
         self.output.mkdir(parents=True, exist_ok=True)
         self.records = []
+        # Sets of messages of the tools already highlighted, so that tools
+        # shown in several screenshots are highlighted only once.
+        self.highlighted = set()
 
-    def shoot(self, name, window):
-        """Save a screenshot of the window and the messages visible in it."""
+    def shoot(self, name, window, target=None, texts=None):
+        """Save a screenshot of the window and the messages visible in it.
+
+        The target is the widget to capture, by default the whole window.
+        The texts, (kind, text) pairs, restrict the strings to link to those
+        shown, by default all text drawn in the target.
+        Each tool of icon-only toolbars gets its own copy of the screenshot,
+        with the tool highlighted and linked to its tooltip.
+        """
         import wx
 
+        target = target or window
         # Other top-level windows could cover the captured one.
         hidden = [
             other
@@ -318,13 +424,15 @@ class Capture:
         for other in hidden:
             other.Hide()
         path = self.output / f"{name.replace('/', '__')}.png"
-        grab(window, path)
+        grab(window, path, target)
         for other in hidden:
             other.Show()
 
         strings = {}
         unmatched = set()
-        for kind, text in visible_texts(window):
+        if texts is None:
+            texts = visible_texts(target)
+        for kind, text in texts:
             if not text.strip():
                 continue
             messages = self.recorder.lookup(text)
@@ -332,10 +440,16 @@ class Capture:
                 unmatched.add(text)
             for message in messages:
                 strings.setdefault(message, kind)
+        self.add_record(name, path, strings, sorted(unmatched))
+        self.highlight_tools(name, target, path)
+
+    def add_record(self, name, path, strings, unmatched, **extra):
+        """Add a screenshot and its strings, a map of messages to kinds."""
         self.records.append(
             {
                 "name": name,
                 "file": path.name,
+                **extra,
                 "strings": [
                     {
                         "msgctxt": context,
@@ -347,10 +461,53 @@ class Capture:
                         strings.items(), key=lambda item: (item[0][0] or "", item[0][1])
                     )
                 ],
-                "unmatched": sorted(unmatched),
+                "unmatched": unmatched,
             }
         )
         print(f"{name}: {len(strings)} strings", file=sys.stderr)
+
+    def highlight_tools(self, name, target, path):
+        """Save a copy of the screenshot per tool of icon-only toolbars.
+
+        Each copy has the tool framed and is linked to its tooltip and
+        description, which are not drawn in the screenshot.
+        """
+        from PIL import Image, ImageDraw
+
+        origin = target.GetScreenPosition()
+        for toolbar in icon_toolbars(target):
+            for tool, rect in tool_rects(toolbar):
+                strings = {}
+                for text in (tool.GetShortHelp(), tool.GetLongHelp()):
+                    for message in self.recorder.lookup(text) if text.strip() else ():
+                        strings.setdefault(message, "tool")
+                if not strings or frozenset(strings) in self.highlighted:
+                    continue
+                self.highlighted.add(frozenset(strings))
+                box = (rect.x - origin.x, rect.y - origin.y, rect.width, rect.height)
+                image = Image.open(path).convert("RGB")
+                ImageDraw.Draw(image).rectangle(
+                    (box[0], box[1], box[0] + box[2] - 1, box[1] + box[3] - 1),
+                    outline=(255, 0, 0),
+                    width=3,
+                )
+                base = f"{name}/tool/{slug(min(msgid for _ctxt, msgid in strings))}"
+                tool_name = base
+                # Different tools can share a message, e.g., the same tooltip.
+                number = 1
+                while any(record["name"] == tool_name for record in self.records):
+                    number += 1
+                    tool_name = f"{base}-{number}"
+                tool_path = self.output / f"{tool_name.replace('/', '__')}.png"
+                image.save(tool_path)
+                self.add_record(
+                    tool_name,
+                    tool_path,
+                    strings,
+                    [],
+                    base=name,
+                    highlight=list(box),
+                )
 
     def notebook_pages(self, prefix, window, notebook, names=None):
         """Capture each page of a notebook.
@@ -418,10 +575,89 @@ def capture_preferences(capture, frame):
     dialog.Destroy()
 
 
+def tree_children(tree, item):
+    """Yield the children of a CustomTreeCtrl item."""
+    child, cookie = tree.GetFirstChild(item)
+    while child is not None:
+        yield child
+        child, cookie = tree.GetNextChild(item, cookie)
+
+
+def expand_all(tree, item):
+    """Expand a CustomTreeCtrl item and its descendants.
+
+    Each item is expanded before its children are listed, because virtual
+    trees, such as the tool tree, create the children when expanding.
+    """
+    tree.Expand(item)
+    for child in tree_children(tree, item):
+        expand_all(tree, child)
+
+
+def tree_descendants(tree, item):
+    """Yield a CustomTreeCtrl item and its descendants, in display order."""
+    yield item
+    for child in tree_children(tree, item):
+        yield from tree_descendants(tree, child)
+
+
+def capture_tool_tree(capture, frame):
+    """Capture each category of the tool tree, expanded, page by page.
+
+    The window is made taller so that fewer pages are needed. Only the tree
+    is captured, as the rest of the window is in the Layer Manager scenario.
+    """
+    from gui_core.wrap import CustomTreeCtrl
+
+    frame.notebook.SetSelectionByName("search")
+    settle()
+    tree = next(
+        widget
+        for widget in descendants(frame.notebook.GetCurrentPage())
+        if isinstance(widget, CustomTreeCtrl)
+    )
+    width, height = frame.GetSize()
+    frame.SetSize(width, 1100)
+    settle()
+    unit = tree.GetScrollPixelsPerUnit()[1]
+    for category in list(tree_children(tree, tree.GetRootItem())):
+        expand_all(tree, category)
+        settle()
+        items = list(tree_descendants(tree, category))
+        prefix = f"wxgui/tool-tree/{slug(tree.GetItemText(category))}"
+        first = 0
+        page = 1
+        while first < len(items):
+            # Scroll the first item not captured yet to the top.
+            tree.Scroll(-1, items[first].GetY() // unit)
+            settle()
+            shown = [i for i, item in enumerate(items) if item_in_view(tree, item)]
+            # Other categories are linked to the screenshot of the tree
+            # with all of them collapsed, not to every page.
+            texts = [("label", tree.GetItemText(items[i])) for i in shown]
+            capture.shoot(f"{prefix}/{page}", frame, target=tree, texts=texts)
+            if not shown or shown[-1] < first:
+                break
+            first = shown[-1] + 1
+            page += 1
+        tree.Collapse(category)
+    tree.Scroll(-1, 0)
+    frame.SetSize(width, height)
+    settle()
+
+
+def descendants(window):
+    """Yield the child widgets of a window, recursively."""
+    for child in window.GetChildren():
+        yield child
+        yield from descendants(child)
+
+
 # All scenarios get the Layer Manager because other windows need it as parent.
 SCENARIOS = {
     "layer-manager": capture_layer_manager,
     "preferences": capture_preferences,
+    "tool-tree": capture_tool_tree,
 }
 
 
