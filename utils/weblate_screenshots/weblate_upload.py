@@ -10,10 +10,10 @@ screenshot is created when missing, its image is replaced when the pixels
 differ, and its links to strings are added or removed to match the manifest.
 
 Only the screenshots with a name starting with the managed prefix are modified
-or deleted, so screenshots uploaded by hand are left alone. The REST API of
-Weblate 5.16.2 is used. Create an API token in the Weblate user profile and
-pass it in the environment (not as an argument, to keep it out of process
-lists and logs):
+or deleted, so screenshots uploaded by hand are left alone. Only REST API
+endpoints available in both Weblate 5.16.2 and 2026.10.1 are used. Create an
+API token in the Weblate user profile and pass it in the environment (not as
+an argument, to keep it out of process lists and logs):
 
     export WEBLATE_TOKEN=wlu_...
     python3 utils/weblate_screenshots/weblate_upload.py \

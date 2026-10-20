@@ -1,4 +1,8 @@
-"""Tests of weblate_upload.py against a fake Weblate 5.16.2 API server."""
+"""Tests of weblate_upload.py against a fake Weblate API server.
+
+The responses model Weblate 5.16.2 and 2026.10.1, which do not differ for the
+endpoints used.
+"""
 
 import io
 import json
@@ -114,7 +118,7 @@ class FakeWeblate(BaseHTTPRequestHandler):
                 "image": fields["image"],
                 "units": set(),
             }
-            # Like Weblate 5.16.2, the reply does not have the id field.
+            # Like Weblate, the reply does not have the id field.
             body = self.serialize(shot_id)
             del body["id"]
             return self.reply(201, body)
