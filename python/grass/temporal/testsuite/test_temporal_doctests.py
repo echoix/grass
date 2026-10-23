@@ -3,7 +3,6 @@ Temporal framework doctests
 """
 
 import doctest
-import sys
 
 import grass.gunittest.case
 import grass.gunittest.main
@@ -28,8 +27,7 @@ def load_tests(loader, tests, ignore):
     tests.addTests(doctest.DocTestSuite(tgis.base))
     tests.addTests(doctest.DocTestSuite(tgis.core))
     tests.addTests(doctest.DocTestSuite(tgis.datetime_math))
-    # Unexpected error here
-    # tests.addTests(doctest.DocTestSuite(tgis.list_stds))
+    tests.addTests(doctest.DocTestSuite(tgis.list_stds))
     tests.addTests(doctest.DocTestSuite(tgis.metadata))
     tests.addTests(doctest.DocTestSuite(tgis.register))
     tests.addTests(doctest.DocTestSuite(tgis.space_time_datasets))
@@ -51,8 +49,4 @@ def load_tests(loader, tests, ignore):
 
 
 if __name__ == "__main__":
-    # Temporary deactivated for Python 3 cause it stalls
-    if sys.version_info[0] >= 3:
-        pass
-    else:
-        grass.gunittest.main.test()
+    grass.gunittest.main.test()
