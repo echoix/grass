@@ -171,3 +171,9 @@ jobs:
         env:
           STEPS_CPR_OUTPUTS_PULL_REQUEST_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
           STEPS_CPR_OUTPUTS_PULL_REQUEST_URL: ${{ steps.cpr.outputs.pull-request-url }}
+  wxgui-screenshots:
+    # The update-i18n job builds without the GUI, so the screenshots are
+    # captured in a separate workflow (also run for changes to it).
+    permissions:
+      contents: read
+    uses: $/.github/workflows/wxgui_screenshots.yml
