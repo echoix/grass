@@ -591,7 +591,6 @@ ignore = ["CVS", ".git", ".ruff_cache", ".pytest_cache"]
 ignore-paths = [
     "bin[.].*",
     "dist[.].*",
-    "gui/wxpython/menustrings.py",
     "python/grass/temporal/ply",           # External code
     "python/libgrass_interface_generator",
 ]

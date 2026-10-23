@@ -166,7 +166,9 @@ class GConsoleWindow(wx.SplitterWindow):
             helpText = StaticText(
                 self.panelPrompt,
                 id=wx.ID_ANY,
-                label="Press Tab to display command help, Ctrl+Space to autocomplete",
+                label=_(
+                    "Press Tab to display command help, Ctrl+Space to autocomplete"
+                ),
             )
             helpText.SetForegroundColour(
                 wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
