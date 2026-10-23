@@ -88,7 +88,7 @@ int graph_generalization(struct Map_info *In, struct Map_info *Out,
     /* build own graph by edge<->vertex */
     /* each vertex represents undirected edge */
     if (!graph_init(&g, dglGet_EdgeCount(gr) / 2 + 1)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return 0;
     }
 
@@ -121,7 +121,7 @@ int graph_generalization(struct Map_info *In, struct Map_info *Out,
                 g.edge[id] = G_malloc(sizeof(int) * (to_degree + from_degree));
                 if (!g.edge[id]) {
                     graph_free(&g);
-                    G_fatal_error(_("Out of memory"));
+                    G_fatal_error(_("Out of memory."));
                     return 0;
                 }
             }

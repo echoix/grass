@@ -43,7 +43,7 @@ struct Map_info *Vect_new_map_struct(void)
     p = (struct Map_info *)malloc(sizeof(struct Map_info));
 
     if (NULL == p)
-        G_fatal_error("Vect_new_map_struct(): %s", _("Out of memory"));
+        G_fatal_error("Vect_new_map_struct(): %s", _("Out of memory."));
 
     G_zero(p, sizeof(struct Map_info));
 
@@ -186,7 +186,7 @@ int Vect_copy(const char *in, const char *mapset, const char *out)
     /* Open input */
     Vect_set_open_level(1);
     if (Vect_open_old_head(&In, in, mapset) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in);
+        G_fatal_error(_("Unable to open vector map <%s>."), in);
 
     if (In.format != GV_FORMAT_NATIVE) { /* Done */
         Vect_close(&In);
@@ -196,7 +196,7 @@ int Vect_copy(const char *in, const char *mapset, const char *out)
     /* Open output */
     Vect_set_open_level(1);
     if (Vect_open_update_head(&Out, out, G_mapset()) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), out);
+        G_fatal_error(_("Unable to open vector map <%s>."), out);
 
     /* Copy tables */
     if (Vect_copy_tables(&In, &Out, 0) != 0) {
@@ -269,7 +269,7 @@ int Vect_rename(const char *in, const char *out)
     /* Rename all tables if the format is native */
     Vect_set_open_level(1);
     if (Vect_open_update_head(&Map, out, G_mapset()) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), out);
+        G_fatal_error(_("Unable to open vector map <%s>."), out);
 
     if (Map.format != GV_FORMAT_NATIVE) { /* Done */
         Vect_close(&Map);
@@ -295,7 +295,7 @@ int Vect_rename(const char *in, const char *out)
 
         Fin = Vect_get_field(&Map, fields[i]);
         if (Fin == NULL) {
-            G_warning(_("Database connection not defined for layer %d"),
+            G_warning(_("Database connection not defined for layer %d."),
                       fields[i]);
             Vect_close(&Map);
             return -1;
@@ -428,7 +428,8 @@ int Vect__delete(const char *map, int is_tmp)
             for (i = 0; i < n; i++) {
                 Fi = Vect_get_dblink(&Map, i);
                 if (Fi == NULL) {
-                    G_warning(_("Database connection not defined for layer %d"),
+                    G_warning(_("Database connection not defined for layer "
+                                "%d."),
                               Map.dblnk->field[i].number);
                     /*
                        Vect_close(&Map);
@@ -477,7 +478,7 @@ int Vect__delete(const char *map, int is_tmp)
     G_debug(3, "opendir '%s'", path);
     dir = opendir(path);
     if (dir == NULL) {
-        G_warning(_("Unable to open directory '%s'"), path);
+        G_warning(_("Unable to open directory '%s'."), path);
         return -1;
     }
 
@@ -496,7 +497,7 @@ int Vect__delete(const char *map, int is_tmp)
         G_debug(3, "delete file '%s'", path_buf);
         ret = unlink(path_buf);
         if (ret == -1) {
-            G_warning(_("Unable to delete file '%s'"), path_buf);
+            G_warning(_("Unable to delete file '%s'."), path_buf);
             closedir(dir);
             return -1;
         }

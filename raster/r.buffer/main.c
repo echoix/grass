@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 
     mapset = G_find_raster2(input, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), input);
+        G_fatal_error(_("Raster map <%s> not found."), input);
 
     /* parse units */
     if (opt4->answer == NULL)

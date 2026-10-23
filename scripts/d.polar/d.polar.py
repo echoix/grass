@@ -52,7 +52,7 @@ from grass.script import core as gcore
 
 def raster_map_required(name):
     if not gcore.find_file(name, "cell")["file"]:
-        gcore.fatal(_("Raster map <%s> not found") % name)
+        gcore.fatal(_("Raster map <%s> not found.") % name)
 
 
 def cleanup():

@@ -644,7 +644,7 @@ int Vect_copy_tables(struct Map_info *In, struct Map_info *Out, int field)
     for (i = 0; i < n; i++) {
         Fi = Vect_get_dblink(In, i);
         if (Fi == NULL) {
-            G_warning(_("Database connection not defined for layer %d"),
+            G_warning(_("Database connection not defined for layer %d."),
                       In->dblnk->field[i].number);
             return -1;
         }
@@ -759,7 +759,7 @@ int Vect_copy_table_by_cats(struct Map_info *In, struct Map_info *Out,
 
     Fi = Vect_get_field(In, field_in);
     if (Fi == NULL) {
-        G_warning(_("Database connection not defined for layer %d"), field_in);
+        G_warning(_("Database connection not defined for layer %d."), field_in);
         return -1;
     }
 

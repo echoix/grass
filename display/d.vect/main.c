@@ -345,7 +345,7 @@ int main(int argc, char **argv)
 
         if (reg < minreg) {
             G_important_message(
-                _("Region size is lower than minreg, nothing displayed"));
+                _("Region size is lower than minreg, nothing displayed."));
             exit(EXIT_SUCCESS);
         }
     }
@@ -354,7 +354,7 @@ int main(int argc, char **argv)
 
         if (reg > maxreg) {
             G_important_message(
-                _("Region size is greater than maxreg, nothing displayed"));
+                _("Region size is greater than maxreg, nothing displayed."));
             exit(EXIT_SUCCESS);
         }
     }
@@ -395,13 +395,13 @@ int main(int argc, char **argv)
     chcat = 0;
     if (where_opt->answer) {
         if (Clist->field < 1)
-            G_fatal_error(_("Option <%s> must be > 0"), field_opt->key);
+            G_fatal_error(_("Option <%s> must be > 0."), field_opt->key);
         chcat = 1;
         option_to_where(&Map, Clist, where_opt->answer);
     }
     else if (cat_opt->answer) {
         if (Clist->field < 1 && !id_flag->answer)
-            G_fatal_error(_("Option <%s> must be > 0"), field_opt->key);
+            G_fatal_error(_("Option <%s> must be > 0."), field_opt->key);
         chcat = 1;
         ret = Vect_str_to_cat_list(cat_opt->answer, Clist);
         if (ret > 0)
@@ -436,7 +436,7 @@ int main(int argc, char **argv)
     if (overlap == 0) {
         G_warning(
             _("The bounding box of the map is outside the current region, "
-              "nothing drawn"));
+              "nothing drawn."));
     }
     else {
         if (overlap < 1)

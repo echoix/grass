@@ -103,7 +103,7 @@ int perform_filter(const char *in_name, const char *out_name, FILTER *filter,
     in[MASTER] = out[MASTER];
     out[MASTER] = Rast_open_fp_new(out_name);
 
-    G_message(_("Writing raster map <%s>"), out_name);
+    G_message(_("Writing raster map <%s>..."), out_name);
     for (row = 0; row < nrows; row++) {
         getrow(in[MASTER], cell[MASTER], row, buflen);
         Rast_put_d_row(out[MASTER], cell[MASTER]);

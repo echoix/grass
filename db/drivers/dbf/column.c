@@ -92,7 +92,7 @@ int drop_column(int tab, char *name)
     /* Check if the column exists */
     c = find_column(tab, name);
     if (c == -1) {
-        db_d_append_error(_("Column '%s' does not exist"), name);
+        db_d_append_error(_("Column <%s> does not exist."), name);
         db_d_report_error();
         return DB_FAILED;
     }

@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
 
         if (db_grant_on_table(Driver, Fi->table, DB_PRIV_SELECT,
                               DB_GROUP | DB_PUBLIC) != DB_OK)
-            G_warning(_("Cannot grant privileges on table %s"), Fi->table);
+            G_warning(_("Cannot grant privileges on table <%s>."), Fi->table);
 
         G_important_message(_("Select privileges were granted on the table"));
 
@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
     /* array of available partitions */
     part = (struct partition *)G_calloc(np, sizeof(struct partition));
     if (!part)
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
 
     /* line index */
     line_idx = (int *)G_calloc(nlines, sizeof(int));
@@ -279,7 +279,8 @@ int main(int argc, char *argv[])
         G_debug(3, "SQL: %s", db_get_string(&sql));
 
         if (db_execute_immediate(Driver, &sql) != DB_OK) {
-            G_fatal_error(_("Unable to insert row: %s"), db_get_string(&sql));
+            G_fatal_error(_("Unable to insert new row: '%s'."),
+                          db_get_string(&sql));
         }
 
         /* increase count of features in partition */

@@ -108,7 +108,7 @@ int display_attr(struct Map_info *Map, int type, char *attrcol,
 
                 if (db_open_select_cursor(driver, &stmt, &cursor,
                                           DB_SEQUENTIAL) != DB_OK)
-                    G_fatal_error(_("Unable to open select cursor: '%s'"),
+                    G_fatal_error(_("Unable to open select cursor: '%s'."),
                                   db_get_string(&stmt));
 
                 nrows = db_get_num_rows(&cursor);

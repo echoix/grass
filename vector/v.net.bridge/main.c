@@ -107,13 +107,13 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2);
 
     if (1 > Vect_open_old(&In, map_in->answer, ""))
-        G_fatal_error(_("Unable to open vector map <%s>"), map_in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_in->answer);
 
     with_z = Vect_is_3d(&In);
 
     if (0 > Vect_open_new(&Out, map_out->answer, with_z)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), map_out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), map_out->answer);
     }
 
     /* parse filter option and select appropriate lines */

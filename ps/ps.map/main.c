@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
         if (strcmp(input_file->answer, "-")) {
             inputfd = fopen(input_file->answer, "r");
             if (!inputfd)
-                G_fatal_error(_("Unable to open file '%s': %s"),
+                G_fatal_error(_("Unable to open file '%s': %s."),
                               input_file->answer, strerror(errno));
         }
         else {

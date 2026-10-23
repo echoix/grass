@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 
     in_mapset = G_find_raster2(in_map, "");
     if (in_mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), in_map);
+        G_fatal_error(_("Raster map <%s> not found."), in_map);
 
     struct Cell_head window;
     Rast_get_window(&window);

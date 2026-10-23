@@ -121,7 +121,7 @@ CELL cluster_bands(struct globals *globals)
     /* temp file for initial clump IDs */
     cname = G_tempfile();
     if ((cfd = open(cname, O_RDWR | O_CREAT | O_EXCL, 0600)) < 0)
-        G_fatal_error(_("Unable to open temp file"));
+        G_fatal_error(_("Unable to open temp file."));
     csize = ncols * sizeof(CELL);
 
     /* initialize clump labels */

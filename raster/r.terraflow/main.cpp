@@ -204,7 +204,7 @@ void check_header(char *cellname)
     const char *mapset;
     mapset = G_find_raster(cellname, "");
     if (mapset == NULL) {
-        G_fatal_error(_("Raster map <%s> not found"), cellname);
+        G_fatal_error(_("Raster map <%s> not found."), cellname);
     }
     /* read cell header */
     struct Cell_head cell_hd;
@@ -351,7 +351,7 @@ void setFlowAccuColorTable(char *cellname)
 
     mapset = G_find_raster(cellname, "");
     if (mapset == NULL) {
-        G_fatal_error(_("Raster map <%s> not found"), cellname);
+        G_fatal_error(_("Raster map <%s> not found."), cellname);
     }
     if (Rast_read_range(cellname, mapset, &r) == -1) {
         G_fatal_error(_("cannot read range"));
@@ -387,7 +387,7 @@ void setSinkWatershedColorTable(char *cellname)
 
     mapset = G_find_raster(cellname, "");
     if (mapset == NULL) {
-        G_fatal_error(_("Raster map <%s> not found"), cellname);
+        G_fatal_error(_("Raster map <%s> not found."), cellname);
     }
     if (Rast_read_range(cellname, mapset, &r) == -1) {
         G_fatal_error(_("cannot read range"));

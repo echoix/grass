@@ -87,7 +87,7 @@ def main():
         gs.fatal(_("Use of libsqlitefunctions only with SQLite backend"))
     if driver == "sqlite" and sqlitefile:
         if not os.access(sqlitefile, os.R_OK):
-            gs.fatal(_("File <%s> not found") % sqlitefile)
+            gs.fatal(_("File '%s' not found.") % sqlitefile)
 
     # Check column existence and get its type.
     all_columns = gs.vector_columns(vector, layer)
@@ -97,7 +97,7 @@ def main():
             coltype = column_record["type"]
             break
     if not coltype:
-        gs.fatal(_("Column <%s> not found") % column)
+        gs.fatal(_("Column <%s> not found.") % column)
 
     if qcolumn:
         if value:

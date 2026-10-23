@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 
     Vect_set_open_level(2);
     if (Vect_open_old(&In, input_opt->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), input_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), input_opt->answer);
 
     afield = Vect_get_field_number(&In, afield_opt->answer);
     nfield = Vect_get_field_number(&In, nfield_opt->answer);
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 
     if (1 > Vect_open_new(&Out, output_opt->answer, Vect_is_3d(&In))) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       output_opt->answer);
     }
     Vect_hist_command(&Out);

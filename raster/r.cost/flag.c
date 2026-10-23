@@ -18,13 +18,13 @@ FLAG *flag_create(int nrows, int ncols)
         (unsigned char **)G_malloc(nrows * sizeof(unsigned char *));
 
     if (!new_flag->array)
-        G_fatal_error(_("Out of memory!"));
+        G_fatal_error(_("Out of memory."));
 
     temp = (unsigned char *)G_malloc((size_t)nrows * new_flag->leng *
                                      sizeof(unsigned char));
 
     if (!temp)
-        G_fatal_error(_("Out of memory!"));
+        G_fatal_error(_("Out of memory."));
 
     for (i = 0; i < nrows; i++) {
         new_flag->array[i] = temp;

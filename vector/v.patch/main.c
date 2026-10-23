@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 
         Vect_set_open_level(no_input_topo_flag->answer ? 1 : 2);
         if (Vect_open_old_head(&InMap, in_name, "") < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), in_name);
+            G_fatal_error(_("Unable to open vector map <%s>."), in_name);
 
         if (out_is_3d != WITH_Z && Vect_is_3d(&InMap))
             out_is_3d = WITH_Z;
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
         if (append->answer) {
             Vect_set_open_level(1);
             if (Vect_open_old_head(&OutMap, out_name, G_mapset()) < 0)
-                G_fatal_error(_("Unable to open vector map <%s>"), out_name);
+                G_fatal_error(_("Unable to open vector map <%s>."), out_name);
 
             fi_out = Vect_get_field(&OutMap, 1);
             if (fi_out) {
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
             in_name = old->answers[i];
             Vect_set_open_level(1);
             if (Vect_open_old_head(&InMap, in_name, "") < 0)
-                G_fatal_error(_("Unable to open vector map <%s>"), in_name);
+                G_fatal_error(_("Unable to open vector map <%s>."), in_name);
 
             fi_in = Vect_get_field(&InMap, 1);
             table_in = NULL;
@@ -333,7 +333,7 @@ int main(int argc, char *argv[])
             Vect_set_open_level(1);
 
         if (Vect_open_update(&OutMap, out_name, G_mapset()) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), out_name);
+            G_fatal_error(_("Unable to open vector map <%s>."), out_name);
 
         if (out_is_3d == WITH_Z && !Vect_is_3d(&OutMap)) {
             G_warning(_("The output map is not 3D"));
@@ -342,12 +342,12 @@ int main(int argc, char *argv[])
     }
     else {
         if (Vect_open_new(&OutMap, out_name, out_is_3d) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"), out_name);
+            G_fatal_error(_("Unable to create vector map <%s>."), out_name);
     }
 
     if (bbox_name) {
         if (Vect_open_new(&BBoxMap, bbox_name, out_is_3d) < 0) /* TODO 3D */
-            G_fatal_error(_("Unable to create vector map <%s>"), bbox_name);
+            G_fatal_error(_("Unable to create vector map <%s>."), bbox_name);
         Vect_hist_command(&BBoxMap);
     }
 
@@ -379,7 +379,7 @@ int main(int argc, char *argv[])
 
         if (!append->answer) {
             if (db_create_table(driver_out, table_out) != DB_OK) {
-                G_fatal_error(_("Unable to create table <%s>"), fi_out->table);
+                G_fatal_error(_("Unable to create table <%s>."), fi_out->table);
             }
 
             /* do not allow duplicate keys */
@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
         else
             Vect_set_open_level(1);
         if (Vect_open_old(&InMap, in_name, "") < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), in_name);
+            G_fatal_error(_("Unable to open vector map <%s>."), in_name);
 
         /*first time around, copy first in head to out head */
         if (i == 1)
@@ -702,7 +702,7 @@ int copy_records(dbDriver *driver_in, dbString *table_name_in,
         G_debug(2, "SQL: %s", db_get_string(&sql));
 
         if (db_execute_immediate(driver_out, &sql) != DB_OK) {
-            G_fatal_error(_("Cannot insert new record: '%s'"),
+            G_fatal_error(_("Cannot insert new record: '%s'."),
                           db_get_string(&sql));
         }
     }

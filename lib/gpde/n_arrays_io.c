@@ -264,7 +264,7 @@ N_array_3d *N_read_rast3d_to_array_3d(char *name, N_array_3d *array, int mask)
     depths = region.depths;
 
     if (NULL == G_find_raster3d(name, ""))
-        Rast3d_fatal_error(_("3D raster map <%s> not found"), name);
+        Rast3d_fatal_error(_("3D raster map <%s> not found."), name);
 
     /*Open all maps with default region */
     map = Rast3d_open_cell_old(

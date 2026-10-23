@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
         Vect_set_open_level(2);
         if (Vect_open_old2(&(In[input]), in_opt[input]->answer, "",
                            field_opt[input]->answer) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           in_opt[input]->answer);
         field[input] =
             Vect_get_field_number(&(In[input]), field_opt[input]->answer);
@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
 
     /* Open output */
     if (Vect_open_new(&Out, out_opt->answer, WITHOUT_Z) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
 
     Vect_set_map_name(&Out, "Output from v.overlay");
     Vect_set_person(&Out, G_whoami());
@@ -424,7 +424,7 @@ int main(int argc, char *argv[])
 
             inFi = Vect_get_field(&(In[input]), field[input]);
             if (!inFi) {
-                G_warning(_("Database connection not defined for layer %d"),
+                G_warning(_("Database connection not defined for layer %d."),
                           field[input]);
                 continue;
             }
@@ -618,7 +618,7 @@ int main(int argc, char *argv[])
         if (db_execute_immediate(driver, &stmt) != DB_OK) {
             Vect_close(&Out);
             db_close_database_shutdown_driver(driver);
-            G_fatal_error(_("Unable to create table: '%s'"),
+            G_fatal_error(_("Unable to create table: '%s'."),
                           db_get_string(&stmt));
         }
 

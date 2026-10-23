@@ -27,7 +27,7 @@ int db__driver_describe_table(dbString *table_name, dbTable **table)
 
     tab = find_table(name);
     if (tab == -1) {
-        db_d_append_error(_("Table '%s' doesn't exist"),
+        db_d_append_error(_("Table <%s> does not exist."),
                           db_get_string(table_name));
         db_d_report_error();
         return DB_FAILED;

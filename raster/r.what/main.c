@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
     oname = opt.output->answer;
     if (oname != NULL && strcmp(oname, "-") != 0) {
         if (NULL == freopen(oname, "w", stdout)) {
-            G_fatal_error(_("Unable to open file <%s> for writing"), oname);
+            G_fatal_error(_("Unable to open file '%s' for writing."), oname);
         }
     }
 
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
     if (opt.points->answer) {
         Vect_set_open_level(1); /* topology not required */
         if (Vect_open_old(&Map, opt.points->answer, "") < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           opt.points->answer);
     }
     Points = Vect_new_line_struct();

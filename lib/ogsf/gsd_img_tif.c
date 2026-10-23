@@ -62,7 +62,7 @@ int GS_write_tif(const char *name)
 
     out = TIFFOpen(name, "w");
     if (out == NULL) {
-        G_warning(_("Unable to open file <%s> for writing"), name);
+        G_warning(_("Unable to open file '%s' for writing."), name);
         return (1);
     }
 

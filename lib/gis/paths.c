@@ -198,7 +198,7 @@ int G_owner(const char *path)
     );
 
     if (hFile == INVALID_HANDLE_VALUE) {
-        G_fatal_error(_("Unable to open file <%s> for reading"), path);
+        G_fatal_error(_("Unable to open file '%s' for reading."), path);
     }
 
     /* Get the owner SID of the file. */

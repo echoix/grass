@@ -63,7 +63,7 @@ int make_support(struct rr_state *theState, int percent, double percentage,
         struct Map_info map;
 
         if (Vect_open_old(&map, theState->outvector, G_mapset()) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           theState->outvector);
         Vect_hist_command(&map);
         Vect_close(&map);

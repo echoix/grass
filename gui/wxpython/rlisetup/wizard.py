@@ -593,7 +593,7 @@ class FirstPage(TitledPage):
             choices=[
                 _("Whole map layer"),
                 _("Keyboard setting"),
-                _("Draw the sampling frame"),
+                _("Draw sampling frame"),
             ],
             majorDimension=1,
             style=wx.RA_SPECIFY_ROWS,

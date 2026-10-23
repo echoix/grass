@@ -30,7 +30,7 @@ static void read_ppm(const char *filename)
 
     input = fopen(filename, "rb");
     if (!input)
-        G_fatal_error(_("Unable to open input file %s"), filename);
+        G_fatal_error(_("Unable to open input file '%s'."), filename);
 
     if (fscanf(input, "P6 %d %d %d", &width, &height, &maxval) != 3)
         G_fatal_error(_("Invalid input file %s"), filename);
@@ -78,7 +78,7 @@ static void write_png(const char *filename)
 
     output = fopen(filename, "wb");
     if (!output)
-        G_fatal_error(_("Unable to open output file %s"), filename);
+        G_fatal_error(_("Unable to open output file '%s'."), filename);
 
     png_init_io(png_ptr, output);
 

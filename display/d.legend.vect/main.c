@@ -260,7 +260,7 @@ int main(int argc, char **argv)
         if (strcmp(opt_output->answer, "-") == 0) {
             source = fopen(file_name, "r");
             if (!source)
-                G_fatal_error(_("Unable to open input file <%s>"), file_name);
+                G_fatal_error(_("Unable to open input file '%s'."), file_name);
             while ((nread = fread(buf, 1, sizeof(buf), source)))
                 fwrite(buf, 1, nread, stdout);
             fclose(source);

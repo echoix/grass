@@ -93,8 +93,7 @@ void set_params(void)
 
     param.shell_style = G_define_flag();
     param.shell_style->key = 'g';
-    param.shell_style->label =
-        _("Print the stats in shell script style [deprecated]");
+    param.shell_style->label = _("Print in shell script style [deprecated]");
     param.shell_style->description = _(
         "This flag is deprecated and will be removed in a future release. Use "
         "format=shell instead.");
@@ -186,7 +185,7 @@ int main(int argc, char *argv[])
     name = param.output_file->answer;
     if (name != NULL && strcmp(name, "-") != 0) {
         if (NULL == freopen(name, "w", stdout)) {
-            G_fatal_error(_("Unable to open file <%s> for writing"), name);
+            G_fatal_error(_("Unable to open file '%s' for writing."), name);
         }
     }
 
@@ -212,9 +211,9 @@ int main(int argc, char *argv[])
     }
 
     if (param.shell_style->answer) {
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=shell instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "shell");
         if (format == JSON || format == CSV) {
             G_fatal_error(
                 _("The -g flag cannot be used with format=json or format=csv. "
@@ -224,9 +223,9 @@ int main(int argc, char *argv[])
     }
 
     if (param.table->answer) {
-        G_verbose_message(
-            _("Flag 't' is deprecated and will be removed in a future "
-              "release. Please use format=csv instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          't', "csv");
         if (format == JSON || format == SHELL) {
             G_fatal_error(_(
                 "The -t flag cannot be used with format=json or format=shell. "
@@ -349,7 +348,7 @@ static int open_raster(const char *infile)
 
     mapset = G_find_raster2(infile, "");
     if (mapset == NULL) {
-        G_fatal_error(_("Raster map <%s> not found"), infile);
+        G_fatal_error(_("Raster map <%s> not found."), infile);
     }
 
     fd = Rast_open_old(infile, mapset);

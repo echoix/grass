@@ -40,7 +40,7 @@ int bseg_open(BSEG *bseg, int srows, int scols, int nsegs_in_memory)
             return -5;
         }
         else if (errflag == -6) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return -6;
         }
     }

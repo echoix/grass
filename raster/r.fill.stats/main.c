@@ -1022,7 +1022,7 @@ int main(int argc, char *argv[])
     /* open raster input map and get its storage type */
     mapset = G_find_raster(input, "");
     if (!mapset)
-        G_fatal_error(_("Raster map <%s> not found"), input);
+        G_fatal_error(_("Raster map <%s> not found."), input);
     Rast_get_cellhd(input, mapset, &cellhd);
     in_fd = Rast_open_old(input, mapset);
     IN_TYPE = Rast_get_map_type(in_fd);

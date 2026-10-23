@@ -13,7 +13,7 @@ int open_files(void)
 
     I_init_group_ref(&Ref);
     if (!I_find_group(group))
-        G_fatal_error(_("Group <%s> not found in current mapset"), group);
+        G_fatal_error(_("Group <%s> not found in current mapset."), group);
 
     if (!I_find_subgroup(group, subgroup))
         G_fatal_error(_("Subgroup <%s> in group <%s> not found"), subgroup,
@@ -41,7 +41,7 @@ int open_files(void)
     n = I_read_signatures(fd, &S);
     fclose(fd);
     if (n < 0)
-        G_fatal_error(_("Unable to read signature file <%s>"), sigfile);
+        G_fatal_error(_("Unable to read signature file '%s'."), sigfile);
 
     if (S.nsigs > 255)
         G_fatal_error(_("<%s> has too many signatures (limit is 255)"),

@@ -64,7 +64,7 @@ static int open_existing_cell_file(char *fname, struct Cell_head *chd)
     const char *mapset = G_find_raster(fname, "");
 
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), fname);
+        G_fatal_error(_("Raster map <%s> not found."), fname);
 
     if (chd)
         Rast_get_cellhd(fname, mapset, chd);
@@ -178,7 +178,7 @@ void open_output_files(void)
         lgfd = Rast_open_new(parm.lgout, FCELL_TYPE);
 
     if (parm.flout && (Vect_open_new(&fl, parm.flout, 0) < 0))
-        G_fatal_error(_("Unable to create vector map <%s>"), parm.flout);
+        G_fatal_error(_("Unable to create vector map <%s>."), parm.flout);
 }
 
 void close_files(void)
@@ -242,7 +242,7 @@ void write_density_file(void)
     Rast_add_c_color_rule(&val1, 0, 0, 255, &val2, 0, 0, 0, &colors);
 
     if ((mapset = G_find_file("cell", parm.dsout, "")) == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), parm.dsout);
+        G_fatal_error(_("Raster map <%s> not found."), parm.dsout);
 
     Rast_write_colors(parm.dsout, mapset, &colors);
     Rast_free_colors(&colors);

@@ -38,7 +38,7 @@ int seg_open(SSEG *sseg, GW_LARGE_INT nrows, GW_LARGE_INT ncols, int row_in_seg,
             return -5;
         }
         else if (errflag == -6) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return -6;
         }
     }

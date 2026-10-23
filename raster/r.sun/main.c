@@ -575,7 +575,7 @@ int main(int argc, char *argv[])
         G_warning(_("Parallel processing disabled due to active mask."));
         threads = 1;
     }
-    G_message(_("Number of threads <%d>"), threads);
+    G_message(_("Number of threads: %d"), threads);
 
     if (civiltime != NULL) {
         setUseCivilTime(TRUE);
@@ -852,7 +852,7 @@ int INPUT_part(int offset, double *zmax)
 
     if (z == NULL) {
         if (!(z = G_alloc_fmatrix(numRows, n))) {
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
         }
     }
 
@@ -862,7 +862,7 @@ int INPUT_part(int offset, double *zmax)
         cell3 = Rast_allocate_f_buf();
         if (s == NULL) {
             if (!(s = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
         fd3 = Rast_open_old(slopein, "");
@@ -873,7 +873,7 @@ int INPUT_part(int offset, double *zmax)
 
         if (o == NULL) {
             if (!(o = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
         fd2 = Rast_open_old(aspin, "");
@@ -883,7 +883,7 @@ int INPUT_part(int offset, double *zmax)
         cell4 = Rast_allocate_f_buf();
         if (li == NULL) {
             if (!(li = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
         fd4 = Rast_open_old(linkein, "");
@@ -893,7 +893,7 @@ int INPUT_part(int offset, double *zmax)
         cell5 = Rast_allocate_f_buf();
         if (a == NULL) {
             if (!(a = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
         fd5 = Rast_open_old(albedo, "");
@@ -903,7 +903,7 @@ int INPUT_part(int offset, double *zmax)
         cell6 = Rast_allocate_f_buf();
         if (latitudeArray == NULL) {
             if (!(latitudeArray = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
         fd6 = Rast_open_old(latin, "");
@@ -913,7 +913,7 @@ int INPUT_part(int offset, double *zmax)
         cell7 = Rast_allocate_f_buf();
         if (longitudeArray == NULL) {
             if (!(longitudeArray = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
 
@@ -924,7 +924,7 @@ int INPUT_part(int offset, double *zmax)
         rast1 = Rast_allocate_f_buf();
         if (cbhr == NULL) {
             if (!(cbhr = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
         fr1 = Rast_open_old(coefbh, "");
@@ -934,7 +934,7 @@ int INPUT_part(int offset, double *zmax)
         rast2 = Rast_allocate_f_buf();
         if (cdhr == NULL) {
             if (!(cdhr = G_alloc_fmatrix(numRows, n))) {
-                G_fatal_error(_("Out of memory"));
+                G_fatal_error(_("Out of memory."));
             }
         }
         fr2 = Rast_open_old(coefdh, "");

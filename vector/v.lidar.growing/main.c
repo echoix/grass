@@ -128,11 +128,11 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(1); /* WITHOUT TOPOLOGY */
     if (Vect_open_old(&In, in_opt->answer, mapset) < 1)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     Vect_set_open_level(1); /* WITHOUT TOPOLOGY */
     if (Vect_open_old(&First, first_opt->answer, mapset) < 1)
-        G_fatal_error(_("Unable to open vector map <%s>"), first_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), first_opt->answer);
 
     /* Open output vector */
     if (0 > Vect_open_new(&Out, out_opt->answer, WITH_Z)) {

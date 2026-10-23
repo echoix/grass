@@ -35,7 +35,7 @@ int close_streamvect(char *stream_vect)
     G_message(_("Writing vector map <%s>..."), stream_vect);
 
     if (Vect_open_new(&Out, stream_vect, 0) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), stream_vect);
+        G_fatal_error(_("Unable to create vector map <%s>."), stream_vect);
 
     nodestack = (struct sstack *)G_malloc(stack_step * sizeof(struct sstack));
     network_id = G_malloc((n_stream_nodes + 1) * sizeof(int));
@@ -190,7 +190,8 @@ int close_streamvect(char *stream_vect)
     if (db_execute_immediate(driver, &dbsql) != DB_OK) {
         db_close_database(driver);
         db_shutdown_driver(driver);
-        G_fatal_error(_("Unable to create table: '%s'"), db_get_string(&dbsql));
+        G_fatal_error(_("Unable to create table: '%s'."),
+                      db_get_string(&dbsql));
     }
 
     if (db_create_index2(driver, Fi->table, cat_col_name) != DB_OK)
@@ -216,7 +217,7 @@ int close_streamvect(char *stream_vect)
         if (db_execute_immediate(driver, &dbsql) != DB_OK) {
             db_close_database(driver);
             db_shutdown_driver(driver);
-            G_fatal_error(_("Unable to insert new row: '%s'"),
+            G_fatal_error(_("Unable to insert new row: '%s'."),
                           db_get_string(&dbsql));
         }
     }

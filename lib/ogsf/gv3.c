@@ -61,7 +61,7 @@ geoline *Gv_load_vect(const char *grassname, int *nlines)
 
     Vect_set_open_level(2);
     if (Vect_open_old(&map, grassname, "") == -1) {
-        G_warning(_("Unable to open vector map <%s>"),
+        G_warning(_("Unable to open vector map <%s>."),
                   G_fully_qualified_name(grassname, mapset));
         return NULL;
     }
@@ -339,13 +339,13 @@ int Gv_load_vect_thematic(geovect *gv, struct Colors *colors)
 
     Vect_set_open_level(1);
     if (Vect_open_old(&Map, gv->filename, "") == -1) {
-        G_fatal_error(_("Unable to open vector map <%s>"),
+        G_fatal_error(_("Unable to open vector map <%s>."),
                       G_fully_qualified_name(gv->filename, mapset));
     }
 
     Fi = Vect_get_field(&Map, gv->tstyle->layer);
     if (!Fi) {
-        G_warning(_("Database connection not defined for layer %d"),
+        G_warning(_("Database connection not defined for layer %d."),
                   gv->tstyle->layer);
     }
     else {

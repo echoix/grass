@@ -109,13 +109,14 @@ int main(int argc, char *argv[])
     /* Open vector */
     Vect_set_open_level(2);
     if (Vect_open_old2(&Map, opt.vect->answer, "", opt.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.vect->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.vect->answer);
 
     field = Vect_get_field_number(&Map, opt.field->answer);
 
     Fi = Vect_get_field(&Map, field);
     if (Fi == NULL)
-        G_fatal_error(_("Database connection not defined for layer %d"), field);
+        G_fatal_error(_("Database connection not defined for layer %d."),
+                      field);
 
     /* Open driver */
     driver = db_start_driver_open_database(Fi->driver, Fi->database);
@@ -137,7 +138,7 @@ int main(int argc, char *argv[])
     col_type = db_column_Ctype(driver, Fi->table, opt.col->answer);
 
     if (col_type == -1)
-        G_fatal_error(_("Column <%s> not found"), opt.col->answer);
+        G_fatal_error(_("Column <%s> not found."), opt.col->answer);
 
     if (col_type != DB_C_TYPE_DOUBLE)
         G_fatal_error(_(

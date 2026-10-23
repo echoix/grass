@@ -133,7 +133,7 @@ class AnimationData:
             raise ValueError(_("No workspace file selected."))
 
         if not Path(fileName).exists():
-            raise OSError(_("File %s not found") % fileName)
+            raise OSError(_("File '%s' not found.") % fileName)
         self._workspaceFile = fileName
 
         self.nvizTask.Load(self.workspaceFile)

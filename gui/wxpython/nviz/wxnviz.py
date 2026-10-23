@@ -592,7 +592,7 @@ class Nviz:
         """
         mapset = G_find_raster2(name, "")
         if mapset is None:
-            G_warning(_("Raster map <%s> not found"), name)
+            G_warning(_("Raster map <%s> not found."), name)
             return -1
 
         # topography
@@ -603,7 +603,7 @@ class Nviz:
         if color_name:  # check for color map
             mapset = G_find_raster2(color_name, "")
             if mapset is None:
-                G_warning(_("Raster map <%s> not found"), color_name)
+                G_warning(_("Raster map <%s> not found."), color_name)
                 GS_delete_surface(id)
                 return -1
 
@@ -782,7 +782,7 @@ class Nviz:
         """
         mapset = G_find_raster3d(name, "")
         if mapset is None:
-            G_warning(_("3d raster map <%s> not found"), name)
+            G_warning(_("3D raster map <%s> not found."), name)
             return -1
 
         # topography
@@ -793,7 +793,7 @@ class Nviz:
         if color_name:  # check for color map
             mapset = G_find_raster3d(color_name, "")
             if mapset is None:
-                G_warning(_("3d raster map <%s> not found"), color_name)
+                G_warning(_("3D raster map <%s> not found."), color_name)
                 GVL_delete_vol(id)
                 return -1
 

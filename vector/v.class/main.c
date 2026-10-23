@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
     /* open input vector */
     Vect_set_open_level(2);
     if (Vect_open_old2(&Map, map_opt->answer, "", field_opt->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_opt->answer);
 
     ofield = Vect_get_field_number(&Map, field_opt->answer);
 
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
         G_fatal_error(_("Unable to select data from table"));
 
     if (nrec == 0)
-        G_warning(_("No records selected from table <%s>"), Fi->table);
+        G_warning(_("No records selected from table <%s>."), Fi->table);
 
     db_close_database_shutdown_driver(Driver);
 

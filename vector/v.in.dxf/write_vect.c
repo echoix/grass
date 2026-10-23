@@ -70,7 +70,7 @@ void write_vect(struct Map_info *Map, char *layer, char *entity, char *handle,
 
         db_set_string(&sql, buf);
         if (db_execute_immediate(driver, &sql) != DB_OK)
-            G_fatal_error(_("Unable to insert new record: %s"),
+            G_fatal_error(_("Unable to insert new record: '%s'."),
                           db_get_string(&sql));
         db_free_string(&sql);
     }
@@ -234,7 +234,7 @@ static int get_field_cat(struct Map_info *Map, char *layer, int *field,
     db_set_string(&sql, buf);
 
     if (db_execute_immediate(driver, &sql) != DB_OK)
-        G_fatal_error(_("Unable to create table: %s"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table: '%s'."), db_get_string(&sql));
     db_free_string(&sql);
 
     if (db_grant_on_table(driver, Fi[i]->table, DB_PRIV_SELECT,

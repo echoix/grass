@@ -209,7 +209,7 @@ void GK_print_keys(const char *name)
     int cnt = 1;
 
     if (NULL == (fp = fopen(name, "w"))) {
-        G_fatal_error(_("Unable to open file <%s> for writing"), name);
+        G_fatal_error(_("Unable to open file '%s' for writing."), name);
     }
     /* write a default frame rate of 30 at top of file */
     fprintf(fp, "30 \n");

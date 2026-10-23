@@ -130,13 +130,13 @@ int IL_grid_calc_2d(
 
     if (!w) {
         if (!(w = (double *)G_malloc(sizeof(double) * (params->KMAX2 + 9)))) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return -1;
         }
     }
     if (!w2) {
         if (!(w2 = (double *)G_malloc(sizeof(double) * (params->KMAX2 + 9)))) {
-            G_warning(_("Out of memory"));
+            G_warning(_("Out of memory."));
             return -1;
         }
     }

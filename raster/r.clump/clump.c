@@ -225,7 +225,7 @@ CELL clump(int *in_fd, int out_fd, int diag, int minsize)
     /* temp file for initial clump IDs */
     cname = G_tempfile();
     if ((cfd = open(cname, O_RDWR | O_CREAT | O_EXCL, 0600)) < 0)
-        G_fatal_error(_("Unable to open temp file"));
+        G_fatal_error(_("Unable to open temp file."));
     csize = ncols * sizeof(CELL);
 
     time(&cur_time);
@@ -494,7 +494,7 @@ CELL clump_n(int *in_fd, char **inname, int nin, double threshold, int out_fd,
     /* temp file for initial clump IDs */
     cname = G_tempfile();
     if ((cfd = open(cname, O_RDWR | O_CREAT | O_EXCL, 0600)) < 0)
-        G_fatal_error(_("Unable to open temp file"));
+        G_fatal_error(_("Unable to open temp file."));
     csize = ncols * sizeof(CELL);
 
     time(&cur_time);

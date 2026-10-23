@@ -168,9 +168,9 @@ int main(int argc, char **argv)
     }
 
     if (csv_print->answer) {
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=csv instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "csv");
         if (format == JSON) {
             G_fatal_error(_("The -g flag cannot be used with format=json. "
                             "Please select only one output format."));
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
     Vect_set_open_level(1); /* no topology needed */
     if (print->answer || csv_print->answer || columns->answer) {
         if (Vect_open_old2(&Map, inopt->answer, "", field_opt->answer) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), inopt->answer);
+            G_fatal_error(_("Unable to open vector map <%s>."), inopt->answer);
     }
     else {
         if (Vect_open_update_head(&Map, inopt->answer, G_mapset()) < 1)
@@ -327,7 +327,7 @@ int main(int argc, char **argv)
 
                 if ((fi = Vect_get_field2(&Map, field_opt->answer)) == NULL)
                     G_fatal_error(
-                        _("Database connection not defined for layer <%s>"),
+                        _("Database connection not defined for layer <%s>."),
                         field_opt->answer);
                 driver = db_start_driver(fi->driver);
                 if (driver == NULL)
@@ -533,7 +533,8 @@ int main(int argc, char **argv)
 
                         if (db_grant_on_table(driver, fi->table, DB_PRIV_SELECT,
                                               DB_GROUP | DB_PUBLIC) != DB_OK)
-                            G_warning(_("Cannot grant privileges on table %s"),
+                            G_warning(_("Cannot grant privileges on table "
+                                        "<%s>."),
                                       fi->table);
 
                         G_important_message(

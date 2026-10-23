@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
         if (G_find_raster2(elev_opt->answer, mapset_elev) == NULL) {
             /* select current location */
             select_current_env();
-            G_fatal_error(_("Raster map <%s> not found"), elev_opt->answer);
+            G_fatal_error(_("Raster map <%s> not found."), elev_opt->answer);
         }
         /* select current location */
         select_current_env();

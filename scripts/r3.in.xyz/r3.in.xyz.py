@@ -140,7 +140,7 @@
 # % required: no
 # % multiple: no
 # % options: 1-100
-# % description: pth percentile of the values
+# % description: Pth percentile of the values
 # % guisection: Statistic
 # %End
 # %Option

@@ -252,7 +252,7 @@ int list_layers_ogr(FILE *fd, const char *dsn, char **layer, int print_types)
     /* open OGR DSN */
     Ogr_ds = OGROpen(dsn, FALSE, NULL);
     if (!Ogr_ds) {
-        G_fatal_error(_("Unable to open data source '%s'"), dsn);
+        G_fatal_error(_("Unable to open data source <%s>."), dsn);
     }
 
     /* Make a list of available layers */

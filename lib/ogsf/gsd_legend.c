@@ -236,7 +236,7 @@ GLuint gsd_put_legend(const char *name, GLuint fontbase, int size, int *flags,
 
     mapset = G_find_raster2(name, "");
     if (mapset == NULL) {
-        G_warning(_("Raster map <%s> not found"), name);
+        G_warning(_("Raster map <%s> not found."), name);
         return (-1);
     }
 

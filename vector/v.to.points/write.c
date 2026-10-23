@@ -56,7 +56,7 @@ void write_point(struct Map_info *Out, double x, double y, double z,
         db_append_string(&stmt, buf);
 
         if (db_execute_immediate(driver, &stmt) != DB_OK) {
-            G_warning(_("Unable to insert new record: '%s'"),
+            G_warning(_("Unable to insert new record: '%s'."),
                       db_get_string(&stmt));
         }
     }

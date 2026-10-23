@@ -126,7 +126,7 @@ void write_ycc(char *tr, char *tg, char *tb, int nrows, int ncols, int *y_rows,
     }
 
     if (NULL == (ofp = fopen(filename, "wb")))
-        G_fatal_error(_("Unable to open output file"));
+        G_fatal_error(_("Unable to open output file."));
 
     for (y = 0; y < rows; y++)
         fwrite(cy + (y * cols), 1, cols, ofp);
@@ -167,7 +167,7 @@ void write_ppm(char *tr, char *tg, char *tb, int nrows, int ncols, int *y_rows,
         G_fatal_error(_("Size mismatch error!"));
 
     if (NULL == (ofp = fopen(filename, "w")))
-        G_fatal_error(_("Unable to open output file"));
+        G_fatal_error(_("Unable to open output file."));
 
     fprintf(ofp, "P6\n");
     /* Magic number meaning rawbits, 24bit color to ppm format */

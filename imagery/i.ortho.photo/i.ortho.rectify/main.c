@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 
     /* find group */
     if (!I_find_group(group.name)) {
-        G_fatal_error(_("Group <%s> not found"), group.name);
+        G_fatal_error(_("Group <%s> not found."), group.name);
     }
 
     /* determine the number of files in this group */

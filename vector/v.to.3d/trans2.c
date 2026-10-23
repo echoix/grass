@@ -46,7 +46,7 @@ void trans2d(struct Map_info *In, struct Map_info *Out, int type, double height,
 
         Fi = Vect_get_field(In, field);
         if (!Fi) {
-            G_fatal_error(_("Database connection not defined for layer <%s>"),
+            G_fatal_error(_("Database connection not defined for layer <%s>."),
                           field_name);
         }
 
