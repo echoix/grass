@@ -185,6 +185,7 @@ jobs:
         run: .github/workflows/test_thorough.bat '%O4WROOT%\opt\grass\grass86.bat' '%O4WROOT%\bin\python3'
         env:
           O4WROOT: ${{ steps.osgeo4w.outputs.root }}
+          GRASS_GUNITTEST_RANDOM_ORDER: "1"
 
       - name: Make HTML test report available
         if: ${{ always() }}
