@@ -13,20 +13,25 @@ from grass.pygrass.errors import GrassError
 from grass.pygrass.raster.raster_type import TYPE as RTYPE
 
 
-CMPFUNC = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_int, ctypes.c_void_p, ctypes.c_int)
+# Rowio_setup() takes a callback which reads one row into a buffer. The
+# generated binding declares the type of that callback (a ctypes function
+# prototype with the arguments fd, buffer, row and length). The functions below
+# have to be wrapped with this exact type: a prototype made here with
+# ctypes.CFUNCTYPE() is a different class, and ctypes rejects it as an argument.
+CMPFUNC = librowio.Rowio_setup.argtypes[4]
 
 
-def getmaprow_CELL(fd, buf, row):
+def getmaprow_CELL(fd, buf, row, length):
     librast.Rast_get_c_row(fd, ctypes.cast(buf, ctypes.POINTER(librast.CELL)), row)
     return 1
 
 
-def getmaprow_FCELL(fd, buf, row):
+def getmaprow_FCELL(fd, buf, row, length):
     librast.Rast_get_f_row(fd, ctypes.cast(buf, ctypes.POINTER(librast.FCELL)), row)
     return 1
 
 
-def getmaprow_DCELL(fd, buf, row):
+def getmaprow_DCELL(fd, buf, row, length):
     librast.Rast_get_d_row(fd, ctypes.cast(buf, ctypes.POINTER(librast.DCELL)), row)
     return 1
 
