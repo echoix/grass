@@ -45,6 +45,9 @@ int G_projection_units(int n)
 /*!
    \brief Get projection name
 
+   The name is translated, so it is meant for messages and other text for
+   people. Use G_projection_name_untranslated() for machine-readable output.
+
    \param n projection code
 
    \return projection name
@@ -61,6 +64,33 @@ const char *G_projection_name(int n)
         return _("Latitude-Longitude");
     case PROJECTION_OTHER:
         return _("Other Projection");
+    default:
+        return NULL;
+    }
+}
+
+/*!
+   \brief Get projection name in English, independent of the locale
+
+   Same as G_projection_name(), but never translated, so the result is
+   suitable for machine-readable output (JSON, shell style).
+
+   \param n projection code
+
+   \return projection name
+   \return NULL on error
+ */
+const char *G_projection_name_untranslated(int n)
+{
+    switch (n) {
+    case PROJECTION_XY:
+        return "x,y";
+    case PROJECTION_UTM:
+        return "UTM";
+    case PROJECTION_LL:
+        return "Latitude-Longitude";
+    case PROJECTION_OTHER:
+        return "Other Projection";
     default:
         return NULL;
     }

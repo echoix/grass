@@ -107,6 +107,10 @@ def test():
     #    pass
     # TODO: add some message somewhere
 
+    # tests check English messages, whatever the locale of the caller; the
+    # invoker sets this too, but a test file can also be run directly
+    os.environ["LANGUAGE"] = "C"
+
     # TODO: enable passing omit to exclude also gunittest or nothing
     program = GrassTestProgram(
         module="__main__", exit_at_end=False, grass_location="all"

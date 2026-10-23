@@ -14,6 +14,11 @@ from grass.tools import Tools
 from grass.experimental import TemporaryMapsetSession
 
 
+# The tests are written for English messages, so they would fail in a
+# translated locale, e.g., when running on a system which is not English.
+os.environ["LANGUAGE"] = "C"
+
+
 @pytest.fixture(scope="module")
 def monkeypatch_module() -> Generator[pytest.MonkeyPatch]:
     """Yield a monkeypatch context, through a module-scoped fixture"""

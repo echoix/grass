@@ -239,6 +239,8 @@ int Rast3d_get_vertical_unit2(RASTER3D_Map *map)
  * \brief
  *
  * Return the name of the unit of <em>map</em>. Units are defined in gis.h.
+ * The name is in English, whatever the locale, because it is used in
+ * machine-readable output and in files.
  *
  * Vertical units may have temporal type
  *
@@ -247,7 +249,7 @@ int Rast3d_get_vertical_unit2(RASTER3D_Map *map)
  */
 const char *Rast3d_get_vertical_unit(RASTER3D_Map *map)
 {
-    return G_get_units_name(map->vertical_unit, 1, 0);
+    return G_get_units_name_untranslated(map->vertical_unit, 1, 0);
 }
 
 /*---------------------------------------------------------------------------*/

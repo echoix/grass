@@ -728,11 +728,13 @@ int G_projection(void);
 /* proj2.c */
 int G_projection_units(int);
 const char *G_projection_name(int);
+const char *G_projection_name_untranslated(int);
 
 /* proj3.c */
 const char *G_database_unit_name(int);
 int G_database_unit(void);
 const char *G_database_projection_name(void);
+const char *G_database_projection_name_untranslated(void);
 const char *G_database_datum_name(void);
 const char *G_database_ellipse_name(void);
 double G_database_units_to_meters_factor(void);
@@ -860,6 +862,7 @@ void G_trim_decimal(char *);
 double G_meters_to_units_factor(int);
 double G_meters_to_units_factor_sq(int);
 const char *G_get_units_name(int, int, int);
+const char *G_get_units_name_untranslated(int, int, int);
 int G_units(const char *);
 int G_is_units_type_spatial(int);
 int G_is_units_type_temporal(int);
