@@ -185,15 +185,26 @@ command sets `PYTHONPATH` to the Python code of the build or installation:
 grass --tmp-project XY --exec ty check
 ```
 
-For editors such as VS Code, which start the language server themselves, create
-a virtual environment and select it as the interpreter. The script adds a
-`.pth` file to it with the location of the Python code of the GRASS found on
-`PATH` (or given with `--grass`). Rerun it when switching to another build:
+Editors such as VS Code start the language server themselves, outside a GRASS
+session, so they need the location in a file instead. A virtual environment is
+only used as a place to put that file, because type checkers and editors
+already read the site-packages directory of the selected interpreter. Nothing
+is built or installed into it, and `grass` is still built the usual way. The
+script writes one file, `grass_generated.pth`, a text file with the directory
+printed by `grass --config python_path`, which Python and the type checkers
+treat as an extra import location.
 
 ```bash
 python utils/typecheck_env.py --grass build/output/bin/grass
 ty check
 ```
+
+This creates `.venv` in the repository, or reuses and adds the file to an
+existing environment given with `--venv`, for example the one you already use
+for development. Select that environment as the interpreter in the editor.
+Without the script, the same can be done by hand by creating the file in the
+site-packages directory of the environment. Rerun the script when switching to
+another build or installation, because the path is stored in the file.
 
 The `grass` package is taken from the build or installation, not from
 `python/grass`, so rebuild after changing the source to see the change in
