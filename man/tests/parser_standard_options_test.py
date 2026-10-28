@@ -106,6 +106,22 @@ def test_parse_options_skips_multiline_function_calls():
     assert not any("Integer" in value for value in option.values())
 
 
+def test_parse_options_continues_after_multiline_function_call():
+    """Check that an assignment following a multiline call is still extracted"""
+    lines = [
+        "case G_OPT_AFTER_CALL:",
+        'Opt->key = "after";',
+        "G_asprintf(",
+        '(char **)&(Opt->descriptions), "a;%s",',
+        '_("A"));',
+        'Opt->description = _("After the call");',
+        "break;",
+    ]
+    assert pso.parse_options(lines) == [
+        ("G_OPT_AFTER_CALL", {"key": "after", "description": "After the call"})
+    ]
+
+
 def test_parse_options_ignores_lines_outside_cases():
     """Check that nothing is extracted before the first case or without a body"""
     assert pso.parse_options([]) == []
