@@ -171,6 +171,37 @@ def test_something_which_changes_the_environment(xy_dataset_session):
     ...
 ```
 
+## Type checking
+
+The _ty_, _pyrefly_, _Zuban_, _pyright_ and _basedpyright_ type checkers are
+configured in `pyproject.toml` without any machine-specific paths. The
+`grass.lib` package is generated during the build, so the checkers need to be
+pointed to a built or installed GRASS, in one of two ways.
+
+On the command line and in CI, run the checker in a GRASS session. The `grass`
+command sets `PYTHONPATH` to the Python code of the build or installation:
+
+```bash
+grass --tmp-project XY --exec ty check
+```
+
+For editors such as VS Code, which start the language server themselves, create
+a virtual environment and select it as the interpreter. The script adds a
+`.pth` file to it with the location of the Python code of the GRASS found on
+`PATH` (or given with `--grass`). Rerun it when switching to another build:
+
+```bash
+python utils/typecheck_env.py --grass build/output/bin/grass
+ty check
+```
+
+The `grass` package is taken from the build or installation, not from
+`python/grass`, so rebuild after changing the source to see the change in
+imports from other modules. Missing optional dependencies, such as wxPython or
+matplotlib, are reported as unresolved imports unless installed in the
+environment. The existing results are not clean yet, so these checks are not
+enforced.
+
 ## More information
 
 - [grass.gunittest documentation](https://grass.osgeo.org/grass-devel/manuals/libpython/gunittest_testing.html)

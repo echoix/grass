@@ -899,11 +899,42 @@ additional-builtins = ["_"]
 exclude = ["**/__pycache__", "**/OBJ.*", "bin.*/**", "dist.*/**"]
 include = ["python"]
 
-# Set extraPath to the output of $(grass --config python_path)
-
 # *GRASS modified*
 # *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
 pythonVersion = "3.11"
+
+# Type checkers find the generated code (grass.lib, in the build or install
+# tree) from outside the repository, so no machine-specific paths are needed
+# here. See the "Type checking" section in doc/development/testing.md.
+venvPath = "."
+venv = ".venv"
+
+[tool.ty.environment]
+# *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
+python-version = "3.11"
+# By default ty also puts python/ first, which hides grass.lib because ty does
+# not look for the rest of a package in other search paths. With only the
+# repository root, the grass package comes from the GRASS build or installation,
+# where it is complete with grass.lib.
+root = ["."]
+
+[tool.ty.src]
+include = ["python"]
+exclude = [
+    "**/__pycache__",
+    "python/grass/temporal/ply",
+    "python/libgrass_interface_generator",
+]
+
+[tool.pyrefly]
+# *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
+python-version = "3.11"
+project-includes = ["python"]
+project-excludes = [
+    "**/__pycache__",
+    "python/grass/temporal/ply",
+    "python/libgrass_interface_generator",
+]
 
 [tool.pyrefact]
 line_length = 88
