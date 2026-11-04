@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
     base_raster_opt = G_define_standard_option(G_OPT_R_INPUT);
     base_raster_opt->key = "base_raster";
     base_raster_opt->required = NO;
-    base_raster_opt->label = _("Subtract raster values from the z coordinates");
+    base_raster_opt->label = _("Subtract raster values from the Z coordinates");
     base_raster_opt->description =
         _("The scale for z is applied beforehand, the filter afterwards");
     base_raster_opt->guisection = _("Transform");

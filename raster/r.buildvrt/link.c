@@ -121,7 +121,7 @@ void create_map(const struct input *inputs, int num_inputs, const char *output,
         Rast_write_rstats(output, ostats);
 #endif
 
-    G_verbose_message(_("Creating support files for %s"), output);
+    G_verbose_message(_("Creating support files for <%s>..."), output);
     Rast_short_history(output, "virtual", &history);
     Rast_command_history(&history);
     Rast_format_history(&history, HIST_KEYWRD,

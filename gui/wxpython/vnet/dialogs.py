@@ -83,7 +83,7 @@ class VNETDialog(wx.Dialog):
         parent,
         giface,
         id=wx.ID_ANY,
-        title=_("Vector Network Analysis Tool"),
+        title=_("Vector network analysis tool"),
         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         **kwargs,
     ):

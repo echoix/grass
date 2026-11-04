@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(2);
     if (Vect_open_old(&In, in_opt->answer, mapset) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     with_z = Vect_is_3d(&In);
 
@@ -79,7 +79,8 @@ int main(int argc, char *argv[])
         Vect_close(&Out);
 
         if (Vect_open_update(&Out, out_opt->answer, G_mapset()) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), out_opt->answer);
+            G_fatal_error(_("Unable to open vector map <%s>."),
+                          out_opt->answer);
 
         /* Count number of areas and total area in input */
         nareas1 = Vect_get_num_areas(&Out);

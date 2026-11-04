@@ -20,12 +20,12 @@ int openfiles(struct parms *parms, struct files *files, struct SigSet *S)
             parms->subgroup, parms->group);
 
     if (Ref.nfiles <= 0)
-        G_fatal_error(_("Subgroup <%s> in group <%s> contains no raster maps"),
+        G_fatal_error(_("Subgroup <%s> in group <%s> contains no raster maps."),
                       parms->subgroup, parms->group);
 
     fd = I_fopen_sigset_file_old(parms->sigfile);
     if (fd == NULL)
-        G_fatal_error(_("Unable to read signature file <%s>"), parms->sigfile);
+        G_fatal_error(_("Unable to read signature file '%s'."), parms->sigfile);
 
     if (I_ReadSigSet(fd, S) < 0 || Ref.nfiles != S->nbands)
         G_fatal_error(_("Signature file <%s> is invalid"), parms->sigfile);

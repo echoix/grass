@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(1); /* without topology */
     if (1 > Vect_open_old(&In, in_opt->answer, mapset))
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     /* Input vector must be 3D */
     if (!Vect_is_3d(&In))
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
                     dist);
         }
         else
-            G_warning(_("No points in current region!"));
+            G_warning(_("No points in current region."));
 
         Vect_close(&In);
         exit(EXIT_SUCCESS);
@@ -211,13 +211,13 @@ int main(int argc, char *argv[])
     /* Open output vector */
     if (0 > Vect_open_new(&Out, out_opt->answer, WITH_Z)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
     }
 
     if (0 > Vect_open_new(&Terrain, out_terrain_opt->answer, WITH_Z)) {
         Vect_close(&In);
         Vect_close(&Out);
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
     }
 
     /* Copy vector Head File */

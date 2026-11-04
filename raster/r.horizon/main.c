@@ -427,7 +427,7 @@ int main(int argc, char *argv[])
             fp = stdout;
         }
         else if (NULL == (fp = fopen(outfile, "w")))
-            G_fatal_error(_("Unable to open file <%s>"), outfile);
+            G_fatal_error(_("Unable to open file '%s'."), outfile);
     }
     settings.single_direction = 0;
     if (parm.direction->answer != NULL)

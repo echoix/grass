@@ -509,7 +509,7 @@ class Model:
                         report = False
                         break
                 if report:
-                    errList.append(cmd[0] + ": " + _("undefined variable '%s'") % var)
+                    errList.append(cmd[0] + ": " + _("Undefined variable <%s>.") % var)
             # TODO: check variables in file only optionally
             # errList += self._substituteFile(action, checkOnly = True)
 
@@ -573,7 +573,7 @@ class Model:
                     s[2:-1] if s.startswith("%{") else s[1:]
                 )  # strip curly braces only if present
                 cmd = item.GetLog(string=False)[0]
-                errList.append(cmd + ": " + _("undefined variable '%s'") % var)
+                errList.append(cmd + ": " + _("Undefined variable <%s>.") % var)
 
             if not checkOnly:
                 if write:

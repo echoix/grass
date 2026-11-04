@@ -56,8 +56,7 @@ void set_params(void)
 
     param.shell_style = G_define_flag();
     param.shell_style->key = 'g';
-    param.shell_style->label =
-        _("Print the stats in shell script style [deprecated]");
+    param.shell_style->label = _("Print in shell script style [deprecated]");
     param.shell_style->description = _(
         "This flag is deprecated and will be removed in a future release. Use "
         "format=shell instead.");
@@ -143,7 +142,7 @@ int main(int argc, char *argv[])
     name = param.output_file->answer;
     if (name != NULL && strcmp(name, "-") != 0) {
         if (NULL == freopen(name, "w", stdout)) {
-            G_fatal_error(_("Unable to open file <%s> for writing"), name);
+            G_fatal_error(_("Unable to open file '%s' for writing."), name);
         }
     }
 
@@ -169,9 +168,9 @@ int main(int argc, char *argv[])
     }
 
     if (param.shell_style->answer) {
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=shell instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "shell");
         if (format == JSON || format == CSV) {
             G_fatal_error(
                 _("The -g flag cannot be used with format=json or format=csv. "
@@ -181,9 +180,9 @@ int main(int argc, char *argv[])
     }
 
     if (param.table->answer) {
-        G_verbose_message(
-            _("Flag 't' is deprecated and will be removed in a future "
-              "release. Please use format=csv instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          't', "csv");
         if (format == JSON || format == SHELL) {
             G_fatal_error(_(
                 "The -t flag cannot be used with format=json or format=shell. "
@@ -204,7 +203,7 @@ int main(int argc, char *argv[])
     /* open 3D zoning raster with default region */
     if ((zonemap = param.zonefile->answer) != NULL) {
         if (NULL == (mapset = G_find_raster3d(zonemap, "")))
-            Rast3d_fatal_error(_("3D raster map <%s> not found"), zonemap);
+            Rast3d_fatal_error(_("3D raster map <%s> not found."), zonemap);
 
         zmap = Rast3d_open_cell_old(zonemap, G_find_raster3d(zonemap, ""),
                                     &region, RASTER3D_TILE_SAME_AS_FILE,
@@ -242,7 +241,7 @@ int main(int argc, char *argv[])
     infile = param.inputfile->answer;
 
     if (NULL == G_find_raster3d(infile, ""))
-        Rast3d_fatal_error(_("3D raster map <%s> not found"), infile);
+        Rast3d_fatal_error(_("3D raster map <%s> not found."), infile);
 
     map = Rast3d_open_cell_old(infile, G_find_raster3d(infile, ""), &region,
                                RASTER3D_TILE_SAME_AS_FILE,

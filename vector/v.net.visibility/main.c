@@ -63,16 +63,16 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2);
 
     if (Vect_open_old(&in, input->answer, "") < 1) /* opens the map */
-        G_fatal_error(_("Unable to open vector map <%s>"), input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), input->answer);
 
     if (Vect_open_new(&out, output->answer, WITHOUT_Z) < 0) {
         Vect_close(&in);
-        G_fatal_error(_("Unable to create vector map <%s>"), output->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), output->answer);
     }
 
     if (ovis->answer != NULL) {
         if (Vect_open_old(&vis, ovis->answer, "") < 1)
-            G_fatal_error(_("Unable to open vector map <%s>"), ovis->answer);
+            G_fatal_error(_("Unable to open vector map <%s>."), ovis->answer);
 
         if (Vect_copy_map_lines(&vis, &out) > 0)
             G_fatal_error(_("Unable to copy elements from vector map <%s>"),

@@ -255,7 +255,7 @@ int main(int argc, char **argv)
     pvout = NULL;
     if (opt.vect->answer) {
         if (0 > Vect_open_new(&vout, opt.vect->answer, 0)) {
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           opt.vect->answer);
         }
         Vect_hist_command(&vout);
@@ -315,7 +315,7 @@ int main(int argc, char **argv)
             Vect_set_open_level(1); /* topology not required */
 
             if (1 > Vect_open_old(&In, opt.vpoint->answers[i], ""))
-                G_fatal_error(_("Unable to open vector map <%s>"),
+                G_fatal_error(_("Unable to open vector map <%s>."),
                               opt.vpoint->answers[i]);
 
             G_verbose_message(_("Reading vector map <%s> with start points..."),

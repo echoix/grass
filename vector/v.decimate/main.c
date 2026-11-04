@@ -136,7 +136,7 @@ int main(int argc, char **argv)
     zrange_opt->type = TYPE_DOUBLE;
     zrange_opt->required = NO;
     zrange_opt->key_desc = "min,max";
-    zrange_opt->description = _("Filter range for z data (min,max)");
+    zrange_opt->description = _("Filter range for Z data (min,max)");
     zrange_opt->guisection = _("Selection");
 
     cats_opt = G_define_standard_option(G_OPT_V_CATS);
@@ -262,7 +262,7 @@ int main(int argc, char **argv)
                                  G_FATAL_EXIT);
 
     if (Vect_open_old2(&vinput, map_opt->answer, "", field_opt->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_opt->answer);
     int layer = Vect_get_field_number(&vinput, field_opt->answer);
 
     if (layer < 1 && (cats_opt->answer || cat_in_grid_flg->answer))
@@ -382,7 +382,7 @@ int main(int argc, char **argv)
     }
 
     if (Vect_open_new(&voutput, voutput_opt->answer, Vect_is_3d(&vinput)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       voutput_opt->answer);
 
     /* some constraints can be set on the map */

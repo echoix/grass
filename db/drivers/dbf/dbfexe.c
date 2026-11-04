@@ -76,7 +76,7 @@ int execute(char *sql, cursor *c)
     /* find table */
     tab = find_table(st->table);
     if (tab < 0 && st->command != SQLP_CREATE) {
-        db_d_append_error(_("Table '%s' doesn't exist."), st->table);
+        db_d_append_error(_("Table <%s> does not exist."), st->table);
         return DB_FAILED;
     }
 
@@ -109,7 +109,8 @@ int execute(char *sql, cursor *c)
             for (i = 0; i < ncols; i++) {
                 cols[i] = find_column(tab, st->Col[i].s);
                 if (cols[i] == -1) {
-                    db_d_append_error(_("Column '%s' not found"), st->Col[i].s);
+                    db_d_append_error(_("Column <%s> not found."),
+                                      st->Col[i].s);
                     return DB_FAILED;
                 }
             }
@@ -178,7 +179,7 @@ int execute(char *sql, cursor *c)
 
     case (SQLP_CREATE):
         if (tab >= 0) {
-            db_d_append_error(_("Table %s already exists"), st->table);
+            db_d_append_error(_("Table <%s> already exists."), st->table);
 
             return DB_FAILED;
         }
@@ -1019,7 +1020,7 @@ int eval_node_type(SQLPNODE *nptr, int tab)
     case SQLP_NODE_COLUMN:
         ccol = find_column(tab, nptr->column_name);
         if (ccol == -1) {
-            db_d_append_error(_("Column '%s' not found"), nptr->column_name);
+            db_d_append_error(_("Column <%s> not found."), nptr->column_name);
             return -1;
         }
         col = &(db.tables[tab].cols[ccol]);

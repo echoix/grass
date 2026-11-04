@@ -461,7 +461,7 @@ int main(int argc, char *argv[])
     if (dir && opt_solve->answer) {
         search_mapset = G_find_raster2(opt_solve->answer, "");
         if (search_mapset == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), opt_solve->answer);
+            G_fatal_error(_("Raster map <%s> not found."), opt_solve->answer);
         have_solver = 1;
     }
 
@@ -489,12 +489,12 @@ int main(int argc, char *argv[])
     /* Open cost cell layer for reading */
     dtm_mapset = G_find_raster2(dtm_layer, "");
     if (dtm_mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), dtm_layer);
+        G_fatal_error(_("Raster map <%s> not found."), dtm_layer);
     dtm_fd = Rast_open_old(dtm_layer, "");
 
     cost_mapset = G_find_raster2(cost_layer, "");
     if (cost_mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), cost_layer);
+        G_fatal_error(_("Raster map <%s> not found."), cost_layer);
     cost_fd = Rast_open_old(cost_layer, cost_mapset);
 
     Rast_get_cellhd(dtm_layer, "", &dtm_cellhd);
@@ -754,7 +754,7 @@ int main(int argc, char *argv[])
         Vect_set_open_level(1); /* topology not required */
 
         if (1 > Vect_open_old(&In, opt7->answer, ""))
-            G_fatal_error(_("Unable to open vector map <%s>"), opt7->answer);
+            G_fatal_error(_("Unable to open vector map <%s>."), opt7->answer);
 
         G_message(_("Reading vector map <%s> with start points..."),
                   Vect_get_full_name(&In));
@@ -821,7 +821,7 @@ int main(int argc, char *argv[])
         Vect_set_open_level(1); /* topology not required */
 
         if (1 > Vect_open_old(&In, opt8->answer, ""))
-            G_fatal_error(_("Unable to open vector map <%s>"), opt8->answer);
+            G_fatal_error(_("Unable to open vector map <%s>."), opt8->answer);
 
         Vect_rewind(&In);
 
@@ -866,7 +866,7 @@ int main(int argc, char *argv[])
         search_mapset = G_find_raster(opt9->answer, "");
 
         if (search_mapset == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), opt9->answer);
+            G_fatal_error(_("Raster map <%s> not found."), opt9->answer);
 
         fd = Rast_open_old(opt9->answer, search_mapset);
         data_type2 = Rast_get_map_type(fd);
@@ -1624,7 +1624,7 @@ int main(int argc, char *argv[])
     nearest_size = Rast_cell_size(nearest_data_type);
 
     /* Copy segmented map to output map */
-    G_message(_("Writing output raster map <%s>... "), cum_cost_layer);
+    G_message(_("Writing output raster map <%s>..."), cum_cost_layer);
     if (nearest_layer) {
         G_message(_("Writing raster map with nearest start point <%s>..."),
                   nearest_layer);

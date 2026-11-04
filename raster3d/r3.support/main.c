@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     mapset = G_find_raster3d(infile,
                              G_mapset()); /* current mapset only for editing */
     if (!mapset || strcmp(mapset, G_mapset()) != 0)
-        G_fatal_error(_("3D raster map <%s> not found"), infile);
+        G_fatal_error(_("3D raster map <%s> not found."), infile);
 
     if (title_opt->answer) {
         strncpy(title, title_opt->answer, MAX_TITLE_LEN);
@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
         int i;
 
         if (!fp)
-            G_fatal_error(_("Unable to open output file <%s>"),
+            G_fatal_error(_("Unable to open output file '%s'."),
                           save_opt->answer);
 
         Rast3d_read_history(raster->answer, "", &hist);
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
         FILE *fp = fopen(load_opt->answer, "r");
 
         if (!fp)
-            G_fatal_error(_("Unable to open input file <%s>"),
+            G_fatal_error(_("Unable to open input file '%s'."),
                           load_opt->answer);
 
         Rast3d_read_history(raster->answer, "", &hist);

@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(2);
     if (Vect_open_old(&PIn, point_opt->answer, mapset) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), point_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), point_opt->answer);
 
     /* Open areas vector */
     if ((mapset = G_find_vector2(area_opt->answer, "")) == NULL)
@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(2);
     if (Vect_open_old(&AIn, area_opt->answer, mapset) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), area_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), area_opt->answer);
 
     point_field = atoi(point_field_opt->answer);
     pcat_list = NULL;
@@ -377,7 +377,7 @@ int main(int argc, char *argv[])
 
         AFi = Vect_get_field(&AIn, area_field);
         if (AFi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           area_field);
 
         Adriver = db_start_driver_open_database(AFi->driver, AFi->database);
@@ -454,7 +454,7 @@ int main(int argc, char *argv[])
 
         PFi = Vect_get_field(&PIn, point_field);
         if (PFi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           point_field);
 
         /* Open points map driver and database */
@@ -845,7 +845,7 @@ int main(int argc, char *argv[])
         G_percent(nacats, nacats, 2);
         db_close_database_shutdown_driver(Adriver);
         db_free_string(&stmt);
-        G_message(_("%d records updated"), update_ok);
+        G_message(_("%d records updated."), update_ok);
         if (update_err > 0)
             G_message(_("%d update errors"), update_err);
 

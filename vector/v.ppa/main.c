@@ -162,11 +162,11 @@ int main(int argc, char *argv[])
 
     num_distances = atoi(num_distances_opt->answer);
     if (num_distances < 1)
-        G_fatal_error(_("Option <%s> must be positive"),
+        G_fatal_error(_("Option <%s> must be positive."),
                       num_distances_opt->key);
     num_random_points = atoi(random_points_opt->answer);
     if (num_random_points < 1)
-        G_fatal_error(_("Option <%s> must be positive"),
+        G_fatal_error(_("Option <%s> must be positive."),
                       random_points_opt->key);
 
     if (seed_opt->answer) {
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
     if (max_distance_opt->answer) {
         max_distance = atof(max_distance_opt->answer);
         if (max_distance <= 0)
-            G_fatal_error(_("Option <%s> must be positive"),
+            G_fatal_error(_("Option <%s> must be positive."),
                           max_distance_opt->key);
         if (max_distance > 0.5 * shorter_side)
             G_warning(_("Option <%s> is larger than half of the shorter "
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
     }
 
     if (Vect_open_old(&map, input_opt->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), input_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), input_opt->answer);
 
     line_points = Vect_new_line_struct();
     line_cats = Vect_new_cats_struct();

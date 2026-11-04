@@ -248,13 +248,14 @@ int main(int argc, char **argv)
         /* get grid easting start */
         if (!G_scan_easting(opt3->answers[0], &east, G_projection())) {
             G_usage();
-            G_fatal_error(_("Illegal east coordinate <%s>"), opt3->answers[0]);
+            G_fatal_error(_("Illegal east coordinate <%s>."), opt3->answers[0]);
         }
 
         /* get grid northing start */
         if (!G_scan_northing(opt3->answers[1], &north, G_projection())) {
             G_usage();
-            G_fatal_error(_("Illegal north coordinate <%s>"), opt3->answers[1]);
+            G_fatal_error(_("Illegal north coordinate <%s>."),
+                          opt3->answers[1]);
         }
     }
 

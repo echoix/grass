@@ -545,7 +545,7 @@ int main(int argc, char *argv[])
 
     Vect_set_open_level(1);
     if (Vect_open_old(&In, input, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), input);
+        G_fatal_error(_("Unable to open vector map <%s>."), input);
 
     if (!Vect_is_3d(&In))
         G_warning(_("Vector is not 3D"));
@@ -565,11 +565,11 @@ int main(int argc, char *argv[])
 
         if (devi != NULL) {
             if (Vect_open_new(&Map, devi, 1) < 0)
-                G_fatal_error(_("Unable to create vector map <%s>"), devi);
+                G_fatal_error(_("Unable to create vector map <%s>."), devi);
         }
         else {
             if (Vect_open_new(&Map, cvdev, 1) < 0)
-                G_fatal_error(_("Unable to create vector map <%s>"), cvdev);
+                G_fatal_error(_("Unable to create vector map <%s>."), cvdev);
         }
         Vect_hist_command(&Map);
         f = Vect_default_field_info(&Map, 1, NULL, GV_1TABLE);
@@ -591,7 +591,7 @@ int main(int argc, char *argv[])
         db_set_error_handler_driver(driver);
 
         if (db_execute_immediate(driver, &sql) != DB_OK) {
-            G_fatal_error(_("Unable to create table '%s'"),
+            G_fatal_error(_("Unable to create table <%s>."),
                           db_get_string(&sql));
         }
         count = 1;
@@ -602,7 +602,7 @@ int main(int argc, char *argv[])
             mapset = NULL;
             mapset = G_find_raster2(cellinp, "");
             if (mapset == NULL)
-                G_fatal_error(_("Raster map <%s> not found"), cellinp);
+                G_fatal_error(_("Raster map <%s> not found."), cellinp);
             fdcell = Rast_open_old(cellinp, mapset);
             fdcout = Rast_open_fp_new(cellout);
             zero_array_cell = (FCELL *)G_malloc(sizeof(FCELL) * n_cols);
@@ -851,7 +851,7 @@ int main(int argc, char *argv[])
 
                     Rast_command_history(&hist);
                     Rast_write_history(cellout, &hist);
-                    G_message(_("Raster map <%s> created"), cellout);
+                    G_message(_("Raster map <%s> created."), cellout);
 
                     fclose(Tmp_fd_cell);
                     unlink(Tmp_file_cell);
@@ -891,7 +891,7 @@ int main(int argc, char *argv[])
                 db_close_database_shutdown_driver(driver);
                 Vect_build(&Map);
                 Vect_close(&Map);
-                G_message(_("Vector map <%s> created"), cvdev);
+                G_message(_("Vector map <%s> created."), cvdev);
             }
 
             fprintf(stderr, "\n");

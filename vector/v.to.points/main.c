@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     type = Vect_option_to_types(opt.type);
     dmax = atof(opt.dmax->answer);
     if (dmax <= 0)
-        G_fatal_error(_("Option %s must be positive"), opt.dmax->key);
+        G_fatal_error(_("Option <%s> must be positive."), opt.dmax->key);
 
     vertex_type = 0;
     if (opt.use->answer) {
@@ -146,7 +146,7 @@ int main(int argc, char **argv)
     Vect_set_open_level(2);
 
     if (Vect_open_old2(&In, opt.input->answer, "", opt.lfield->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.input->answer);
 
     Vect_set_error_handler_io(&In, &Out);
 
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
 
     /* Open output segments */
     if (Vect_open_new(&Out, opt.output->answer, Vect_is_3d(&In)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       opt.output->answer);
 
     Vect_copy_head_data(&In, &Out);
@@ -208,7 +208,7 @@ int main(int argc, char **argv)
         db_append_string(&stmt, buf);
 
         if (db_execute_immediate(driver, &stmt) != DB_OK) {
-            G_fatal_error(_("Unable to create table: '%s'"),
+            G_fatal_error(_("Unable to create table: '%s'."),
                           db_get_string(&stmt));
         }
 

@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
     name = parms.map->answer;
     mapset = G_find_raster2(name, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), name);
+        G_fatal_error(_("Raster map <%s> not found."), name);
 
     is_reclass = (Rast_is_reclass(name, mapset, rname, rmapset) > 0);
     if (is_reclass)

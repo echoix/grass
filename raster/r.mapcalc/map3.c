@@ -718,7 +718,7 @@ void prepare_region_from_maps(expression **map_list, int type, int num_maps)
         mapset = G_find_raster2(rast_name, "");
 
         if (!mapset)
-            G_fatal_error(_("Raster map <%s> not found"), rast_name);
+            G_fatal_error(_("Raster map <%s> not found."), rast_name);
 
         G_debug(1, "Setting region from raster map: %s@%s", rast_name, mapset);
 

@@ -235,9 +235,9 @@ int main(int argc, char *argv[])
         break;
     }
     if (csv->answer) {
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=csv instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "csv");
         if (format == JSON) {
             G_fatal_error(
                 _("JSON output and CSV output cannot be used simultaneously."));

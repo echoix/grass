@@ -32,7 +32,7 @@ int get_control_points(struct Image_Group *group, int order)
                    _("Not enough memory to solve transformation equations."));
             break;
         case -3:
-            strcat(msg, _("Invalid order."));
+            strcat(msg, _("Invalid order"));
             break;
         default:
             return 1;

@@ -402,7 +402,7 @@ def rmarea(
 def main() -> None:
     """Run area filtering."""
     if not gs.find_file(options["input"])["name"]:
-        gs.fatal(_("Raster map <%s> not found") % options["input"])
+        gs.fatal(_("Raster map <%s> not found.") % options["input"])
 
     if flags["i"] and options["method"] == "rmarea":
         gs.fatal(_("Flag -i is not supported with method='rmarea'"))

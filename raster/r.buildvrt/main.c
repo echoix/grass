@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
         else {
             in = fopen(parm.file->answer, "r");
             if (!in)
-                G_fatal_error(_("Unable to open input file <%s>"),
+                G_fatal_error(_("Unable to open input file '%s'."),
                               parm.file->answer);
         }
 

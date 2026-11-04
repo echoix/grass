@@ -55,7 +55,7 @@ int NetA_compute_bridges(dglGraph_s *graph, struct ilist *bridge_list)
     stack = (dglInt32_t **)G_calloc(nnodes + 1, sizeof(dglInt32_t *));
     current_edge = (dglInt32_t **)G_calloc(nnodes + 1, sizeof(dglInt32_t *));
     if (!tin || !min_tin || !parent || !stack || !current) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 

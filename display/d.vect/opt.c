@@ -123,7 +123,7 @@ int option_to_color(struct color_rgb *color, const char *color_val)
         has_color = 0;
     }
     else if (ret == 0) { /* error */
-        G_fatal_error(_("Unknown color: '%s'"), color_val);
+        G_fatal_error(_("Unknown color: <%s>."), color_val);
     }
 
     return has_color;

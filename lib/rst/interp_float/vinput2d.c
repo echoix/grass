@@ -90,7 +90,7 @@ int IL_vector_input_data_2d(
         G_verbose_message(_("Loading data from attribute table ..."));
         Fi = Vect_get_field(Map, field);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
         G_debug(3, "  driver = %s database = %s table = %s", Fi->driver,
                 Fi->database, Fi->table);
@@ -105,7 +105,7 @@ int IL_vector_input_data_2d(
         zctype = db_column_Ctype(driver, Fi->table, zcol);
         G_debug(3, " zcol C type = %d", zctype);
         if (zctype == -1)
-            G_fatal_error(_("Column <%s> not found"), zcol);
+            G_fatal_error(_("Column <%s> not found."), zcol);
         if (zctype != DB_C_TYPE_INT && zctype != DB_C_TYPE_DOUBLE)
             G_fatal_error(_("Data type of column <%s> must be numeric"), zcol);
 
@@ -118,7 +118,7 @@ int IL_vector_input_data_2d(
             sctype = db_column_Ctype(driver, Fi->table, scol);
             G_debug(3, " scol C type = %d", sctype);
             if (sctype == -1)
-                G_fatal_error(_("Column <%s> not found"), scol);
+                G_fatal_error(_("Column <%s> not found."), scol);
             if (sctype != DB_C_TYPE_INT && sctype != DB_C_TYPE_DOUBLE)
                 G_fatal_error(_("Data type of column <%s> must be numeric"),
                               scol);
@@ -132,7 +132,7 @@ int IL_vector_input_data_2d(
     }
 
     /* Lines without nodes */
-    G_message(_("Reading features from vector map ..."));
+    G_message(_("Reading features from vector map..."));
     sm = 0;
     while ((ltype = Vect_read_next_line(Map, Points, Cats)) != -2) {
 

@@ -21,7 +21,7 @@ int get_range(const char *name, long *min, long *max)
         fd = Rast_open_old(name, "");
         nrows = Rast_window_rows();
         ncols = Rast_window_cols();
-        G_message(_("Reading %s ..."), name);
+        G_message(_("Reading <%s>..."), name);
         for (row = 0; row < nrows; row++) {
             G_percent(row, nrows, 2);
             Rast_get_c_row_nomask(fd, cell, row);

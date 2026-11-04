@@ -401,7 +401,7 @@ class HistogramFrame(wx.Frame):
                 dcmd, fullyQualified=True, layerType="raster"
             )
             if not found:
-                GError(parent=propwin, message=_("Raster map <%s> not found") % name)
+                GError(parent=propwin, message=_("Raster map <%s> not found.") % name)
                 return
 
             self.SetHistLayer(name, dcmd)

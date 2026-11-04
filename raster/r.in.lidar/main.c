@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
                _("Variance of point values in cell"),
                _("Coefficient of variance of point values in cell"),
                _("Median value of point values in cell"),
-               _("pth (nth) percentile of point values in cell"),
+               _("Pth (nth) percentile of point values in cell"),
                _("Skewness of point values in cell"),
                _("Trimmed mean of point values in cell"));
 
@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
     pth_opt->type = TYPE_INTEGER;
     pth_opt->required = NO;
     pth_opt->options = "1-100";
-    pth_opt->description = _("pth percentile of the values");
+    pth_opt->description = _("Pth percentile of the values");
     pth_opt->guisection = _("Statistic");
 
     trim_opt = G_define_option();
@@ -611,8 +611,8 @@ int main(int argc, char *argv[])
     if (!scan_flag->answer) {
         if (!check_rows_cols_fit_to_size_t(rows, cols))
             G_fatal_error(
-                _("Unable to process the whole map at once. "
-                  "Please set the '%s' option to some value lower than 100."),
+                _("Unable to process the whole map at once. Please set the "
+                  "<%s> option to some value lower than 100."),
                 percent_opt->key);
         point_binning_memory_test(&point_binning, rows, cols, rtype);
     }
@@ -665,7 +665,7 @@ int main(int argc, char *argv[])
             /* we already know file is there, so just do basic checks */
             LAS_reader = LASReader_Create(infile);
             if (LAS_reader == NULL)
-                G_fatal_error(_("Unable to open file <%s>"), infile);
+                G_fatal_error(_("Unable to open file '%s'."), infile);
 
             while ((LAS_point = LASReader_GetNextPoint(LAS_reader)) != NULL) {
                 line++;

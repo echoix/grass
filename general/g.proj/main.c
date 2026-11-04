@@ -255,24 +255,24 @@ int main(int argc, char *argv[])
     }
 
     if (shellinfo->answer) {
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=shell instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "shell");
         outputFormat = SHELL;
     }
     else if (printproj4->answer) {
-        G_verbose_message(
-            _("Flag 'j' is deprecated and will be removed in a future "
-              "release. Please use format=proj4 instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'j', "proj4");
         outputFormat = PROJ4;
     }
     else if (printwkt->answer || esristyle->answer) {
         outputFormat = WKT;
 
         if (printwkt->answer) {
-            G_verbose_message(
-                _("Flag 'w' is deprecated and will be removed in a future "
-                  "release. Please use format=wkt instead."));
+            G_verbose_message(_("Flag '%c' is deprecated and will be removed "
+                                "in a future release. Use format=%s instead."),
+                              'w', "wkt");
         }
     }
 

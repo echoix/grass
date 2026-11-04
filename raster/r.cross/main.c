@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
             G_fatal_error(_("More than %d files not allowed"), NFILES);
         mapset = G_find_raster2(name, "");
         if (!mapset)
-            G_fatal_error(_("Raster map <%s> not found"), name);
+            G_fatal_error(_("Raster map <%s> not found."), name);
         names[nfiles] = name;
         fd[nfiles] = Rast_open_old(name, mapset);
     }

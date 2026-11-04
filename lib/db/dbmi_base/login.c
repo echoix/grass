@@ -110,7 +110,7 @@ static int read_file(LOGIN *login)
 
     fd = fopen(file, "r");
     if (fd == NULL) {
-        G_warning(_("Unable to read file '%s'"), file);
+        G_warning(_("Unable to read file '%s'."), file);
         return -1;
     }
 

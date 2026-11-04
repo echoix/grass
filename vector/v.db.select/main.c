@@ -180,7 +180,7 @@ int main(int argc, char **argv)
     /* set input vector map name and mapset */
     if (options.file->answer && strcmp(options.file->answer, "-") != 0) {
         if (NULL == freopen(options.file->answer, "w", stdout))
-            G_fatal_error(_("Unable to open file <%s> for writing"),
+            G_fatal_error(_("Unable to open file '%s' for writing."),
                           options.file->answer);
     }
 
@@ -199,7 +199,8 @@ int main(int argc, char **argv)
             options.format, flags.colnames,
             _("Column names are always included"));
         fatal_error_option_value_excludes_option(
-            options.format, options.fsep, _("Separator is part of the format"));
+            options.format, options.fsep,
+            _("Separator is part of the format."));
         fatal_error_option_value_excludes_option(
             options.format, options.nullval,
             _("Null value is part of the format"));
@@ -266,7 +267,7 @@ int main(int argc, char **argv)
     else {
         if (Vect_open_old_head2(&Map, options.map->answer, "",
                                 options.field->answer) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           options.map->answer);
         /* field_number won't be used, but is initialized to suppress compiler
          * warnings. */
@@ -274,7 +275,7 @@ int main(int argc, char **argv)
     }
 
     if ((Fi = Vect_get_field2(&Map, options.field->answer)) == NULL)
-        G_fatal_error(_("Database connection not defined for layer <%s>"),
+        G_fatal_error(_("Database connection not defined for layer <%s>."),
                       options.field->answer);
 
     driver = db_start_driver_open_database(Fi->driver, Fi->database);

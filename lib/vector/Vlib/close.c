@@ -76,7 +76,7 @@ int Vect_close(struct Map_info *Map)
 
         putenv("GRASS_VECTOR_EXTERNAL_IMMEDIATE=1");
         if (-1 == Vect_open_new(&Out, Vect_get_name(Map), Vect_is_3d(Map))) {
-            G_warning(_("Unable to create vector map <%s>"),
+            G_warning(_("Unable to create vector map <%s>."),
                       Vect_get_name(Map));
             return 1;
         }
@@ -267,7 +267,7 @@ int Vect_save_frmt(struct Map_info *Map)
         fprintf(fd, "layer: %s\n", Map->fInfo.ogr.layer_name);
     }
 
-    G_verbose_message(_("Link to vector map <%s> created"), Map->name);
+    G_verbose_message(_("Link to vector map <%s> created."), Map->name);
 
     /* close frmt file */
     fclose(fd);

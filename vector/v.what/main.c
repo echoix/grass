@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 
     flag.shell = G_define_flag();
     flag.shell->key = 'g';
-    flag.shell->label = _("Print the stats in shell script style [deprecated]");
+    flag.shell->label = _("Print in shell script style [deprecated]");
     flag.shell->description = _(
         "This flag is deprecated and will be removed in a future release. Use "
         "format=shell instead.");
@@ -183,14 +183,14 @@ int main(int argc, char **argv)
         format = flag.shell->answer ? SHELL
                                     : (flag.json->answer ? LEGACY_JSON : PLAIN);
         if (format == LEGACY_JSON) {
-            G_verbose_message(
-                _("Flag 'j' is deprecated and will be removed in a future "
-                  "release. Please use format=json instead."));
+            G_verbose_message(_("Flag '%c' is deprecated and will be removed "
+                                "in a future release. Use format=%s instead."),
+                              'j', "json");
         }
         else if (format == SHELL) {
-            G_verbose_message(
-                _("Flag 'g' is deprecated and will be removed in a future "
-                  "release. Please use format=shell instead."));
+            G_verbose_message(_("Flag '%c' is deprecated and will be removed "
+                                "in a future release. Use format=%s instead."),
+                              'g', "shell");
         }
     }
     else {

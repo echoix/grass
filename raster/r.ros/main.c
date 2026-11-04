@@ -356,7 +356,7 @@ int main(int argc, char *argv[])
 
     /*  Check if input layers exists in data base  */
     if (G_find_raster2(parm.model->answer, "") == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), parm.model->answer);
+        G_fatal_error(_("Raster map <%s> not found."), parm.model->answer);
 
     if (!(parm.mois_1h->answer || parm.mois_10h->answer ||
           parm.mois_100h->answer)) {
@@ -367,21 +367,22 @@ int main(int argc, char *argv[])
 
     if (parm.mois_1h->answer) {
         if (G_find_raster2(parm.mois_1h->answer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), parm.mois_1h->answer);
+            G_fatal_error(_("Raster map <%s> not found."),
+                          parm.mois_1h->answer);
     }
     if (parm.mois_10h->answer) {
         if (G_find_raster2(parm.mois_10h->answer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"),
+            G_fatal_error(_("Raster map <%s> not found."),
                           parm.mois_10h->answer);
     }
     if (parm.mois_100h->answer) {
         if (G_find_raster2(parm.mois_100h->answer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"),
+            G_fatal_error(_("Raster map <%s> not found."),
                           parm.mois_100h->answer);
     }
 
     if (G_find_raster2(parm.mois_live->answer, "") == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), parm.mois_live->answer);
+        G_fatal_error(_("Raster map <%s> not found."), parm.mois_live->answer);
 
     if (parm.vel->answer && !(parm.dir->answer)) {
         G_fatal_error(_("A wind direction layer should be "
@@ -395,11 +396,11 @@ int main(int argc, char *argv[])
     }
     if (parm.vel->answer) {
         if (G_find_raster2(parm.vel->answer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), parm.vel->answer);
+            G_fatal_error(_("Raster map <%s> not found."), parm.vel->answer);
     }
     if (parm.dir->answer) {
         if (G_find_raster2(parm.dir->answer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), parm.dir->answer);
+            G_fatal_error(_("Raster map <%s> not found."), parm.dir->answer);
     }
 
     if (parm.slope->answer && !(parm.aspect->answer)) {
@@ -414,11 +415,11 @@ int main(int argc, char *argv[])
     }
     if (parm.slope->answer) {
         if (G_find_raster2(parm.slope->answer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), parm.slope->answer);
+            G_fatal_error(_("Raster map <%s> not found."), parm.slope->answer);
     }
     if (parm.aspect->answer) {
         if (G_find_raster2(parm.aspect->answer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), parm.aspect->answer);
+            G_fatal_error(_("Raster map <%s> not found."), parm.aspect->answer);
     }
 
     if (spotting) {
@@ -428,7 +429,7 @@ int main(int argc, char *argv[])
         }
         else {
             if (G_find_raster2(parm.elev->answer, "") == NULL)
-                G_fatal_error(_("Raster map <%s> not found"),
+                G_fatal_error(_("Raster map <%s> not found."),
                               parm.elev->answer);
         }
     }

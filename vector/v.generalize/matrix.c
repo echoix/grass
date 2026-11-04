@@ -136,7 +136,7 @@ int matrix_inverse(MATRIX *a, MATRIX *res, int percents)
 
     /* initialize output matrix to the identity matrix */
     if (!matrix_init(a->rows, a->rows, res)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return 0;
     }
     for (i = 0; i < a->rows; i++) {

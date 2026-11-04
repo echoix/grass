@@ -121,13 +121,13 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2);
 
     if (1 > Vect_open_old(&In, map_in->answer, ""))
-        G_fatal_error(_("Unable to open vector map <%s>"), map_in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_in->answer);
 
     with_z = Vect_is_3d(&In);
 
     if (0 > Vect_open_new(&Out, map_out->answer, with_z)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), map_out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), map_out->answer);
     }
 
     /* parse filter option and select appropriate lines */
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
     if (ncol->answer) {
         node_costs = (int *)G_calloc(nnodes + 1, sizeof(int));
         if (!node_costs)
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
         NetA_get_node_costs(&In, nfield, ncol->answer, node_costs);
         nedges = NetA_split_vertices(graph, &vg, node_costs);
         G_free(node_costs);
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 
     flow = (int *)G_calloc(nedges + 1, sizeof(int));
     if (!flow)
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
 
     total_flow = NetA_flow(graph, set1_list, set2_list, flow);
     G_debug(3, "Connectivity: %d", total_flow);

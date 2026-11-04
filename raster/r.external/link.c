@@ -217,7 +217,7 @@ void create_map(const char *input, int band, const char *output,
         write_fp_quant(output);
     }
 
-    G_verbose_message(_("Creating support files for %s"), output);
+    G_verbose_message(_("Creating support files for <%s>..."), output);
     Rast_short_history(output, "GDAL-link", &history);
     Rast_command_history(&history);
     snprintf(buf, sizeof(buf), "%s band %d", input, band);

@@ -368,7 +368,7 @@ int main(int argc, char **argv)
         has_color = 0;
     }
     else if (ret == 0) { /* error */
-        G_fatal_error(_("Unknown color: [%s]"), bcolor_opt->answer);
+        G_fatal_error(_("Unknown color: <%s>."), bcolor_opt->answer);
     }
 
     /* if both class breaks and (algorithm or classnumber) are given, give
@@ -448,7 +448,7 @@ int main(int argc, char **argv)
         D_setup(0);
 
         if (verbose)
-            G_message(_("Plotting ..."));
+            G_message(_("Plotting..."));
 
         overlap = 1;
         Vect_get_map_box(&Map, &box);

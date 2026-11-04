@@ -167,7 +167,7 @@ int PS_vpoints_plot(struct Map_info *P_map, int vec)
 
             if (size_val < 0.0) {
                 G_warning(
-                    _("Attribute is of invalid size [%.3f] for category [%d]"),
+                    _("Attribute is of invalid size (%.3f) for category %d."),
                     size_val, cat);
                 continue;
             }

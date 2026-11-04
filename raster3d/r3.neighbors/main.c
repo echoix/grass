@@ -219,7 +219,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
 
     if (NULL == G_find_raster3d(param.input->answer, ""))
-        Rast3d_fatal_error(_("3D raster map <%s> not found"),
+        Rast3d_fatal_error(_("3D raster map <%s> not found."),
                            param.input->answer);
 
     Rast3d_init_defaults();

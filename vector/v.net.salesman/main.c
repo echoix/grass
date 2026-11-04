@@ -244,7 +244,7 @@ int main(int argc, char **argv)
     Vect_set_open_level(2);
 
     if (Vect_open_old(&Map, map->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map->answer);
 
     afield = Vect_get_field_number(&Map, afield_opt->answer);
     nfield = Vect_get_field_number(&Map, nfield_opt->answer);
@@ -538,7 +538,7 @@ int main(int argc, char **argv)
 
     /* Write arcs to new map */
     if (Vect_open_new(&Out, output->answer, Vect_is_3d(&Map)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), output->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), output->answer);
 
     Vect_hist_command(&Out);
 
@@ -567,7 +567,7 @@ int main(int argc, char **argv)
 
         fp = fopen(seqname, "w");
         if (!fp)
-            G_fatal_error(_("Unable to open file '%s' for writing"), seqname);
+            G_fatal_error(_("Unable to open file '%s' for writing."), seqname);
 
         fprintf(fp, "sequence;category;cost_to_next\n");
     }

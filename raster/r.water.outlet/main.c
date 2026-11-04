@@ -82,10 +82,10 @@ int main(int argc, char *argv[])
     }
 
     if (!G_scan_easting(opt.coords->answers[0], &E, G_projection()))
-        G_fatal_error(_("Illegal east coordinate '%s'"),
+        G_fatal_error(_("Illegal east coordinate <%s>."),
                       opt.coords->answers[0]);
     if (!G_scan_northing(opt.coords->answers[1], &N, G_projection()))
-        G_fatal_error(_("Illegal north coordinate '%s'"),
+        G_fatal_error(_("Illegal north coordinate <%s>."),
                       opt.coords->answers[1]);
 
     G_debug(1, "easting = %.4f northing = %.4f", E, N);

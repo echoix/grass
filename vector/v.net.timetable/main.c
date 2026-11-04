@@ -92,7 +92,7 @@ void init_database(struct Map_info *Out, dbDriver **driver,
 
     if (db_execute_immediate(*driver, &sql) != DB_OK) {
         db_close_database_shutdown_driver(*driver);
-        G_fatal_error(_("Unable to create table: '%s'"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table: '%s'."), db_get_string(&sql));
     }
 
     if (db_create_index2(*driver, (*Fi)->table, GV_KEY_COLUMN) != DB_OK)
@@ -100,7 +100,8 @@ void init_database(struct Map_info *Out, dbDriver **driver,
 
     if (db_grant_on_table(*driver, (*Fi)->table, DB_PRIV_SELECT,
                           DB_GROUP | DB_PUBLIC) != DB_OK)
-        G_fatal_error(_("Cannot grant privileges on table <%s>"), (*Fi)->table);
+        G_fatal_error(_("Cannot grant privileges on table <%s>."),
+                      (*Fi)->table);
 
     db_free_string(&sql);
     db_begin_transaction(*driver);
@@ -120,7 +121,8 @@ void insert_point(dbDriver *driver, char *table, int cat, int path, int stop_id,
     G_debug(3, "%s", db_get_string(&sql));
     if (db_execute_immediate(driver, &sql) != DB_OK) {
         db_close_database_shutdown_driver(driver);
-        G_fatal_error(_("Cannot insert new record: %s"), db_get_string(&sql));
+        G_fatal_error(_("Cannot insert new record: '%s'."),
+                      db_get_string(&sql));
     };
 
     db_free_string(&sql);
@@ -141,7 +143,8 @@ void insert_line(dbDriver *driver, char *table, int cat, int path, int from_id,
     G_debug(3, "%s", db_get_string(&sql));
     if (db_execute_immediate(driver, &sql) != DB_OK) {
         db_close_database_shutdown_driver(driver);
-        G_fatal_error(_("Cannot insert new record: %s"), db_get_string(&sql));
+        G_fatal_error(_("Cannot insert new record: '%s'."),
+                      db_get_string(&sql));
     };
 
     db_free_string(&sql);
@@ -339,13 +342,13 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2);
 
     if (1 > Vect_open_old(&In, map_in->answer, ""))
-        G_fatal_error(_("Unable to open vector map <%s>"), map_in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_in->answer);
 
     with_z = Vect_is_3d(&In);
 
     if (0 > Vect_open_new(&Out, map_out->answer, with_z)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), map_out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), map_out->answer);
     }
 
     /* parse filter option and select appropriate lines */
@@ -377,7 +380,7 @@ int main(int argc, char *argv[])
     found = (int *)G_calloc(timetable.stops, sizeof(int));
 
     if (!stop_x || !stop_y || !stop_z || !found)
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
 
     if (afield > 0) {
         nnodes = Vect_get_num_nodes(&In);
@@ -386,7 +389,7 @@ int main(int argc, char *argv[])
             (struct ilist **)G_calloc(timetable.routes, sizeof(struct ilist *));
         edges = (int *)G_calloc(nnodes + 1, sizeof(int));
         if (!edges || !stop_node || !lines)
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
         for (i = 0; i < timetable.routes; i++)
             lines[i] = Vect_new_list();
 

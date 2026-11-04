@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     /* open input for reading */
     ret = Vect_open_old2(&In, params.input->answer, "", params.layer->answer);
     if (ret == -1)
-        G_fatal_error(_("Unable to open vector map <%s>"),
+        G_fatal_error(_("Unable to open vector map <%s>."),
                       params.input->answer);
     if (Vect_maptype(&In) != GV_FORMAT_NATIVE)
         G_fatal_error(

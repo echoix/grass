@@ -61,7 +61,7 @@ int where_am_i(char **coords, FILE *fp, int have_spheroid, int decimal,
 
             if (GPJ_transform(&iproj, &oproj, &tproj, PJ_FWD, &lon, &lat,
                               NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform()"));
+                G_fatal_error(_("Error in GPJ_transform()."));
 
             if (decimal) {
                 G_format_easting(lon, buf1, 0);

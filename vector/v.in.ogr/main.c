@@ -545,7 +545,7 @@ int main(int argc, char *argv[])
             GDALOpenEx(dsn, GDAL_OF_VECTOR, NULL, (const char **)doo, NULL);
     }
     if (Ogr_ds == NULL)
-        G_fatal_error(_("Unable to open data source <%s>"), dsn);
+        G_fatal_error(_("Unable to open data source <%s>."), dsn);
 
     /* driver name */
     ogr_driver_name = GDALGetDriverShortName(GDALGetDatasetDriver(Ogr_ds));
@@ -689,7 +689,7 @@ int main(int argc, char *argv[])
     /* Check if the output map exists */
     if (G_find_vector2(output, G_mapset()) && !overwrite) {
         GDALClose(Ogr_ds);
-        G_fatal_error(_("Vector map <%s> already exists"), output);
+        G_fatal_error(_("Vector map <%s> already exists."), output);
     }
 
     /* report back if several layers will be imported because
@@ -864,7 +864,7 @@ int main(int argc, char *argv[])
     G_find_vector(output, G_mapset());
 
     if (Vect_open_new(&Map, output, with_z) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), output);
+        G_fatal_error(_("Unable to create vector map <%s>."), output);
 
     Out = &Map;
 
@@ -1057,7 +1057,7 @@ int main(int argc, char *argv[])
                              OFTIntegerListlength);
                     col_info[i_out].type = G_store(buf);
                     G_warning(_("Writing column <%s> with fixed length %d "
-                                "chars (may be truncated)"),
+                                "chars (may be truncated)."),
                               Ogr_fieldname, OFTIntegerListlength);
                 }
                 else if (Ogr_ftype == OFTReal) {
@@ -1099,8 +1099,8 @@ int main(int argc, char *argv[])
                     snprintf(buf, sizeof(buf), "varchar ( %d )",
                              OFTIntegerListlength);
                     col_info[i_out].type = G_store(buf);
-                    G_warning(_("Writing column %s with fixed length %d chars "
-                                "(may be truncated)"),
+                    G_warning(_("Writing column <%s> with fixed length %d "
+                                "chars (may be truncated)."),
                               Ogr_fieldname, OFTIntegerListlength);
                 }
                 else {
@@ -1168,7 +1168,7 @@ int main(int argc, char *argv[])
             if (db_execute_immediate(driver, &sql) != DB_OK) {
                 db_close_database(driver);
                 db_shutdown_driver(driver);
-                G_fatal_error(_("Unable to create table: '%s'"),
+                G_fatal_error(_("Unable to create table: '%s'."),
                               db_get_string(&sql));
             }
 
@@ -1393,7 +1393,7 @@ int main(int argc, char *argv[])
                 snprintf(buf, sizeof(buf), "drop table %s", Fi->table);
                 db_set_string(&sql, buf);
                 if (db_execute_immediate(driver, &sql) != DB_OK) {
-                    G_fatal_error(_("Unable to drop table: '%s'"),
+                    G_fatal_error(_("Unable to drop table: '%s'."),
                                   db_get_string(&sql));
                 }
             }

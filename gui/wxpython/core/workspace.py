@@ -1736,7 +1736,7 @@ class ProcessGrcFile:
         except OSError:
             wx.MessageBox(
                 parent=parent,
-                message=_("Unable to open file <%s> for reading.") % self.filename,
+                message=_("Unable to open file '%s' for reading.") % self.filename,
                 caption=_("Error"),
                 style=wx.OK | wx.ICON_ERROR,
             )

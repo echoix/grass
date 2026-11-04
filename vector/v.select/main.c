@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
         if (Vect_open_old2(&(In[iopt]), parm.input[iopt]->answer, "",
                            parm.field[iopt]->answer) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"),
+            G_fatal_error(_("Unable to open vector map <%s>."),
                           parm.input[iopt]->answer);
 
         ifield[iopt] =
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
 
     /* Open output */
     if (Vect_open_new(&Out, parm.output->answer, Vect_is_3d(&(In[0]))) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       parm.output->answer);
 
     Vect_set_map_name(&Out, _("Output from v.select"));

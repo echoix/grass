@@ -261,7 +261,7 @@ int Vect_set_varray_from_db(struct Map_info *Map, int field, const char *where,
     /* Select categories from DB to array */
     Fi = Vect_get_field(Map, field);
     if (Fi == NULL) {
-        G_warning(_("Database connection not defined for layer %d"), field);
+        G_warning(_("Database connection not defined for layer %d."), field);
         return -1;
     }
 

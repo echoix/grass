@@ -104,7 +104,7 @@ def main():
 
     gs.run_command("v.db.connect", flags="d", map=map, layer=layer)
 
-    gs.message(_("Current attribute table link(s):"))
+    gs.message(_("Current attribute table links:"))
     # silently test first to avoid confusing error messages
     nuldev = open(os.devnull, "w")
     try:

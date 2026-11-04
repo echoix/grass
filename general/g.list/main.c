@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
     flag.full->label = _("Verbose listing (also list map titles) [deprecated]");
     flag.full->description =
         _("This flag is deprecated and will be removed in a future release. "
-          " Use the type-specific tool to obtain metadata, such as r.info "
+          "Use the type-specific tool to obtain metadata, such as r.info "
           "and v.info.");
     flag.full->guisection = _("Print");
 
@@ -335,7 +335,7 @@ int main(int argc, char *argv[])
             else if (strcmp(mapset, ".") == 0)
                 mapset = G_mapset();
             else if (G_mapset_permissions(mapset) == -1)
-                G_fatal_error(_("Mapset <%s> does not exist"), mapset);
+                G_fatal_error(_("Mapset <%s> does not exist."), mapset);
             G_add_mapset_to_search_path(mapset);
         }
     }

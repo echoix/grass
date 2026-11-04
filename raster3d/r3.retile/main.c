@@ -45,7 +45,7 @@ void fatal_error(void *map, int *fd, int depths, char *errorMsg)
     /* Close files and exit */
     if (map != NULL) {
         if (!Rast3d_close(map))
-            Rast3d_fatal_error(_("Unable to close the 3D raster map"));
+            Rast3d_fatal_error(_("Unable to close 3D raster map."));
     }
 
     if (fd != NULL) {
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     mapset = G_find_raster3d(param.input->answer, "");
 
     if (mapset == NULL)
-        Rast3d_fatal_error(_("3D raster map <%s> not found"),
+        Rast3d_fatal_error(_("3D raster map <%s> not found."),
                            param.input->answer);
 
     /*Set the defaults */
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 
     /* Close files and exit */
     if (!Rast3d_close(map))
-        fatal_error(map, NULL, 0, _("Error closing 3D raster map"));
+        fatal_error(map, NULL, 0, _("Error closing 3D raster map."));
 
     map = NULL;
 

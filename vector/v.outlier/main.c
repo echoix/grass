@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
             G_message("Estimated mean distance between points: %.4g", dist);
         }
         else
-            G_warning(_("No points in current region!"));
+            G_warning(_("No points in current region."));
 
         Vect_close(&In);
         exit(EXIT_SUCCESS);
@@ -225,18 +225,18 @@ int main(int argc, char *argv[])
     /* Open output vector */
     if (qgis_opt->answer)
         if (0 > Vect_open_new(&Qgis, qgis_opt->answer, WITHOUT_Z))
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           qgis_opt->answer);
 
     if (0 > Vect_open_new(&Out, out_opt->answer, WITH_Z)) {
         Vect_close(&Qgis);
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
     }
 
     if (0 > Vect_open_new(&Outlier, outlier_opt->answer, WITH_Z)) {
         Vect_close(&Out);
         Vect_close(&Qgis);
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
     }
 
     /* Copy vector Head File */

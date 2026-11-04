@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
 
     mapset = G_find_raster2(name, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), name);
+        G_fatal_error(_("Raster map <%s> not found."), name);
 
     map_type = Rast_map_type(name, mapset);
 
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 
             cmapset = G_find_raster2(parm.raster->answer, "");
             if (cmapset == NULL)
-                G_fatal_error(_("Raster map <%s> not found"),
+                G_fatal_error(_("Raster map <%s> not found."),
                               parm.raster->answer);
 
             fd = Rast_open_old(name, mapset);
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
             else {
                 fp = fopen(parm.file->answer, "r");
                 if (!fp)
-                    G_fatal_error(_("Unable to open file <%s>"),
+                    G_fatal_error(_("Unable to open file '%s'."),
                                   parm.file->answer);
             }
 

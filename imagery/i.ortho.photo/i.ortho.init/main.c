@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     strcpy(group.name, group_opt->answer);
 
     if (!I_find_group(group.name)) {
-        G_fatal_error(_("Group [%s] not found"), group.name);
+        G_fatal_error(_("Group <%s> not found."), group.name);
     }
     G_debug(1, "Found group %s", group.name);
 

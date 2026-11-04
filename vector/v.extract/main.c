@@ -187,7 +187,7 @@ int main(int argc, char **argv)
     Vect_set_open_level(2); /* topology required */
 
     if (Vect_open_old2(&In, input, "", opt.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), input);
+        G_fatal_error(_("Unable to open vector map <%s>."), input);
 
     field = Vect_get_field_number(&In, opt.field->answer);
 
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
             Fi = Vect_get_field(&In, field);
             if (!Fi) {
                 G_fatal_error(
-                    _("Database connection not defined for layer <%s>"),
+                    _("Database connection not defined for layer <%s>."),
                     opt.field->answer);
             }
 
@@ -309,7 +309,7 @@ int main(int argc, char **argv)
     else if (opt.where->answer != NULL) {
         Fi = Vect_get_field(&In, field);
         if (!Fi) {
-            G_fatal_error(_("Database connection not defined for layer <%s>"),
+            G_fatal_error(_("Database connection not defined for layer <%s>."),
                           opt.field->answer);
         }
 
@@ -403,7 +403,7 @@ int main(int argc, char **argv)
     }
 
     if (Vect_open_new(&Out, output, Vect_is_3d(&In)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), output);
+        G_fatal_error(_("Unable to create vector map <%s>."), output);
 
     Vect_hist_copy(&In, &Out);
     Vect_hist_command(&Out);

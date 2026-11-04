@@ -187,7 +187,8 @@ dbDriver *create_table(OGRLayerH hLayer, const struct field_info *Fi)
     db_append_string(&sql, " where 0 = 1");
 
     if (db_open_select_cursor(driver, &sql, &cursor, DB_SEQUENTIAL) != DB_OK) {
-        G_warning(_("Unable to open select cursor: '%s'"), db_get_string(&sql));
+        G_warning(_("Unable to open select cursor: '%s'."),
+                  db_get_string(&sql));
         db_close_database_shutdown_driver(driver);
         return NULL;
     }

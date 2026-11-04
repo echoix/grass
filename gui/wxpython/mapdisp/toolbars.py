@@ -29,7 +29,7 @@ MapIcons = {
     ),
     "select": MetaIcon(
         img="select",
-        label=_("Select vector feature(s)"),
+        label=_("Select vector features"),
         desc=_("Select features interactively from vector map"),
     ),
     "addBarscale": MetaIcon(img="scalebar-add", label=_("Add scale bar")),

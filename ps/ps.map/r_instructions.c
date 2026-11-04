@@ -193,7 +193,7 @@ void read_instructions(int copies_set, int can_reset_scale)
         if (KEY("scalebar")) {
             if (G_projection() == PROJECTION_LL) {
                 error(key, data,
-                      _("scalebar is not appropriate for this projection"));
+                      _("Scalebar is not appropriate for this projection."));
                 gobble_input();
             }
             PS.do_scalebar = 1;

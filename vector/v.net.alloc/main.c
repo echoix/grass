@@ -171,7 +171,7 @@ int main(int argc, char **argv)
 
     Vect_set_open_level(2);
     if (Vect_open_old(&Map, map->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map->answer);
 
     afield = Vect_get_field_number(&Map, afield_opt->answer);
     nfield = Vect_get_field_number(&Map, nfield_opt->answer);
@@ -285,7 +285,7 @@ int main(int argc, char **argv)
 
     /* Write arcs to new map */
     if (Vect_open_new(&Out, output->answer, Vect_is_3d(&Map)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), output->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), output->answer);
 
     Vect_hist_command(&Out);
 
@@ -316,7 +316,7 @@ int main(int argc, char **argv)
         G_debug(2, "%s", db_get_string(&sql));
 
         if (db_execute_immediate(driver, &sql) != DB_OK) {
-            G_fatal_error(_("Unable to create table: '%s'"),
+            G_fatal_error(_("Unable to create table: '%s'."),
                           db_get_string(&sql));
         }
 
@@ -325,7 +325,7 @@ int main(int argc, char **argv)
 
         if (db_grant_on_table(driver, Fi->table, DB_PRIV_SELECT,
                               DB_GROUP | DB_PUBLIC) != DB_OK)
-            G_fatal_error(_("Cannot grant privileges on table <%s>"),
+            G_fatal_error(_("Cannot grant privileges on table <%s>."),
                           Fi->table);
 
         db_begin_transaction(driver);
@@ -422,7 +422,7 @@ int main(int argc, char **argv)
                     G_debug(3, "%s", db_get_string(&sql));
 
                     if (db_execute_immediate(driver, &sql) != DB_OK) {
-                        G_fatal_error(_("Cannot insert new record: %s"),
+                        G_fatal_error(_("Cannot insert new record: '%s'."),
                                       db_get_string(&sql));
                     }
                     ucat++;
@@ -455,7 +455,7 @@ int main(int argc, char **argv)
                         G_debug(3, "%s", db_get_string(&sql));
 
                         if (db_execute_immediate(driver, &sql) != DB_OK) {
-                            G_fatal_error(_("Cannot insert new record: %s"),
+                            G_fatal_error(_("Cannot insert new record: '%s'."),
                                           db_get_string(&sql));
                         }
                         ucat++;
@@ -487,7 +487,7 @@ int main(int argc, char **argv)
                         G_debug(3, "%s", db_get_string(&sql));
 
                         if (db_execute_immediate(driver, &sql) != DB_OK) {
-                            G_fatal_error(_("Cannot insert new record: %s"),
+                            G_fatal_error(_("Cannot insert new record: '%s'."),
                                           db_get_string(&sql));
                         }
                         ucat++;
@@ -527,7 +527,7 @@ int main(int argc, char **argv)
                         G_debug(3, "%s", db_get_string(&sql));
 
                         if (db_execute_immediate(driver, &sql) != DB_OK) {
-                            G_fatal_error(_("Cannot insert new record: %s"),
+                            G_fatal_error(_("Cannot insert new record: '%s'."),
                                           db_get_string(&sql));
                         }
                         ucat++;
@@ -556,7 +556,7 @@ int main(int argc, char **argv)
                         G_debug(3, "%s", db_get_string(&sql));
 
                         if (db_execute_immediate(driver, &sql) != DB_OK) {
-                            G_fatal_error(_("Cannot insert new record: %s"),
+                            G_fatal_error(_("Cannot insert new record: '%s'."),
                                           db_get_string(&sql));
                         }
                         ucat++;
@@ -606,7 +606,8 @@ int main(int argc, char **argv)
                             G_debug(3, "%s", db_get_string(&sql));
 
                             if (db_execute_immediate(driver, &sql) != DB_OK) {
-                                G_fatal_error(_("Cannot insert new record: %s"),
+                                G_fatal_error(_("Cannot insert new record: "
+                                                "'%s'."),
                                               db_get_string(&sql));
                             }
                             ucat++;
@@ -642,7 +643,8 @@ int main(int argc, char **argv)
                             G_debug(3, "%s", db_get_string(&sql));
 
                             if (db_execute_immediate(driver, &sql) != DB_OK) {
-                                G_fatal_error(_("Cannot insert new record: %s"),
+                                G_fatal_error(_("Cannot insert new record: "
+                                                "'%s'."),
                                               db_get_string(&sql));
                             }
                             ucat++;
@@ -673,7 +675,7 @@ int main(int argc, char **argv)
                 G_debug(3, "%s", db_get_string(&sql));
 
                 if (db_execute_immediate(driver, &sql) != DB_OK) {
-                    G_fatal_error(_("Cannot insert new record: %s"),
+                    G_fatal_error(_("Cannot insert new record: '%s'."),
                                   db_get_string(&sql));
                 }
                 ucat++;

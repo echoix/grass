@@ -279,7 +279,7 @@ class Layer:
     def SetType(self, ltype):
         """Set layer type"""
         if ltype not in list(utils.command2ltype.values()) + ["overlay", "command"]:
-            raise GException(_("Unsupported map layer type '%s'") % ltype)
+            raise GException(_("Unsupported map layer type <%s>.") % ltype)
 
         if not self.renderMgr:
             env = {}

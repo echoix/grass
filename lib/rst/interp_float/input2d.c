@@ -47,7 +47,7 @@ struct BM *IL_create_bitmask(struct interp_params *params)
         if (params->maskmap != NULL) {
             mapsetm = G_find_raster2(params->maskmap, "");
             if (!mapsetm)
-                G_fatal_error(_("Mask raster map <%s> not found"),
+                G_fatal_error(_("Mask raster map <%s> not found."),
                               params->maskmap);
 
             cellmask = Rast_allocate_c_buf();

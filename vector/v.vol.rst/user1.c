@@ -372,7 +372,7 @@ int INPUT(struct Map_info *In, char *column, char *scol, char *wheresql)
         mapsetm = G_find_raster2(maskmap, "");
         if (!mapsetm) {
             clean();
-            G_fatal_error(_("Mask raster map [%s] not found"), maskmap);
+            G_fatal_error(_("Mask raster map <%s> not found."), maskmap);
         }
         bitmask = BM_create(nsizc, nsizr);
         cellmask = Rast_allocate_c_buf();
@@ -431,7 +431,7 @@ int OUTGR(void)
 
     if (!(data = (float *)G_malloc(sizeof(float) * nsizr * nsizc * nsizl))) {
         clean();
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
     }
 
     /*** Write elevation results ***/

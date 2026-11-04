@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     ppm_file->required = YES;
     ppm_file->multiple = NO;
     ppm_file->answer = NULL;
-    ppm_file->description = _("Name for new PPM file. (use '-' for stdout)");
+    ppm_file->description = _("Name for new PPM file (use '-' for stdout)");
 
     comment = G_define_flag();
     comment->key = 'c';
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
     else {
         fp = fopen(ppm_file->answer, "w");
         if (!fp)
-            G_fatal_error(_("Unable to open file <%s>"), ppm_file->answer);
+            G_fatal_error(_("Unable to open file '%s'."), ppm_file->answer);
     }
 
     /* write header info */

@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
             GDALOpenEx(options.dsn->answer, GDAL_OF_VECTOR, NULL, NULL, NULL);
     }
     if (Ogr_ds == NULL)
-        G_fatal_error(_("Unable to open data source <%s>"), dsn);
+        G_fatal_error(_("Unable to open data source <%s>."), dsn);
 
     G_get_window(&cellhd);
 
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
     putenv("GRASS_VECTOR_EXTERNAL_IGNORE=1");
     if (Vect_open_new(&Map, output, WITHOUT_Z) <
         0) /* dimension is set later from data source */
-        G_fatal_error(_("Unable to create vector map <%s>"), output);
+        G_fatal_error(_("Unable to create vector map <%s>."), output);
     Vect_set_error_handler_io(NULL, &Map);
 
     Vect_hist_command(&Map);
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
              G_mapset(), GV_DIRECTORY, output);
     G_debug(2, "Delete '%s'", buf);
     if (unlink(buf) == -1) {
-        G_fatal_error(_("Unable to delete '%s'"), buf);
+        G_fatal_error(_("Unable to delete <%s>."), buf);
     }
 
     /* create frmt file */
@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
     if (!flags.topo->answer) {
         Vect_set_open_level(1);
         if (Vect_open_old(&Map, output, G_mapset()) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), output);
+            G_fatal_error(_("Unable to open vector map <%s>."), output);
         Vect_build(&Map);
         Vect_close(&Map);
     }

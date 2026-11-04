@@ -86,13 +86,13 @@ int do_geogrid(void)
             e2 = e1 + ((east - west) / SEGS);
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &e1,
                               &n1, NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
             check_coords(e1, n1, &lon, &lat, 1);
             e1 = lon;
             n1 = lat;
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &e2,
                               &n2, NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
             check_coords(e2, n2, &lon, &lat, 1);
             e2 = lon;
             n2 = lat;
@@ -115,13 +115,13 @@ int do_geogrid(void)
             n2 = n1 + ((north - south) / SEGS);
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &e1,
                               &n1, NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
             check_coords(e1, n1, &lon, &lat, 2);
             e1 = lon;
             n1 = lat;
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &e2,
                               &n2, NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
             check_coords(e2, n2, &lon, &lat, 2);
             e2 = lon;
             n2 = lat;
@@ -192,7 +192,7 @@ int do_geogrid_numbers(void)
         n1 = g;
         if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &e1, &n1,
                           NULL) < 0)
-            G_fatal_error(_("Error in GPJ_transform"));
+            G_fatal_error(_("Error in GPJ_transform()."));
         check_coords(e1, n1, &lon, &lat, 1);
         e1 = lon;
         n1 = lat;
@@ -234,7 +234,7 @@ int do_geogrid_numbers(void)
         n1 = south; /* draw at south edge */
         if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &e1, &n1,
                           NULL) < 0)
-            G_fatal_error(_("Error in GPJ_transform"));
+            G_fatal_error(_("Error in GPJ_transform()."));
         check_coords(e1, n1, &lon, &lat, 2);
         e1 = lon;
         n1 = lat;
@@ -314,7 +314,7 @@ void get_ll_bounds(double *w, double *e, double *s, double *n)
         n1 = PS.w.north;
         if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_FWD, &e1, &n1,
                           NULL) < 0)
-            G_fatal_error(_("Error in GPJ_transform"));
+            G_fatal_error(_("Error in GPJ_transform()."));
         if (!first) {
             north = n1;
             first = 1;
@@ -331,7 +331,7 @@ void get_ll_bounds(double *w, double *e, double *s, double *n)
         s1 = PS.w.south;
         if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_FWD, &e1, &s1,
                           NULL) < 0)
-            G_fatal_error(_("Error in GPJ_transform"));
+            G_fatal_error(_("Error in GPJ_transform()."));
         if (!first) {
             south = s1;
             first = 1;
@@ -349,7 +349,7 @@ void get_ll_bounds(double *w, double *e, double *s, double *n)
         n1 = ns;
         if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_FWD, &e1, &n1,
                           NULL) < 0)
-            G_fatal_error(_("Error in GPJ_transform"));
+            G_fatal_error(_("Error in GPJ_transform()."));
         if (!first) {
             east = e1;
             first = 1;
@@ -367,7 +367,7 @@ void get_ll_bounds(double *w, double *e, double *s, double *n)
         n1 = ns;
         if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_FWD, &w1, &n1,
                           NULL) < 0)
-            G_fatal_error(_("Error in GPJ_transform"));
+            G_fatal_error(_("Error in GPJ_transform()."));
         if (!first) {
             west = w1;
             first = 1;
@@ -422,19 +422,19 @@ void check_coords(double e, double n, double *lon, double *lat, int par)
         /* convert original coords to ll */
         if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_FWD, &e, &n,
                           NULL) < 0)
-            G_fatal_error(_("Error in GPJ_transform"));
+            G_fatal_error(_("Error in GPJ_transform()."));
 
         if (par == 1) {
             /* lines of latitude -- const. northing */
             /* convert correct UTM to ll */
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_FWD, &x, &y,
                               NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
 
             /* convert new ll back to coords */
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &x, &n,
                               NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
             *lat = n;
             *lon = x;
         }
@@ -443,12 +443,12 @@ void check_coords(double e, double n, double *lon, double *lat, int par)
             /* convert correct UTM to ll */
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_FWD, &x, &y,
                               NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
 
             /* convert new ll back to coords */
             if (GPJ_transform(&info_in, &info_out, &info_trans, PJ_INV, &e, &y,
                               NULL) < 0)
-                G_fatal_error(_("Error in GPJ_transform"));
+                G_fatal_error(_("Error in GPJ_transform()."));
             *lat = y;
             *lon = e;
         }

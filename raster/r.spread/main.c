@@ -439,23 +439,23 @@ int main(int argc, char *argv[])
         G_fatal_error("Raster map <%s> not found", max_layer);
 
     if (G_find_raster2(dir_layer, "") == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), dir_layer);
+        G_fatal_error(_("Raster map <%s> not found."), dir_layer);
 
     if (G_find_raster2(base_layer, "") == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), base_layer);
+        G_fatal_error(_("Raster map <%s> not found."), base_layer);
 
     if (G_find_raster2(start_layer, "") == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), start_layer);
+        G_fatal_error(_("Raster map <%s> not found."), start_layer);
 
     if (spotting) {
         if (G_find_raster2(spotdist_layer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), spotdist_layer);
+            G_fatal_error(_("Raster map <%s> not found."), spotdist_layer);
 
         if (G_find_raster2(velocity_layer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), velocity_layer);
+            G_fatal_error(_("Raster map <%s> not found."), velocity_layer);
 
         if (G_find_raster2(mois_layer, "") == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), mois_layer);
+            G_fatal_error(_("Raster map <%s> not found."), mois_layer);
     }
 
     /*  Open input cell layers for reading  */
@@ -554,7 +554,7 @@ int main(int argc, char *argv[])
     heap = (struct costHa *)G_calloc(nrows * ncols + 1, sizeof(struct costHa));
     heap_len = 0;
 
-    G_message(_("Reading %s..."), start_layer);
+    G_message(_("Reading <%s>..."), start_layer);
     G_debug(1, "Collecting origins...");
     collect_ori(start_fd, start_is_time);
     G_debug(1, "Done");

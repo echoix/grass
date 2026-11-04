@@ -163,7 +163,7 @@ class WSPanel(wx.Panel):
 
         # list of layers
         self.layersBox = StaticBox(
-            parent=self.req_page_panel, id=wx.ID_ANY, label=_("List of layers ")
+            parent=self.req_page_panel, id=wx.ID_ANY, label=_("List of layers")
         )
 
         style = wx.TR_DEFAULT_STYLE | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT

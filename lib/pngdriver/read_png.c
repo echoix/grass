@@ -66,7 +66,7 @@ void read_png(void)
 
     input = fopen(png.file_name, "rb");
     if (!input)
-        G_fatal_error(_("Unable to open output file <%s>"), png.file_name);
+        G_fatal_error(_("Unable to open output file '%s'."), png.file_name);
 
     png_set_read_fn(png_ptr, input, read_data);
 

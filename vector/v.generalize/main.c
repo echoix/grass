@@ -318,7 +318,7 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2);
 
     if (Vect_open_old2(&In, map_in->answer, "", field_opt->answer) < 1)
-        G_fatal_error(_("Unable to open vector map <%s>"), map_in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_in->answer);
 
     if (Vect_get_num_primitives(&In, mask_type) == 0) {
         G_warning(_("No lines found in input map <%s>"), map_in->answer);
@@ -329,7 +329,7 @@ int main(int argc, char *argv[])
 
     if (0 > Vect_open_new(&Out, map_out->answer, with_z)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), map_out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), map_out->answer);
     }
 
     if (error_out->answer) {

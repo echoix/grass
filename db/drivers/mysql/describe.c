@@ -40,7 +40,7 @@ int db__driver_describe_table(dbString *table_name, dbTable **table)
     }
 
     if (describe_table(res, table, NULL) == DB_FAILED) {
-        db_d_append_error(_("Unable to describe table"));
+        db_d_append_error(_("Unable to describe table."));
         db_d_report_error();
         mysql_free_result(res);
         return DB_FAILED;

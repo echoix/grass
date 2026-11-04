@@ -67,7 +67,7 @@
 # %end
 
 # %option G_OPT_R_BASENAME_OUTPUT
-# % label: basename for output raster map(s)
+# % label: Basename for output raster maps
 # %end
 
 # %option

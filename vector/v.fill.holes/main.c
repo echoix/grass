@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     if (1 > Vect_open_old2(&input, options.input->answer, "",
                            options.field->answer))
-        G_fatal_error(_("Unable to open vector map <%s>"),
+        G_fatal_error(_("Unable to open vector map <%s>."),
                       options.input->answer);
 
     /* Check if old vector is 3D. We should preserve 3D data. */
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
     /* Open new vector for reading/writing */
     if (0 > Vect_open_new(&output, options.output->answer, open3d)) {
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       options.output->answer);
     }
 

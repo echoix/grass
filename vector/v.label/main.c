@@ -261,7 +261,7 @@ int main(int argc, char **argv)
 
     /* open vector */
     if (Vect_open_old(&Map, Vectfile->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), Vectfile->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), Vectfile->answer);
 
     /* open database */
     field = atoi(Fieldopt->answer);

@@ -25,7 +25,7 @@ int douglas_peucker(struct line_pnts *Points, double thresh, int with_z)
     int *stack = G_malloc(sizeof(int) * Points->n_points * 2);
 
     if (!stack) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return Points->n_points;
     }
 
@@ -33,7 +33,7 @@ int douglas_peucker(struct line_pnts *Points, double thresh, int with_z)
         sizeof(int) * Points->n_points); /* Indices of points in output line */
 
     if (!index) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         G_free(stack);
         return Points->n_points;
     }
@@ -297,7 +297,7 @@ int douglas_peucker_reduction(struct line_pnts *Points, double thresh,
 
     sel = G_calloc(sizeof(int), n);
     if (sel == NULL) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return n;
     }
 
@@ -306,7 +306,7 @@ int douglas_peucker_reduction(struct line_pnts *Points, double thresh,
 
     index = G_malloc(sizeof(int) * 3 * n);
     if (index == NULL) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         G_free(sel);
         return n;
     }
@@ -330,7 +330,7 @@ int douglas_peucker_reduction(struct line_pnts *Points, double thresh,
     binary_heap pq;
 
     if (!binary_heap_init(n, &pq)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         G_free(sel);
         G_free(index);
         return n;

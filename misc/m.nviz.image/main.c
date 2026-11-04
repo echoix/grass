@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
     if (access(output_name, F_OK) == 0) {
         if (G_check_overwrite(argc, argv))
-            G_warning(_("File <%s> already exists and will be overwritten"),
+            G_warning(_("File '%s' already exists and will be overwritten."),
                       output_name);
         else
             G_fatal_error(_("option <%s>: <%s> exists. To overwrite, use the "
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
     else if (ret == 2)
         G_fatal_error(_("Unsupported output format"));
 
-    G_done_msg(_("File <%s> created."), output_name);
+    G_done_msg(_("File '%s' created."), output_name);
 
     Nviz_destroy_data(&data);
     Nviz_destroy_render_window(offscreen);

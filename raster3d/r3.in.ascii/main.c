@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
     asciiToG3d(fp, &region, convertNull, nullValue);
 
     if (!Rast3d_close(map))
-        fatalError(_("Unable to close 3D raster map"));
+        fatalError(_("Unable to close 3D raster map."));
 
     /* write input name to map history */
     Rast3d_read_history(output, G_mapset(), &history);

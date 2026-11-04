@@ -419,7 +419,7 @@ void *open_g3d_file(const char *filename, IFLAG *type, double *min, double *max)
     /* search for g3d file a return his mapset */
     mapset = G_find_raster3d(filename, "");
     if (!mapset) {
-        G_warning(_("3D raster map <%s> not found"), filename);
+        G_warning(_("3D raster map <%s> not found."), filename);
         return (NULL);
     }
 

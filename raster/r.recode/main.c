@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     if (strcmp(parm.rules->answer, "-") != 0) {
         srcfp = fopen(parm.rules->answer, "r");
         if (!srcfp)
-            G_fatal_error(_("Unable to open file <%s>"), parm.rules->answer);
+            G_fatal_error(_("Unable to open file '%s'."), parm.rules->answer);
     }
 
     if (!read_rules(srcfp)) {

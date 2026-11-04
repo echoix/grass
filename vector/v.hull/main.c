@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 
     Vect_set_open_level(1);
     if (Vect_open_old2(&Map, sitefile, "", field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), sitefile);
+        G_fatal_error(_("Unable to open vector map <%s>."), sitefile);
 
     layer = Vect_get_field_number(&Map, field->answer);
 
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 
     /* create output vector map */
     if (0 > Vect_open_new(&Map, output->answer, MODE2D ? WITHOUT_Z : WITH_Z)) {
-        G_fatal_error(_("Unable to create vector map <%s>"), output->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), output->answer);
     }
 
     Vect_hist_command(&Map);

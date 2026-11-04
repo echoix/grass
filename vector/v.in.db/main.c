@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     }
 
     if (Vect_open_new(&Map, outvect->answer, with_z) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), outvect->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), outvect->answer);
 
     Vect_set_error_handler_io(NULL, &Map);
 
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
     G_debug(2, "SQL: %s", db_get_string(&sql));
 
     if (db_open_select_cursor(driver, &sql, &cursor, DB_SEQUENTIAL) != DB_OK) {
-        G_fatal_error(_("Unable to open select cursor: '%s'"),
+        G_fatal_error(_("Unable to open select cursor: '%s'."),
                       db_get_string(&sql));
     }
 

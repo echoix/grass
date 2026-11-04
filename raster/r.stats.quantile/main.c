@@ -372,7 +372,7 @@ static void print_quantiles(char *fs, char *name, enum OutputFormat format)
 
     if (name != NULL && strcmp(name, "-") != 0) {
         if (NULL == freopen(name, "w", stdout)) {
-            G_fatal_error(_("Unable to open file <%s> for writing"), name);
+            G_fatal_error(_("Unable to open file '%s' for writing."), name);
         }
     }
 
@@ -745,9 +745,9 @@ int main(int argc, char *argv[])
     }
 
     if (flag.t->answer) {
-        G_verbose_message(
-            _("Flag 't' is deprecated and will be removed in a future "
-              "release. Please use format=csv instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          't', "csv");
         if (format == JSON) {
             G_fatal_error(_("The -t flag cannot be used with format=json. "
                             "Please select only one output format."));

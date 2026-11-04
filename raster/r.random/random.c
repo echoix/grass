@@ -55,7 +55,7 @@ int execute_random(struct rr_state *theState)
 
     if (theState->outvector) {
         if (Vect_open_new(&Out, theState->outvector, theState->z_geometry) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           theState->outvector);
         Vect_hist_command(&Out);
 
@@ -104,9 +104,9 @@ int execute_random(struct rr_state *theState)
         G_message(_("Writing raster map <%s> and vector map <%s> ..."),
                   theState->outraster, theState->outvector);
     else if (theState->outraster)
-        G_message(_("Writing raster map <%s> ..."), theState->outraster);
+        G_message(_("Writing raster map <%s>..."), theState->outraster);
     else if (theState->outvector)
-        G_message(_("Writing vector map <%s> ..."), theState->outvector);
+        G_message(_("Writing vector map <%s>..."), theState->outvector);
 
     G_percent(0, theState->nRand, 2);
 
@@ -181,7 +181,7 @@ int execute_random(struct rr_state *theState)
                     db_set_string(&sql, buf);
 
                     if (db_execute_immediate(driver, &sql) != DB_OK)
-                        G_fatal_error(_("Cannot insert new record: %s"),
+                        G_fatal_error(_("Cannot insert new record: '%s'."),
                                       db_get_string(&sql));
 
                     cat++;

@@ -589,7 +589,7 @@ struct cat_list *Vect_cats_set_constraint(struct Map_info *Map, int layer,
 
         Fi = Vect_get_field(Map, layer);
         if (!Fi) {
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           layer);
         }
 

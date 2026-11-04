@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     mapset->key = "mapset";
     mapset->type = TYPE_STRING;
     mapset->required = NO;
-    mapset->description = _("Name of target mapset");
+    mapset->description = _("Name of the target mapset");
 
     c = G_define_flag();
     c->key = 'c';

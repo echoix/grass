@@ -25,7 +25,7 @@ int write_vect(double x1, double y1, double x2, double y2, struct Map_info *Map,
     yarray[1] = y2;
 
     if (0 > Vect_copy_xyz_to_pnts(Points, xarray, yarray, NULL, NUM_POINTS))
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
     Vect_write_line(Map, out_type, Points, Cats);
 
     return 0;

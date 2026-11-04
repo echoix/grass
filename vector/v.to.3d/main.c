@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     /* open input vector, topology not needed */
     Vect_set_open_level(1);
     if (Vect_open_old2(&In, opt.input->answer, "", opt.field->answer) < 1)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.input->answer);
     Vect_set_error_handler_io(&In, &Out);
 
     if (opt.reverse->answer && !Vect_is_3d(&In)) {
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     Vect_set_open_level(2);
     if (Vect_open_new(&Out, opt.output->answer,
                       opt.reverse->answer ? WITHOUT_Z : WITH_Z) == -1)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       opt.output->answer);
 
     /* copy history & header */

@@ -24,7 +24,7 @@
 int open_new_vect(struct Map_info *map, char *vect)
 {
     if (Vect_open_new(map, vect, 1) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), vect);
+        G_fatal_error(_("Unable to create vector map <%s>."), vect);
 
     Vect_set_map_name(map, vect);
     Vect_set_comment(map, G_recreate_command());

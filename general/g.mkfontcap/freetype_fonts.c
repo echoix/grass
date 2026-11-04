@@ -48,7 +48,7 @@ void find_freetype_fonts(void)
     int i;
 
     if (FT_Init_FreeType(&ftlibrary) != 0)
-        G_fatal_error(_("Unable to initialise Freetype"));
+        G_fatal_error(_("Unable to initialise FreeType."));
 
     for (i = 0; i < numsearchdirs; i++)
         find_fonts(searchdirs[i]);

@@ -99,7 +99,7 @@ int NetA_spanning_tree(dglGraph_s *graph, struct ilist *tree_list)
     nedges = dglGet_EdgeCount(graph);
     perm = (edge_cost_pair *)G_calloc(nedges, sizeof(edge_cost_pair));
     if (!perm || !uf_initialize(&uf, nnodes + 1)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
     /* dglGetEdge is only supported with graphs version > 1. Therefore this

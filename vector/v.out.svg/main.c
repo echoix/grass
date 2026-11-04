@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     /* open input vector */
     Vect_set_open_level(2);
     if (Vect_open_old2(&In, in_opt->answer, "", field_opt->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     /* parse field number */
     field = Vect_get_field_number(&In, field_opt->answer);

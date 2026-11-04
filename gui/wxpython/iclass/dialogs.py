@@ -212,7 +212,7 @@ class IClassGroupDialog(SimpleDialog):
                 else:
                     GError(_("No data found in group <%s>.\n.") % g, parent=parent)
         else:
-            GError(_("Group <%s> not found") % gr, parent=parent)
+            GError(_("Group <%s> not found.") % gr, parent=parent)
 
         return bands
 

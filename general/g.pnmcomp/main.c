@@ -91,7 +91,7 @@ static void read_pnm(const char *filename, unsigned char *buf,
 
     fp = fopen(filename, "rb");
     if (!fp)
-        G_fatal_error(_("File <%s> not found"), filename);
+        G_fatal_error(_("File '%s' not found."), filename);
 
     read_header(fp, &magic, &maxval);
 
@@ -237,7 +237,7 @@ static void write_ppm(const char *filename, const unsigned char *buf)
 
     fp = fopen(filename, "wb");
     if (!fp)
-        G_fatal_error(_("Unable to open file <%s>"), filename);
+        G_fatal_error(_("Unable to open file '%s'."), filename);
 
     fprintf(fp, "P6\n%d %d\n255\n", width, height);
 
@@ -254,7 +254,7 @@ static void write_pgm(const char *filename, const unsigned char *buf)
 
     fp = fopen(filename, "wb");
     if (!fp)
-        G_fatal_error(_("Unable to open file <%s>"), filename);
+        G_fatal_error(_("Unable to open file '%s'."), filename);
 
     fprintf(fp, "P5\n%d %d\n255\n", width, height);
 

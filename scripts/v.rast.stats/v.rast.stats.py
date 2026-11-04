@@ -148,7 +148,7 @@ def main():
     for raster in rasters:
         # check the input raster map
         if not gs.find_file(raster, "cell")["file"]:
-            gs.fatal(_("Raster map <%s> not found") % raster)
+            gs.fatal(_("Raster map <%s> not found.") % raster)
 
     # save current settings:
     gs.use_temp_region()

@@ -82,7 +82,7 @@ int read_rules(const char *filename)
     else {
         fp = fopen(filename, "r");
         if (!fp)
-            G_fatal_error(_("unable to open input file <%s>"), filename);
+            G_fatal_error(_("Unable to open input file '%s'."), filename);
     }
 
     read_range();

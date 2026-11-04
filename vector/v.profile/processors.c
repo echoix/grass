@@ -27,7 +27,7 @@ void add_point(const int cat, const double dist, const double z,
         /* Don't leak memory if realloc fails */
         if (!tmp) {
             G_free(resultset);
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
         }
         else
             resultset = tmp;

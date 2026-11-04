@@ -449,7 +449,7 @@ class WorkspaceManager:
             except OSError:
                 GError(
                     parent=self.lmgr,
-                    message=_("Unable to open file <%s> for writing.") % filename,
+                    message=_("Unable to open file '%s' for writing.") % filename,
                 )
                 return False
         self.AddFileToHistory(file_path=filename)

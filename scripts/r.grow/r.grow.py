@@ -119,7 +119,7 @@ def main():
 
     # check if input file exists
     if not gs.find_file(input)["file"]:
-        gs.fatal(_("Raster map <%s> not found") % input)
+        gs.fatal(_("Raster map <%s> not found.") % input)
 
     # Workaround for r.mapcalc bug #3475
     # Mapcalc will fail if output is a fully qualified map name

@@ -431,11 +431,11 @@ int main(int argc, char *argv[])
     region.bottom = atof(parm.bottom->answer);
 
     if (!G_scan_northing(parm.north->answer, &region.north, region.proj))
-        G_fatal_error(_("Illegal north coordinate <%s>"), parm.north->answer);
+        G_fatal_error(_("Illegal north coordinate <%s>."), parm.north->answer);
     if (!G_scan_northing(parm.south->answer, &region.south, region.proj))
         G_fatal_error(_("Illegal south coordinate <%s>"), parm.south->answer);
     if (!G_scan_easting(parm.east->answer, &region.east, region.proj))
-        G_fatal_error(_("Illegal east coordinate <%s>"), parm.east->answer);
+        G_fatal_error(_("Illegal east coordinate <%s>."), parm.east->answer);
     if (!G_scan_easting(parm.west->answer, &region.west, region.proj))
         G_fatal_error(_("Illegal west coordinate <%s>"), parm.west->answer);
 
@@ -478,7 +478,7 @@ int main(int argc, char *argv[])
                     byte_swap, flag.row->answer, flag.depth->answer);
 
     if (!Rast3d_close(map))
-        G_fatal_error(_("Unable to close 3D raster map"));
+        G_fatal_error(_("Unable to close 3D raster map."));
 
     /* write input name to map history */
     Rast3d_read_history(output, G_mapset(), &history);

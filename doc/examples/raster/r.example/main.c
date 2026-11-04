@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
      * mapset name otherwise */
     mapset = (char *)G_find_raster2(name, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), name);
+        G_fatal_error(_("Raster map <%s> not found."), name);
 
     /* determine the inputmap type (CELL/FCELL/DCELL) */
     data_type = Rast_map_type(name, mapset);

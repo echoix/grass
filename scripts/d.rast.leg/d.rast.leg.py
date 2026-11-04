@@ -89,11 +89,11 @@ def main():
 
     # for -n flag of d.legend
     if not gs.find_file(map)["file"]:
-        gs.fatal(_("Raster map <%s> not found") % map)
+        gs.fatal(_("Raster map <%s> not found.") % map)
 
     # for rast=
     if rast and not gs.find_file(rast)["file"]:
-        gs.fatal(_("Raster map <%s> not found") % rast)
+        gs.fatal(_("Raster map <%s> not found.") % rast)
 
     s = gs.read_command("d.info", flags="f")
     if not s:

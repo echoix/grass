@@ -161,7 +161,7 @@ int copy_tables_by_cats(struct Map_info *In, struct Map_info *Out)
         /* Make a list of categories */
         IFi = Vect_get_field(In, fields[i]);
         if (!IFi) { /* no table */
-            G_warning(_("Database connection not defined for layer %d"),
+            G_warning(_("Database connection not defined for layer %d."),
                       fields[i]);
             continue;
         }

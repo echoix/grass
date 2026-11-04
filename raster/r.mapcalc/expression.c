@@ -202,7 +202,7 @@ expression *variable(const char *name)
     expression *e;
 
     if (!var)
-        syntax_error(_("Undefined variable '%s'"), name);
+        syntax_error(_("Undefined variable <%s>."), name);
 
     e = allocate(expr_type_variable, var ? var->res_type : CELL_TYPE);
     e->data.var.name = name;

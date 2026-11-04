@@ -45,7 +45,7 @@ int path(struct Map_info *In, struct Map_info *Out, char *filename, int nfield,
     if (filename) {
         /* open input file */
         if ((in_file = fopen(filename, "r")) == NULL)
-            G_fatal_error(_("Unable to open input file <%s>"), filename);
+            G_fatal_error(_("Unable to open input file '%s'."), filename);
     }
 
     AList = Vect_new_list();
@@ -107,7 +107,7 @@ int path(struct Map_info *In, struct Map_info *Out, char *filename, int nfield,
     G_debug(2, "%s", db_get_string(&sql));
 
     if (db_execute_immediate(driver, &sql) != DB_OK) {
-        G_fatal_error(_("Unable to create table: '%s'"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table: '%s'."), db_get_string(&sql));
     }
 
     if (db_create_index2(driver, Fi->table, GV_KEY_COLUMN) != DB_OK)
@@ -115,7 +115,7 @@ int path(struct Map_info *In, struct Map_info *Out, char *filename, int nfield,
 
     if (db_grant_on_table(driver, Fi->table, DB_PRIV_SELECT,
                           DB_GROUP | DB_PUBLIC) != DB_OK)
-        G_fatal_error(_("Cannot grant privileges on table <%s>"), Fi->table);
+        G_fatal_error(_("Cannot grant privileges on table <%s>."), Fi->table);
 
     db_begin_transaction(driver);
 
@@ -334,7 +334,7 @@ int path(struct Map_info *In, struct Map_info *Out, char *filename, int nfield,
         G_debug(3, "%s", db_get_string(&sql));
 
         if (db_execute_immediate(driver, &sql) != DB_OK) {
-            G_fatal_error(_("Cannot insert new record: %s"),
+            G_fatal_error(_("Cannot insert new record: '%s'."),
                           db_get_string(&sql));
         }
     }

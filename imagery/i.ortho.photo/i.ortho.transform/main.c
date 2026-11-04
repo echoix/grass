@@ -316,7 +316,7 @@ static void analyze(void)
     else if (group.ref_equation_stat < 0 || group.con_equation_stat < 0)
         G_fatal_error(_("Parameter error"));
     else if (group.ref_equation_stat == 0 || group.con_equation_stat == 0)
-        G_fatal_error(_("No active control points"));
+        G_fatal_error(_("No active control points."));
     else if (summary) {
         printf("Number of active points: %d\n", count);
         do_stats("Forward", &fwd);
@@ -407,7 +407,7 @@ static void do_pt_xforms(void)
     else {
         fp = fopen(coord_file, "r");
         if (!fp)
-            G_fatal_error(_("Unable to open file <%s>"), coord_file);
+            G_fatal_error(_("Unable to open file '%s'."), coord_file);
     }
 
     for (;;) {

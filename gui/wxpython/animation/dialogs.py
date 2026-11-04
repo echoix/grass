@@ -1444,7 +1444,8 @@ class ExportDialog(wx.Dialog):
                 if not Path(decor["file"]).exists():
                     if decor["file"]:
                         GError(
-                            parent=self, message=_("File %s not found.") % decor["file"]
+                            parent=self,
+                            message=_("File '%s' not found.") % decor["file"],
                         )
                     else:
                         GError(

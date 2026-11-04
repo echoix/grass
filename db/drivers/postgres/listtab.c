@@ -87,7 +87,7 @@ int db__driver_list_tables(dbString **tlist, int *tcount, int system)
     list = db_alloc_string_array(nrows);
 
     if (list == NULL) {
-        db_d_append_error(_("Out of memory"));
+        db_d_append_error(_("Out of memory."));
         db_d_report_error();
         return DB_FAILED;
     }

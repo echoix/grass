@@ -105,7 +105,7 @@ int plot1(struct Map_info *Map, int type, int area G_UNUSED,
     if (open_db) {
         fi = Vect_get_field(Map, (Clist->field > 0 ? Clist->field : 1));
         if (fi == NULL) {
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           (Clist->field > 0 ? Clist->field : 1));
         }
 
@@ -159,7 +159,7 @@ int plot1(struct Map_info *Map, int type, int area G_UNUSED,
 
         if (cvarr_width.ctype != DB_C_TYPE_INT &&
             cvarr_width.ctype != DB_C_TYPE_DOUBLE)
-            G_fatal_error(_("Line width column (%s) not a number."),
+            G_fatal_error(_("Line width column <%s> not a number."),
                           width_column);
 
         if (nrec_width < 0)

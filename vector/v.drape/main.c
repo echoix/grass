@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2); /* topology required ? */
 
     if (Vect_open_old2(&In, opt.input->answer, "", opt.layer->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.input->answer);
 
     Vect_set_error_handler_io(&In, &Out);
 
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 
     /* create output */
     if (Vect_open_new(&Out, opt.output->answer, WITH_Z) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       opt.output->answer);
 
     Vect_copy_head_data(&In, &Out);
@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
     }
 
     /* copy attribute data */
-    G_important_message(_("Copying attribute tables..."));
+    G_important_message(_("Copying attribute table(s)..."));
     if (layer < 0)
         Vect_copy_tables(&In, &Out, 0);
     else

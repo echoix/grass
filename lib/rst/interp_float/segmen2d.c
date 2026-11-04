@@ -186,19 +186,19 @@ int IL_interp_segments_2d(
         if (!matrix) {
             if (!(matrix =
                       G_alloc_matrix(params->KMAX2 + 1, params->KMAX2 + 1))) {
-                G_warning(_("Out of memory"));
+                G_warning(_("Out of memory."));
                 return -1;
             }
         }
         if (!indx) {
             if (!(indx = G_alloc_ivector(params->KMAX2 + 1))) {
-                G_warning(_("Out of memory"));
+                G_warning(_("Out of memory."));
                 return -1;
             }
         }
         if (!b) {
             if (!(b = G_alloc_vector(params->KMAX2 + 3))) {
-                G_warning(_("Out of memory"));
+                G_warning(_("Out of memory."));
                 return -1;
             }
         }
@@ -206,7 +206,7 @@ int IL_interp_segments_2d(
         if (params->cv) {
             if (!(point = (struct triple *)G_malloc(sizeof(struct triple) *
                                                     data->n_points))) {
-                G_warning(_("Out of memory"));
+                G_warning(_("Out of memory."));
                 return -1;
             }
         }

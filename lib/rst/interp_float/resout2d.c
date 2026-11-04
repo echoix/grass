@@ -235,7 +235,7 @@ int IL_resample_output_2d(
 
     if (params->elev != NULL) {
         if (maps == NULL) {
-            G_warning(_("Raster map <%s> not found"), input);
+            G_warning(_("Raster map <%s> not found."), input);
             return -1;
         }
         Rast_init_colors(&colors2);
@@ -279,7 +279,7 @@ int IL_resample_output_2d(
             maps = NULL;
             maps = G_find_file("cell", params->elev, "");
             if (maps == NULL) {
-                G_warning(_("Raster map <%s> not found"), params->elev);
+                G_warning(_("Raster map <%s> not found."), params->elev);
                 return -1;
             }
 
@@ -323,7 +323,7 @@ int IL_resample_output_2d(
             maps = NULL;
             maps = G_find_file("cell", params->slope, "");
             if (maps == NULL) {
-                G_warning(_("Raster map <%s> not found"), params->slope);
+                G_warning(_("Raster map <%s> not found."), params->slope);
                 return -1;
             }
             Rast_write_colors(params->slope, maps, &colors);
@@ -355,7 +355,7 @@ int IL_resample_output_2d(
             maps = NULL;
             maps = G_find_file("cell", params->aspect, "");
             if (maps == NULL) {
-                G_warning(_("Raster map <%s> not found"), params->aspect);
+                G_warning(_("Raster map <%s> not found."), params->aspect);
                 return -1;
             }
             Rast_write_colors(params->aspect, maps, &colors);
@@ -404,7 +404,7 @@ int IL_resample_output_2d(
             if (params->pcurv != NULL) {
                 maps = G_find_file("cell", params->pcurv, "");
                 if (maps == NULL) {
-                    G_warning(_("Raster map <%s> not found"), params->pcurv);
+                    G_warning(_("Raster map <%s> not found."), params->pcurv);
                     return -1;
                 }
                 Rast_write_colors(params->pcurv, maps, &colors);
@@ -421,7 +421,7 @@ int IL_resample_output_2d(
                 maps = NULL;
                 maps = G_find_file("cell", params->tcurv, "");
                 if (maps == NULL) {
-                    G_warning(_("Raster map <%s> not found"), params->tcurv);
+                    G_warning(_("Raster map <%s> not found."), params->tcurv);
                     return -1;
                 }
                 Rast_write_colors(params->tcurv, maps, &colors);
@@ -436,7 +436,7 @@ int IL_resample_output_2d(
                 maps = NULL;
                 maps = G_find_file("cell", params->mcurv, "");
                 if (maps == NULL) {
-                    G_warning(_("Raster map <%s> not found"), params->mcurv);
+                    G_warning(_("Raster map <%s> not found."), params->mcurv);
                     return -1;
                 }
                 Rast_write_colors(params->mcurv, maps, &colors);
@@ -451,7 +451,7 @@ int IL_resample_output_2d(
 
     if (params->elev != NULL) {
         if (!G_find_file2("cell", params->elev, "")) {
-            G_warning(_("Raster map <%s> not found"), params->elev);
+            G_warning(_("Raster map <%s> not found."), params->elev);
             return -1;
         }
 

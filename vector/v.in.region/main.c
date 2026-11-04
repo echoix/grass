@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 
     /* Open output segments */
     if (Vect_open_new(&Out, out_opt->answer, 0) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
 
     Vect_hist_command(&Out);
 

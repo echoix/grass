@@ -26,7 +26,7 @@ void read_sites(const char *name, const char *field_name, const char *col,
 
     Vect_set_open_level(1); /* without topology */
     if (Vect_open_old2(&Map, name, "", field_name) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), name);
+        G_fatal_error(_("Unable to open vector map <%s>."), name);
 
     field = Vect_get_field_number(&Map, field_name);
     with_z = col == NULL && Vect_is_3d(&Map); /* read z-coordinates
@@ -50,7 +50,7 @@ void read_sites(const char *name, const char *field_name, const char *col,
 
         Fi = Vect_get_field(&Map, field);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %s"),
+            G_fatal_error(_("Database connection not defined for layer <%s>."),
                           field_name);
 
         Driver = db_start_driver_open_database(Fi->driver, Fi->database);

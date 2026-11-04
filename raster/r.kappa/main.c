@@ -167,7 +167,7 @@ static void layer(const char *s)
         G_fatal_error(_("Raster map name <%s> is too long"), s);
     }
     if ((mapset = G_find_raster2(name, "")) == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), s);
+        G_fatal_error(_("Raster map <%s> not found."), s);
 
     n = nlayers++;
     layers = (LAYER *)G_realloc(layers, 2 * sizeof(LAYER));

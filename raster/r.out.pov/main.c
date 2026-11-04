@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
         G_fatal_error(_("Invalid output filename"));
 
     if (NULL == (outf = fopen(outfilename, "wb")))
-        G_fatal_error(_("Unable to open output file <%s>"), outfilename);
+        G_fatal_error(_("Unable to open output file '%s'."), outfilename);
 
     /* cell = Rast_allocate_c_buf(); */
 

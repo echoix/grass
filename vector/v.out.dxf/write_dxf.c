@@ -18,9 +18,9 @@ int dxf_open(char *filename)
         fclose(dxf_fp);
 
         if (!overwrite)
-            G_fatal_error(_("The file '%s' already exists."), filename);
+            G_fatal_error(_("File '%s' already exists."), filename);
 
-        G_warning(_("The file '%s' already exists and will be overwritten."),
+        G_warning(_("File '%s' already exists and will be overwritten."),
                   filename);
     }
     if ((dxf_fp = fopen(filename, "w")) == NULL)

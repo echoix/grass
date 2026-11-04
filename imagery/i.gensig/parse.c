@@ -35,10 +35,10 @@ int parse(int argc, char *argv[], struct parms *parms)
 
     /* check all the inputs */
     if (G_find_raster(parms->training_map, "") == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), parms->training_map);
+        G_fatal_error(_("Raster map <%s> not found."), parms->training_map);
 
     if (!I_find_group(parms->group))
-        G_fatal_error(_("Group <%s> not found in current mapset"),
+        G_fatal_error(_("Group <%s> not found in current mapset."),
                       parms->group);
 
     if (!I_find_subgroup(parms->group, parms->subgroup))

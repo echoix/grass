@@ -31,7 +31,7 @@ cursor *alloc_cursor(void)
     /* allocate the cursor */
     c = (cursor *)db_malloc(sizeof(cursor));
     if (c == NULL) {
-        db_d_append_error(_("Unable to allocate cursor"));
+        db_d_append_error(_("Unable to allocate cursor."));
         db_d_report_error();
         return c;
     }

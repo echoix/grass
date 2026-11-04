@@ -114,7 +114,7 @@ int main(int argc, char **argv)
     Vect_set_open_level(2);
 
     if (Vect_open_old2(&In, parm.input->answer, "", parm.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), parm.input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), parm.input->answer);
 
     field = Vect_get_field_number(&In, parm.field->answer);
 
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
     /* Read attributes */
     Fi = Vect_get_field(&In, field);
     if (Fi == NULL)
-        G_fatal_error(_("Database connection not defined for layer %s"),
+        G_fatal_error(_("Database connection not defined for layer <%s>."),
                       parm.field->answer);
 
     Driver = db_start_driver_open_database(Fi->driver, Fi->database);
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 
     /* Open output */
     if (Vect_open_new(&Out, parm.output->answer, 0) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       parm.output->answer);
 
     Vect_hist_copy(&In, &Out);
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
     db_set_string(&sql, buf);
 
     if (db_execute_immediate(Driver, &sql) != DB_OK)
-        G_fatal_error(_("Unable to create table <%s>"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table <%s>."), db_get_string(&sql));
 
     if (db_create_index2(Driver, Fi->table, Fi->key) != DB_OK)
         G_warning(_("Cannot create index"));
@@ -255,7 +255,8 @@ int main(int argc, char **argv)
         db_set_string(&sql, buf);
 
         if (db_execute_immediate(Driver, &sql) != DB_OK)
-            G_fatal_error(_("Unable to insert row: %s"), db_get_string(&sql));
+            G_fatal_error(_("Unable to insert new row: '%s'."),
+                          db_get_string(&sql));
 
         Vect_write_line(&Out, GV_POINT, Points, Cats);
     }

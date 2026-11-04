@@ -252,7 +252,7 @@ int main(int argc, char **argv)
         G_fatal_error(_("Vector map <%s> not found"), in_lines_opt->answer);
 
     if (Vect_open_old(&In, in_lines_opt->answer, mapset) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"),
+        G_fatal_error(_("Unable to open vector map <%s>."),
                       in_lines_opt->answer);
 
     /* Open input ipoints */
@@ -261,17 +261,17 @@ int main(int argc, char **argv)
         G_fatal_error(_("Vector map <%s> not found"), points_opt->answer);
 
     if (Vect_open_old(&PMap, points_opt->answer, mapset) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), points_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), points_opt->answer);
 
     /* Open output lines */
     if (Vect_open_new(&Out, out_lines_opt->answer, Vect_is_3d(&In)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       out_lines_opt->answer);
 
     /* Open output error map */
     if (err_opt->answer) {
         if (Vect_open_new(&EMap, err_opt->answer, Vect_is_3d(&In)) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           err_opt->answer);
     }
 
@@ -326,7 +326,7 @@ int main(int argc, char **argv)
         snprintf(buf, sizeof(buf), "drop table %s", table_opt->answer);
         db_append_string(&rsstmt, buf);
         if (db_execute_immediate(rsdriver, &rsstmt) != DB_OK)
-            G_warning(_("Unable to drop table: %s"), buf);
+            G_warning(_("Unable to drop table: '%s'."), buf);
     }
     db_init_string(&rsstmt);
     snprintf(buf, sizeof(buf),
@@ -339,7 +339,7 @@ int main(int argc, char **argv)
     G_debug(debug, "ref tab SQL: %s", buf);
     db_append_string(&rsstmt, buf);
     if (db_execute_immediate(rsdriver, &rsstmt) != DB_OK)
-        G_fatal_error(_("Unable to create table: %s"), buf);
+        G_fatal_error(_("Unable to create table: '%s'."), buf);
 
     /* Select all lid from line table */
     snprintf(buf, sizeof(buf), "select %s from %s", lidcol_opt->answer,

@@ -130,9 +130,9 @@ int main(int argc, char *argv[])
     }
 
     if (simple_flag->answer) {
-        G_verbose_message(
-            _("Flag 'g' is deprecated and will be removed in a future "
-              "release. Please use format=shell instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'g', "shell");
         if (format == JSON) {
             G_json_value_free(root_value);
             G_fatal_error(_("Cannot use the -g flag with format=json; "
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
         rasters = G_malloc(m * sizeof(char *));
         in = fopen(rastf->answer, "r");
         if (!in)
-            G_fatal_error(_("Unable to open input file <%s>"), rastf->answer);
+            G_fatal_error(_("Unable to open input file '%s'."), rastf->answer);
 
         for (;;) {
             char buf[GNAME_MAX];
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
                     strcpy(mapset, found_mapset);
             }
             if (!I_find_group2(group, mapset))
-                G_fatal_error(_("Group <%s> not found"), group);
+                G_fatal_error(_("Group <%s> not found."), group);
 
             struct Ref ref;
 

@@ -182,13 +182,13 @@ int main(int argc, char *argv[])
 
     /* opening input vector map */
     if (Vect_open_old2(&In, opt.input->answer, "", opt.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), opt.input->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), opt.input->answer);
 
     Vect_set_error_handler_io(&In, &Out);
 
     /* creating output vector map */
     if (Vect_open_new(&Out, opt.output->answer, WITH_Z) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"),
+        G_fatal_error(_("Unable to create vector map <%s>."),
                       opt.output->answer);
 
     field = Vect_get_field_number(&In, opt.field->answer);
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
         dbColumn *column;
 
         if ((Fi = Vect_get_field(&In, field)) == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
 
         if ((driver = db_start_driver_open_database(Fi->driver,
@@ -228,7 +228,8 @@ int main(int argc, char *argv[])
 
         if (db_get_column(driver, Fi->table, opt.hcolumn->answer, &column) !=
             DB_OK)
-            G_fatal_error(_("Column <%s> does not exist"), opt.hcolumn->answer);
+            G_fatal_error(_("Column <%s> does not exist."),
+                          opt.hcolumn->answer);
         else
             db_free_column(column);
 

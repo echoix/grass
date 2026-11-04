@@ -81,7 +81,7 @@ int main(int argc, char **argv)
     if (parms.input && strcmp(parms.input, "-") != 0) {
         fd = fopen(parms.input, "r");
         if (fd == NULL) {
-            G_fatal_error(_("Unable to open file <%s>: %s"), parms.input,
+            G_fatal_error(_("Unable to open file '%s': %s."), parms.input,
                           strerror(errno));
         }
     }
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 
     if (parms.output && strcmp(parms.output, "-") != 0) {
         if (NULL == freopen(parms.output, "w", stdout)) {
-            G_fatal_error(_("Unable to open file <%s> for writing"),
+            G_fatal_error(_("Unable to open file '%s' for writing."),
                           parms.output);
         }
     }
@@ -534,7 +534,7 @@ void parse_command_line(int argc, char **argv)
     // Check for mutually exclusive options
     if (parms.format == JSON) {
         fatal_error_option_value_excludes_option(
-            format, fs, _("Separator is part of the format"));
+            format, fs, _("Separator is part of the format."));
         fatal_error_option_value_excludes_option(
             format, vs, _("Vertical separator is part of the format"));
         fatal_error_option_value_excludes_option(
@@ -543,9 +543,9 @@ void parse_command_line(int argc, char **argv)
             format, c, _("Column names are always included"));
     }
     if (v->answer) {
-        G_verbose_message(
-            _("Flag 'v' is deprecated and will be removed in a future "
-              "release. Please use format=vertical instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'v', "vertical");
         if (format->answer && parms.format != VERTICAL) {
             G_fatal_error(_("Flag 'v' is only allowed with format=vertical."));
         }

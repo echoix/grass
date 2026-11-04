@@ -38,7 +38,7 @@ int display_shape(struct Map_info *Map, int type, struct cat_list *Clist,
         field = Clist->field > 0 ? Clist->field : 1;
         fi = Vect_get_field(Map, field);
         if (!fi) {
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
         }
 
@@ -87,7 +87,7 @@ int display_shape(struct Map_info *Map, int type, struct cat_list *Clist,
     }
     if (width_column) {
         if (*width_column == '\0')
-            G_fatal_error(_("Line width column not specified"));
+            G_fatal_error(_("Line width column not specified."));
 
         db_CatValArray_init(&cvarr_width);
 
@@ -98,7 +98,7 @@ int display_shape(struct Map_info *Map, int type, struct cat_list *Clist,
 
         if (cvarr_width.ctype != DB_C_TYPE_INT &&
             cvarr_width.ctype != DB_C_TYPE_DOUBLE)
-            G_fatal_error(_("Line width column ('%s') not a number"),
+            G_fatal_error(_("Line width column <%s> not a number."),
                           width_column);
 
         if (nrec_width < 0)

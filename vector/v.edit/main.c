@@ -76,7 +76,8 @@ int main(int argc, char *argv[])
         if (strcmp(params.in->answer, "-") != 0) {
             ascii = fopen(params.in->answer, "r");
             if (ascii == NULL)
-                G_fatal_error(_("Unable to open file <%s>"), params.in->answer);
+                G_fatal_error(_("Unable to open file '%s'."),
+                              params.in->answer);
         }
         else {
             ascii = stdin;
@@ -93,7 +94,7 @@ int main(int argc, char *argv[])
             (!G_find_file("", "OGR", G_mapset()) &&
              !G_find_file("", "PG", G_mapset()))) {
             if (!overwrite)
-                G_fatal_error(_("Vector map <%s> already exists"),
+                G_fatal_error(_("Vector map <%s> already exists."),
                               params.map->answer);
         }
 
@@ -101,7 +102,7 @@ int main(int argc, char *argv[])
         putenv("GRASS_VECTOR_EXTERNAL_IMMEDIATE=1");
         ret = Vect_open_new(&Map, params.map->answer, WITHOUT_Z);
         if (ret == -1) {
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           params.map->answer);
         }
         Vect_set_error_handler_io(NULL, &Map);
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
                     _("Supported feature types for non-native formats:"));
             /* create OGR or PostGIS layer */
             if (Vect_write_line(&Map, type, NULL, NULL) < 0)
-                G_fatal_error(_("Unable to create vector map <%s>"),
+                G_fatal_error(_("Unable to create vector map <%s>."),
                               params.map->answer);
         }
 
@@ -170,7 +171,7 @@ int main(int argc, char *argv[])
             BgMap[nbgmaps - 1] =
                 (struct Map_info *)G_malloc(sizeof(struct Map_info));
             if (Vect_open_old(BgMap[nbgmaps - 1], bmap, "") == -1)
-                G_fatal_error(_("Unable to open vector map <%s>"), bmap);
+                G_fatal_error(_("Unable to open vector map <%s>."), bmap);
             G_verbose_message(_("Background vector map <%s> registered"), bmap);
             i++;
         }
@@ -245,7 +246,7 @@ int main(int argc, char *argv[])
 
             if (Vect_open_update2(&Map, params.map->answer, G_mapset(),
                                   params.fld->answer) < 0)
-                G_fatal_error(_("Unable to open vector map <%s>"),
+                G_fatal_error(_("Unable to open vector map <%s>."),
                               params.map->answer);
         }
     }

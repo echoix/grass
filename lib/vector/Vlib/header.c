@@ -175,7 +175,7 @@ int Vect__read_head(struct Map_info *Map)
         else if (strncmp(buff, "MAP THRESH:", sizeof(char) * 11) == 0)
             Vect_set_thresh(Map, atof(ptr));
         else
-            G_warning(_("Unknown keyword '%s' in vector head"), buff);
+            G_warning(_("Unknown keyword <%s> in vector head."), buff);
     }
 
     fclose(head_fp);

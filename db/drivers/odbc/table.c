@@ -151,7 +151,7 @@ int db__driver_drop_table(dbString *name)
     }
 
     if (nrow == 0) {
-        db_d_append_error(_("Table %s doesn't exist"), tname);
+        db_d_append_error(_("Table <%s> does not exist."), tname);
         db_d_report_error();
 
         return DB_FAILED;

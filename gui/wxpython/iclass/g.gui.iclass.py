@@ -66,7 +66,7 @@ def main():
             gs.fatal(_("Name of subgroup required"))
         group_name = gs.find_file(name=options["group"], element="group")["name"]
         if not group_name:
-            gs.fatal(_("Group <%s> not found") % options["group"])
+            gs.fatal(_("Group <%s> not found.") % options["group"])
         subgroups = gs.read_command(
             "i.group", group=group_name, flags="sg"
         ).splitlines()
@@ -77,7 +77,7 @@ def main():
     if options["map"]:
         map_name = gs.find_file(name=options["map"], element="cell")["fullname"]
         if not map_name:
-            gs.fatal(_("Raster map <%s> not found") % options["map"])
+            gs.fatal(_("Raster map <%s> not found.") % options["map"])
 
     if options["trainingmap"]:
         trainingmap_name = gs.find_file(name=options["trainingmap"], element="vector")[

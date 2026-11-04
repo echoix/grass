@@ -183,9 +183,9 @@ int main(int argc, char *argv[])
     }
 
     if (flag.report->answer) {
-        G_verbose_message(
-            _("Flag 'f' is deprecated and will be removed in a future "
-              "release. Please use format=csv instead."));
+        G_verbose_message(_("Flag '%c' is deprecated and will be removed in a "
+                            "future release. Use format=%s instead."),
+                          'f', "csv");
         if (format == JSON) {
             G_fatal_error(_("The -f flag cannot be used with format=json. "
                             "Please select only one output format."));
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
     /* initialize vector map (for centroids) if needed */
     if (centroidsmap) {
         if (Vect_open_new(fd_centroids, centroidsmap, WITHOUT_Z) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"), centroidsmap);
+            G_fatal_error(_("Unable to create vector map <%s>."), centroidsmap);
 
         Points = Vect_new_line_struct();
         Cats = Vect_new_cats_struct();
@@ -336,7 +336,8 @@ int main(int argc, char *argv[])
 
         G_debug(3, "%s", db_get_string(&sql));
         if (db_execute_immediate(driver, &sql) != DB_OK) {
-            G_fatal_error(_("Unable to create table: %s"), db_get_string(&sql));
+            G_fatal_error(_("Unable to create table: '%s'."),
+                          db_get_string(&sql));
         }
     }
 

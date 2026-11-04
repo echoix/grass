@@ -132,7 +132,7 @@ void check_input_maps(void)
     if (param.input->answers != NULL) {
         for (i = 0; param.input->answers[i] != NULL; i++) {
             if (NULL == G_find_raster3d(param.input->answers[i], ""))
-                Rast3d_fatal_error(_("3D raster map <%s> not found"),
+                Rast3d_fatal_error(_("3D raster map <%s> not found."),
                                    param.input->answers[i]);
         }
     }
@@ -245,7 +245,7 @@ void open_write_rgb_maps(input_maps *in, RASTER3D_Region region, FILE *fp,
             }
             /* Close the 3d raster map */
             if (!Rast3d_close(maprgb)) {
-                fatal_error(_("Unable to close 3D raster map"), in);
+                fatal_error(_("Unable to close 3D raster map."), in);
             }
 
             /*Set the pointer to null so we know later that these files are
@@ -330,7 +330,7 @@ void open_write_vector_maps(input_maps *in, RASTER3D_Region region, FILE *fp,
 
             /* Close the 3d raster map */
             if (!Rast3d_close(mapvect)) {
-                fatal_error(_("Unable to close 3D raster map"), in);
+                fatal_error(_("Unable to close 3D raster map."), in);
             }
             /*Set the pointer to null so we know later that these files are
              * already closed */
@@ -385,7 +385,7 @@ int main(int argc, char *argv[])
     /*The precision of the output */
     if (param.decimals->answer) {
         if (sscanf(param.decimals->answer, "%d", &dp) != 1)
-            G_fatal_error(_("failed to interpret dp as an integer"));
+            G_fatal_error(_("Failed to interpret dp as an integer."));
         if (dp > 20 || dp < 0)
             G_fatal_error(_("dp has to be from 0 to 20"));
     }
@@ -416,7 +416,7 @@ int main(int argc, char *argv[])
         fp = fopen(param.output->answer, "w");
         if (fp == NULL) {
             perror(param.output->answer);
-            G_fatal_error(_("Unable to open file <%s>"), param.output->answer);
+            G_fatal_error(_("Unable to open file '%s'."), param.output->answer);
         }
     }
     else

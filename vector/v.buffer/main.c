@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2); /* topology required */
 
     if (Vect_open_old2(&In, in_opt->answer, "", field_opt->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), in_opt->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), in_opt->answer);
 
     Vect_set_error_handler_io(&In, &Out);
 
@@ -395,7 +395,7 @@ int main(int argc, char *argv[])
     }
 
     if (Vect_open_new(&Out, out_opt->answer, WITHOUT_Z) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), out_opt->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), out_opt->answer);
 
     Points = Vect_new_line_struct();
     Cats = Vect_new_cats_struct();
@@ -416,7 +416,7 @@ int main(int argc, char *argv[])
 
         Fi = Vect_get_field(&In, field);
         if (Fi == NULL)
-            G_fatal_error(_("Database connection not defined for layer %d"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
 
         Driver = db_start_driver_open_database(Fi->driver, Fi->database);
@@ -546,7 +546,7 @@ int main(int argc, char *argv[])
 
                 if (size_val < 0.0) {
                     G_warning(_("Attribute is of invalid size (%.3f) for "
-                                "category %d"),
+                                "category %d."),
                               size_val, cat);
                     continue;
                 }
@@ -659,7 +659,7 @@ int main(int argc, char *argv[])
 
                 if (size_val < 0.0) {
                     G_warning(_("Attribute is of invalid size (%.3f) for "
-                                "category %d"),
+                                "category %d."),
                               size_val, cat);
                     continue;
                 }
@@ -804,7 +804,7 @@ int main(int argc, char *argv[])
         G_message(_("Removing duplicates..."));
         Vect_remove_duplicates(&Out, GV_BOUNDARY, NULL);
 
-        G_message(_("Cleaning boundaries at nodes"));
+        G_message(_("Cleaning boundaries at nodes..."));
 
     } while (Vect_clean_small_angles_at_nodes(&Out, GV_BOUNDARY, NULL) > 0);
 

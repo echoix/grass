@@ -74,7 +74,7 @@ void draw(char *file_name, double LL, double LT, char *title, int cols,
     snprintf(sub_delim, sizeof(GNAME_MAX), "%s%s%s%s%s%s", sep, sep, sep, sep,
              sep, sep);
     if (!file_in)
-        G_fatal_error(_("Unable to open input file <%s>"), file_name);
+        G_fatal_error(_("Unable to open input file '%s'."), file_name);
 
     /* Get number of legend row(item) and the biggest symbol */
     item_count = 0;

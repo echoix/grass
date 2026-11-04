@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     free_input(&input);
     if ((output.out_file = fopen(output.file_name, "w")) == NULL) {
         free_output(&output);
-        G_fatal_error(_("unable to open output file"));
+        G_fatal_error(_("Unable to open output file."));
     }
     if (output.do_basin) {
         fprintf(output.out_file,

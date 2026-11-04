@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     if (parms.input && strcmp(parms.input, "-") != 0) {
         fd = fopen(parms.input, "r");
         if (fd == NULL) {
-            G_fatal_error(_("Unable to open file <%s>: %s"), parms.input,
+            G_fatal_error(_("Unable to open file '%s': %s."), parms.input,
                           strerror(errno));
         }
     }

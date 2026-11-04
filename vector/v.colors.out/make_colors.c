@@ -20,7 +20,7 @@ struct Colors *make_colors(const char *name, const char *layer,
 
     Vect_set_open_level(1); /* no topology required */
     if (Vect_open_old2(&Map, name, "", layer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), name);
+        G_fatal_error(_("Unable to open vector map <%s>."), name);
 
     field = Vect_get_field_number(&Map, layer);
     if (field < 1)
@@ -28,7 +28,7 @@ struct Colors *make_colors(const char *name, const char *layer,
 
     fi = Vect_get_field(&Map, field);
     if (!fi)
-        G_fatal_error(_("Database connection not defined for layer <%s>"),
+        G_fatal_error(_("Database connection not defined for layer <%s>."),
                       layer);
 
     driver = db_start_driver_open_database(fi->driver, fi->database);

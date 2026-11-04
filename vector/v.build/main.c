@@ -114,7 +114,8 @@ int main(int argc, char *argv[])
         Vect_set_open_level(1);
 
         if (Vect_open_old(&Map, map_opt->answer, G_mapset()) < 0)
-            G_fatal_error(_("Unable to open vector map <%s>"), map_opt->answer);
+            G_fatal_error(_("Unable to open vector map <%s>."),
+                          map_opt->answer);
 
         Vect_build(&Map);
     }
@@ -124,7 +125,7 @@ int main(int argc, char *argv[])
             Vect_set_open_level(2);
 
             if (Vect_open_old(&Map, map_opt->answer, "") < 0)
-                G_fatal_error(_("Unable to open vector map <%s>"),
+                G_fatal_error(_("Unable to open vector map <%s>."),
                               map_opt->answer);
         }
         if (dump)
@@ -150,7 +151,7 @@ int main(int argc, char *argv[])
         Cats = Vect_new_cats_struct();
 
         if (Vect_open_new(&Err, err_opt->answer, Vect_is_3d(&Map)) < 0)
-            G_fatal_error(_("Unable to create vector map <%s>"),
+            G_fatal_error(_("Unable to create vector map <%s>."),
                           err_opt->answer);
 
         nlines = Vect_get_num_lines(&Map);

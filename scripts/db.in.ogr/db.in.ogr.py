@@ -112,7 +112,7 @@ def main():
                     "db.execute", input="-", stdin="DROP TABLE %s" % output
                 )
                 break
-            gs.fatal(_("Table <%s> already exists") % output)
+            gs.fatal(_("Table <%s> already exists.") % output)
 
     # treat DB as real vector map...
     layer = db_table or None

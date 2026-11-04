@@ -59,7 +59,7 @@ int NetA_eigenvector_centrality(dglGraph_s *graph, int iterations, double error,
     nnodes = dglGet_NodeCount(graph);
     tmp = (double *)G_calloc(nnodes + 1, sizeof(double));
     if (!tmp) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 
@@ -140,7 +140,7 @@ int NetA_betweenness_closeness(dglGraph_s *graph, double *betweenness,
     delta = (dglInt32_t *)G_calloc(nnodes + 1, sizeof(dglInt32_t));
 
     if (!dst || !prev || !stack || !cnt || !delta) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 

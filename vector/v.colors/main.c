@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
     /* open map and get min/max values */
     Vect_set_open_level(1); /* no topology required */
     if (Vect_open_old2(&Map, name, mapset, opt.field->answer) < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), name);
+        G_fatal_error(_("Unable to open vector map <%s>."), name);
 
     Vect_set_error_handler_io(&Map, NULL);
     if (use == USE_Z && !Vect_is_3d(&Map))
@@ -311,7 +311,7 @@ int main(int argc, char *argv[])
         if (opt.rast->answer) {
             cmapset = G_find_raster2(cmap, "");
             if (!cmapset)
-                G_fatal_error(_("Raster map <%s> not found"), cmap);
+                G_fatal_error(_("Raster map <%s> not found."), cmap);
 
             if (Rast_read_colors(cmap, cmapset, &colors) < 0)
                 G_fatal_error(
@@ -320,7 +320,7 @@ int main(int argc, char *argv[])
         else if (opt.volume->answer) {
             cmapset = G_find_raster3d(cmap, "");
             if (!cmapset)
-                G_fatal_error(_("3D raster map <%s> not found"), cmap);
+                G_fatal_error(_("3D raster map <%s> not found."), cmap);
 
             if (Rast3d_read_colors(cmap, cmapset, &colors) < 0)
                 G_fatal_error(

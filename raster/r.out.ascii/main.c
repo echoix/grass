@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
     if (parm.dp->answer) {
         if (sscanf(parm.dp->answer, "%d", &dp) != 1)
-            G_fatal_error(_("Failed to interpret dp as an integer"));
+            G_fatal_error(_("Failed to interpret dp as an integer."));
         if (dp > 20 || dp < 0)
             G_fatal_error(_("dp has to be from 0 to 20"));
     }
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
     /* open ascii file for writing or use stdout */
     if (parm.output->answer && strcmp("-", parm.output->answer) != 0) {
         if (NULL == (fp = fopen(parm.output->answer, "w")))
-            G_fatal_error(_("Unable to open file <%s>"), parm.output->answer);
+            G_fatal_error(_("Unable to open file '%s'."), parm.output->answer);
     }
     else
         fp = stdout;
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
     if (flag.surfer->answer) {
         if (!flag.noheader->answer) {
             if (writeGSheader(fp, name))
-                G_fatal_error(_("Unable to read fp range for <%s>"), name);
+                G_fatal_error(_("Unable to read FP range for <%s>."), name);
         }
         rc = write_GSGRID(fd, fp, nrows, ncols, out_type, dp, surfer_null_str,
                           width);

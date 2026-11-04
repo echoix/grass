@@ -131,7 +131,7 @@ void create_table_for_lidar(struct Map_info *vector_map, const char *name,
     db_set_error_handler_driver(driver);
 
     if (db_execute_immediate(driver, &sql) != DB_OK) {
-        G_fatal_error(_("Unable to create table: '%s'"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table: '%s'."), db_get_string(&sql));
     }
 
     if (db_create_index2(driver, Fi->table, cat_col_name) != DB_OK)

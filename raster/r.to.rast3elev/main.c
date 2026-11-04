@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
                                            DCELL_TYPE, maxSize);
 
     if (db.map == NULL)
-        fatal_error(db, _("Error opening 3D raster map"));
+        fatal_error(db, _("Error opening 3D raster map."));
 
     /*if requested set the Mask on */
     if (param.mask->answer) {
@@ -513,7 +513,7 @@ int main(int argc, char *argv[])
     if (!Rast3d_flush_all_tiles(db.map))
         Rast3d_fatal_error("Error flushing tiles with Rast3d_flush_all_tiles");
     if (!Rast3d_close(db.map))
-        Rast3d_fatal_error(_("Error closing 3d raster map"));
+        Rast3d_fatal_error(_("Error closing 3D raster map."));
 
     G_debug(2, "\nDone\n");
 

@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     else {
         fp = fopen(file, "w");
         if (!fp)
-            G_fatal_error(_("Unable to open output file <%s>"), file);
+            G_fatal_error(_("Unable to open output file '%s'."), file);
     }
 
     if (strcmp(opt.format->answer, "json") == 0) {

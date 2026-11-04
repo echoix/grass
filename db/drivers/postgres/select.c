@@ -64,7 +64,7 @@ int db__driver_open_select_cursor(dbString *sel, dbCursor *dbc, int mode)
         G_free(str);
 
     if (describe_table(c->res, &table, c) == DB_FAILED) {
-        db_d_append_error(_("Unable to describe table"));
+        db_d_append_error(_("Unable to describe table."));
         db_d_report_error();
         PQclear(res);
         return DB_FAILED;

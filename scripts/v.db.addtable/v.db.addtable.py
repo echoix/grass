@@ -133,7 +133,7 @@ def main():
         try:
             gs.run_command("db.execute", database=database2, driver=driver, sql=sql)
         except CalledModuleError:
-            gs.fatal(_("Unable to create table <%s>") % table)
+            gs.fatal(_("Unable to create table <%s>.") % table)
 
     # connect the map to the DB:
     if schema:

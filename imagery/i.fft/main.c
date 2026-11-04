@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 #define C(i, j) ((i) * cols + (j))
 
     /* Read in cell map values */
-    G_message(_("Reading the raster map <%s>..."), Cellmap_orig);
+    G_message(_("Reading raster map <%s>..."), Cellmap_orig);
     for (i = 0; i < rows; i++) {
         Rast_get_d_row(inputfd, cell_real, i);
         for (j = 0; j < cols; j++) {

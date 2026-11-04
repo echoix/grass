@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
     input3 = G_define_standard_option(G_OPT_R_INPUT);
     input3->key = "temperature";
-    input3->description = _("Name of Surface temperature raster map [K]");
+    input3->description = _("Name of surface temperature raster map [K]");
 
     input4 = G_define_standard_option(G_OPT_R_INPUT);
     input4->key = "netradiation";

@@ -445,7 +445,7 @@ int area_area(struct Map_info *In, int *field, struct Map_info *Tmp,
                         G_debug(3, "%s", db_get_string(&stmt));
 
                         if (db_execute_immediate(driver, &stmt) != DB_OK)
-                            G_warning(_("Unable to insert new record: '%s'"),
+                            G_warning(_("Unable to insert new record: '%s'."),
                                       db_get_string(&stmt));
                     }
                     out_cat++;

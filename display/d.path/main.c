@@ -183,7 +183,7 @@ int main(int argc, char **argv)
 
     Vect_set_open_level(2);
     if (Vect_open_old(&Map, map->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map->answer);
 
     D_setup(0);
 

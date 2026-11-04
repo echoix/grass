@@ -265,7 +265,7 @@ int extract_line(int num_index, int *num_array, struct Map_info *In,
     if (dissolve_key) {
         Fi = Vect_get_field(In, field);
         if (!Fi) {
-            G_fatal_error(_("Database connection not defined for layer <%d>"),
+            G_fatal_error(_("Database connection not defined for layer %d."),
                           field);
         }
 

@@ -240,7 +240,8 @@ static int copy_table(const char *from_drvname, const char *from_dbname,
     G_debug(3, "db__copy_table: %s", db_get_string(&sql));
     if (db_open_select_cursor(from_driver, &sql, &cursor, DB_SEQUENTIAL) !=
         DB_OK) {
-        G_warning(_("Unable to open select cursor: '%s'"), db_get_string(&sql));
+        G_warning(_("Unable to open select cursor: '%s'."),
+                  db_get_string(&sql));
         db_close_database_shutdown_driver(to_driver);
         if (from_driver != to_driver) {
             db_close_database_shutdown_driver(from_driver);
@@ -287,10 +288,10 @@ static int copy_table(const char *from_drvname, const char *from_dbname,
     db_close_cursor(&cursor);
 
     if (selcol && !selcol_found)
-        G_fatal_error(_("Column <%s> not found"), selcol);
+        G_fatal_error(_("Column <%s> not found."), selcol);
 
     if (db_create_table(to_driver, out_table) != DB_OK) {
-        G_warning(_("Unable to create table <%s>"), to_tblname);
+        G_warning(_("Unable to create table <%s>."), to_tblname);
         db_close_database_shutdown_driver(to_driver);
         if (from_driver != to_driver) {
             db_close_database_shutdown_driver(from_driver);
@@ -314,7 +315,8 @@ static int copy_table(const char *from_drvname, const char *from_dbname,
     G_debug(3, "db__copy_table: %s", db_get_string(&sql));
     if (db_open_select_cursor(from_driver, &sql, &cursor, DB_SEQUENTIAL) !=
         DB_OK) {
-        G_warning(_("Unable to open select cursor: '%s'"), db_get_string(&sql));
+        G_warning(_("Unable to open select cursor: '%s'."),
+                  db_get_string(&sql));
         db_close_database_shutdown_driver(to_driver);
         if (from_driver != to_driver) {
             db_close_database_shutdown_driver(from_driver);

@@ -492,7 +492,8 @@ int sel_by_where(struct Map_info *Map, int layer, int type, char *where,
     Fi = Vect_get_field(Map, layer);
 
     if (!Fi) {
-        G_fatal_error(_("Database connection not defined for layer %d"), layer);
+        G_fatal_error(_("Database connection not defined for layer %d."),
+                      layer);
     }
 
     driver = db_start_driver(Fi->driver);

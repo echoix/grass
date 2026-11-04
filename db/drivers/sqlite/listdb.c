@@ -95,7 +95,7 @@ int listdb(dbString *path, int npaths, dbHandle **handles, int *count)
     /* count number of dbs */
     dirp = opendir(db_get_string(path));
     if (dirp == NULL) {
-        db_d_append_error(_("Unable to open directory '%s'"),
+        db_d_append_error(_("Unable to open directory '%s'."),
                           db_get_string(path));
         db_d_report_error();
         return DB_FAILED;
@@ -132,7 +132,7 @@ int listdb(dbString *path, int npaths, dbHandle **handles, int *count)
     /* allocate handles */
     hlist = db_alloc_handle_array(hcount);
     if (hlist == NULL) {
-        db_d_append_error(_("Out of memory"));
+        db_d_append_error(_("Out of memory."));
         db_d_report_error();
 
         freedb(dlist, hcount);

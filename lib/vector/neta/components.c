@@ -68,7 +68,7 @@ int NetA_weakly_connected_components(dglGraph_s *graph, int *component)
     nnodes = dglGet_NodeCount(graph);
     stack = (dglInt32_t *)G_calloc(nnodes + 1, sizeof(dglInt32_t));
     if (!stack) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 
@@ -178,7 +178,7 @@ int NetA_strongly_connected_components(dglGraph_s *graph, int *component)
     order = (dglInt32_t *)G_calloc(nnodes + 1, sizeof(dglInt32_t));
     processed = (int *)G_calloc(nnodes + 1, sizeof(int));
     if (!stack || !order || !processed) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 

@@ -674,7 +674,7 @@ int main(int argc, char *argv[])
         struct Colors colors;
 
         if (Rast_read_colors(parm.rastin->answer, "", &colors) < 0)
-            G_fatal_error(_("Unable to read color table for %s"),
+            G_fatal_error(_("Unable to read color table for <%s>."),
                           parm.rastin->answer);
         Rast_mark_colors_as_fp(&colors);
         Rast_write_colors(parm.rastout->answer, G_mapset(), &colors);

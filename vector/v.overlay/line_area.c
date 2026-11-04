@@ -449,7 +449,7 @@ int line_area(struct Map_info *In, int *field, struct Map_info *Tmp,
 
                             if (db_execute_immediate(driver, &stmt) != DB_OK)
                                 G_warning(
-                                    _("Unable to insert new record: '%s'"),
+                                    _("Unable to insert new record: '%s'."),
                                     db_get_string(&stmt));
                         }
 

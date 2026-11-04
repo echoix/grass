@@ -49,7 +49,7 @@ void fatalError(char *errorMsg)
         /* should unopen map here! */
         if (!Rast3d_close(map))
             Rast3d_fatal_error("%s (%s)", errorMsg,
-                               _("Unable to close 3D raster map"));
+                               _("Unable to close 3D raster map."));
     }
 
     Rast3d_fatal_error("%s", errorMsg);
@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
     trueCoords = coords->answer;
 
     if (NULL == G_find_raster3d(input, ""))
-        Rast3d_fatal_error(_("3D raster map <%s> not found"), input);
+        Rast3d_fatal_error(_("3D raster map <%s> not found."), input);
 
     map = Rast3d_open_cell_old(input, G_find_raster3d(input, ""),
                                RASTER3D_DEFAULT_WINDOW,
@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
 
     /* Close files and exit */
     if (!Rast3d_close(map))
-        fatalError(_("Unable to close 3D raster map"));
+        fatalError(_("Unable to close 3D raster map."));
 
     map = NULL;
     return (0);

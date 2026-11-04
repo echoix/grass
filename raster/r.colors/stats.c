@@ -119,7 +119,7 @@ void get_fp_stats(struct maps_info *input_maps, struct FP_stats *statf,
                                          RASTER3D_USE_CACHE_DEFAULT);
 
             if (map3d == NULL)
-                Rast3d_fatal_error(_("Error opening 3d raster map"));
+                Rast3d_fatal_error(_("Error opening 3D raster map."));
 
             nrows = map3d->window.rows;
             ncols = map3d->window.cols;

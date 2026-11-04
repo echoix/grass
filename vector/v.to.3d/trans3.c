@@ -49,7 +49,7 @@ void trans3d(struct Map_info *In, struct Map_info *Out, int type,
 
         Fi = Vect_get_field(Out, field);
         if (!Fi) {
-            G_fatal_error(_("Database connection not defined for layer <%s>"),
+            G_fatal_error(_("Database connection not defined for layer <%s>."),
                           field_name);
         }
 

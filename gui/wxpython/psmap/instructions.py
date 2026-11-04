@@ -702,7 +702,7 @@ class MapFrame(InstructionObject):
                     elif line.startswith("color"):
                         instr["color"] = line.split()[1]
                 except IndexError:
-                    GError(_("Failed to read instruction %s") % instruction)
+                    GError(_("Failed to read instruction %s.") % instruction)
                     return False
 
         elif instruction == "scale":
@@ -929,7 +929,7 @@ class Mapinfo(InstructionObject):
                 elif sub[0] == "where":
                     instr["where"] = float(sub[1].split()[0]), float(sub[1].split()[1])
         except (ValueError, IndexError):
-            GError(_("Failed to read instruction %s") % instruction)
+            GError(_("Failed to read instruction %s.") % instruction)
             return False
         self.instruction.update(instr)
         self.instruction["rect"] = self.EstimateRect(mapinfoDict=self.instruction)
@@ -1057,7 +1057,7 @@ class Text(InstructionObject):
                         instr["background"] = "none"
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
         instr["where"] = PaperMapCoordinates(
             mapInstr=map,
@@ -1132,7 +1132,7 @@ class Image(InstructionObject):
                     instr["scale"] = float(line.split(None, 1)[1])
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
         if not Path(instr["epsfile"]).exists():
             GError(
@@ -1317,7 +1317,7 @@ class Point(InstructionObject):
                     instr["fcolor"] = line.split(None, 1)[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1392,7 +1392,7 @@ class Line(InstructionObject):
                     instr["color"] = line.split(None, 1)[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1470,7 +1470,7 @@ class Rectangle(InstructionObject):
                     instr["fcolor"] = line.split(None, 1)[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1576,7 +1576,7 @@ class Scalebar(InstructionObject):
                     elif line.split()[1].strip().lower() in {"n", "no", "none"}:
                         instr["background"] = "n"
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1717,7 +1717,7 @@ class RasterLegend(InstructionObject):
                         instr["discrete"] = "n"
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
 
         if "raster" in instr:
@@ -1859,7 +1859,7 @@ class VectorLegend(InstructionObject):
                     instr["border"] = line.split()[1]
 
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
 
         self.instruction.update(instr)
@@ -1909,7 +1909,7 @@ class Raster(InstructionObject):
         try:
             map = text.split()[1]
         except IndexError:
-            GError(_("Failed to read instruction %s") % instruction)
+            GError(_("Failed to read instruction %s.") % instruction)
             return False
         try:
             info = gs.find_file(map, element="cell")
@@ -2261,7 +2261,7 @@ class Labels(InstructionObject):
                     labels = line.split(None, 1)[1]
                     self.instruction["labels"].append(labels)
             except (IndexError, ValueError):
-                GError(_("Failed to read instruction %s") % instruction)
+                GError(_("Failed to read instruction %s.") % instruction)
                 return False
 
         return True

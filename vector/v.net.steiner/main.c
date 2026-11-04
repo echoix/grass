@@ -433,7 +433,7 @@ int main(int argc, char **argv)
     Vect_set_open_level(2);
 
     if (Vect_open_old(&Map, map->answer, "") < 0)
-        G_fatal_error(_("Unable to open vector map <%s>"), map->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map->answer);
 
     nnodes = Vect_get_num_nodes(&Map);
     nlines = Vect_get_num_lines(&Map);
@@ -615,7 +615,7 @@ int main(int argc, char **argv)
 
     /* Write arcs to new map */
     if (Vect_open_new(&Out, output->answer, Vect_is_3d(&Map)) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), output->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), output->answer);
 
     Vect_hist_command(&Out);
 

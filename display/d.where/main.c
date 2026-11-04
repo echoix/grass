@@ -151,7 +151,7 @@ int main(int argc, char **argv)
         else {
             fp = fopen(file->answer, "r");
             if (!fp)
-                G_fatal_error(_("Unable to open input file <%s>"),
+                G_fatal_error(_("Unable to open input file '%s'."),
                               file->answer);
         }
     }

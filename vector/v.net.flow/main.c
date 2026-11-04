@@ -134,19 +134,19 @@ int main(int argc, char *argv[])
     Vect_set_open_level(2);
 
     if (1 > Vect_open_old(&In, map_in->answer, ""))
-        G_fatal_error(_("Unable to open vector map <%s>"), map_in->answer);
+        G_fatal_error(_("Unable to open vector map <%s>."), map_in->answer);
 
     with_z = Vect_is_3d(&In);
 
     if (0 > Vect_open_new(&Out, map_out->answer, with_z)) {
         Vect_close(&In);
-        G_fatal_error(_("Unable to create vector map <%s>"), map_out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), map_out->answer);
     }
 
     if (find_cut && 0 > Vect_open_new(&cut_map, cut_out->answer, with_z)) {
         Vect_close(&In);
         Vect_close(&Out);
-        G_fatal_error(_("Unable to create vector map <%s>"), cut_out->answer);
+        G_fatal_error(_("Unable to create vector map <%s>."), cut_out->answer);
     }
 
     /* parse filter option and select appropriate lines */
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 
     if (db_execute_immediate(driver, &sql) != DB_OK) {
         db_close_database_shutdown_driver(driver);
-        G_fatal_error(_("Unable to create table: '%s'"), db_get_string(&sql));
+        G_fatal_error(_("Unable to create table: '%s'."), db_get_string(&sql));
     }
 
     if (db_create_index2(driver, Fi->table, GV_KEY_COLUMN) != DB_OK)
@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
 
     if (db_grant_on_table(driver, Fi->table, DB_PRIV_SELECT,
                           DB_GROUP | DB_PUBLIC) != DB_OK)
-        G_fatal_error(_("Cannot grant privileges on table <%s>"), Fi->table);
+        G_fatal_error(_("Cannot grant privileges on table <%s>."), Fi->table);
 
     db_begin_transaction(driver);
 
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
     nlines = Vect_get_num_lines(&In);
     flow = (int *)G_calloc(nlines + 1, sizeof(int));
     if (!flow)
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
 
     total_flow = NetA_flow(graph, source_list, sink_list, flow);
     G_debug(3, "Max flow: %d", total_flow);
@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
 
             if (db_execute_immediate(driver, &sql) != DB_OK) {
                 db_close_database_shutdown_driver(driver);
-                G_fatal_error(_("Cannot insert new record: %s"),
+                G_fatal_error(_("Cannot insert new record: '%s'."),
                               db_get_string(&sql));
             };
         }

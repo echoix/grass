@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
     name = option.output->answer;
     if (name != NULL && strcmp(name, "-") != 0) {
         if (NULL == freopen(name, "w", stdout)) {
-            G_fatal_error(_("Unable to open file <%s> for writing"), name);
+            G_fatal_error(_("Unable to open file '%s' for writing."), name);
         }
     }
 

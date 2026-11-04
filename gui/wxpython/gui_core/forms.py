@@ -1021,7 +1021,7 @@ class TaskFrame(wx.Frame):
             #            wx.TheClipboard.UsePrimarySelection(True)
             wx.TheClipboard.SetData(cmddata)
             wx.TheClipboard.Close()
-            self.SetStatusText(_("'%s' copied to clipboard") % (cmdstring))
+            self.SetStatusText(_("'%s' copied to clipboard.") % (cmdstring))
 
     def OnCopyPython(self, event):
         """Copy the command in the selected Python API syntax"""
@@ -1276,7 +1276,7 @@ class TaskFrame(wx.Frame):
             if wx.TheClipboard.Open():
                 wx.TheClipboard.SetData(wx.TextDataObject(text))
                 wx.TheClipboard.Close()
-                self.SetStatusText(_("%s copied to clipboard") % text)
+                self.SetStatusText(_("'%s' copied to clipboard.") % text)
 
     def OnCancel(self, event):
         """Cancel button pressed"""

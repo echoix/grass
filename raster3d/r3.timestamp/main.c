@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         mapset = G_find_raster3d(name, "");
 
     if (mapset == NULL) {
-        G_fatal_error(_("3D raster map <%s> not found"), name);
+        G_fatal_error(_("3D raster map <%s> not found."), name);
         exit(EXIT_FAILURE);
     }
 

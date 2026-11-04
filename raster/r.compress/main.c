@@ -121,7 +121,7 @@ static int process(char *name, int uncompress)
 
     mapset = G_find_raster(name, G_mapset());
     if (mapset == NULL) {
-        G_warning(_("Raster map <%s> not found"), name);
+        G_warning(_("Raster map <%s> not found."), name);
         return 1;
     }
     if (strcmp(mapset, G_mapset())) {
@@ -327,7 +327,7 @@ static int pprint(char *name, int shell_style)
 
     mapset = G_find_raster(name, G_mapset());
     if (mapset == NULL) {
-        G_warning(_("Raster map <%s> not found"), name);
+        G_warning(_("Raster map <%s> not found."), name);
         return 1;
     }
     if (strcmp(mapset, G_mapset())) {

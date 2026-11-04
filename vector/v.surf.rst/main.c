@@ -569,7 +569,7 @@ int main(int argc, char *argv[])
 
     open_check = Vect_open_old2(&Map, input, "", parm.field->answer);
     if (open_check < 1)
-        G_fatal_error(_("Unable to open vector map <%s>"), input);
+        G_fatal_error(_("Unable to open vector map <%s>."), input);
     /*    if (open_check < 2)
        G_fatal_error(_("You first need to run v.build on vector map <%s>"),
        input);
@@ -613,11 +613,11 @@ int main(int argc, char *argv[])
 
         if (devi != NULL) {
             if (Vect_open_new(&Map2, devi, 1) < 0)
-                G_fatal_error(_("Unable to create vector map <%s>"), devi);
+                G_fatal_error(_("Unable to create vector map <%s>."), devi);
         }
         else {
             if (Vect_open_new(&Map2, cvdev, 1) < 0)
-                G_fatal_error(_("Unable to create vector map <%s>"), cvdev);
+                G_fatal_error(_("Unable to create vector map <%s>."), cvdev);
         }
         Vect_hist_command(&Map2);
         ff = Vect_default_field_info(&Map2, 1, NULL, GV_1TABLE);
@@ -639,7 +639,7 @@ int main(int argc, char *argv[])
         db_set_error_handler_driver(driver2);
 
         if (db_execute_immediate(driver2, &sql2) != DB_OK) {
-            G_fatal_error(_("Unable to create table '%s'"),
+            G_fatal_error(_("Unable to create table <%s>."),
                           db_get_string(&sql2));
         }
         db_begin_transaction(driver2);
@@ -691,7 +691,7 @@ int main(int argc, char *argv[])
     if (treefile != NULL) {
         if (0 > Vect_open_new(&TreeMap, treefile, 0)) {
             clean();
-            G_fatal_error(_("Unable to open vector map <%s>"), treefile);
+            G_fatal_error(_("Unable to open vector map <%s>."), treefile);
         }
         Vect_hist_command(&TreeMap);
 
@@ -813,7 +813,7 @@ int main(int argc, char *argv[])
     if (overfile != NULL) {
         if (0 > Vect_open_new(&OverMap, overfile, 0)) {
             clean();
-            G_fatal_error(_("Unable to create vector map <%s>"), overfile);
+            G_fatal_error(_("Unable to create vector map <%s>."), overfile);
         }
         Vect_hist_command(&OverMap);
 
@@ -885,7 +885,7 @@ int print_tree(struct multtree *tree, double x_orig, double y_orig,
         xarray[4] = xarray[0];
         if (Vect_copy_xyz_to_pnts(Points, xarray, yarray, zarray, 5) < 0) {
             clean();
-            G_fatal_error(_("Out of memory"));
+            G_fatal_error(_("Out of memory."));
         }
         Vect_write_line(Map, (unsigned int)type, Points, Cats);
 

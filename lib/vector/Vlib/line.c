@@ -45,7 +45,7 @@ struct line_pnts *Vect_new_line_struct(void)
     struct line_pnts *p;
 
     if (NULL == (p = Vect__new_line_struct()))
-        G_fatal_error("Vect_new_line_struct(): %s", _("Out of memory"));
+        G_fatal_error("Vect_new_line_struct(): %s", _("Out of memory."));
 
     return p;
 }
@@ -148,7 +148,7 @@ int Vect_append_point(struct line_pnts *Points, double x, double y, double z)
     register int n;
 
     if (0 > dig_alloc_points(Points, Points->n_points + 1)) {
-        G_fatal_error(_("Out of memory"));
+        G_fatal_error(_("Out of memory."));
         return -1;
     }
 

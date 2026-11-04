@@ -72,7 +72,7 @@
 # %flag
 # % key: o
 # % label: Override projection check (use current projects's CRS)
-# % description: Assume that the dataset has same coordinate reference system as the current project
+# % description: Assume that the dataset has the same coordinate reference system as the current project
 # %end
 
 # %flag

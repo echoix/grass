@@ -1785,7 +1785,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
             nvizType = "volume"
             unloadFn = self._display.UnloadVolume
             errorMsg = _("Unable to unload 3d raster map")
-            successMsg = _("3d raster map")
+            successMsg = _("3D raster map")
 
         try:
             id = data[nvizType]["object"]["id"]

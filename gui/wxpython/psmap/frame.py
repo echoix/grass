@@ -574,7 +574,7 @@ class PsMapFrame(wx.Frame):
         filename = ""
         dlg = wx.FileDialog(
             self,
-            message=_("Save file as"),
+            message=_("Save file as..."),
             defaultDir="",
             defaultFile=mapName,
             wildcard=wildcard,
@@ -799,7 +799,7 @@ class PsMapFrame(wx.Frame):
     def OnAddScalebar(self, event):
         """Add scalebar"""
         if projInfo()["proj"] == "ll":
-            GMessage(message=_("Scalebar is not appropriate for this projection"))
+            GMessage(message=_("Scalebar is not appropriate for this projection."))
             return
         if self.instruction.FindInstructionByType("scalebar"):
             id = self.instruction.FindInstructionByType("scalebar").id

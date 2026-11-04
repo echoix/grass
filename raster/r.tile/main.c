@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
     mapset = G_find_raster2(parm.rastin->answer, "");
     if (mapset == NULL)
-        G_fatal_error(_("Raster map <%s> not found"), parm.rastin->answer);
+        G_fatal_error(_("Raster map <%s> not found."), parm.rastin->answer);
 
     /* set window to old map */
     Rast_get_cellhd(parm.rastin->answer, "", &src_w);
@@ -203,7 +203,7 @@ static void write_support_files(int xtile, int ytile, int overlap)
 
     /* copy color table from source map */
     if (Rast_read_colors(parm.rastin->answer, "", &colors) < 0)
-        G_fatal_error(_("Unable to read color table for %s"),
+        G_fatal_error(_("Unable to read color table for <%s>."),
                       parm.rastin->answer);
     if (map_type != CELL_TYPE)
         Rast_mark_colors_as_fp(&colors);

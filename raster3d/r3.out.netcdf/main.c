@@ -568,7 +568,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 
     if (NULL == G_find_raster3d(param.input->answer, ""))
-        Rast3d_fatal_error(_("3D raster map <%s> not found"),
+        Rast3d_fatal_error(_("3D raster map <%s> not found."),
                            param.input->answer);
 
     /* Initiate the default settings */
@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
 
     /* Close files and exit */
     if (!Rast3d_close(map))
-        fatalError(_("Unable to close 3D raster map"));
+        fatalError(_("Unable to close 3D raster map."));
 
     /* Close the netCDF file */
     if ((retval = nc_close(ncid)))

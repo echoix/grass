@@ -49,7 +49,7 @@ static void output_walker_as_vector(const char *name,
     int i;
 
     if (Vect_open_new(&Out, name, WITH_Z) < 0)
-        G_fatal_error(_("Unable to create vector map <%s>"), name);
+        G_fatal_error(_("Unable to create vector map <%s>."), name);
     G_message("Writing %i walker into vector file %s", sim->nstack, name);
 
     Points = Vect_new_line_struct();
@@ -395,7 +395,7 @@ int output_data(double tt, double name_time, double conn, const Setup *setup,
         Rast_add_f_color_rule(&dat1, 0, 0, 255, &dat2, 0, 0, 0, &colors);
 
         if ((mapst = G_find_file("cell", disch0, "")) == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), disch0);
+            G_fatal_error(_("Raster map <%s> not found."), disch0);
         Rast_write_colors(disch0, mapst, &colors);
         Rast_quantize_fp_map_range(disch0, mapst, 0., (FCELL)dismax, 0,
                                    (CELL)dismax);
@@ -421,7 +421,7 @@ int output_data(double tt, double name_time, double conn, const Setup *setup,
         Rast_add_f_color_rule(&dat1, 191, 127, 63, &dat2, 0, 0, 0, &colors);
 
         if ((mapst = G_find_file("cell", flux0, "")) == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), flux0);
+            G_fatal_error(_("Raster map <%s> not found."), flux0);
         Rast_write_colors(flux0, mapst, &colors);
         Rast_quantize_fp_map_range(flux0, mapst, 0., (FCELL)dismax, 0,
                                    (CELL)dismax);
@@ -461,7 +461,7 @@ int output_data(double tt, double name_time, double conn, const Setup *setup,
         Rast_add_f_color_rule(&dat1, 255, 0, 0, &dat2, 255, 0, 255, &colors);
 
         if ((mapst = G_find_file("cell", erdep0, "")) == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), erdep0);
+            G_fatal_error(_("Raster map <%s> not found."), erdep0);
         Rast_write_colors(erdep0, mapst, &colors);
         Rast_quantize_fp_map_range(erdep0, mapst, (FCELL)ermin, (FCELL)ermax,
                                    (CELL)ermin, (CELL)ermax);
@@ -619,7 +619,7 @@ int output_et(const Geometry *geometry, const Outputs *outputs,
 
         /*    if (ts == 1) {
            if ((mapst = G_find_file("cell", et0, "")) == NULL)
-           G_fatal_error(_("Raster map <%s> not found"), et0);
+           G_fatal_error(_("Raster map <%s> not found."), et0);
            Rast_write_colors(et0, mapst, &colors);
            Rast_quantize_fp_map_range(et0, mapst, (FCELL)etmin, (FCELL)etmax,
            (CELL)etmin, (CELL)etmax); Rast_free_colors(&colors);
@@ -627,7 +627,7 @@ int output_et(const Geometry *geometry, const Outputs *outputs,
            else { */
 
         if ((mapst = G_find_file("cell", outputs->et, "")) == NULL)
-            G_fatal_error(_("Raster map <%s> not found"), outputs->et);
+            G_fatal_error(_("Raster map <%s> not found."), outputs->et);
         Rast_write_colors(outputs->et, mapst, &colors);
         Rast_quantize_fp_map_range(outputs->et, mapst, (FCELL)etmin,
                                    (FCELL)etmax, (CELL)etmin, (CELL)etmax);

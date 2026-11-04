@@ -49,7 +49,7 @@ def main():
 
     # input test
     if not os.access(infile, os.R_OK):
-        gs.fatal(_("File <%s> not found") % infile)
+        gs.fatal(_("File '%s' not found.") % infile)
 
     # DBF doesn't support lengthy text fields
     kv = gs.db_connection()

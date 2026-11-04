@@ -519,7 +519,7 @@ int main(int argc, char *argv[])
                     _("Raster map <%s> already exists and will be overwritten"),
                     output);
             else
-                G_fatal_error(_("Raster map <%s> already exists"), output);
+                G_fatal_error(_("Raster map <%s> already exists."), output);
         }
     }
 
@@ -831,7 +831,7 @@ int main(int argc, char *argv[])
                                     "be overwritten"),
                                   szBandName);
                     else
-                        G_fatal_error(_("Raster map <%s> already exists"),
+                        G_fatal_error(_("Raster map <%s> already exists."),
                                       szBandName);
                 }
             }
@@ -1022,7 +1022,7 @@ int main(int argc, char *argv[])
                     if (0 != G_make_location_crs(
                                  parm.target->answer, &gcpcellhd, proj_info,
                                  proj_units, gdalsrid, gdalwkt)) {
-                        G_fatal_error(_("Unable to create new project <%s>"),
+                        G_fatal_error(_("Unable to create new project <%s>."),
                                       parm.target->answer);
                     }
                     /* switch back to import location */
@@ -1950,7 +1950,7 @@ static int dump_rat(GDALRasterBandH hBand, char *outrat, int nBand)
     if (!(fp = fopen(fname, "w"))) {
         int err = errno;
 
-        G_fatal_error(_("Unable to open file <%s>: %s."), fname, strerror(err));
+        G_fatal_error(_("Unable to open file '%s': %s."), fname, strerror(err));
     }
 
     /* dump column names and usage */

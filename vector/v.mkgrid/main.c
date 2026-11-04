@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
 
     /* Open output map */
     if (0 > Vect_open_new(&Map, dig_file, 0)) {
-        G_fatal_error(_("Unable to create vector map <%s>"), dig_file);
+        G_fatal_error(_("Unable to create vector map <%s>."), dig_file);
     }
 
     Vect_hist_command(&Map);
@@ -358,7 +358,8 @@ int main(int argc, char *argv[])
         G_debug(1, "SQL: %s", db_get_string(&sql));
 
         if (db_execute_immediate(Driver, &sql) != DB_OK) {
-            G_fatal_error(_("Unable to create table: %s"), db_get_string(&sql));
+            G_fatal_error(_("Unable to create table: '%s'."),
+                          db_get_string(&sql));
         }
 
         if (db_create_index2(Driver, Fi->table, Fi->key) != DB_OK)
@@ -382,7 +383,7 @@ int main(int argc, char *argv[])
 
             G_debug(3, "SQL: %s", db_get_string(&sql));
             if (db_execute_immediate(Driver, &sql) != DB_OK) {
-                G_fatal_error(_("Unable to insert new record: %s"),
+                G_fatal_error(_("Unable to insert new record: '%s'."),
                               db_get_string(&sql));
             }
         }
@@ -419,7 +420,8 @@ int main(int argc, char *argv[])
         G_debug(1, "SQL: %s", db_get_string(&sql));
 
         if (db_execute_immediate(Driver, &sql) != DB_OK) {
-            G_fatal_error(_("Unable to create table: %s"), db_get_string(&sql));
+            G_fatal_error(_("Unable to create table: '%s'."),
+                          db_get_string(&sql));
         }
 
         if (db_create_index2(Driver, Fi->table, Fi->key) != DB_OK)
@@ -482,7 +484,7 @@ int main(int argc, char *argv[])
                     G_debug(3, "SQL: %s", db_get_string(&sql));
 
                     if (db_execute_immediate(Driver, &sql) != DB_OK) {
-                        G_fatal_error(_("Unable to insert new record: %s"),
+                        G_fatal_error(_("Unable to insert new record: '%s'."),
                                       db_get_string(&sql));
                     }
                     attCount++;

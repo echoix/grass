@@ -362,7 +362,7 @@ int main(int argc, char **argv)
     else {
         cmd_fp = fopen(opt.input->answer, "r");
         if (!cmd_fp)
-            G_fatal_error(_("Unable to open input file <%s>"),
+            G_fatal_error(_("Unable to open input file '%s'."),
                           opt.input->answer);
     }
 
