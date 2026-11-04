@@ -251,12 +251,11 @@ def main():
 
     TMPLOC = gs.append_node_pid("tmp_v_import_location")
 
-    f = open(SRCGISRC, "w")
-    f.write("MAPSET: PERMANENT\n")
-    f.write("GISDBASE: %s\n" % GISDBASE)
-    f.write("LOCATION_NAME: %s\n" % TMPLOC)
-    f.write("GUI: text\n")
-    f.close()
+    with open(SRCGISRC, "w") as f:
+        f.write("MAPSET: PERMANENT\n")
+        f.write("GISDBASE: %s\n" % GISDBASE)
+        f.write("LOCATION_NAME: %s\n" % TMPLOC)
+        f.write("GUI: text\n")
 
     # create temp location from input without import
     gs.verbose(_("Creating temporary project for <%s>...") % OGRdatasource)
