@@ -34,6 +34,10 @@ DOMAINS = $(LIBDOMAIN) $(MODDOMAIN) $(WXPYDOMAIN)
 LIB_POTFILES = find ../lib \( -name "*.c" -o -name "*.py" \) | LC_ALL=C sort | xargs grep -l "_(\"\|n_(\""
 MOD_POTFILES = find ../ \( -name "*.c" -o -name "*.cpp" \) | grep -v '../lib' | LC_ALL=C sort | xargs grep -l "_(\"\|n_(\""
 WXPY_POTFILES = find ../gui/wxpython -name '*.py' | LC_ALL=C sort | xargs grep -l "_(\"\|n_(\""
+#wxGUI menu definitions, extracted with the ITS rules in ./its
+WXPY_XMLFILES = ../gui/wxpython/xml/toolboxes.xml ../gui/wxpython/xml/wxgui_items.xml \
+	../gui/wxpython/xml/menudata_modeler.xml ../gui/wxpython/xml/menudata_psmap.xml \
+	../gui/wxpython/xml/menudata_pyedit.xml
 #For Python script module messages
 MOD_PYFILES = find ../scripts -name '*.py' | LC_ALL=C sort | xargs grep -l "_(\"\|n_(\""
 
@@ -48,10 +52,6 @@ endef
 #The xgettext utility is used to automate the creation of
 #portable message files (.po)
 pot:
-	if [ ! -f ../gui/wxpython/menustrings.py ] ; then \
-		echo "Build GRASS before running 'make pot'" >&2 ; \
-		exit 1 ; \
-	fi
 	@rm -f ./templates/*.pot
 	@echo "Generating $(LIBDOMAIN)..."
 	xgettext $(XGETTEXT_ARGS) --from-code=utf-8 --keyword=_ --keyword=n_:1,2 -cGTC -o ./templates/$(LIBDOMAIN).pot `$(LIB_POTFILES)`
@@ -60,6 +60,7 @@ pot:
 	xgettext $(XGETTEXT_ARGS) --from-code=utf-8 -j --keyword=_ --keyword=n_:1,2 -cGTC -o ./templates/$(MODDOMAIN).pot `$(MOD_PYFILES)`
 	@echo "Generating $(WXPYDOMAIN)..."
 	xgettext $(XGETTEXT_ARGS) --from-code=utf-8 --keyword=_ --keyword=n_:1,2 -cGTC -o ./templates/$(WXPYDOMAIN).pot `$(WXPY_POTFILES)`
+	GETTEXTDATADIRS="$(CURDIR)" xgettext $(XGETTEXT_ARGS) --from-code=utf-8 -j -o ./templates/$(WXPYDOMAIN).pot $(WXPY_XMLFILES)
 
 #merge already existing translations with new messages in POT template file, deduplicate it and create new po files:
 update-po:

@@ -12,8 +12,7 @@ python menutree.py [action] [menu]
 @endcode
 
 where <i>action</i>:
- - strings (default, used for translations)
- - tree (simple tree structure)
+ - tree (default, simple tree structure)
  - commands (command names and their place in tree)
  - dump (tree structure with stored data)
 
@@ -38,8 +37,6 @@ import sys
 import copy
 import xml.etree.ElementTree as ET
 
-from typing import TYPE_CHECKING
-
 import wx
 
 from core.treemodel import TreeModel, ModuleNode
@@ -51,9 +48,6 @@ from core.gcmd import GError
 
 if not os.getenv("GISBASE"):
     sys.exit("GRASS is not running. Exiting...")
-
-if TYPE_CHECKING:
-    from typing_extensions import Writer
 
 # TODO: change the system to remove strange derived classes
 
@@ -158,17 +152,6 @@ class MenuTreeModelBuilder:
         for child in self.model.root.children:
             printTree(node=child, fh=fh)
 
-    def PrintStrings(self, fh: Writer[str]):
-        """Print menu strings to file (used for localization)
-
-        :param fh: file descriptor
-        """
-        className = self.__class__.__name__
-        fh.write("menustrings_%s = [\n" % className)
-        for child in self.model.root.children:
-            printStrings(child, fh)
-        fh.write("    '']\n")
-
     def PrintCommands(self, fh):
         printCommands(self.model.root, fh, itemSep=" | ", menuSep=" > ")
 
@@ -192,20 +175,6 @@ def printTree(node, fh, indent=0):
         printTree(node=child, fh=fh, indent=indent + 2)
 
 
-def printStrings(node, fh: Writer[str]):
-    # node.label  - with module in brackets
-    # node.data['label'] - without module in brackets
-    if node.label and not node.data:
-        fh.write("    _(%r),\n" % str(node.label))
-    if node.data:
-        if node.data.get("label"):
-            fh.write("    _(%r),\n" % str(node.data["label"]))
-        if node.data.get("description"):
-            fh.write("    _(%r),\n" % str(node.data["description"]))
-    for child in node.children:
-        printStrings(node=child, fh=fh)
-
-
 def printCommands(node, fh, itemSep, menuSep):
     def collectParents(node, parents):
         parent = node.parent
@@ -227,11 +196,11 @@ def printCommands(node, fh, itemSep, menuSep):
 
 
 if __name__ == "__main__":
-    action = "strings"
+    action = "tree"
     menu = "manager"
 
     for arg in sys.argv:
-        if arg in {"strings", "tree", "commands", "dump"}:
+        if arg in {"tree", "commands", "dump"}:
             action = arg
         elif arg in {"manager", "module_tree", "modeler", "psmap"}:
             menu = arg
@@ -264,9 +233,7 @@ if __name__ == "__main__":
 
         gscore.fatal("Unknown value for parameter menu: %s" % menu)
 
-    if action == "strings":
-        menudata.PrintStrings(sys.stdout)
-    elif action == "tree":
+    if action == "tree":
         menudata.PrintTree(sys.stdout)
     elif action == "commands":
         menudata.PrintCommands(sys.stdout)

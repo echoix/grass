@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locatingRules>
+  <locatingRule name="GRASS wxGUI toolboxes" pattern="*.xml">
+    <documentRule localName="toolboxes" target="grass-wxgui.its"/>
+  </locatingRule>
+  <locatingRule name="GRASS wxGUI items" pattern="*.xml">
+    <documentRule localName="wxgui-items" target="grass-wxgui.its"/>
+  </locatingRule>
+  <locatingRule name="GRASS wxGUI menus" pattern="*.xml">
+    <documentRule localName="menudata" target="grass-wxgui.its"/>
+  </locatingRule>
+</locatingRules>

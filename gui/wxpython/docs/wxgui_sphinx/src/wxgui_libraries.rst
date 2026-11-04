@@ -14,7 +14,6 @@ Libraries
   location_wizard
   mapdisp
   mapwin
-  menustrings
   modules
   nviz
   vnet

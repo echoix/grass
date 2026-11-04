@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ITS rules to extract the translatable strings of the wxGUI menu definitions
+  (gui/wxpython/xml) with xgettext.
+  SPDX-FileCopyrightText: 2026 GRASS Development Team
+  SPDX-License-Identifier: GPL-2.0-or-later
+-->
+<its:rules xmlns:its="http://www.w3.org/2005/11/its"
+           xmlns:gt="https://www.gnu.org/s/gettext/ns/its/extensions/1.0"
+           version="2.0">
+  <its:translateRule selector="//*" translate="no"/>
+  <its:translateRule selector="//label | //help | //description" translate="yes"/>
+  <!--
+    Translator comments in a mechanical key=value form: "type" is the kind of
+    string, with its interpretation in parentheses, and the other keys are
+    what is specific to it. They are built from the XML itself, so they stay
+    in sync. A label gets its help text, a help text gets its label and a tool
+    menu item gets the tool name, which tells the translators what the item
+    does, e.g. whether a word is a noun or a verb.
+  -->
+  <its:locNoteRule selector="//toolbox/label | //menu/label"
+                   locNoteType="description">
+    <its:locNote>type=menu-title (name of a menu or submenu)</its:locNote>
+  </its:locNoteRule>
+  <its:locNoteRule selector="//module-item/label" locNoteType="description"
+                   locNotePointer="concat('type=menu-item-label (text of a menu entry); tool=', ../@name)"/>
+  <its:locNoteRule selector="//wxgui-item/label | //menuitem/label"
+                   locNoteType="description"
+                   locNotePointer="concat('type=menu-item-label (text of a menu entry); help=&quot;', ../description, ../help, '&quot;')"/>
+  <its:locNoteRule selector="//wxgui-item/label[not(../description)]"
+                   locNoteType="description"
+                   locNotePointer="concat('type=menu-item-label (text of a menu entry); name=', ../@name)"/>
+  <its:locNoteRule selector="//wxgui-item/description | //menuitem/help"
+                   locNoteType="description"
+                   locNotePointer="concat('type=menu-item-help (description of a menu entry); label=&quot;', ../label, '&quot;')"/>
+  <!-- Keep the ampersand marking keyboard accelerators (&amp;File) as is. -->
+  <gt:escapeRule selector="//label | //help | //description" escape="no"/>
+</its:rules>
