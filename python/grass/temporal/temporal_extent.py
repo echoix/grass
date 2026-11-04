@@ -38,7 +38,9 @@ class TemporalExtent(SQLDatabaseInterface):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
+        >>> from datetime import datetime
         >>> A = TemporalExtent(
         ...     table="raster_absolute_time",
         ...     ident="soil@PERMANENT",
@@ -1084,7 +1086,9 @@ class STDSAbsoluteTime(AbsoluteTemporalExtent):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
+        >>> from datetime import datetime
         >>> A = STDSAbsoluteTime(
         ...     table="strds_absolute_time",
         ...     ident="strds@PERMANENT",
@@ -1232,7 +1236,8 @@ class RelativeTemporalExtent(TemporalExtent):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> A = RelativeTemporalExtent(
         ...     table="raster_relative_time",
         ...     ident="soil@PERMANENT",
@@ -1359,7 +1364,8 @@ class STDSRelativeTime(RelativeTemporalExtent):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> A = STDSRelativeTime(
         ...     table="strds_relative_time",
         ...     ident="strds@PERMANENT",

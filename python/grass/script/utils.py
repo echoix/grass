@@ -269,12 +269,10 @@ def decode(bytes_: AnyStr, encoding: str | None = None) -> str:
     Example
     -------
 
-    >>> decode(b"S\xc3\xbcdtirol")
-    u'Südtirol'
+    >>> decode(b"S\\xc3\\xbcdtirol")
+    'Südtirol'
     >>> decode("Südtirol")
-    u'Südtirol'
-    >>> decode(1234)
-    u'1234'
+    'Südtirol'
     """
     if isinstance(bytes_, str):
         return bytes_
@@ -298,12 +296,10 @@ def encode(string: AnyStr, encoding: str | None = None) -> bytes:
     Example
     -------
 
-    >>> encode(b"S\xc3\xbcdtirol")
-    b'S\xc3\xbcdtirol'
-    >>> decode("Südtirol")
-    b'S\xc3\xbcdtirol'
-    >>> decode(1234)
-    b'1234'
+    >>> encode(b"S\\xc3\\xbcdtirol")
+    b'S\\xc3\\xbcdtirol'
+    >>> encode("Südtirol")
+    b'S\\xc3\\xbcdtirol'
     """
     if isinstance(string, bytes):
         return string
@@ -686,7 +682,8 @@ def append_node_pid(name):
     The returned string is a name usable for vectors, tables, and columns
     (vector legal name) as long as provided argument *name* is.
 
-    >>> append_node_pid("tmp_raster_1")
+    >>> append_node_pid("tmp_raster_1")  # doctest: +ELLIPSIS
+    'tmp_raster_1_...'
 
     .. note::
 
@@ -719,7 +716,8 @@ def append_uuid(name):
 
     For a random name of a given shorter size, see :func:`append_random()`.
 
-    >>> append_uuid("tmp")
+    >>> append_uuid("tmp")  # doctest: +ELLIPSIS
+    'tmp_...'
 
     .. note::
 
@@ -733,8 +731,10 @@ def append_uuid(name):
 def append_random(name, suffix_length=None, total_length=None):
     """Add a random part to of a specified length to a name (string)
 
-    >>> append_random("tmp", 8)
-    >>> append_random("tmp", total_length=16)
+    >>> append_random("tmp", 8)  # doctest: +ELLIPSIS
+    'tmp_...'
+    >>> append_random("tmp", total_length=16)  # doctest: +ELLIPSIS
+    'tmp_...'
 
     .. note::
 

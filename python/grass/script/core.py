@@ -202,8 +202,8 @@ def get_commands(*, env=None):
 
         >>> cmds = list(get_commands()[0])
         >>> cmds.sort()
-        >>> cmds[:5]
-        ['d.barscale', 'd.colorlist', 'd.colortable', 'd.correlate', 'd.erase']
+        >>> "g.region" in cmds
+        True
     """
     if not env:
         env = os.environ
@@ -520,7 +520,7 @@ def start_command(
 
         >>> p = start_command("g.gisenv", stdout=subprocess.PIPE)
         >>> print(p)  # doctest: +ELLIPSIS
-        <...Popen object at 0x...>
+        <...Popen...>
         >>> print(p.communicate()[0])  # doctest: +SKIP
         GISDBASE='/opt/grass-data';
         LOCATION_NAME='spearfish60';
@@ -627,7 +627,7 @@ def pipe_command(*args, **kwargs):
 
         >>> p = pipe_command("g.gisenv")
         >>> print(p)  # doctest: +ELLIPSIS
-        <....Popen object at 0x...>
+        <...Popen...>
         >>> print(p.communicate()[0])  # doctest: +SKIP
         GISDBASE='/opt/grass-data';
         LOCATION_NAME='spearfish60';
@@ -761,7 +761,6 @@ def write_command(*args, **kwargs):
         ...     stdin="%s|%s" % (635818.8, 221342.4),
         ...     output="view_point",
         ... )
-        0
 
     See :func:`start_command()` for details about parameters and usage.
 
@@ -1147,8 +1146,8 @@ def tempname(length: int, lowercase: bool = False) -> str:
     :Example:
       .. code-block:: pycon
 
-        >>> tempname(12)
-        'tmp_MxMa1kAS13s9'
+        >>> tempname(12)  # doctest: +ELLIPSIS
+        'tmp_...'
 
     .. seealso:: functions :func:`~grass.script.utils.append_uuid()`,
         :func:`~grass.script.utils.append_random()`,
@@ -2289,11 +2288,8 @@ def version():
 
     .. code-block:: pycon
 
-        >>> print(version())
-        {'proj4': '4.8.0', 'geos': '3.3.5', 'libgis_revision': '52468',
-         'libgis_date': '2012-07-27 22:53:30 +0200 (Fri, 27 Jul 2012)',
-         'version': '7.0.svn', 'date': '2012', 'gdal': '2.0dev',
-         'revision': '53670'}
+        >>> print(version())  # doctest: +ELLIPSIS
+        {'version': '...', 'date': '...', 'revision': '...', ...}
 
     """
     data = parse_command("g.version", flags="rge", errors="ignore")

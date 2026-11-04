@@ -48,19 +48,27 @@ def group_to_dict(
     :Example:
       .. code-block:: pycon
 
-        >>> run_command("g.copy", raster="lsat7_2000_10,lsat7_2000_10")
-        >>> run_command("r.support", raster="lsat7_2000_10", semantic_label="L8_1")
-        >>> run_command("g.copy", raster="lsat7_2000_20,lsat7_2000_20")
-        >>> run_command("r.support", raster="lsat7_2000_20", semantic_label="L8_2")
-        >>> run_command("g.copy", raster="lsat7_2000_30,lsat7_2000_30")
-        >>> run_command("r.support", raster="lsat7_2000_30", semantic_label="L8_3")
-        >>> run_command("i.group", group="L8_group",
-        >>>             input="lsat7_2000_10,lsat7_2000_20,lsat7_2000_30")
+        >>> import grass.script as gs
+        >>> gs.run_command("g.copy", raster="lsat7_2002_10,lsat7_2002_10")
+        >>> gs.run_command("r.support", map="lsat7_2002_10", semantic_label="L8_1")
+        >>> gs.run_command("g.copy", raster="lsat7_2002_20,lsat7_2002_20")
+        >>> gs.run_command("r.support", map="lsat7_2002_20", semantic_label="L8_2")
+        >>> gs.run_command("g.copy", raster="lsat7_2002_30,lsat7_2002_30")
+        >>> gs.run_command("r.support", map="lsat7_2002_30", semantic_label="L8_3")
+        >>> gs.run_command(
+        ...     "i.group",
+        ...     group="L8_group",
+        ...     input="lsat7_2002_10,lsat7_2002_20,lsat7_2002_30",
+        ... )
         >>> group_to_dict("L8_group")  # doctest: +ELLIPSIS
-        {"L8_1": "lsat7_2000_10", ... "L8_3": "lsat7_2000_30"}
-        >>> run_command("g.remove", flags="f", type="group", name="L8_group")
-        >>> run_command("g.remove", flags="f", type="raster",
-        >>>             name="lsat7_2000_10,lsat7_2000_20,lsat7_2000_30")
+        {'L8_1': 'lsat7_2002_10@...', ... 'L8_3': 'lsat7_2002_30@...'}
+        >>> gs.run_command("g.remove", flags="f", type="group", name="L8_group")
+        >>> gs.run_command(
+        ...     "g.remove",
+        ...     flags="f",
+        ...     type="raster",
+        ...     name="lsat7_2002_10,lsat7_2002_20,lsat7_2002_30",
+        ... )
 
     :param str imagery_group_name: Name of the imagery group to process (or None)
     :param str subgroup: Name of the imagery sub-group to process (or None)

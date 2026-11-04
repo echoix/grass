@@ -357,7 +357,7 @@ def set_raise_on_error(raise_exp: bool = True):
 
         >>> tgis.set_raise_on_error(True)
         False
-        >>> msgr.fatal("Ohh no no no!")
+        >>> msgr.fatal("Ohh no no no!")  # doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
           File "__init__.py", line 241, in fatal
             raise FatalError(message)

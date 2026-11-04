@@ -535,27 +535,16 @@ def command_info(cmd):
     with entries for description, keywords, usage, flags, and
     parameters, e.g.
 
-    >>> command_info("g.tempfile")  # doctest: +NORMALIZE_WHITESPACE
-    {'keywords': ['general', 'support'], 'params': [{'gisprompt': False,
-    'multiple': False, 'name': 'pid', 'guidependency': '', 'default': '',
-    'age': None, 'required': True, 'value': '', 'label': '', 'guisection': '',
-    'key_desc': [], 'values': [], 'values_desc': [], 'prompt': None,
-    'hidden': False, 'element': None, 'type': 'integer', 'description':
-    'Process id to use when naming the tempfile'}], 'flags': [{'description':
-    "Dry run - don't create a file, just prints it's file name", 'value':
-    False, 'label': '', 'guisection': '', 'suppress_required': False,
-    'hidden': False, 'name': 'd'}, {'description': 'Print usage summary',
-    'value': False, 'label': '', 'guisection': '', 'suppress_required': False,
-    'hidden': False, 'name': 'help'}, {'description': 'Verbose module output',
-    'value': False, 'label': '', 'guisection': '', 'suppress_required': False,
-    'hidden': False, 'name': 'verbose'}, {'description': 'Quiet module output',
-    'value': False, 'label': '', 'guisection': '', 'suppress_required': False,
-    'hidden': False, 'name': 'quiet'}], 'description': "Creates a temporary
-    file and prints it's file name.", 'usage': 'g.tempfile pid=integer [--help]
-    [--verbose] [--quiet]'}
+    >>> info = command_info("g.tempfile")
+    >>> info["description"]
+    "Creates a temporary file and prints it's file name."
+    >>> info["keywords"]
+    ['general', 'support', 'scripts']
+    >>> info["usage"]
+    'g.tempfile pid=integer [--help] [--verbose] [--quiet]'
 
-    >>> command_info("v.buffer")
-    ['vector', 'geometry', 'buffer']
+    >>> command_info("v.buffer")["keywords"]
+    ['vector', 'buffer', 'area', 'circle', 'geometry', 'line', 'grow', 'shrink']
 
     :param str cmd: the command to query
     """

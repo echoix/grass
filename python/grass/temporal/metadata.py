@@ -38,7 +38,8 @@ class RasterMetadataBase(SQLDatabaseInterface):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = RasterMetadataBase(
         ...     table="metadata",
         ...     ident="soil@PERMANENT",
@@ -324,7 +325,8 @@ class RasterMetadata(RasterMetadataBase):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = RasterMetadata(
         ...     ident="soil@PERMANENT",
         ...     datatype="CELL",
@@ -451,7 +453,8 @@ class Raster3DMetadata(RasterMetadataBase):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = Raster3DMetadata(
         ...     ident="soil@PERMANENT",
         ...     datatype="FCELL",
@@ -606,7 +609,8 @@ class VectorMetadata(SQLDatabaseInterface):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = VectorMetadata(
         ...     ident="lidar@PERMANENT",
         ...     is_3d=True,
@@ -968,7 +972,8 @@ class STDSMetadataBase(SQLDatabaseInterface):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = STDSMetadataBase(
         ...     ident="soils@PERMANENT", title="Soils", description="Soils 1950 - 2010"
         ... )
@@ -1168,7 +1173,8 @@ class STDSRasterMetadataBase(STDSMetadataBase):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = STDSRasterMetadataBase(
         ...     ident="soils@PERMANENT", title="Soils", description="Soils 1950 - 2010"
         ... )
@@ -1395,12 +1401,14 @@ class STRDSMetadata(STDSRasterMetadataBase):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
+        >>> mapset = tgis.get_current_mapset()
         >>> meta = STRDSMetadata(
-        ...     ident="soils@PERMANENT", title="Soils", description="Soils 1950 - 2010"
+        ...     ident="soils@" + mapset, title="Soils", description="Soils 1950 - 2010"
         ... )
-        >>> meta.id
-        'soils@PERMANENT'
+        >>> meta.id == "soils@" + mapset
+        True
         >>> meta.title
         'Soils'
         >>> meta.description
@@ -1506,6 +1514,10 @@ class STRDSMetadata(STDSRasterMetadataBase):
             # band names supported from TGIS DB version 3
             return None
 
+        if self.get_raster_register() is None:
+            # Without a register table there are no maps to get the labels from.
+            return None
+
         sql = "SELECT distinct semantic_label FROM %s WHERE %s.id " % (
             "raster_metadata",
             "raster_metadata",
@@ -1590,7 +1602,8 @@ class STR3DSMetadata(STDSRasterMetadataBase):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = STR3DSMetadata(
         ...     ident="soils@PERMANENT", title="Soils", description="Soils 1950 - 2010"
         ... )
@@ -1746,7 +1759,8 @@ class STVDSMetadata(STDSMetadataBase):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> meta = STVDSMetadata(
         ...     ident="lidars@PERMANENT",
         ...     title="LIDARS",
