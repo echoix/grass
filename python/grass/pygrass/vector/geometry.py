@@ -404,7 +404,9 @@ class Geo:
         barray = libvect.Vect_line_to_wkb(
             self.c_points, self.gtype, not self.is2D, ctypes.byref(size)
         )
-        return ctypes.string_at(barray, size.value)
+        wkb = ctypes.string_at(barray, size.value)
+        libgis.G_free(barray)
+        return wkb
 
 
 class Point(Geo):
@@ -1798,7 +1800,9 @@ class Area(Geo):
         barray = libvect.Vect_read_area_to_wkb(
             self.c_mapinfo, self.id, ctypes.byref(size)
         )
-        return ctypes.string_at(barray, size.value)
+        wkb = ctypes.string_at(barray, size.value)
+        libgis.G_free(barray)
+        return wkb
 
     @mapinfo_must_be_set
     def cats(self, cats=None):
