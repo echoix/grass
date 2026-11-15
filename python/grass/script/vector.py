@@ -39,7 +39,7 @@ def vector_db(map, env=None, **kwargs):
       .. code-block:: pycon
 
         >>> vector_db("geology")  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-        {1: {'layer': 1, ... 'table': 'geology'}}
+        {1: {'layer': 1, 'name': 'geology', 'table': 'geology', 'key': 'cat', 'database': '...', 'driver': 'sqlite'}}
 
     :param str map: vector map
     :param kwargs: other v.db.connect's arguments
@@ -103,12 +103,7 @@ def vector_columns(map, layer=None, getDict=True, env=None, **kwargs):
     database table connected to a vector map (interface to `v.info -c`).
 
     >>> vector_columns("geology", getDict=True)  # doctest: +NORMALIZE_WHITESPACE
-    {'PERIMETER': {'index': 2, 'type': 'DOUBLE PRECISION'}, 'GEOL250_':
-    {'index': 3, 'type': 'INTEGER'}, 'SHAPE_area': {'index': 6, 'type':
-    'DOUBLE PRECISION'}, 'onemap_pro': {'index': 1, 'type': 'DOUBLE
-    PRECISION'}, 'SHAPE_len': {'index': 7, 'type': 'DOUBLE PRECISION'},
-    'cat': {'index': 0, 'type': 'INTEGER'}, 'GEOL250_ID': {'index': 4, 'type':
-    'INTEGER'}, 'GEO_NAME': {'index': 5, 'type': 'CHARACTER'}}
+    {'cat': {'type': 'INTEGER', 'index': 0}, 'onemap_pro': {'type': 'DOUBLE PRECISION', 'index': 1}, 'PERIMETER': {'type': 'DOUBLE PRECISION', 'index': 2}, 'GEOL250_': {'type': 'INTEGER', 'index': 3}, 'GEOL250_ID': {'type': 'INTEGER', 'index': 4}, 'GEO_NAME': {'type': 'CHARACTER', 'index': 5}, 'SHAPE_area': {'type': 'DOUBLE PRECISION', 'index': 6}, 'SHAPE_len': {'type': 'DOUBLE PRECISION', 'index': 7}}
 
     >>> vector_columns("geology", getDict=False)  # doctest: +NORMALIZE_WHITESPACE
     ['cat',
@@ -171,9 +166,7 @@ def vector_info_topo(map, layer=1, env=None):
       .. code-block:: pycon
 
         >>> vector_info_topo("geology")  # doctest: +NORMALIZE_WHITESPACE
-        {'lines': 0, 'centroids': 1832, 'boundaries': 3649, 'points': 0,
-        'primitives': 5481, 'islands': 907, 'nodes': 2724, 'map3d': False,
-        'areas': 1832}
+        {'nodes': 2724, 'points': 0, 'lines': 0, 'boundaries': 3649, 'centroids': 1832, 'areas': 1832, 'islands': 907, 'primitives': 5481, 'map3d': False}
 
     :param str map: map name
     :param int layer: layer number
@@ -197,7 +190,7 @@ def vector_info(map, layer=1, env=None):
       .. code-block:: pycon
 
         >>> vector_info("geology")  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-        {'comment': '', 'projection': 'Lambert Conformal Conic' ... 'south': 10875.8272320917}
+        {'name': 'geology', 'mapset': 'PERMANENT', ... 'projection': 'Lambert Conformal Conic', ... 'south': 10875.8272320917, ...}
 
     :param str map: map name
     :param int layer: layer number
