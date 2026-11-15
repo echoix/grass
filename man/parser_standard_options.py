@@ -45,7 +45,7 @@ def parse_options(
             elif line.startswith("G_"):
                 diff = count_par_diff(line)
             elif diff > 0:
-                diff -= count_par_diff(line)
+                diff += count_par_diff(line)
             elif res is not None:
                 res.append(line)
 
