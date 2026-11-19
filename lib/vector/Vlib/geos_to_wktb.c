@@ -13,10 +13,39 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <grass/vector.h>
 #include <grass/glocale.h>
 
 #ifdef HAVE_GEOS
+
+/*!
+   \brief Copy a WKB buffer allocated by GEOS into memory from G_malloc()
+
+   The buffer returned by GEOS has to be released with GEOSFree() of the
+   library which allocated it. Returning a copy lets the caller use G_free(),
+   which is not possible with the GEOS buffer when GEOS and GRASS use
+   different C runtimes (for example on Windows).
+
+   \param geos_wkb buffer allocated by GEOS, released by this function
+   \param size size of the buffer
+
+   \return pointer to a copy allocated by G_malloc()
+   \return NULL if geos_wkb is NULL
+ */
+static unsigned char *copy_geos_wkb(unsigned char *geos_wkb, size_t size)
+{
+    unsigned char *wkb;
+
+    if (!geos_wkb)
+        return NULL;
+
+    wkb = G_malloc(size);
+    memcpy(wkb, geos_wkb, size);
+    GEOSFree(geos_wkb);
+
+    return wkb;
+}
 
 /*!
    \brief Read vector area and return it as Well Known Binary (WKB)
@@ -26,7 +55,8 @@
    \param area area id
    \param size The size of the returned unsigned char array
 
-   \return pointer to unsigned char array
+   \return pointer to unsigned char array allocated by G_malloc(), to be
+   released with G_free()
    \return NULL on error
  */
 unsigned char *Vect_read_area_to_wkb(struct Map_info *Map, int area,
@@ -56,7 +86,7 @@ unsigned char *Vect_read_area_to_wkb(struct Map_info *Map, int area,
 
     GEOSGeom_destroy(geom);
 
-    return (wkb);
+    return copy_geos_wkb(wkb, *size);
 }
 
 /*!
@@ -137,7 +167,8 @@ char *Vect_read_area_to_wkt2(struct Map_info *Map, int area, bool trim)
    \param line The id of the feature to read
    \param size The size of the returned unsigned char array
 
-   \return pointer to unsigned char array
+   \return pointer to unsigned char array allocated by G_malloc(), to be
+   released with G_free()
    \return NULL on error
  */
 unsigned char *Vect_read_line_to_wkb(struct Map_info *Map,
@@ -194,7 +225,7 @@ unsigned char *Vect_read_line_to_wkb(struct Map_info *Map,
 
     GEOSGeom_destroy(geom);
 
-    return (wkb);
+    return copy_geos_wkb(wkb, *size);
 }
 
 /*!
@@ -214,7 +245,8 @@ unsigned char *Vect_read_line_to_wkb(struct Map_info *Map,
    \param with_z Set to 1 if the feature is 3d, 0 otherwise
    \param size The size of the returned byte array
 
-   \return pointer to string (allocated)
+   \return pointer to byte array allocated by G_malloc(), to be released
+   with G_free()
    \return NULL on error
  */
 unsigned char *Vect_line_to_wkb(const struct line_pnts *points, int type,
@@ -244,7 +276,7 @@ unsigned char *Vect_line_to_wkb(const struct line_pnts *points, int type,
 
     GEOSGeom_destroy(geom);
 
-    return (wkb);
+    return copy_geos_wkb(wkb, *size);
 }
 
 /*!
