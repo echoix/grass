@@ -8,6 +8,10 @@ include $(MODULE_TOPDIR)/include/Make/Python.make
 
 DSTDIR = $(GUIDIR)/wxpython
 
+# Do not leave a partial menustrings.py or XML file behind when a generator
+# fails (e.g., wxPython is missing), as later steps treat it as complete.
+.DELETE_ON_ERROR:
+
 SRCFILES := $(wildcard icons/*.py xml/*) \
 	$(wildcard animation/*.py core/*.py datacatalog/*.py jupyter_notebook/*.py history/*.py dbmgr/*.py gcp/*.py gmodeler/*.py \
 	gui_core/*.py iclass/*.py lmgr/*.py location_wizard/*.py main_window/*.py mapwin/*.py mapdisp/*.py \
