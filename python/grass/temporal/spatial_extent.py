@@ -83,7 +83,8 @@ class SpatialExtent(SQLDatabaseInterface):
 
     .. code-block:: pycon
 
-        >>> init()
+        >>> import grass.temporal as tgis
+        >>> tgis.init()
         >>> extent = SpatialExtent(
         ...     table="raster_spatial_extent",
         ...     ident="soil@PERMANENT",

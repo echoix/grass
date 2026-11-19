@@ -32,11 +32,11 @@ def raster3d_info(map, env=None):
     :Example:
       .. code-block:: pycon
 
+        >>> import grass.script as gs
         >>> mapcalc3d("volume = row() + col() + depth()")
         >>> raster3d_info("volume")  # doctest: +ELLIPSIS
-        {'vertical_units': '"units"', 'tbres': 1.0, ... 'south': 185000.0}
-        >>> run_command("g.remove", flags="f", type="raster_3d", name="volume")
-        0
+        {'north': ..., 'south': ..., ... 'vertical_units': '"units"', ...}
+        >>> gs.run_command("g.remove", flags="f", type="raster_3d", name="volume")
 
     :param str map: map name
     :param env: environment
