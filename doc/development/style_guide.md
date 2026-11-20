@@ -29,7 +29,8 @@ with PEP8, consistent formatting, and readable and error-free code:
 - [Ruff](https://docs.astral.sh/ruff/) linter and code formatter to ensure
   code quality and consistent code formatting
 - [Pylint](https://pylint.readthedocs.io/en/latest/) static code analyser to
-  find bad code practices or errors
+  find errors that need type inference, such as calls with wrong arguments
+  or use of undefined names
 
 Note that while the entire GRASS code base is formatted with `ruff format`,
 full compliance with PEP8, Flake8, and Pylint practices is still work in progress.
@@ -67,6 +68,32 @@ warnings to ignore:
 
 ```bash
 flake8 --ignore=E203,E266,E501 --max-line-length=88 python_file.py
+```
+
+#### Pylint
+
+Ruff runs the style, import order and unused code checks, so Pylint is kept
+for what Ruff cannot do. The configuration is in the `[tool.pylint]` sections
+of [pyproject.toml](https://github.com/OSGeo/grass/blob/main/pyproject.toml).
+All messages are enabled except the ones listed under `disable`, which are
+grouped by reason: not wanted, already enforced by an equivalent Ruff rule,
+unreliable inference, and still to fix. Fixing the code for a message in the
+last group and removing it from the list is a welcome contribution.
+
+Pylint needs GRASS to be built, so that `grass` and its compiled bindings can
+be imported. Use the same command as the continuous integration, from the root
+of the source code:
+
+```bash
+PYTHONPATH="$(grass --config python_path):$PYTHONPATH" \
+LD_LIBRARY_PATH="$(grass --config path)/lib:$LD_LIBRARY_PATH" \
+pylint --persistent=no --jobs=0 .
+```
+
+For a single message, disable the others on the command line:
+
+```bash
+pylint --disable=all --enable=no-value-for-parameter python_file.py
 ```
 
 ### C and C++

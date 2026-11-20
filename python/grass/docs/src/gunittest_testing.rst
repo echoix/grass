@@ -676,22 +676,11 @@ check them and fix them in your code. Furthermore, continuous integrations is
 used to check if the source code can still be compiled after submitting changes
 to the repository.
 
-For Python, we recommend pylint and then for style issues pep8 tool
-(and perhaps also pep257 tool). However, there is more tools available
-you can use them together with the recommend ones.
-
-To provide a way to evaluate the Python source code in the whole GRASS source
-tree there is a Python script ``grass_py_static_check.py`` which uses
-pylint and pep8 with GRASS-specific settings. Run the tool in GRASS session
-in the source code root directory. A HTML report will be created in
-``pylint_report`` directory.
-
-::
-
-    grass_py_static_check.py
-
-.. note::
-    ``grass_py_static_check.py`` is available in `sandbox`_.
+For Python, the source tree is checked in the continuous integration with
+*ruff*, *flake8* and *pylint*, configured in ``pyproject.toml`` and ``.flake8``
+in the source code root directory. Run *ruff check* and *ruff format* before
+submitting changes, see the developer's style guide for details on using
+*pylint*.
 
 Additionally, if you are invoking your Python code manually using python command,
 e.g. when testing, use parameters::
@@ -719,5 +708,4 @@ Further reading
 .. _Coverity Scan: https://scan.coverity.com/
 .. _1038: https://scan.coverity.com/projects/1038
 .. _Cppcheck: http://cppcheck.sourceforge.net/
-.. _sandbox: https://svn.osgeo.org/grass/sandbox/wenzeslaus/grass_py_static_check.py
 .. _GRASS sample data: https://grass.osgeo.org/sampledata/north_carolina/
