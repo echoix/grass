@@ -68,9 +68,6 @@ class _JupyterGlobalSession:
         :raises ValueError: if the mapset does not exist (e.g., when the name is
             misspelled or the mapset is invalid).
         """
-        # The method could be a function, but this is more general (would work even for
-        # a non-global session).
-        # pylint: disable=no-self-use
         # Functions needed only here.
         # pylint: disable=import-outside-toplevel
         from grass.grassdb.checks import (
