@@ -642,21 +642,11 @@ disable = [
     # with a threshold of 50 lines, finds only copied GUI and test modules.
     "similarities",
 
-    # Ruff enforces an equivalent rule, Pylint would report it a second time.
-    "C0206",  # consider-using-dict-items, PLC0206
+    # Ruff reports the same cases, Pylint would report them a second time.
     "C0411",  # wrong-import-order, I001
     "C0412",  # ungrouped-imports, I001
     "C0413",  # wrong-import-position, E402
-    "C1802",  # use-implicit-booleaness-not-len, PLC1802
-    "R1705",  # no-else-return, RET505
-    "R1714",  # consider-using-in, PLR1714
-    "R1715",  # consider-using-get, SIM401
-    "R1724",  # no-else-continue, RET507
-    "R1733",  # unnecessary-dict-index-lookup, PLR1733
-    "R1735",  # use-dict-literal, C408
-    "W0104",  # pointless-statement, B018
     "W0611",  # unused-import, F401
-    "W0612",  # unused-variable, F841
 
     # Inference is not reliable here: names defined at runtime (the builtin
     # "_" installed by the grass package, ctypes bindings from grass.lib) and
@@ -671,8 +661,10 @@ disable = [
     "C0200",  # consider-using-enumerate
     "C0201",  # consider-iterating-dictionary
     "C0204",  # bad-mcs-classmethod-argument
+    "C0206",  # consider-using-dict-items, PLC0206 misses iteration over .keys()
     "C0207",  # use-maxsplit-arg
     "C0325",  # superfluous-parens
+    "C1802",  # use-implicit-booleaness-not-len, PLC1802 misses "not len(x)"
     "C1803",  # use-implicit-booleaness-not-comparison
     "C2801",  # unnecessary-dunder-call
     "E0203",  # access-member-before-definition
@@ -691,13 +683,20 @@ disable = [
     "E1307",  # bad-string-format-type
     "R0401",  # cyclic-import
     "R1704",  # redefined-argument-from-local
+    "R1705",  # no-else-return, RET505 reports fewer cases
     "R1710",  # inconsistent-return-statements
     "R1712",  # consider-swap-variables
     "R1713",  # consider-using-join
+    "R1714",  # consider-using-in, PLR1714 reports fewer cases
+    "R1715",  # consider-using-get, SIM401 reports fewer cases
+    "R1724",  # no-else-continue, RET507 reports fewer cases
     "R1727",  # condition-evals-to-constant
     "R1732",  # consider-using-with
+    "R1733",  # unnecessary-dict-index-lookup, PLR1733 reports fewer cases
+    "R1735",  # use-dict-literal, C408 reports fewer cases
     "W0101",  # unreachable
     "W0102",  # dangerous-default-value
+    "W0104",  # pointless-statement, B018 reports fewer cases
     "W0106",  # expression-not-assigned
     "W0108",  # unnecessary-lambda
     "W0123",  # eval-used
@@ -714,6 +713,7 @@ disable = [
     "W0602",  # global-variable-not-assigned
     "W0603",  # global-statement
     "W0604",  # global-at-module-level
+    "W0612",  # unused-variable, F841 skips unpacked variables (RUF059 is ignored)
     "W0613",  # unused-argument
     "W0621",  # redefined-outer-name
     "W0622",  # redefined-builtin
