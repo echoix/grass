@@ -29,8 +29,7 @@ with PEP8, consistent formatting, and readable and error-free code:
 - [Ruff](https://docs.astral.sh/ruff/) linter and code formatter to ensure
   code quality and consistent code formatting
 - [Pylint](https://pylint.readthedocs.io/en/latest/) static code analyser to
-  find errors that need type inference, such as calls with wrong arguments
-  or use of undefined names
+  find bad code practices or errors
 
 Note that while the entire GRASS code base is formatted with `ruff format`,
 full compliance with PEP8, Flake8, and Pylint practices is still work in progress.
@@ -72,17 +71,19 @@ flake8 --ignore=E203,E266,E501 --max-line-length=88 python_file.py
 
 #### Pylint
 
-Ruff runs the style, import order and unused code checks, so Pylint is kept
-for what Ruff cannot do. The configuration is in the `[tool.pylint]` sections
-of [pyproject.toml](https://github.com/OSGeo/grass/blob/main/pyproject.toml).
-All messages are enabled except the ones listed under `disable`, which are
-grouped by reason: not wanted, already enforced by an equivalent Ruff rule,
-unreliable inference, and still to fix. Fixing the code for a message in the
-last group and removing it from the list is a welcome contribution.
+Ruff runs most of the style, import order and unused code checks, so Pylint is
+kept mainly for what Ruff does not check. The configuration is in the
+`[tool.pylint]` sections of
+[pyproject.toml](https://github.com/OSGeo/grass/blob/main/pyproject.toml). All
+messages are enabled except the ones listed under `disable` (and the few that
+Pylint disables by default). The list is grouped by reason: not wanted, also
+checked by Ruff, unreliable inference, and still to fix. Fixing the code for a
+message in the last group and removing it from the list is a welcome
+contribution.
 
-Pylint needs GRASS to be built, so that `grass` and its compiled bindings can
-be imported. Use the same command as the continuous integration, from the root
-of the source code:
+Pylint needs GRASS to be built, so that `grass` and its compiled bindings can be
+imported. Run a command like the one in the continuous integration, from the
+root of the source code:
 
 ```bash
 PYTHONPATH="$(grass --config python_path):$PYTHONPATH" \

@@ -594,8 +594,9 @@ ignore-paths = [
     "python/libgrass_interface_generator", # External code
 ]
 
-# Files and directories with a base name matching are skipped.
-ignore-patterns = ["OBJ[.].*"]
+# Files and directories with a base name matching are skipped. Setting this
+# replaces the default, which skips Emacs lock files (^\.#), so it is repeated.
+ignore-patterns = ["^\\.#", "OBJ[.].*"]
 
 # Use all the available processors.
 jobs = 0
@@ -604,8 +605,7 @@ jobs = 0
 # *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
 py-version = "3.11"
 
-# The source roots are where imports of the local packages are resolved from,
-# like PYTHONPATH does at runtime.
+# Places where imports of the local packages are looked up.
 source-roots = ["python", "gui/wxpython", "man"]
 
 
@@ -638,19 +638,20 @@ disable = [
     "R0917",  # too-many-positional-arguments
     "R1702",  # too-many-nested-blocks
 
-    # Not wanted: duplicate-code takes about a quarter of the run time and,
-    # with a threshold of 50 lines, finds only copied GUI and test modules.
+    # Not wanted: with a threshold of 50 lines, duplicate-code finds only copied
+    # GUI and test modules, and it adds a few percent to the run time.
     "similarities",
 
-    # Ruff reports the same cases, Pylint would report them a second time.
-    "C0411",  # wrong-import-order, I001
-    "C0412",  # ungrouped-imports, I001
+    # Ruff enforces the same rule, Pylint would report it a second time. Pylint
+    # does not see the "noqa" comments, so it reports a few more places.
     "C0413",  # wrong-import-position, E402
     "W0611",  # unused-import, F401
 
-    # Inference is not reliable here: names defined at runtime (the builtin
-    # "_" installed by the grass package, ctypes bindings from grass.lib) and
-    # modules not installed for the Pylint run (wxPython, GDAL).
+    # Inference is not reliable here: when the whole tree is checked, many
+    # imports of local packages (mostly in the GUI) and of the generated
+    # grass.lib bindings do not resolve, optional modules such as wxPython and
+    # GDAL may not be installed, and the builtin "_" installed by the grass
+    # package is not understood.
     "E0401",  # import-error
     "E0611",  # no-name-in-module
     "E1101",  # no-member
@@ -664,6 +665,8 @@ disable = [
     "C0206",  # consider-using-dict-items, PLC0206 misses iteration over .keys()
     "C0207",  # use-maxsplit-arg
     "C0325",  # superfluous-parens
+    "C0411",  # wrong-import-order, I001 is ignored for most of the tree
+    "C0412",  # ungrouped-imports, I001 is ignored for most of the tree
     "C1803",  # use-implicit-booleaness-not-comparison
     "C2801",  # unnecessary-dunder-call
     "E0203",  # access-member-before-definition
@@ -728,7 +731,7 @@ disable = [
     "W4701",  # modified-iterating-list
 ]
 
-# Disabled by default.
+# deprecated-pragma is disabled by default.
 enable = ["deprecated-pragma"]
 
 
