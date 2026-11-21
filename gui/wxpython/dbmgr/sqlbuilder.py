@@ -180,9 +180,9 @@ class SQLBuilder(wx.Frame):
         }
 
         self.btn_logicpanel = wx.Panel(parent=self.panel, id=wx.ID_ANY)
-        for key, value in self.btn_logic.items():
+        for value in self.btn_logic.values():
             btn = Button(parent=self.btn_logicpanel, id=wx.ID_ANY, label=value[0])
-            self.btn_logic[key].append(btn.GetId())
+            value.append(btn.GetId())
 
         self.buttonsizer = wx.FlexGridSizer(cols=4, hgap=5, vgap=5)
         self.buttonsizer.Add(self.btn_clear)
@@ -338,7 +338,7 @@ class SQLBuilder(wx.Frame):
         self.btn_unique.Bind(wx.EVT_BUTTON, self.OnUniqueValues)
         self.btn_uniquesample.Bind(wx.EVT_BUTTON, self.OnSampleValues)
 
-        for key, value in self.btn_logic.items():
+        for value in self.btn_logic.values():
             self.FindWindowById(value[1]).Bind(wx.EVT_BUTTON, self.OnAddMark)
 
         self.btn_close.Bind(wx.EVT_BUTTON, self.OnClose)
@@ -680,9 +680,9 @@ class SQLBuilderUpdate(SQLBuilder):
 
         self.btn_arithmeticpanel = wx.Panel(parent=self.panel, id=wx.ID_ANY)
 
-        for key, value in self.btn_arithmetic.items():
+        for value in self.btn_arithmetic.values():
             btn = Button(parent=self.btn_arithmeticpanel, id=wx.ID_ANY, label=value[0])
-            self.btn_arithmetic[key].append(btn.GetId())
+            value.append(btn.GetId())
 
         btn_arithmeticsizer = wx.GridBagSizer(hgap=5, vgap=5)
 
@@ -733,7 +733,7 @@ class SQLBuilderUpdate(SQLBuilder):
         self.hsizer.Insert(2, self.funcpanel, proportion=1, flag=wx.EXPAND)
 
         self.list_func.Bind(wx.EVT_LISTBOX, self.OnAddFunc)
-        for key, value in self.btn_arithmetic.items():
+        for value in self.btn_arithmetic.values():
             self.FindWindowById(value[1]).Bind(wx.EVT_BUTTON, self.OnAddMark)
         self.mode.SetSelection(0)
         self.OnMode(None)

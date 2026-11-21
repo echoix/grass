@@ -109,11 +109,10 @@ def getLocationTree(gisdbase, location, queue, mapsets=None, lazy=False):
         )
         gs.try_remove(tmp_gisrc_file)
         return
-    else:
-        mapsets = mapsets.split(",")
-        Debug.msg(4, "Project <{0}>: {1} mapsets found".format(location, len(mapsets)))
-        for each in mapsets:
-            maps_dict[each] = []
+    mapsets = mapsets.split(",")
+    Debug.msg(4, "Project <{0}>: {1} mapsets found".format(location, len(mapsets)))
+    for each in mapsets:
+        maps_dict[each] = []
     if lazy:
         queue.put((maps_dict, None))
         return
@@ -135,14 +134,13 @@ def getLocationTree(gisdbase, location, queue, mapsets=None, lazy=False):
         )
         gs.try_remove(tmp_gisrc_file)
         return
-    else:
-        # fill dictionary
-        listOfMaps = maplist.splitlines()
-        Debug.msg(4, "Project <{0}>: {1} maps found".format(location, len(listOfMaps)))
-        for each in listOfMaps:
-            ltype, wholename = each.split("/")
-            name, mapset = wholename.split("@", maxsplit=1)
-            maps_dict[mapset].append({"name": name, "type": ltype})
+    # fill dictionary
+    listOfMaps = maplist.splitlines()
+    Debug.msg(4, "Project <{0}>: {1} maps found".format(location, len(listOfMaps)))
+    for each in listOfMaps:
+        ltype, wholename = each.split("/")
+        name, mapset = wholename.split("@", maxsplit=1)
+        maps_dict[mapset].append({"name": name, "type": ltype})
 
     try:
         conns = (

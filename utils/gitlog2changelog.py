@@ -58,7 +58,7 @@ with open("ChangeLog", "w") as fout:
             continue
         # Match the author line and extract the part we want
         # (Don't use startswith to allow Author override inside commit message.)
-        elif "Author:" in line:
+        if "Author:" in line:
             authorList = re.split(r": ", line, maxsplit=1)
             try:
                 author = authorList[1]

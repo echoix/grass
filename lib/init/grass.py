@@ -571,14 +571,10 @@ def read_gui(gisrc: StrPath, default_gui):
         kv = read_gisrc(gisrc)
         if "GRASS_GUI" in os.environ:
             grass_gui = os.environ["GRASS_GUI"]
-        elif "GUI" in kv:
-            grass_gui = kv["GUI"]
-        elif "GRASS_GUI" in kv:
-            # For backward compatibility (GRASS_GUI renamed to GUI)
-            grass_gui = kv["GRASS_GUI"]
         else:
-            # Set the GRASS user interface to the default if needed
-            grass_gui = default_gui
+            # GRASS_GUI is the old name of GUI, kept for backward compatibility.
+            # Set the GRASS user interface to the default if needed.
+            grass_gui = kv.get("GUI", kv.get("GRASS_GUI", default_gui))
 
     if not grass_gui:
         grass_gui = default_gui

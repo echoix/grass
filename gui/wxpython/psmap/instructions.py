@@ -683,8 +683,7 @@ class MapFrame(InstructionObject):
 
     def Read(self, instruction, text, **kwargs):
         """Read instruction and save information"""
-        if "isRegionComment" in kwargs:
-            isRegionComment = kwargs["isRegionComment"]
+        isRegionComment = kwargs.get("isRegionComment")
         instr = {}
 
         if instruction == "border":
