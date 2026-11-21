@@ -6,7 +6,7 @@ Created on Wed Jul 18 10:46:25 2012
 
 import ctypes
 import re
-from collections import namedtuple
+from typing import NamedTuple
 
 import numpy as np
 
@@ -22,7 +22,13 @@ from grass.pygrass.vector import sql
 # For test purposes
 test_vector_name = "geometry_doctest_map"
 
-LineDist = namedtuple("LineDist", "point dist spdist sldist")
+
+class LineDist(NamedTuple):
+    point: "Point"
+    dist: float
+    spdist: float
+    sldist: float
+
 
 WKT = {
     r"POINT\((.*)\)": "point",  # 'POINT\(\s*([+-]*\d+\.*\d*)+\s*\)'

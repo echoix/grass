@@ -16,6 +16,7 @@ so that the function ``_`` appears in the global namespace (as an additional bui
 
 import builtins as _builtins
 import os
+from pathlib import Path as _Path
 
 
 # Setup translations
@@ -99,5 +100,5 @@ _builtins.__dict__["_"] = _translate
 
 
 __all__ = ["script", "temporal"]
-if os.path.exists(os.path.join(os.path.dirname(__file__), "lib", "__init__.py")):
-    __all__.append("lib")
+if (_Path(__file__).parent / "lib" / "__init__.py").exists():
+    __all__ += ["lib"]

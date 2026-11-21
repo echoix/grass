@@ -26,7 +26,7 @@ from grass.gunittest.main import test
 def can_import_folium():
     """Test folium import to see if test can be run."""
     try:
-        import folium  # noqa
+        import folium  # noqa: F401
 
         return True
     except ImportError:
@@ -36,7 +36,7 @@ def can_import_folium():
 def can_import_ipyleaflet():
     """Test ipyleaflet import to see if test can be run."""
     try:
-        import ipyleaflet  # noqa
+        import ipyleaflet  # noqa: F401
 
         return True
     except ImportError:

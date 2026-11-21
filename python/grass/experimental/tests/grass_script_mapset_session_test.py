@@ -163,44 +163,40 @@ def test_create_multiple(xy_session):
 def test_nested_top_env(xy_session):
     """Sessions can be nested with one top-level environment"""
     names = ["test_mapset_1", "test_mapset_2", "test_mapset_3"]
-    with experimental.MapsetSession(
-        names[0], create=True, env=xy_session.env
-    ) as session1:
-        with experimental.MapsetSession(
+    with (
+        experimental.MapsetSession(
+            names[0], create=True, env=xy_session.env
+        ) as session1,
+        experimental.MapsetSession(
             names[1], create=True, env=xy_session.env
-        ) as session2:
-            with experimental.MapsetSession(
-                names[2], create=True, env=xy_session.env
-            ) as session3:
-                for name, session in zip(
-                    names, [session1, session2, session3], strict=True
-                ):
-                    session_mapset = gs.read_command(
-                        "g.mapset", flags="p", env=session.env
-                    ).strip()
-                    assert name == session_mapset
+        ) as session2,
+        experimental.MapsetSession(
+            names[2], create=True, env=xy_session.env
+        ) as session3,
+    ):
+        for name, session in zip(names, [session1, session2, session3], strict=True):
+            session_mapset = gs.read_command(
+                "g.mapset", flags="p", env=session.env
+            ).strip()
+            assert name == session_mapset
     assert Path(xy_session.env["GISRC"]).exists()
 
 
 def test_nested_inherited_env(xy_session):
     """Sessions can be nested including environment"""
     names = ["test_mapset_1", "test_mapset_2", "test_mapset_3"]
-    with experimental.MapsetSession(
-        names[0], create=True, env=xy_session.env
-    ) as session1:
-        with experimental.MapsetSession(
-            names[1], create=True, env=session1.env
-        ) as session2:
-            with experimental.MapsetSession(
-                names[2], create=True, env=session2.env
-            ) as session3:
-                for name, session in zip(
-                    names, [session1, session2, session3], strict=True
-                ):
-                    session_mapset = gs.read_command(
-                        "g.mapset", flags="p", env=session.env
-                    ).strip()
-                    assert name == session_mapset
+    with (
+        experimental.MapsetSession(
+            names[0], create=True, env=xy_session.env
+        ) as session1,
+        experimental.MapsetSession(names[1], create=True, env=session1.env) as session2,
+        experimental.MapsetSession(names[2], create=True, env=session2.env) as session3,
+    ):
+        for name, session in zip(names, [session1, session2, session3], strict=True):
+            session_mapset = gs.read_command(
+                "g.mapset", flags="p", env=session.env
+            ).strip()
+            assert name == session_mapset
     assert Path(xy_session.env["GISRC"]).exists()
 
 

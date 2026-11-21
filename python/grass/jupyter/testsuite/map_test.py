@@ -26,7 +26,7 @@ from grass.gunittest.main import test
 def can_import_ipython():
     """Test folium import to see if test can be run."""
     try:
-        import IPython  # noqa
+        import IPython  # noqa: F401
 
         return True
     except ImportError:

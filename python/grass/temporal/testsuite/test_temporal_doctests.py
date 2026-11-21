@@ -3,10 +3,8 @@ Temporal framework doctests
 """
 
 import doctest
-import sys
 
 import grass.gunittest.case
-import grass.gunittest.main
 import grass.gunittest.utils
 import grass.temporal as tgis
 
@@ -51,8 +49,5 @@ def load_tests(loader, tests, ignore):
 
 
 if __name__ == "__main__":
-    # Temporary deactivated for Python 3 cause it stalls
-    if sys.version_info[0] >= 3:
-        pass
-    else:
-        grass.gunittest.main.test()
+    # Temporarily deactivated because the doctests stall.
+    pass
