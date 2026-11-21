@@ -263,8 +263,7 @@ class array(np.memmap):
             )
         except CalledModuleError:
             return 1
-        else:
-            return 0
+        return 0
 
 
 ###############################################################################
@@ -390,5 +389,4 @@ class array3d(np.memmap):
 
         except CalledModuleError:
             return 1
-        else:
-            return 0
+        return 0
