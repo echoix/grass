@@ -664,7 +664,6 @@ disable = [
     "C0206",  # consider-using-dict-items, PLC0206 misses iteration over .keys()
     "C0207",  # use-maxsplit-arg
     "C0325",  # superfluous-parens
-    "C1802",  # use-implicit-booleaness-not-len, PLC1802 misses "not len(x)"
     "C1803",  # use-implicit-booleaness-not-comparison
     "C2801",  # unnecessary-dunder-call
     "E0203",  # access-member-before-definition
@@ -683,16 +682,11 @@ disable = [
     "E1307",  # bad-string-format-type
     "R0401",  # cyclic-import
     "R1704",  # redefined-argument-from-local
-    "R1705",  # no-else-return, RET505 reports fewer cases
     "R1710",  # inconsistent-return-statements
     "R1712",  # consider-swap-variables
     "R1713",  # consider-using-join
-    "R1714",  # consider-using-in, PLR1714 reports fewer cases
-    "R1715",  # consider-using-get, SIM401 reports fewer cases
-    "R1724",  # no-else-continue, RET507 reports fewer cases
     "R1727",  # condition-evals-to-constant
     "R1732",  # consider-using-with
-    "R1733",  # unnecessary-dict-index-lookup, PLR1733 reports fewer cases
     "R1735",  # use-dict-literal, C408 reports fewer cases
     "W0101",  # unreachable
     "W0102",  # dangerous-default-value
