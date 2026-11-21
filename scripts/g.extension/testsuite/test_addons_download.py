@@ -25,7 +25,7 @@ from grass.app.runtime import RuntimePaths
 
 runtime_paths = RuntimePaths()
 is_cmake = runtime_paths.is_cmake_build
-ms_windows = sys.platform == "win32" or sys.platform == "cygwin"
+ms_windows = sys.platform in {"win32", "cygwin"}
 
 
 class TestModuleDownloadFromDifferentSources(TestCase):

@@ -213,10 +213,7 @@ def _regionToCellHead(region):
 
     for k, v in region.items():
         v = int(v) if k in {"rows", "cols", "cells", "zone"} else float(v)
-        if k in convert_dict:
-            k = convert_dict[k]
-
-        setattr(cell_head, k, v)
+        setattr(cell_head, convert_dict.get(k, k), v)
 
     return cell_head
 

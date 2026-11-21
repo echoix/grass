@@ -316,7 +316,7 @@ class RDigitController(wx.EvtHandler):
 
     def Undo(self):
         """Undo a change, goes object back (finished or not finished)"""
-        if len(self._all):
+        if self._all:
             removed = self._all.pop(-1)
             # try to remove from each, it fails quietly when theitem is not
             # there

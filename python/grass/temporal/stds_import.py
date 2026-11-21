@@ -484,13 +484,8 @@ def import_stds(
         if line_count != int(init_data["number_of_maps"]):
             gs.fatal(_("Number of maps mismatch in init and list file."))
 
-        format_ = "GTiff"
-        type_ = "strds"
-
-        if "stds_type" in init_data:
-            type_ = init_data["stds_type"]
-        if "format" in init_data:
-            format_ = init_data["format"]
+        format_ = init_data.get("format", "GTiff")
+        type_ = init_data.get("stds_type", "strds")
 
         if stds_type != type_:
             gs.fatal(_("The archive file is of wrong space time dataset type"))

@@ -374,24 +374,23 @@ def _removeReceiver(receiver):
         backSet = sendersBack.pop(backKey)
     except KeyError:
         return False
-    else:
-        for senderkey in backSet:
-            try:
-                signals = list(connections[senderkey])
-            except KeyError:
-                pass
-            else:
-                for signal in signals:
+    for senderkey in backSet:
+        try:
+            signals = list(connections[senderkey])
+        except KeyError:
+            pass
+        else:
+            for signal in signals:
+                try:
+                    receivers = connections[senderkey][signal]
+                except KeyError:
+                    pass
+                else:
                     try:
-                        receivers = connections[senderkey][signal]
-                    except KeyError:
+                        receivers.remove(receiver)
+                    except Exception:
                         pass
-                    else:
-                        try:
-                            receivers.remove(receiver)
-                        except Exception:
-                            pass
-                    _cleanupConnections(senderkey, signal)
+                _cleanupConnections(senderkey, signal)
 
 
 def _cleanupConnections(senderkey, signal):
@@ -460,22 +459,21 @@ def _removeOldBackRefs(senderkey, signal, receiver, receivers):
         # need to scan back references here and remove senderkey
     except ValueError:
         return False
-    else:
-        oldReceiver = receivers[index]
-        del receivers[index]
-        found = 0
-        signals = connections.get(signal)
-        if signals is not None:
-            for sig, recs in connections.get(signal, {}).items():
-                if sig != signal:
-                    for rec in recs:
-                        if rec is oldReceiver:
-                            found = 1
-                            break
-        if not found:
-            _killBackref(oldReceiver, senderkey)
-            return True
-        return False
+    oldReceiver = receivers[index]
+    del receivers[index]
+    found = 0
+    signals = connections.get(signal)
+    if signals is not None:
+        for sig, recs in connections.get(signal, {}).items():
+            if sig != signal:
+                for rec in recs:
+                    if rec is oldReceiver:
+                        found = 1
+                        break
+    if not found:
+        _killBackref(oldReceiver, senderkey)
+        return True
+    return False
 
 
 def _killBackref(receiver, senderkey):

@@ -1611,8 +1611,7 @@ def find_file(name: str, element: str = "cell", mapset: str | None = None, env=N
         "raster3d": "grid3",
     }
 
-    if element in element_translation:
-        element = element_translation[element]
+    element = element_translation.get(element, element)
 
     result = parse_command(
         "g.findfile",

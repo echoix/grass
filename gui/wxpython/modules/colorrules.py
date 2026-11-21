@@ -1326,7 +1326,7 @@ class VectorColorTable(ColorTable):
         self.dbInfo = VectorDBInfo(self.inmap)
         enable = True
 
-        if not len(self.dbInfo.layers):  # no connection
+        if not self.dbInfo.layers:  # no connection
             if not (
                 self.version7 and self.attributeType == "color"
             ):  # otherwise it doesn't matter
