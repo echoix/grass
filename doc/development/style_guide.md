@@ -69,6 +69,34 @@ warnings to ignore:
 flake8 --ignore=E203,E266,E501 --max-line-length=88 python_file.py
 ```
 
+#### Pylint
+
+Ruff runs most of the style, import order and unused code checks, so Pylint is
+kept mainly for what Ruff does not check. The configuration is in the
+`[tool.pylint]` sections of
+[pyproject.toml](https://github.com/OSGeo/grass/blob/main/pyproject.toml). All
+messages are enabled except the ones listed under `disable` (and the few that
+Pylint disables by default). The list is grouped by reason: not wanted, also
+checked by Ruff, unreliable inference, and still to fix. Fixing the code for a
+message in the last group and removing it from the list is a welcome
+contribution.
+
+Pylint needs GRASS to be built, so that `grass` and its compiled bindings can be
+imported. Run a command like the one in the continuous integration, from the
+root of the source code:
+
+```bash
+PYTHONPATH="$(grass --config python_path):$PYTHONPATH" \
+LD_LIBRARY_PATH="$(grass --config path)/lib:$LD_LIBRARY_PATH" \
+pylint --persistent=no --jobs=0 .
+```
+
+For a single message, disable the others on the command line:
+
+```bash
+pylint --disable=all --enable=no-value-for-parameter python_file.py
+```
+
 ### C and C++
 
 C and C++ code is formatted with
