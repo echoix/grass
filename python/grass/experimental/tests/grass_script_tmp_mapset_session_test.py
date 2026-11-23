@@ -139,23 +139,21 @@ def test_nested_top_env(xy_session):
         "g.mapset", flags="p", env=xy_session.env
     ).strip()
 
-    with (
-        experimental.TemporaryMapsetSession(env=xy_session.env) as session1,
-        experimental.TemporaryMapsetSession(env=xy_session.env) as session2,
-        experimental.TemporaryMapsetSession(env=xy_session.env) as session3,
-    ):
-        for session in [session1, session2, session3]:
-            session_mapset = gs.read_command(
-                "g.mapset", flags="p", env=session.env
-            ).strip()
-            session_mapset = gs.read_command(
-                "g.mapset", flags="p", env=session.env
-            ).strip()
-            assert top_level_mapset != session_mapset
-            session_file = session.env["GISRC"]
-            assert top_level_session_file != session_file
-            assert Path(session_file).exists()
-            assert Path(session.mapset_path).exists()
+    with experimental.TemporaryMapsetSession(env=xy_session.env) as session1:
+        with experimental.TemporaryMapsetSession(env=xy_session.env) as session2:
+            with experimental.TemporaryMapsetSession(env=xy_session.env) as session3:
+                for session in [session1, session2, session3]:
+                    session_mapset = gs.read_command(
+                        "g.mapset", flags="p", env=session.env
+                    ).strip()
+                    session_mapset = gs.read_command(
+                        "g.mapset", flags="p", env=session.env
+                    ).strip()
+                    assert top_level_mapset != session_mapset
+                    session_file = session.env["GISRC"]
+                    assert top_level_session_file != session_file
+                    assert Path(session_file).exists()
+                    assert Path(session.mapset_path).exists()
     for session in [session1, session2, session3]:
         assert not session.active
         assert not Path(session.mapset_path).exists()
@@ -170,23 +168,21 @@ def test_nested_inherited_env(xy_session):
         "g.mapset", flags="p", env=xy_session.env
     ).strip()
 
-    with (
-        experimental.TemporaryMapsetSession(env=xy_session.env) as session1,
-        experimental.TemporaryMapsetSession(env=session1.env) as session2,
-        experimental.TemporaryMapsetSession(env=session2.env) as session3,
-    ):
-        for session in [session1, session2, session3]:
-            session_mapset = gs.read_command(
-                "g.mapset", flags="p", env=session.env
-            ).strip()
-            session_mapset = gs.read_command(
-                "g.mapset", flags="p", env=session.env
-            ).strip()
-            assert top_level_mapset != session_mapset
-            session_file = session.env["GISRC"]
-            assert top_level_session_file != session_file
-            assert Path(session_file).exists()
-            assert Path(session.mapset_path).exists()
+    with experimental.TemporaryMapsetSession(env=xy_session.env) as session1:
+        with experimental.TemporaryMapsetSession(env=session1.env) as session2:
+            with experimental.TemporaryMapsetSession(env=session2.env) as session3:
+                for session in [session1, session2, session3]:
+                    session_mapset = gs.read_command(
+                        "g.mapset", flags="p", env=session.env
+                    ).strip()
+                    session_mapset = gs.read_command(
+                        "g.mapset", flags="p", env=session.env
+                    ).strip()
+                    assert top_level_mapset != session_mapset
+                    session_file = session.env["GISRC"]
+                    assert top_level_session_file != session_file
+                    assert Path(session_file).exists()
+                    assert Path(session.mapset_path).exists()
     for session in [session1, session2, session3]:
         assert not session.active
         assert not Path(session.mapset_path).exists()
