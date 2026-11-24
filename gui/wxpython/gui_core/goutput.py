@@ -666,12 +666,15 @@ class GConsoleFrame(wx.Frame):
 
         panel = wx.Panel(self, id=wx.ID_ANY)
 
+        from core.giface import StandaloneGrassInterface
         from lmgr.menudata import LayerManagerMenuData
 
+        giface = StandaloneGrassInterface()
         menuTreeBuilder = LayerManagerMenuData()
-        self.gconsole = GConsole(guiparent=self)
+        self.gconsole = GConsole(guiparent=self, giface=giface)
         self.goutput = GConsoleWindow(
             parent=panel,
+            giface=giface,
             gconsole=self.gconsole,
             menuModel=menuTreeBuilder.GetModel(),
             gcstyle=GC_PROMPT,

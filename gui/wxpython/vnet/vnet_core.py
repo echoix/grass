@@ -1067,6 +1067,7 @@ class SnappingNodes(wx.EvtHandler):
 
         elif self.snapPts.VectMapState() == 0:
             dlg = wx.MessageDialog(
+                parent=None,
                 message=_(
                     "Temporary map '%s' was changed outside vector analysis tool.\n"
                     "Do you really want to activate snapping and overwrite it? "

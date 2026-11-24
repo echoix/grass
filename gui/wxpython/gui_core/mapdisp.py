@@ -394,7 +394,7 @@ class MapPanelBase(wx.Panel):
         """Return toolbar names"""
         return list(self.toolbars.keys())
 
-    def AddToolbar(self):
+    def AddToolbar(self, name):
         """Add defined toolbar to the window"""
         msg = self.AddToolbar.__name__
         raise NotImplementedError(msg)

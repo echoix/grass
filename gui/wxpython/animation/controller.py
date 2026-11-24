@@ -565,7 +565,7 @@ class AnimationController(wx.EvtHandler):
                         bitmap = self.bitmapProvider.GetBitmap(frameId)
                         lastBitmaps[i] = bitmap
                     elif i not in lastBitmaps:
-                        lastBitmaps[i] = wx.NullBitmap()
+                        lastBitmaps[i] = wx.NullBitmap
                 else:
                     bitmap = self.bitmapProvider.GetBitmap(frameId)
                     lastBitmaps[i] = bitmap
