@@ -199,7 +199,7 @@ class TreeView(AbstractTreeViewMixin, wx.TreeCtrl):
     """Tree view class inheriting from wx.TreeCtrl"""
 
     def __init__(self, model, parent, *args, **kw):
-        super().__init__(parent=parent, model=model, *args, **kw)
+        super().__init__(parent=parent, model=model, *args, **kw)  # ty: ignore[parameter-already-assigned]
         self.RefreshItems()
 
 

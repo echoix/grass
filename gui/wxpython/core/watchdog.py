@@ -92,7 +92,7 @@ class MapWatch(PatternMatchingEventHandler):
     containing info about the change."""
 
     def __init__(self, patterns, element, event_handler):
-        PatternMatchingEventHandler.__init__(self, patterns=patterns)
+        PatternMatchingEventHandler.__init__(self, patterns=patterns)  # ty: ignore[unknown-argument]
         self.element = element
         self.event_handler = event_handler
 

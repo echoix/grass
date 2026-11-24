@@ -1862,14 +1862,16 @@ class VectorColorTable(ColorTable):
                 "handler": self.OnToColSelection,
             },
         ]
+        # The dict values have mixed types, so ty cannot tell that "widget"
+        # is a window and not an event binder.
         for widget in widgets:
             if bind is True:
-                widget["widget"].Bind(
+                widget["widget"].Bind(  # ty: ignore[missing-argument]
                     widget["event"],
                     widget["handler"],
                 )
             else:
-                widget["widget"].Unbind(widget["event"])
+                widget["widget"].Unbind(widget["event"])  # ty: ignore[missing-argument]
 
 
 class ThematicVectorTable(VectorColorTable):

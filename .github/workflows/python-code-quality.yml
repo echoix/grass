@@ -203,10 +203,61 @@ jobs:
           ( cd doc/examples/raster/r.example/ && make )
           ( cd doc/examples/vector/v.example/ && make )
 
+  ty-wxgui:
+    name: Type check wxPython GUI with ty
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.job }}-${{
+        github.event_name == 'pull_request' &&
+        github.head_ref || github.sha }}
+      cancel-in-progress: true
+
+    env:
+      PYTHON_VERSION: "3.13"
+      # renovate: datasource=pypi depName=wxPython
+      WXPYTHON_VERSION: "4.3.2"
+      # renovate: datasource=pypi depName=ty
+      TY_VERSION: "0.0.109"
+
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Versions
+        run: |
+          echo "Python: ${PYTHON_VERSION}"
+          echo "wxPython: ${WXPYTHON_VERSION}"
+          echo "ty: ${TY_VERSION}"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip # zizmor: ignore[cache-poisoning] Not creating release artifacts, less of a concern here
+
+      # PyPI has only the source distribution of wxPython for Linux; Ubuntu
+      # wheels are attached to the GitHub releases. Only the type stubs of
+      # wxPython are needed here.
+      - name: Install wxPython and ty
+        run: |
+          cp="cp${PYTHON_VERSION/./}"
+          pip install "ty==${TY_VERSION}" \
+              "https://github.com/wxWidgets/Phoenix/releases/download/wxPython-${WXPYTHON_VERSION}/wxpython-${WXPYTHON_VERSION}%2Bubuntu2404-${cp}-${cp}-linux_x86_64.whl"
+
+      - name: Run ty on the wxPython GUI
+        # Configured in pyproject.toml; wxPython is needed for its type stubs
+        run: ty check --python "$(python -c 'import sys; print(sys.prefix)')" --output-format github
+
   python-success:
     name: Python Code Quality Result
     needs:
       - python-checks
+      - ty-wxgui
     if: ${{ always() }}
     uses: $/.github/workflows/verify-success.yml
     with:

@@ -1650,7 +1650,7 @@ def test():
         size=globalvar.MAP_WINDOW_SIZE,
         title=_("Supervised Classification Tool"),
     )
-    frame = IClassMapDisplay(parent=frame)
+    frame = IClassMapDisplay(parent=frame)  # ty: ignore[missing-argument]
     frame.Show()
     app.MainLoop()
 

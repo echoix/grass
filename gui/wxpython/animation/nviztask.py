@@ -336,7 +336,7 @@ class NvizTask:
 
 
 def test():
-    nviz = NvizTask("/home/anna/testy/nviz/t12.gxw")
+    nviz = NvizTask("/home/anna/testy/nviz/t12.gxw")  # ty: ignore[too-many-positional-arguments]
     # nviz = NvizState('/home/anna/testy/nviz/t3.gxw')
 
     # cmd = nviz.GetCommand()

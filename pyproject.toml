@@ -897,3 +897,27 @@ line_length = 88
 profile = "black"
 # *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
 py_version = 311
+
+# Type checking of the wxPython GUI is limited to a few rules which report
+# calls that fail at run time. The other rules produce mostly false positives
+# here: the code supports both wxPython Classic and Phoenix, uses optional
+# dependencies, and the translation function _() is installed as a builtin.
+[tool.ty.environment]
+extra-paths = ["python", "gui/wxpython"]
+# *GRASS TODO: keep in sync with MIN_PYTHON_VERSION supported*
+python-version = "3.11"
+
+[tool.ty.src]
+include = ["gui/wxpython"]
+exclude = [
+    "gui/wxpython/docs",
+    # Manual test scripts which use APIs that no longer exist.
+    "gui/wxpython/mapdisp/test_mapdisp.py",
+]
+
+[tool.ty.rules]
+all = "ignore"
+missing-argument = "error"
+unknown-argument = "error"
+too-many-positional-arguments = "error"
+parameter-already-assigned = "error"

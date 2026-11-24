@@ -406,7 +406,9 @@ class VNETDialog(wx.Dialog):
             selPanels[dataSel[0]] = Panel(parent=dataPanel)
             if dataSel[0] == "input":
                 self.inputData[dataSel[0]] = dataSel[2](
-                    parent=selPanels[dataSel[0]], size=(-1, -1), type="vector"
+                    parent=selPanels[dataSel[0]],
+                    size=(-1, -1),
+                    type="vector",  # ty: ignore[unknown-argument]
                 )
                 icon = wx.Image(
                     os.path.join(globalvar.ICONDIR, "grass", "layer-vector-add.png")
@@ -1533,7 +1535,9 @@ class CreateTtbDialog(wx.Dialog):
             selPanels[dataSel[0]] = Panel(parent=self)
             if dataSel[0] in {"input", "output"}:
                 self.inputData[dataSel[0]] = dataSel[2](
-                    parent=selPanels[dataSel[0]], size=(-1, -1), type="vector"
+                    parent=selPanels[dataSel[0]],
+                    size=(-1, -1),
+                    type="vector",  # ty: ignore[unknown-argument]
                 )
             elif dataSel[0] != "input":
                 self.inputData[dataSel[0]] = dataSel[2](
