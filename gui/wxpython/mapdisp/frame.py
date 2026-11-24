@@ -981,7 +981,7 @@ class MapPanel(SingleMapPanel, MainPageBase):
         """
         Debug.msg(2, "MapPanel.OnCloseWindow()")
         if self.canCloseCallback:
-            pgnum_dict = self.canCloseCallback(askIfSaveWorkspace=askIfSaveWorkspace)
+            pgnum_dict = self.canCloseCallback(askIfSaveWorkspace=askIfSaveWorkspace)  # ty: ignore[unknown-argument]
             if pgnum_dict is not None:
                 self.CleanUp()
                 if pgnum_dict["layers"] > -1:

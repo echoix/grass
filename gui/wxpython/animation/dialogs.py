@@ -2102,7 +2102,7 @@ def testAnimEdit():
     anim = AnimationData()
     anim.SetDefaultValues(animationIndex=0, windowIndex=0)
 
-    dlg = EditDialog(parent=None, animationData=[anim])
+    dlg = EditDialog(parent=None, animationData=[anim])  # ty: ignore[missing-argument]
     dlg.Show()
 
 

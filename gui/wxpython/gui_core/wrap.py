@@ -611,7 +611,7 @@ class Menu(wx.Menu):
         if wxPythonPhoenix:
             wx.Menu.AppendSubMenu(self, submenu=submenu, text=text, help=help)
         else:
-            wx.Menu.AppendMenu(self, id=id, text=text, submenu=submenu, help=help)
+            wx.Menu.AppendMenu(self, id=id, text=text, submenu=submenu, help=help)  # ty: ignore[missing-argument, unknown-argument]
 
 
 class DragImage(wx.GenericDragImage if wxPythonPhoenix else wx.DragImage):

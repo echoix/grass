@@ -428,7 +428,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
                 if CheckWxVersion(version=[2, 9]):
                     self.SetCurrent(self.context)
                 else:
-                    self.SetCurrent()
+                    self.SetCurrent()  # ty: ignore[missing-argument]
                 self._display.ResizeWindow(
                     size.width, size.height, self.GetContentScaleFactor()
                 )
@@ -454,7 +454,7 @@ class GLWindow(MapWindowBase, glcanvas.GLCanvas):
         if CheckWxVersion(version=[2, 9]):
             self.SetCurrent(self.context)
         else:
-            self.SetCurrent()
+            self.SetCurrent()  # ty: ignore[missing-argument]
 
         if not self.initView:
             self._display.InitView()

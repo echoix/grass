@@ -278,7 +278,7 @@ class GConsoleWindow(wx.SplitterWindow):
             try:
                 self.cmdOutput.StartStyling(p1)
             except TypeError:
-                self.cmdOutput.StartStyling(p1, 0xFF)
+                self.cmdOutput.StartStyling(p1, 0xFF)  # ty: ignore[too-many-positional-arguments]
             self.cmdOutput.SetStyling(p2 - p1, style)
 
         self.cmdOutput.EnsureCaretVisible()
@@ -637,7 +637,7 @@ class GStc(stc.StyledTextCtrl):
             try:
                 self.StartStyling(p1)
             except TypeError:
-                self.StartStyling(p1, 0xFF)
+                self.StartStyling(p1, 0xFF)  # ty: ignore[too-many-positional-arguments]
 
             if style == "error":
                 self.SetStyling(p2 - p1, self.StyleError)
