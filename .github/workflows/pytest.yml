@@ -32,6 +32,8 @@ jobs:
       FORCE_COLOR: 1 # for software including pip: https://force-color.org/
       CLICOLOR_FORCE: 1 # for other software including ninja: https://bixense.com/clicolors/
       PYTHONWARNINGS: always
+      # renovate: datasource=pypi depName=wxPython
+      WXPYTHON_VERSION: "4.3.2"
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -62,8 +64,18 @@ jobs:
           pip install --break-system-packages -r .github/workflows/python_requirements.txt
           pip install --break-system-packages -r .github/workflows/optional_requirements.txt
           pip install --break-system-packages GDAL=="$(gdal-config --version)"
+          # PyPI has only the source distribution of wxPython for Linux;
+          # Ubuntu wheels are attached to the GitHub releases.
+          cp="cp${MATRIX_PYTHON_VERSION/./}"
+          ubuntu="${MATRIX_OS//[-.]/}"
+          pip install --break-system-packages \
+              "https://github.com/wxWidgets/Phoenix/releases/download/wxPython-${WXPYTHON_VERSION}/wxpython-${WXPYTHON_VERSION}%2B${ubuntu}-${cp}-${cp}-linux_x86_64.whl"
           pip install --break-system-packages pytest pytest-timeout \
-              pytest-github-actions-annotate-failures pytest-xdist pytest-cov
+              pytest-github-actions-annotate-failures pytest-xdist pytest-cov \
+              pytest-xvfb
+        env:
+          MATRIX_OS: ${{ matrix.os }}
+          MATRIX_PYTHON_VERSION: ${{ matrix.python-version }}
 
       - name: Create installation directory
         run: |

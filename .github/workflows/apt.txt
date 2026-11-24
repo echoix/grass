@@ -7,13 +7,16 @@ libfftw3-dev
 libgdal-dev
 libgl1-mesa-dev
 libglu1-mesa-dev
+libgtk-3-0t64
 liblapacke-dev
 libncurses-dev
 libnetcdf-dev
+libnotify4
 libpdal-dev
 libpng-dev
 libproj-dev
 libreadline-dev
+libsdl2-2.0-0
 libsvm-dev
 libzstd-dev
 pdal
@@ -26,4 +29,5 @@ python3-pil
 python3-pyvirtualdisplay
 python3-termcolor
 sqlite3
+xvfb
 zlib1g-dev
