@@ -511,7 +511,7 @@ class ModelEvtHandler(ogl.ShapeEvtHandler):
                     layer_list.DeleteLayer(layer)
 
         except GException as e:
-            GError(parent=self, message="{}".format(e))
+            GError(parent=self.frame, message="{}".format(e))
 
     def OnRemove(self, event):
         """Remove shape"""
