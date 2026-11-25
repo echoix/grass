@@ -2439,7 +2439,7 @@ class CmdPanel(wx.Panel):
                                     except UnicodeDecodeError:
                                         # remove non-ascii characters on encoding
                                         # mismatch (file vs OS)
-                                        ifbb.AppendText(line.translate(None, nonascii))
+                                        ifbb.AppendText(line.translate(None, nonascii))  # ty: ignore[too-many-positional-arguments]
                                 ifbb.SetInsertionPoint(0)
 
                         ifbb.Bind(wx.EVT_TEXT, self.OnFileText)

@@ -470,9 +470,9 @@ class Instruction:
                     id = kwargs["id"]
                     newInstr = myInstrDict[i](
                         id,
-                        subType=instruction[1:],
+                        subType=instruction[1:],  # ty: ignore[unknown-argument]
                         env=self.env,
-                    )
+                    )  # ty: ignore[missing-argument]
                 elif i in {"image", "northArrow"}:
                     commentFound = False
                     for line in text:
@@ -482,9 +482,9 @@ class Instruction:
                         i == "northArrow" and not commentFound
                     ):
                         continue
-                    newInstr = myInstrDict[i](id, settings=self, env=self.env)
+                    newInstr = myInstrDict[i](id, settings=self, env=self.env)  # ty: ignore[missing-argument, unknown-argument]
                 else:
-                    newInstr = myInstrDict[i](id, env=self.env)
+                    newInstr = myInstrDict[i](id, env=self.env)  # ty: ignore[missing-argument]
                 ok = newInstr.Read(instruction, text, **kwargs)
                 if ok:
                     self.AddInstruction(newInstr)
