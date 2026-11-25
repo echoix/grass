@@ -240,14 +240,18 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip # zizmor: ignore[cache-poisoning] Not creating release artifacts, less of a concern here
 
-      # PyPI has only the source distribution of wxPython for Linux; Ubuntu
-      # wheels are attached to the GitHub releases. Only the type stubs of
+      # PyPI has only the source distribution of wxPython for Linux. Ubuntu
+      # wheels are attached to the GitHub releases, with the Ubuntu version as
+      # local version, e.g., 4.3.2+ubuntu2404. Their metadata lack the local
+      # version, which pip rejects, so uv is used. Only the type stubs of
       # wxPython are needed here.
       - name: Install wxPython and ty
         run: |
-          cp="cp${PYTHON_VERSION/./}"
-          pip install "ty==${TY_VERSION}" \
-              "https://github.com/wxWidgets/Phoenix/releases/download/wxPython-${WXPYTHON_VERSION}/wxpython-${WXPYTHON_VERSION}%2Bubuntu2404-${cp}-${cp}-linux_x86_64.whl"
+          pip install uv
+          ubuntu="ubuntu$(. /etc/os-release && echo "${VERSION_ID//./}")"
+          uv pip install --system \
+              --find-links "https://github.com/wxWidgets/Phoenix/releases/expanded_assets/wxPython-${WXPYTHON_VERSION}" \
+              "wxPython==${WXPYTHON_VERSION}+${ubuntu}" "ty==${TY_VERSION}"
 
       - name: Run ty on the wxPython GUI
         # Configured in pyproject.toml; wxPython is needed for its type stubs
