@@ -2104,18 +2104,20 @@ class PreferencesDialog(PreferencesBaseDialog):
             )
             winCode.SetValue("")
             win.SetValue("")
+            return
 
         try:
             code = int(event.GetString())
         except ValueError:
             wx.MessageBox(
                 parent=self,
-                message=_("EPSG code %s not found") % str(code),
+                message=_("EPSG code %s not found") % event.GetString(),
                 caption=_("Error"),
                 style=wx.OK | wx.ICON_ERROR | wx.CENTRE,
             )
             winCode.SetValue("")
             win.SetValue("")
+            return
 
         try:
             win.SetValue(self.epsgCodeDict[code][1].replace("<>", "").strip())

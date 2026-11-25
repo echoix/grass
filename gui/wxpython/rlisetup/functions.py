@@ -70,7 +70,7 @@ def checkMapExists(name, typ="raster") -> bool:
     env = grass.gisenv()
     mapset = env["MAPSET"]
     found_map = grass.find_file(name, typ, mapset)
-    return bool(found_map.name != "")
+    return bool(found_map["name"] != "")
 
 
 def convertFeature(vect, outrast, cat, origrast, layer="1", overwrite=False):

@@ -936,7 +936,7 @@ class GMFrame(wx.Frame):
 
         from gmodeler.model import Model
 
-        self.model = Model()
+        self.model = Model(self._giface)
         self.model.LoadModel(filename)
         self.model.Run(log=self.GetLogWindow(), onDone=self.OnDone, parent=self)
         dlg.Destroy()

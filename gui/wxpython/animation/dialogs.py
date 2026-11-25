@@ -852,7 +852,7 @@ class EditDialog(wx.Dialog):
         windowIndex = self._getNextIndex()
         if windowIndex is None:
             GMessage(
-                self,
+                parent=self,
                 message=_("Maximum number of animations is %d.") % self.maxAnimations,
             )
             return

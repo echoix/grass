@@ -46,7 +46,7 @@ class Circle:
 
 
 class MaskedArea:
-    def __init__(self, region, raster, radius):
+    def __init__(self, region, raster, radius=None):
         self.region = region
         self.raster = raster
         self.radius = radius
@@ -251,7 +251,7 @@ class RLiSetupMapPanel(wx.Panel):
             )
 
     def writeArea(self, coords, rasterName):
-        with tempfile.NamedTemporaryFile(delete=False) as polyfile:
+        with tempfile.NamedTemporaryFile(delete=False, mode="w") as polyfile:
             polyfile.write("AREA\n")
             for coor in coords:
                 east, north = coor
