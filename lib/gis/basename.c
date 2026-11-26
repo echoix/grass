@@ -128,6 +128,9 @@ char *G_join_basename_strings(const char **strings, size_t len)
     char *result;
     char *separator;
 
+    if (len == 0)
+        return G_store("");
+
     separator = G_get_basename_separator();
 
     lensep = strlen(separator);

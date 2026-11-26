@@ -666,6 +666,21 @@ int G_parser(int argc, char **argv)
     return 0;
 }
 
+/* Copy src to dst with double quotes escaped, return the end of dst.
+ * shortcut: backslashes are not escaped, so a value ending in a backslash
+ * still breaks the quoting; upgrade if histories must be exactly replayable.
+ */
+static char *copy_escaped(char *dst, const char *src)
+{
+    for (; *src; src++) {
+        if (*src == '"')
+            *dst++ = '\\';
+        *dst++ = *src;
+    }
+    *dst = '\0';
+    return dst;
+}
+
 /*!
  * \brief Creates command to run non-interactive.
  *
@@ -712,6 +727,7 @@ char *recreate_command(int original_path)
         if (len + slen >= nalloced) {
             nalloced += (1024 > len) ? 1024 : len + 1;
             buff = G_realloc(buff, nalloced);
+            cur = buff + len;
         }
         strcpy(cur, " --overwrite");
         cur += slen;
@@ -730,6 +746,7 @@ char *recreate_command(int original_path)
         if (len + slen >= nalloced) {
             nalloced += (1024 > len) ? 1024 : len + 1;
             buff = G_realloc(buff, nalloced);
+            cur = buff + len;
         }
         strcpy(cur, sflg);
         cur += slen;
@@ -781,8 +798,8 @@ char *recreate_command(int original_path)
             len = cur - buff;
         }
         else if (opt->answer && opt->answers && opt->answers[0]) {
-            slen = strlen(opt->key) + strlen(opt->answers[0]) +
-                   4; /* +4 for: ' ' = " " */
+            slen = strlen(opt->key) + 2 * strlen(opt->answers[0]) +
+                   4; /* +4 for: ' ' = " ", 2x for escaped quotes */
             if (len + slen >= nalloced) {
                 nalloced += (nalloced + 1024 > len + slen) ? 1024 : slen + 1;
                 buff = G_realloc(buff, nalloced);
@@ -798,13 +815,12 @@ char *recreate_command(int original_path)
                 strcpy(cur, "\"");
                 cur++;
             }
-            strcpy(cur, opt->answers[0]);
-            cur = strchr(cur, '\0');
+            cur = copy_escaped(cur, opt->answers[0]);
             len = cur - buff;
             for (n = 1; opt->answers[n]; n++) {
                 if (!opt->answers[n])
                     break;
-                slen = strlen(opt->answers[n]) + 2; /* +2 for , " */
+                slen = 2 * strlen(opt->answers[n]) + 2; /* +2 for , " */
                 if (len + slen >= nalloced) {
                     nalloced +=
                         (nalloced + 1024 > len + slen) ? 1024 : slen + 1;
@@ -813,8 +829,7 @@ char *recreate_command(int original_path)
                 }
                 strcpy(cur, ",");
                 cur++;
-                strcpy(cur, opt->answers[n]);
-                cur = strchr(cur, '\0');
+                cur = copy_escaped(cur, opt->answers[n]);
                 len = cur - buff;
             }
             if (opt->type == TYPE_STRING) {

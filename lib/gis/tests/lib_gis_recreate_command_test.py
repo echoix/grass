@@ -6,8 +6,6 @@
 import subprocess
 import sys
 
-import pytest
-
 # The parser keeps global state and the program name, so each case runs in a
 # separate process in the session. Arguments: program name, then tool arguments.
 SCRIPT = """
@@ -49,12 +47,6 @@ def recreate(session, *arguments, program="testmod"):
     ).stdout
 
 
-QUOTES_NOT_ESCAPED = pytest.mark.xfail(
-    strict=True,
-    reason="G_recreate_command() does not escape double quotes in values",
-)
-
-
 def test_plain_value(xy_session_for_module):
     assert recreate(xy_session_for_module, "text=abc") == 'testmod text="abc"'
 
@@ -63,31 +55,23 @@ def test_several_values(xy_session_for_module):
     assert recreate(xy_session_for_module, "text=a,b") == 'testmod text="a,b"'
 
 
-@QUOTES_NOT_ESCAPED
 def test_quote_in_value_is_escaped(xy_session_for_module):
     """A double quote in a value must not end the quoted value early"""
     result = recreate(xy_session_for_module, 'text=say "hi"')
     assert result == 'testmod text="say \\"hi\\""'
 
 
-@QUOTES_NOT_ESCAPED
 def test_quote_in_later_value_is_escaped(xy_session_for_module):
     result = recreate(xy_session_for_module, 'text=a,"b"')
     assert result == 'testmod text="a,\\"b\\""'
 
 
-@QUOTES_NOT_ESCAPED
 def test_long_value_is_not_truncated(xy_session_for_module):
     value = '"' * 3000
     result = recreate(xy_session_for_module, f"text={value}")
     assert result == f'testmod text="{value.replace(chr(34), chr(92) + chr(34))}"'
 
 
-# Not strict: the stale pointer is only written to freed memory when realloc
-# moves the buffer, so the test can pass by luck before the fix.
-@pytest.mark.xfail(
-    reason="G_recreate_command() writes --overwrite to the buffer it just freed",
-)
 def test_overwrite_after_long_program_name(xy_session_for_module):
     """Adding --overwrite after the buffer grows keeps it in the result
 
