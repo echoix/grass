@@ -16,6 +16,20 @@ layers of space time datasets are considered in the analysis.
 The temporal relation *start* means that the start time of an input map
 layer is temporally located in an interval of a sample map layer.
 
+The other methods name the temporal relation of a sample map layer to an
+input map layer. They select the input map layers that:
+
+- *contain*: lie in the sample map layer
+- *during*: cover the sample map layer
+- *overlap*: have one end inside the sample map layer, not at its start or
+  end, and the other end outside it
+- *equal*: have the start and end time of the sample map layer
+- *follows*: end at the start of the sample map layer
+- *precedes*: start at the end of the sample map layer
+
+Only *start* and *equal* select an input map layer with the start and end
+time of the sample map layer.
+
 The textual output at the command line shows the names of the maps,
 start and end time as well as the *interval length* in days and the
 temporal *distance from begin* in days.
@@ -41,12 +55,12 @@ stamped map layers in *A* and *P*.
 g.region s=0 n=80 w=0 e=120 b=0 t=50 res=10 res3=10 -p3
 
 # Generate the raster map layer
-r.mapcalc expression="a1 = rand(0, 550)" -s
-r.mapcalc expression="a2 = rand(0, 450)" -s
-r.mapcalc expression="a3 = rand(0, 320)" -s
-r.mapcalc expression="a4 = rand(0, 510)" -s
-r.mapcalc expression="a5 = rand(0, 300)" -s
-r.mapcalc expression="a6 = rand(0, 650)" -s
+r.mapcalc expression="a1 = rand(0, 550)"
+r.mapcalc expression="a2 = rand(0, 450)"
+r.mapcalc expression="a3 = rand(0, 320)"
+r.mapcalc expression="a4 = rand(0, 510)"
+r.mapcalc expression="a5 = rand(0, 300)"
+r.mapcalc expression="a6 = rand(0, 650)"
 
 # Generate the vector map layer
 v.random -z output=pnts1 n=20 zmin=0 zmax=100 column=height

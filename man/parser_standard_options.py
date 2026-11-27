@@ -1,5 +1,7 @@
 """
-Copyright 2015-2025 by Pietro Zambelli and the GRASS Development Team
+SPDX-FileCopyrightText: 2015-2025 Pietro Zambelli
+SPDX-FileCopyrightText: GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author: Pietro Zambelli
 @author: Vaclav Petras (Markdown output)
@@ -151,7 +153,7 @@ def write_markdown_option(md: list, name: str, option: dict, keys: list) -> None
                 "\nTo use the value in Python:\n",
                 "```python",
                 f'{key_aka_name} = options["{key_aka_name}"]',
-                "```"
+                "```",
                 # Example from user perspective.
                 "\nWhat a tool user (caller) may write:\n",
                 "```python",

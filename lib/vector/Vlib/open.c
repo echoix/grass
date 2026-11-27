@@ -6,10 +6,8 @@
 
    Higher level functions for reading/writing/manipulating vectors.
 
-   (C) 2001-2015 by the GRASS Development Team
-
-   This program is free software under the GNU General Public License
-   (>=v2).  Read the file COPYING that comes with GRASS for details.
+   SPDX-FileCopyrightText: 2001-2015 GRASS Development Team
+   SPDX-License-Identifier: GPL-2.0-or-later
 
    \author Original author CERL, probably Dave Gerdes or Mike Higgins.
    \author Update to GRASS 5.7 Radim Blazek and David D. Gray.
@@ -44,26 +42,26 @@
  */
 #define MAX_OPEN_LEVEL 2
 
-static int open_old_dummy(struct Map_info *Map UNUSED, int update UNUSED)
+static int open_old_dummy(struct Map_info *Map G_UNUSED, int update G_UNUSED)
 {
     return 0;
 }
 
-static int open_new_dummy(struct Map_info *Map UNUSED, const char *name UNUSED,
-                          int with_z UNUSED)
+static int open_new_dummy(struct Map_info *Map G_UNUSED,
+                          const char *name G_UNUSED, int with_z G_UNUSED)
 {
     return 0;
 }
 
 #if !defined HAVE_POSTGRES
-static int format_old(struct Map_info *Map UNUSED, int update UNUSED)
+static int format_old(struct Map_info *Map G_UNUSED, int update G_UNUSED)
 {
     G_fatal_error(_("Requested format is not compiled in this version"));
     return 0;
 }
 
-static int format_new(struct Map_info *Map UNUSED, const char *name UNUSED,
-                      int with_z UNUSED)
+static int format_new(struct Map_info *Map G_UNUSED, const char *name G_UNUSED,
+                      int with_z G_UNUSED)
 {
     G_fatal_error(_("Requested format is not compiled in this version"));
     return 0;
@@ -1194,7 +1192,7 @@ int Vect_open_topo(struct Map_info *Map, int head_only)
  */
 int Vect_open_sidx(struct Map_info *Map, int mode)
 {
-    int err;
+    int err, ret;
     struct Coor_info CInfo;
     struct Plus_head *Plus;
 
@@ -1289,10 +1287,13 @@ int Vect_open_sidx(struct Map_info *Map, int mode)
 
         if (mode == 1) {
             /* load spatial index for update */
-            if (dig_Rd_spidx(&(Plus->spidx_fp), Plus) == -1) {
-                fclose(Plus->spidx_fp.file);
+            ret = dig_Rd_spidx(&(Plus->spidx_fp), Plus);
+            /* The index is now copied to memory or to temporary files and
+             * the sidx file is rewritten by Vect_save_sidx(). */
+            fclose(Plus->spidx_fp.file);
+            Plus->spidx_fp.file = NULL;
+            if (ret == -1)
                 return -1;
-            }
         }
     }
 

@@ -5,11 +5,8 @@
  * PURPOSE:      Provides a means of reporting the contents of GRASS
  *               projection information files and creating
  *               new projection information files.
- * COPYRIGHT:    (C) 2003-2007 by the GRASS Development Team
- *
- *               This program is free software under the GNU General Public
- *               License (>=v2). Read the file COPYING that comes with GRASS
- *               for details.
+ * SPDX-FileCopyrightText: 2003-2007 GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  *****************************************************************************/
 
@@ -381,7 +378,7 @@ void print_projjson(void)
         outwkt = GPJ_grass_to_wkt(projinfo, projunits, 0, 0);
         /* datum info might be incomplete or incorrect */
         if (outwkt) {
-            obj = proj_create_from_wkt(NULL, projwkt, NULL, NULL, NULL);
+            obj = proj_create_from_wkt(NULL, outwkt, NULL, NULL, NULL);
             G_free(outwkt);
         }
     }

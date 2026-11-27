@@ -11,7 +11,6 @@ extern int scrn;
 extern Window grwin;
 extern XWindowAttributes xwa;
 
-static int NCOLORS;
 static unsigned long *xpixels;
 
 static int Red[256], Grn[256], Blu[256];
@@ -142,8 +141,8 @@ static int try_get_colors(Colormap cmap, int nr, int ng, int nb)
     int n_pixels;
     int r, g, b;
 
-    xpixels = (unsigned long *)G_realloc(xpixels,
-                                         nr * ng * nb * sizeof(unsigned long));
+    xpixels = (unsigned long *)G_realloc(xpixels, (size_t)nr * ng * nb *
+                                                      sizeof(unsigned long));
     n_pixels = 0;
 
     xcolor.flags = DoRed | DoGreen | DoBlue;
@@ -235,8 +234,6 @@ Colormap InitColorTableFixed(Colormap cmap)
         if (y < 2)
             G_fatal_error(_("Unable to get sufficient gray shades."));
 
-        NCOLORS = y;
-
         for (i = 0; i < 256; i++)
             Gray[i] = i * y / 256;
 
@@ -251,8 +248,6 @@ Colormap InitColorTableFixed(Colormap cmap)
         while (!try_get_colors(cmap, r, g, b))
             if (!get_fewer_levels(&r, &g, &b))
                 G_fatal_error(_("Unable to get sufficient colors."));
-
-        NCOLORS = r * g * b;
 
         for (i = 0; i < 256; i++) {
             Red[i] = (i * r / 256) * g * b;
@@ -270,7 +265,7 @@ Colormap InitColorTableFixed(Colormap cmap)
             XFreeColormap(dpy, cmap);
 
         /* get shift factors for R,G,B masks */
-        NCOLORS = get_rgb_shifts();
+        get_rgb_shifts();
 
         /* create colormap (emulates TrueColor visual) */
         cmap = ramp_colormap();
@@ -278,7 +273,7 @@ Colormap InitColorTableFixed(Colormap cmap)
 
     case TrueColor:
         /* get shift factors for R,G,B masks */
-        NCOLORS = get_rgb_shifts();
+        get_rgb_shifts();
         break;
 
     default:

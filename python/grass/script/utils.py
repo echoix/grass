@@ -7,10 +7,8 @@ Usage:
 
     from grass.script import utils as gutils
 
-(C) 2014-2016 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2014-2016 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 .. sectionauthor:: Glynn Clements
 .. sectionauthor:: Martin Landa <landa.martin gmail.com>
@@ -29,6 +27,7 @@ import platform
 import uuid
 import random
 import string
+import sys
 
 from pathlib import Path
 from typing import TYPE_CHECKING, AnyStr, TypeVar, cast, overload
@@ -37,6 +36,7 @@ from typing import TYPE_CHECKING, AnyStr, TypeVar, cast, overload
 if TYPE_CHECKING:
     from _typeshed import FileDescriptorOrPath, StrOrBytesPath, StrPath
     from collections.abc import Callable
+    from multiprocessing.context import BaseContext
 
 
 # Type variables
@@ -52,13 +52,26 @@ def float_or_dms(s) -> float:
     >>> round(float_or_dms("26:0:0.1"), 5)
     26.00003
 
+    A leading minus sign or a trailing S or W hemisphere letter
+    makes the result negative:
+
+    >>> round(float_or_dms("-26:45:30"), 5)
+    -26.75833
+    >>> round(float_or_dms("26:45:30S"), 5)
+    -26.75833
+
     :param s: DMS value
 
     :return: float value
     """
-    if s[-1] in {"E", "W", "N", "S"}:
+    negative = s[-1:] in {"S", "W"}
+    if s[-1:] in {"E", "W", "N", "S"}:
         s = s[:-1]
-    return sum(float(x) / 60**n for (n, x) in enumerate(s.split(":")))
+    if s[:1] in {"-", "+"}:
+        negative = negative or s[0] == "-"
+        s = s[1:]
+    value = sum(float(x) / 60**n for (n, x) in enumerate(s.split(":")))
+    return -value if negative else value
 
 
 def separator(sep: str) -> str:
@@ -91,6 +104,71 @@ def separator(sep: str) -> str:
     if sep in {"newline", "\\n"}:
         return "\n"
     return sep
+
+
+def available_cpus() -> int:
+    """Number of CPUs this process may actually use.
+
+    Prefers affinity-aware sources over ``os.cpu_count()``, which reports
+    the host total and overcounts in containers and cgroup-limited jobs.
+
+    .. versionadded:: 8.6
+    """
+    if hasattr(os, "process_cpu_count"):  # Python 3.13+
+        return os.process_cpu_count() or 1
+    if hasattr(os, "sched_getaffinity"):  # Linux
+        return len(os.sched_getaffinity(0))
+    return os.cpu_count() or 1
+
+
+def resolve_nprocs(nprocs: int | str | None = None, env=None) -> int:
+    """Resolve G_OPT_M_NPROCS into a worker count.
+
+    Mirrors the semantics of ``G_set_omp_num_threads()`` in
+    ``lib/gis/omp_threads.c``: 0 means use all available cores, a positive
+    number is used as-is, a negative number means cpu_count + nprocs
+    (clamped to at least 1).
+
+    When *nprocs* is None, it is NPROCS set with g.gisenv, which tools take
+    as the default of their nprocs option, or 0 when NPROCS is not set. This
+    needs a session, the current one or the one of *env*.
+
+    .. versionadded:: 8.6
+    """
+    if nprocs is None:
+        from .core import gisenv  # core imports this module
+
+        nprocs = gisenv(env=env).get("NPROCS") or 0
+    n = int(nprocs)
+    if n > 0:
+        return n
+    available = available_cpus()
+    if n == 0:
+        return available
+    return max(1, available + n)
+
+
+def _get_multiprocessing_context() -> BaseContext:
+    """Return the multiprocessing context to use for GRASS worker processes.
+
+    Python 3.14 changed the default multiprocessing start method from "fork"
+    to "forkserver" (on platforms where "fork" is available, except macOS).
+    GRASS worker processes rely on "fork" semantics: they inherit the
+    initialized C library state and the session environment from the parent.
+    Use "fork" wherever it is available, i.e. the default before 3.14, except
+    on macOS, which has defaulted to "spawn" since Python 3.8 and where
+    "fork" is unsafe. Everywhere else (Windows) keep the platform default.
+
+    This is a workaround until GRASS supports the "spawn" and "forkserver"
+    start methods.
+    """
+    # Imported here because grass.script is imported by every Python tool
+    # and only a few callers need multiprocessing.
+    import multiprocessing
+
+    if sys.platform != "darwin" and "fork" in multiprocessing.get_all_start_methods():
+        return multiprocessing.get_context("fork")
+    return multiprocessing.get_context()
 
 
 def diff_files(
@@ -175,18 +253,14 @@ class KeyValue(dict[str, VT]):
         try:
             return self[key]
         except KeyError:
-            raise AttributeError(key)
+            raise AttributeError(key) from None
 
     def __setattr__(self, key: str, value: VT) -> None:
         self[key] = value
 
 
 def _get_encoding() -> str:
-    try:
-        # Python >= 3.11
-        encoding = locale.getencoding()
-    except AttributeError:
-        encoding = locale.getdefaultlocale()[1]
+    encoding = locale.getencoding()
     if not encoding:
         encoding = "UTF-8"
     return encoding
@@ -435,8 +509,8 @@ def get_lib_path(modname, libname=None):
     from os import getenv
     from os.path import join, sep
 
-    if Path(getenv("GISBASE"), "etc", modname).is_dir():
-        path = join(os.getenv("GISBASE"), "etc", modname)
+    if Path(getenv("GRASS_ETCDIR"), modname).is_dir():
+        path = join(os.getenv("GRASS_ETCDIR"), modname)
     elif (
         getenv("GRASS_ADDON_BASE")
         and libname
@@ -457,8 +531,19 @@ def get_lib_path(modname, libname=None):
         idx = cwd.find(modname)
         if idx < 0:
             return None
-        path = "{cwd}{sep}etc{sep}{modname}".format(
-            cwd=cwd[: idx + len(modname)], sep=sep, modname=modname
+
+        from grass.app.runtime import RuntimePaths
+
+        runtime_paths = RuntimePaths(set_env_variables=True)
+
+        path = (
+            "{cwd}{sep}build{sep}output{sep}etc{sep}{modname}".format(
+                cwd=cwd[: idx + len(modname)], sep=sep, modname=modname
+            )
+            if runtime_paths.is_cmake_build
+            else "{cwd}{sep}etc{sep}{modname}".format(
+                cwd=cwd[: idx + len(modname)], sep=sep, modname=modname
+            )
         )
         if libname:
             path += "{pathsep}{cwd}{sep}etc{sep}{modname}{sep}{libname}".format(
@@ -594,7 +679,7 @@ def legalize_vector_name(name, fallback_prefix: str | None = "x") -> str:
         name = "{fallback_prefix}{name}".format(**locals())
     name = re.sub(r"[^A-Za-z0-9_]", "_", name, flags=re.ASCII)
     keywords = ["and", "or", "not"]
-    if name in keywords:
+    if name.lower() in keywords:
         name = "{name}_".format(**locals())
     return name
 

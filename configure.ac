@@ -9,11 +9,8 @@
 # PURPOSE:	This configure runs all the tests to determine what components
 #		are installed on the current system. It also defines certain
 #		configuration variables for compilation and installation.
-# COPYRIGHT:    (C) 2000-2025 by the GRASS Development Team
-#
-#		This program is free software under the GNU General
-#		Public License (>=v2). Read the file COPYING that
-#		comes with GRASS for details.
+# SPDX-FileCopyrightText: 2000-2026 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 # MANUAL:       https://www.gnu.org/software/autoconf/manual/autoconf.html
 #               http://savannah.gnu.org/projects/autoconf/
@@ -48,6 +45,8 @@ LOC_CHECK_USE(cxx,C++,USE_CXX)
 
 if test -n "$USE_CXX"; then
 	AC_PROG_CXX
+	m4_include([m4/ax_cxx_compile_stdcxx.m4])
+	AX_CXX_COMPILE_STDCXX([17], [ext], [mandatory])
 else
 	CXX=
 	CXXFLAGS=
@@ -149,10 +148,10 @@ AC_SUBST(GRASS_BIN)
 
 GRASS_VERSION_FILE=include/VERSION
 GRASS_VERSION_GIT_FILE=include/VERSION_GIT
-GRASS_VERSION_MAJOR=`sed -n 1p "${GRASS_VERSION_FILE}"`
-GRASS_VERSION_MINOR=`sed -n 2p "${GRASS_VERSION_FILE}"`
-GRASS_VERSION_RELEASE=`sed -n 3p "${GRASS_VERSION_FILE}"`
-GRASS_VERSION_DATE=`sed -n 4p "${GRASS_VERSION_FILE}"`
+GRASS_VERSION_MAJOR=`sed -n 1p "${SRCDIR}/${GRASS_VERSION_FILE}"`
+GRASS_VERSION_MINOR=`sed -n 2p "${SRCDIR}/${GRASS_VERSION_FILE}"`
+GRASS_VERSION_RELEASE=`sed -n 3p "${SRCDIR}/${GRASS_VERSION_FILE}"`
+GRASS_VERSION_DATE=`sed -n 4p "${SRCDIR}/${GRASS_VERSION_FILE}"`
 GRASS_VERSION_NUMBER=`echo ${GRASS_VERSION_MAJOR}.${GRASS_VERSION_MINOR}.${GRASS_VERSION_RELEASE}`
 NAME_VER=`echo ${GRASS_VERSION_NUMBER} | sed 's/\..*//'`
 changequote(,)
@@ -165,7 +164,9 @@ GRASS_VERSION_GIT="exported"
 GRASS_HEADERS_GIT_HASH="${GRASS_VERSION_NUMBER}"
 GRASS_HEADERS_GIT_DATE=`date -u +%FT%T%z | sed 's/\(..\)$/:\1/'`
 AC_PATH_PROG(GIT, git, no)
-AC_CHECK_FILE([$GRASS_VERSION_GIT_FILE])
+AS_IF([test -f "${SRCDIR}/${GRASS_VERSION_GIT_FILE}"],
+      [ac_cv_file_include_VERSION_GIT=yes],
+      [ac_cv_file_include_VERSION_GIT=no])
 AC_MSG_CHECKING(for GRASS headers commit date)
 if test "$GIT" != "no" ; then
    GRASS_VERSION_GIT=`$GIT rev-parse --short HEAD 2>/dev/null`
@@ -184,9 +185,9 @@ if test "$GIT" != "no" ; then
 fi
 if test $GRASS_VERSION_GIT == "exported" && \
    test "$ac_cv_file_include_VERSION_GIT" == "yes"; then
-      GRASS_HEADERS_GIT_HASH=$(sed -n 1p "${GRASS_VERSION_GIT_FILE}")
+      GRASS_HEADERS_GIT_HASH=$(sed -n 1p "${SRCDIR}/${GRASS_VERSION_GIT_FILE}")
       GRASS_VERSION_GIT=$GRASS_HEADERS_GIT_HASH
-      GRASS_HEADERS_GIT_DATE=$(sed -n 2p "${GRASS_VERSION_GIT_FILE}")
+      GRASS_HEADERS_GIT_DATE=$(sed -n 2p "${SRCDIR}/${GRASS_VERSION_GIT_FILE}")
 fi
 AC_MSG_RESULT($GRASS_HEADERS_GIT_DATE)
 
@@ -254,9 +255,9 @@ MACOSX_SDK=
 if test -z "$with_macosx_sdk" ; then
   AC_MSG_RESULT(no)
 else
-  AC_CHECK_FILE($with_macosx_sdk/SDKSettings.plist, [
-    MACOSX_SDK="-isysroot $with_macosx_sdk"],[
-    AC_MSG_ERROR([*** specified SDK does not exist or is not a SDK])])
+  AS_IF([test -f "$with_macosx_sdk/SDKSettings.plist"],
+    [MACOSX_SDK="-isysroot $with_macosx_sdk"],
+    [AC_MSG_ERROR([*** specified SDK does not exist or is not a SDK])])
   LDFLAGS="$LDFLAGS $MACOSX_SDK"
   CFLAGS="$CFLAGS $MACOSX_SDK"
   CXXFLAGS="$CXXFLAGS $MACOSX_SDK"
@@ -763,7 +764,7 @@ proj_version="$proj_ver_major.$proj_ver_minor.$proj_ver_patch"
 
 if test "$(expr "$proj_ver_major" \>= 9)" = 1; then
   AC_MSG_RESULT([using PROJ version "${proj_version}"])
-else
+elif test "$cross_compiling" != "yes" ; then
   AC_MSG_ERROR([*** PROJ version 9.0.0 or newer is required (found version "${proj_version}")])
 fi
 
@@ -961,7 +962,7 @@ else
   if test "$(expr "$gdal_version_major" \>= 3)" = 1 && \
       test "$(expr "$gdal_version_minor" \>= 7)" = 1; then
       AC_MSG_RESULT([using GDAL version "${gdal_version}"])
-  else
+  elif test "$cross_compiling" != "yes" ; then
       AC_MSG_ERROR([*** GDAL version 3.7 or newer is required (found version "${gdal_version}")])
   fi
 

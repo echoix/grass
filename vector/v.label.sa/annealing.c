@@ -4,11 +4,8 @@
  * AUTHOR(S):    Wolf Bergenheim
  * PURPOSE:      This file contains functions which have to do with the
  *               annealing part of the algorithm.
- * COPYRIGHT:    (C) 2007 by the GRASS Development Team
- *
- *               This program is free software under the GNU General Public
- *               License (>=v2). Read the file COPYING that comes with GRASS
- *               for details.
+ * SPDX-FileCopyrightText: 2007 GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  *****************************************************************************/
 
@@ -30,16 +27,6 @@ static double calc_label_overlap(label_t *label, int cc, int nc);
 static void do_label_overlap(label_t *label, int cc, int nc);
 
 /**
- * This is just a variable used to show statistics in the end.
- */
-static unsigned int overlaps_created = 0;
-
-/**
- * This is just a variable used to show statistics in the end.
- */
-static unsigned int overlaps_removed = 0;
-
-/**
  * This function does the actual simulated annealing process. Each round 30 x
  * n (the number of labels) a label is picked at random, and placed in a random
  * new position. Then the dE is calculated, and if dE is > 0 the new position is
@@ -48,7 +35,8 @@ static unsigned int overlaps_removed = 0;
  @param n_labels The size of the labels array.
  @params The commandline parameters.
  */
-void simulate_annealing(label_t *labels, int n_labels, struct params *p UNUSED)
+void simulate_annealing(label_t *labels, int n_labels,
+                        struct params *p G_UNUSED)
 {
     /* The temperature of the system */
     double T;
@@ -194,7 +182,6 @@ static void do_label_overlap(label_t *label, int cc, int nc)
             ol->current_score -= LABEL_OVERLAP_WEIGHT;
             label->current_score -= LABEL_OVERLAP_WEIGHT;
             /* ol->candidates[oc].score -= LABEL_OVERLAP_WEIGHT; */
-            overlaps_removed++;
         }
     }
 
@@ -209,7 +196,6 @@ static void do_label_overlap(label_t *label, int cc, int nc)
             ol->current_score += LABEL_OVERLAP_WEIGHT;
             label->current_score += LABEL_OVERLAP_WEIGHT;
             /* ol->candidates[oc]->score += 40; */
-            overlaps_created++;
         }
     }
 }
