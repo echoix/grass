@@ -17,7 +17,7 @@ import threading
 from typing import TYPE_CHECKING, NoReturn
 
 from grass.exceptions import FatalError
-from grass.script.utils import _get_multiprocessing_context
+from grass.script.utils import _environ_process
 
 if TYPE_CHECKING:
     from multiprocessing.connection import Connection
@@ -161,10 +161,9 @@ class RPCServerBase:
         """This function must be re-implemented in the subclasses"""
         logger.debug("Start the libgis server")
 
-        ctx = _get_multiprocessing_context()
-        self.client_conn, self.server_conn = ctx.Pipe(True)
-        self.lock = ctx.Lock()
-        self.server = ctx.Process(
+        self.client_conn, self.server_conn = multiprocessing.Pipe(True)
+        self.lock = multiprocessing.Lock()
+        self.server = _environ_process(
             target=dummy_server, args=(self.lock, self.server_conn)
         )
         self.server.daemon = True

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import logging
 import math
+import multiprocessing
 import sys
 from ctypes import CFUNCTYPE, POINTER, byref, c_int, c_void_p, cast
 from datetime import datetime
@@ -28,7 +29,7 @@ from grass.pygrass.raster import RasterRow
 from grass.pygrass.rpc.base import RPCServerBase
 from grass.pygrass.utils import decode
 from grass.pygrass.vector import VectorTopo
-from grass.script.utils import _get_multiprocessing_context, encode
+from grass.script.utils import _environ_process, encode
 import grass.script as gs
 
 if TYPE_CHECKING:
@@ -1466,10 +1467,9 @@ class CLibrariesInterface(RPCServerBase):
         RPCServerBase.__init__(self)
 
     def start_server(self) -> None:
-        ctx = _get_multiprocessing_context()
-        self.client_conn, self.server_conn = ctx.Pipe(True)
-        self.lock = ctx.Lock()
-        self.server = ctx.Process(
+        self.client_conn, self.server_conn = multiprocessing.Pipe(True)
+        self.lock = multiprocessing.Lock()
+        self.server = _environ_process(
             target=c_library_server, args=(self.lock, self.server_conn)
         )
         self.server.daemon = True

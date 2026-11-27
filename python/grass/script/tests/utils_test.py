@@ -1,7 +1,8 @@
 """Test functions in grass.script.utils"""
 
 import multiprocessing
-import sys
+import os
+from pathlib import Path
 
 import pytest
 
@@ -113,13 +114,35 @@ def test_resolve_nprocs_from_gisenv(empty_session):
         assert gs.resolve_nprocs(None, env=env) == gs.resolve_nprocs(nprocs)
 
 
-def test_get_multiprocessing_context():
-    """Fork is used where available and safe, the platform default elsewhere."""
-    ctx = gutils._get_multiprocessing_context()
-    if sys.platform != "darwin" and "fork" in multiprocessing.get_all_start_methods():
-        assert ctx.get_start_method() == "fork"
-    else:
-        assert ctx.get_start_method() == multiprocessing.get_start_method()
+def write_environ_value(path):
+    """Write a variable from the environment to a file (worker process target)"""
+    Path(path).write_text(os.environ["GRASS_TEST_ENVIRON_PROCESS"])
+
+
+@pytest.fixture(params=multiprocessing.get_all_start_methods())
+def start_method(request):
+    """Set each available multiprocessing start method as the default"""
+    original = multiprocessing.get_start_method(allow_none=True)
+    multiprocessing.set_start_method(request.param, force=True)
+    yield request.param
+    multiprocessing.set_start_method(original, force=True)
+
+
+def test_environ_process_sees_current_environment(start_method, tmp_path, monkeypatch):
+    """Worker gets the current environment with any start method
+
+    With forkserver, a worker would otherwise get the environment from the time
+    the fork server was started, so start it with a different value first.
+    """
+    monkeypatch.setenv("GRASS_TEST_ENVIRON_PROCESS", "first")
+    for value in ("first", "second"):
+        monkeypatch.setenv("GRASS_TEST_ENVIRON_PROCESS", value)
+        path = tmp_path / value
+        process = gutils._environ_process(write_environ_value, (path,))
+        process.start()
+        process.join()
+        assert process.exitcode == 0
+        assert path.read_text() == value
 
 
 @pytest.mark.parametrize(

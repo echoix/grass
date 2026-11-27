@@ -27,7 +27,6 @@ import platform
 import uuid
 import random
 import string
-import sys
 
 from pathlib import Path
 from typing import TYPE_CHECKING, AnyStr, TypeVar, cast, overload
@@ -36,7 +35,6 @@ from typing import TYPE_CHECKING, AnyStr, TypeVar, cast, overload
 if TYPE_CHECKING:
     from _typeshed import FileDescriptorOrPath, StrOrBytesPath, StrPath
     from collections.abc import Callable
-    from multiprocessing.context import BaseContext
 
 
 # Type variables
@@ -148,27 +146,32 @@ def resolve_nprocs(nprocs: int | str | None = None, env=None) -> int:
     return max(1, available + n)
 
 
-def _get_multiprocessing_context() -> BaseContext:
-    """Return the multiprocessing context to use for GRASS worker processes.
+def _run_with_environ(environ, target, args):
+    """Run target in a worker process after setting its environment"""
+    os.environ.clear()
+    os.environ.update(environ)
+    target(*args)
 
-    Python 3.14 changed the default multiprocessing start method from "fork"
-    to "forkserver" (on platforms where "fork" is available, except macOS).
-    GRASS worker processes rely on "fork" semantics: they inherit the
-    initialized C library state and the session environment from the parent.
-    Use "fork" wherever it is available, i.e. the default before 3.14, except
-    on macOS, which has defaulted to "spawn" since Python 3.8 and where
-    "fork" is unsafe. Everywhere else (Windows) keep the platform default.
 
-    This is a workaround until GRASS supports the "spawn" and "forkserver"
-    start methods.
+def _environ_process(target, args=()):
+    """Create a worker process which runs with the environment of this process.
+
+    Workers need the GRASS session environment (e.g., GISRC) of the parent.
+    With the "fork" and "spawn" start methods the worker gets it automatically,
+    but with "forkserver", the default on Linux since Python 3.14, it gets
+    the environment from the time the fork server was started. Passing the
+    environment explicitly makes the worker independent of the start method.
+
+    The target and its arguments need to be picklable, which is required by
+    the "spawn" and "forkserver" start methods.
     """
     # Imported here because grass.script is imported by every Python tool
     # and only a few callers need multiprocessing.
     import multiprocessing
 
-    if sys.platform != "darwin" and "fork" in multiprocessing.get_all_start_methods():
-        return multiprocessing.get_context("fork")
-    return multiprocessing.get_context()
+    return multiprocessing.Process(
+        target=_run_with_environ, args=(os.environ.copy(), target, args)
+    )
 
 
 def diff_files(
