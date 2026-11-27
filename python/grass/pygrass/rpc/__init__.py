@@ -8,7 +8,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 :authors: Soeren Gebbert
 """
 
-import multiprocessing
 import sys
 from ctypes import CFUNCTYPE, c_void_p
 
@@ -19,7 +18,7 @@ from grass.pygrass.gis.region import Region
 from grass.pygrass.raster import RasterRow, raster2numpy_img
 from grass.pygrass.vector import VectorTopo
 from grass.pygrass.vector.basic import Bbox
-from grass.script.utils import _environ_process
+from grass.script.utils import _environ_process, _get_multiprocessing_context
 
 from .base import RPCServerBase
 
@@ -245,8 +244,9 @@ class DataProvider(RPCServerBase):
 
     def start_server(self):
         """This function must be re-implemented in the subclasses"""
-        self.client_conn, self.server_conn = multiprocessing.Pipe(True)
-        self.lock = multiprocessing.Lock()
+        ctx = _get_multiprocessing_context()
+        self.client_conn, self.server_conn = ctx.Pipe(True)
+        self.lock = ctx.Lock()
         self.server = _environ_process(
             target=data_provider_server, args=(self.lock, self.server_conn)
         )

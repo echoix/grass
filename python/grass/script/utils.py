@@ -153,6 +153,24 @@ def _run_with_environ(environ, target, args):
     target(*args)
 
 
+def _get_multiprocessing_context():
+    """Return the multiprocessing context with the default start method.
+
+    Unlike using the multiprocessing module directly (e.g., multiprocessing.Lock()),
+    this does not fix the default start method, so the application can still
+    set it later.
+    """
+    # Imported here because grass.script is imported by every Python tool
+    # and only a few callers need multiprocessing.
+    import multiprocessing
+
+    method = multiprocessing.get_start_method(allow_none=True)
+    # The first of the available methods is the platform default.
+    return multiprocessing.get_context(
+        method or multiprocessing.get_all_start_methods()[0]
+    )
+
+
 def _environ_process(target, args=()):
     """Create a worker process which runs with the environment of this process.
 
@@ -165,11 +183,7 @@ def _environ_process(target, args=()):
     The target and its arguments need to be picklable, which is required by
     the "spawn" and "forkserver" start methods.
     """
-    # Imported here because grass.script is imported by every Python tool
-    # and only a few callers need multiprocessing.
-    import multiprocessing
-
-    return multiprocessing.Process(
+    return _get_multiprocessing_context().Process(
         target=_run_with_environ, args=(os.environ.copy(), target, args)
     )
 

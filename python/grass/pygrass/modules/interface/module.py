@@ -1,10 +1,15 @@
-from multiprocessing import Process, Queue
 import time
 from xml.etree.ElementTree import fromstring
 
 from grass.exceptions import CalledModuleError, GrassError, ParameterError
 from grass.script.core import Popen, PIPE, use_temp_region, del_temp_region
-from grass.script.utils import available_cpus, decode, resolve_nprocs
+from grass.script.utils import (
+    _environ_process,
+    _get_multiprocessing_context,
+    available_cpus,
+    decode,
+    resolve_nprocs,
+)
 from .docstring import docstring_property
 from .parameter import Parameter
 from .flag import Flag
@@ -1013,7 +1018,7 @@ class MultiModule:
         self.set_temp_region = set_temp_region
         self.finish_ = sync  # We use the same variable name a Module
         self.p = None
-        self.q = Queue()
+        self.q = _get_multiprocessing_context().Queue()
 
     def __str__(self):
         """Return the command string that can be executed in a shell"""
@@ -1047,11 +1052,11 @@ class MultiModule:
                 module.run()
             return None
         if self.set_temp_region is True:
-            self.p = Process(
-                target=run_modules_in_temp_region, args=[self.module_list, self.q]
+            self.p = _environ_process(
+                run_modules_in_temp_region, (self.module_list, self.q)
             )
         else:
-            self.p = Process(target=run_modules, args=[self.module_list, self.q])
+            self.p = _environ_process(run_modules, (self.module_list, self.q))
         self.p.start()
 
         return self.p

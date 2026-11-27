@@ -134,7 +134,6 @@ def test_environ_process_sees_current_environment(start_method, tmp_path, monkey
     With forkserver, a worker would otherwise get the environment from the time
     the fork server was started, so start it with a different value first.
     """
-    monkeypatch.setenv("GRASS_TEST_ENVIRON_PROCESS", "first")
     for value in ("first", "second"):
         monkeypatch.setenv("GRASS_TEST_ENVIRON_PROCESS", value)
         path = tmp_path / value

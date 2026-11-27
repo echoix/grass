@@ -3,9 +3,9 @@
 
 """Test that GRASS server processes start with every multiprocessing start method.
 
-Python 3.14 made forkserver the default start method on Linux, while macOS and Windows use
-spawn. This test sets each available start method as the default in a subprocess,
-so that all of them are tested on any platform and Python version.
+Python 3.14 made forkserver the default start method on Linux, while macOS and
+Windows use spawn. This test sets each available start method as the default in
+a subprocess, so that all of them are tested on any platform and Python version.
 """
 
 import multiprocessing
@@ -59,7 +59,15 @@ if __name__ == "__main__":
 """
 
 
-@pytest.mark.parametrize("start_method", multiprocessing.get_all_start_methods())
+# Fork is unsafe on macOS, which is why spawn is the default there.
+START_METHODS = [
+    method
+    for method in multiprocessing.get_all_start_methods()
+    if not (method == "fork" and sys.platform == "darwin")
+]
+
+
+@pytest.mark.parametrize("start_method", START_METHODS)
 def test_servers_start_with_start_method(tmp_path, start_method):
     """Servers work and exit cleanly with the start method set as the default."""
     script = tmp_path / "script.py"
