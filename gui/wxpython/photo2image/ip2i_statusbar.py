@@ -44,7 +44,8 @@ class SbGoToGCP(SbItem):
         # always false, spin checks it
         if gcpNumber < 0 or gcpNumber > len(mapCoords):
             GMessage(
-                parent=self, message="%s 1 - %s." % (_("Valid Range:"), len(mapCoords))
+                parent=self.mapFrame,
+                message="%s 1 - %s." % (_("Valid Range:"), len(mapCoords)),
             )
             return
 

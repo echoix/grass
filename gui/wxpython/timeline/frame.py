@@ -180,7 +180,7 @@ class TimelineFrame(wx.Frame):
             sp = tgis.dataset_factory(etype, name)
             if not sp.is_in_db(dbif=self.dbif):
                 GError(
-                    self,
+                    parent=self,
                     message=_("Dataset <%s> not found in temporal database") % (name),
                 )
                 return
@@ -217,8 +217,10 @@ class TimelineFrame(wx.Frame):
                     unit = self.timeData[name]["unit"]
                 elif self.timeData[name]["unit"] != unit:
                     GError(
-                        self,
-                        _("Datasets have different time unit which is not allowed."),
+                        parent=self,
+                        message=_(
+                            "Datasets have different time unit which is not allowed."
+                        ),
                     )
                     return
 

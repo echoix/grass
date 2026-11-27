@@ -19,7 +19,7 @@ from core.gcmd import GException, GError, GMessage
 from grass.imaging import writeAvi, writeGif, writeIms, writeSwf
 from core.gthread import gThread
 from core.settings import UserSettings
-from gui_core.wrap import EmptyImage, ImageFromBitmap
+from gui_core.wrap import BitmapFromImage, EmptyImage, ImageFromBitmap
 
 from animation.temporal_manager import TemporalManager
 from animation.dialogs import InputDialog, EditDialog, ExportDialog
@@ -565,7 +565,7 @@ class AnimationController(wx.EvtHandler):
                         bitmap = self.bitmapProvider.GetBitmap(frameId)
                         lastBitmaps[i] = bitmap
                     elif i not in lastBitmaps:
-                        lastBitmaps[i] = wx.NullBitmap()
+                        lastBitmaps[i] = BitmapFromImage(EmptyImage(1, 1))
                 else:
                     bitmap = self.bitmapProvider.GetBitmap(frameId)
                     lastBitmaps[i] = bitmap

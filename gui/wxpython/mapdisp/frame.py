@@ -306,7 +306,7 @@ class MapPanel(SingleMapPanel, MainPageBase):
         from vdigit.toolbars import VDigitToolbar
 
         if not haveVDigit:
-            from vdigit import errorMsg
+            from vdigit.main import errorMsg
 
             self.toolbars["map"].combo.SetValue(_("2D view"))
 

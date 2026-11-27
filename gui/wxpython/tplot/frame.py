@@ -1329,7 +1329,6 @@ class LookUp:
     def AddDataset(self, yranges, xranges, datasetName):
         if len(yranges) != len(xranges):
             GError(
-                parent=self,
                 showTraceback=False,
                 message=_("Datasets have different number of values"),
             )

@@ -221,7 +221,7 @@ class VNETManager:
         """Check if map was modified outside"""
         if resultVectMap.VectMapState() == 0:
             dlg = wx.MessageDialog(
-                parent=self,
+                parent=self.guiparent,
                 message=_(
                     "Temporary map '%s' with result "
                     "was changed outside vector network analysis tool.\n"
@@ -266,7 +266,8 @@ class VNETManager:
         mapName, mapSet = ParseMapStr(outputMap)
         if mapSet != grass.gisenv()["MAPSET"]:
             GMessage(
-                parent=self, message=_("Map can be created only in current mapset")
+                parent=self.guiparent,
+                message=_("Map can be created only in current mapset"),
             )
             return False
         existsMap = grass.find_file(
@@ -634,7 +635,6 @@ class VNETAnalyses:
             for cat in cats:
                 if len(catPts[cat[0]]) < 1:
                     GMessage(
-                        parent=self,
                         message=_("Please choose '{0}' and '{1}' point.").format(
                             cats[0][1], cats[1][1]
                         ),
@@ -643,9 +643,7 @@ class VNETAnalyses:
         else:
             for cat in cats:
                 if len(catPts[cat[0]]) < 2:
-                    GMessage(
-                        parent=self, message=_("Please choose at least two points.")
-                    )
+                    GMessage(message=_("Please choose at least two points."))
                     return False
 
         # TODO add also to thread for analysis?
@@ -1024,7 +1022,7 @@ class SnappingNodes(wx.EvtHandler):
 
         if not haveCtypes:
             GMessage(
-                parent=self,
+                parent=self.mapWin,
                 message=_("Unable to use ctypes. \n")
                 + _("Snapping mode can not be activated."),
             )
@@ -1067,6 +1065,7 @@ class SnappingNodes(wx.EvtHandler):
 
         elif self.snapPts.VectMapState() == 0:
             dlg = wx.MessageDialog(
+                parent=self.mapWin,
                 message=_(
                     "Temporary map '%s' was changed outside vector analysis tool.\n"
                     "Do you really want to activate snapping and overwrite it? "

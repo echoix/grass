@@ -1248,7 +1248,7 @@ class LayerTree(treemixin.DragAndDrop, CT.CustomTreeCtrl):
         """Start editing vector map layer requested by the user"""
         mapLayer = self.GetLayerInfo(self.layer_selected, key="maplayer")
         if not haveVDigit:
-            from vdigit import errorMsg
+            from vdigit.main import errorMsg
 
             self.mapdisplay.toolbars["map"].combo.SetValue(_("2D view"))
 

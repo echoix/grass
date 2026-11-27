@@ -304,7 +304,8 @@ class VectorSelectBase:
             )
         except ScriptError:
             GError(
-                parent=self, message=_("Failed to query vector map(s) <%s>.") % self.map
+                parent=self.mapWin,
+                message=_("Failed to query vector map(s) <%s>.") % self.mapName,
             )
             return None
 
