@@ -13,6 +13,7 @@
    \author Update to GRASS 7 Markus Metz
  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -21,6 +22,25 @@
 #include <string.h>
 #include <grass/vector.h>
 #include <grass/glocale.h>
+
+/* Create a spatial index backed by a temporary file. */
+static struct RTree *create_file_tree(int ndims)
+{
+    char *filename = G_tempfile();
+    int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
+
+    if (fd < 0)
+        G_fatal_error(_("Unable to create temporary file <%s> for spatial "
+                        "index: %s"),
+                      filename, strerror(errno));
+    /* Removing the open file only unlinks its name and the data are freed
+       when fd is closed. Windows refuses this, leaving the file to the
+       temporary file cleanup, so failure is ignored on purpose. */
+    (void)remove(filename);
+    G_free(filename);
+
+    return RTreeCreateTree(fd, 0, ndims);
+}
 
 /*!
    \brief Initit spatial index (nodes, lines, areas, isles)
@@ -40,33 +60,10 @@ int dig_spidx_init(struct Plus_head *Plus)
     G_debug(1, "dig_spidx_init(), %d dims", ndims);
 
     if (Plus->Spidx_file) {
-        int fd;
-        char *filename;
-
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Node_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
-        G_free(filename);
-
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Line_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
-        G_free(filename);
-
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Area_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
-        G_free(filename);
-
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Isle_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
-        G_free(filename);
-
+        Plus->Node_spidx = create_file_tree(ndims);
+        Plus->Line_spidx = create_file_tree(ndims);
+        Plus->Area_spidx = create_file_tree(ndims);
+        Plus->Isle_spidx = create_file_tree(ndims);
         Plus->Face_spidx = NULL;
         Plus->Volume_spidx = NULL;
         Plus->Hole_spidx = NULL;
@@ -114,19 +111,12 @@ void dig_spidx_free_nodes(struct Plus_head *Plus)
 
     /* Node spidx */
     if (Plus->Node_spidx->fd > -1) {
-        int fd;
-        char *filename;
-
         if (Plus->Spidx_new)
             close(Plus->Node_spidx->fd);
         RTreeDestroyTree(Plus->Node_spidx);
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Node_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
+        Plus->Node_spidx = create_file_tree(ndims);
         if (!Plus->Spidx_new)
             close(Plus->Node_spidx->fd);
-        G_free(filename);
     }
     else {
         RTreeDestroyTree(Plus->Node_spidx);
@@ -147,19 +137,12 @@ void dig_spidx_free_lines(struct Plus_head *Plus)
 
     /* Line spidx */
     if (Plus->Line_spidx->fd > -1) {
-        int fd;
-        char *filename;
-
         if (Plus->Spidx_new)
             close(Plus->Line_spidx->fd);
         RTreeDestroyTree(Plus->Line_spidx);
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Line_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
+        Plus->Line_spidx = create_file_tree(ndims);
         if (!Plus->Spidx_new)
             close(Plus->Line_spidx->fd);
-        G_free(filename);
     }
     else {
         RTreeDestroyTree(Plus->Line_spidx);
@@ -180,19 +163,12 @@ void dig_spidx_free_areas(struct Plus_head *Plus)
 
     /* Area spidx */
     if (Plus->Area_spidx->fd > -1) {
-        int fd;
-        char *filename;
-
         if (Plus->Spidx_new)
             close(Plus->Area_spidx->fd);
         RTreeDestroyTree(Plus->Area_spidx);
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Area_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
+        Plus->Area_spidx = create_file_tree(ndims);
         if (!Plus->Spidx_new)
             close(Plus->Area_spidx->fd);
-        G_free(filename);
     }
     else {
         RTreeDestroyTree(Plus->Area_spidx);
@@ -213,19 +189,12 @@ void dig_spidx_free_isles(struct Plus_head *Plus)
 
     /* Isle spidx */
     if (Plus->Isle_spidx->fd > -1) {
-        int fd;
-        char *filename;
-
         if (Plus->Spidx_new)
             close(Plus->Isle_spidx->fd);
         RTreeDestroyTree(Plus->Isle_spidx);
-        filename = G_tempfile();
-        fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-        Plus->Isle_spidx = RTreeCreateTree(fd, 0, ndims);
-        remove(filename);
+        Plus->Isle_spidx = create_file_tree(ndims);
         if (!Plus->Spidx_new)
             close(Plus->Isle_spidx->fd);
-        G_free(filename);
     }
     else {
         RTreeDestroyTree(Plus->Isle_spidx);
