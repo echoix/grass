@@ -6,17 +6,8 @@
 # AUTHOR(S):    Soeren Gebbert
 #
 # PURPOSE:  Remove space time datasets from the temporal database
-# COPYRIGHT:    (C) 2011-2017 by the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: 2011-2017 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -100,19 +91,17 @@ def main():
         else:
             dataset_list = tuple(datasets.split(","))
 
-    # Read the dataset list from file
     if file:
-        fd = open(file)
-
         line = True
-        while True:
-            line = fd.readline()
-            if not line:
-                break
+        with open(file) as fd:
+            while True:
+                line = fd.readline()
+                if not line:
+                    break
 
-            line_list = line.split("\n")
-            dataset_name = line_list[0]
-            dataset_list.append(dataset_name)
+                line_list = line.split("\n")
+                dataset_name = line_list[0]
+                dataset_list.append(dataset_name)
 
     statement = ""
 

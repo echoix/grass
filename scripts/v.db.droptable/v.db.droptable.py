@@ -6,11 +6,8 @@
 # AUTHOR(S):   	Markus Neteler
 #               Converted to Python by Glynn Clements
 # PURPOSE:      interface to db.execute to drop an existing table of given vector map
-# COPYRIGHT:    (C) 2005, 2008 by the GRASS Development Team
-#
-#               This program is free software under the GNU General Public
-#               License (>=v2). Read the file COPYING that comes with GRASS
-#               for details.
+# SPDX-FileCopyrightText: 2005, 2008 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -72,10 +69,7 @@ def main():
         existingtable = f["table"]
         if existingtable != table:
             gs.fatal(
-                _(
-                    "User selected table <%s> but the table <%s> "
-                    "is linked to layer <%s>"
-                )
+                _("User selected table <%s> but the table <%s> is linked to layer <%s>")
                 % (table, existingtable, layer)
             )
 
@@ -90,10 +84,7 @@ def main():
 
     if not force:
         gs.message(
-            _(
-                "You must use the -f (force) flag to actually "
-                "remove the table. Exiting."
-            )
+            _("You must use the -f (force) flag to actually remove the table. Exiting.")
         )
         gs.message(_("Leaving map/table unchanged."))
         sys.exit(0)

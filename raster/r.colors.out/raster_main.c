@@ -6,12 +6,9 @@
  *
  * PURPOSE:      Allows export of the color table for a raster map.
  *
- * COPYRIGHT:    (C) 2008, 2010-2011 Glynn Clements and the GRASS Development
- *               Team
- *
- *               This program is free software under the GNU General
- *               Public License (>=v2). Read the file COPYING that
- *               comes with GRASS for details.
+ * SPDX-FileCopyrightText: 2008, 2010-2011 Glynn Clements
+ * SPDX-FileCopyrightText: GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  ***************************************************************************/
 
@@ -20,9 +17,6 @@
 #include <grass/gis.h>
 #include <grass/raster.h>
 #include <grass/glocale.h>
-#include <grass/parson.h>
-
-#include "local_proto.h"
 
 /* Run in raster mode */
 int main(int argc, char **argv)
@@ -40,7 +34,7 @@ int main(int argc, char **argv)
     struct Colors colors;
     struct FPRange range;
 
-    enum ColorFormat clr_frmt;
+    ColorFormat clr_frmt;
 
     G_gisinit(argv[0]);
 
@@ -89,20 +83,9 @@ int main(int argc, char **argv)
     }
 
     if (strcmp(opt.format->answer, "json") == 0) {
-        if (strcmp(opt.color_format->answer, "rgb") == 0) {
-            clr_frmt = RGB;
-        }
-        else if (strcmp(opt.color_format->answer, "triplet") == 0) {
-            clr_frmt = TRIPLET;
-        }
-        else if (strcmp(opt.color_format->answer, "hsv") == 0) {
-            clr_frmt = HSV;
-        }
-        else {
-            clr_frmt = HEX;
-        }
-        print_json_colors(&colors, range.min, range.max, fp,
-                          flag.p->answer ? 1 : 0, clr_frmt);
+        clr_frmt = G_option_to_color_format(opt.color_format);
+        Rast_print_json_colors(&colors, range.min, range.max, fp,
+                               flag.p->answer ? 1 : 0, clr_frmt);
     }
     else {
         Rast_print_colors(&colors, range.min, range.max, fp,

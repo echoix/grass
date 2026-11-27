@@ -10,10 +10,8 @@ Classes:
  - iscatt_core::ScattPlotsCondsData
  - iscatt_core::ScattPlotsData
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Stepan Turek <stepan.turek seznam.cz> (mentor: Martin Landa)
 """
@@ -139,7 +137,7 @@ class Core:
         )
 
         if returncode < 0:
-            GException(_("Computing of scatter plots failed."))
+            raise GException(_("Computing of scatter plots failed."))
 
     def CatRastUpdater(self):
         return self.cat_rast_updater
@@ -155,12 +153,12 @@ class Core:
             b1, b2 = idScattToidBands(scatt_id, len(self.an_data.GetBands()))
             b = self.scatts_dt.GetBandsInfo(scatt_id)
 
-            region = {}
-            region["s"] = b["b2"]["min"] - 0.5
-            region["n"] = b["b2"]["max"] + 0.5
-
-            region["w"] = b["b1"]["min"] - 0.5
-            region["e"] = b["b1"]["max"] + 0.5
+            region = {
+                "s": b["b2"]["min"] - 0.5,
+                "n": b["b2"]["max"] + 0.5,
+                "w": b["b1"]["min"] - 0.5,
+                "e": b["b1"]["max"] + 0.5,
+            }
 
             arr = self.scatt_conds_dt.GetValuesArr(cat_id, scatt_id)
             arr = Rasterize(polygon=coords, rast=arr, region=region, value=value)
@@ -218,11 +216,12 @@ class CatRastUpdater:
 
         region = self.an_data.GetRegion()
 
-        bbox = {}
-        bbox["maxx"] = region["e"]
-        bbox["minx"] = region["w"]
-        bbox["maxy"] = region["n"]
-        bbox["miny"] = region["s"]
+        bbox = {
+            "maxx": region["e"],
+            "minx": region["w"],
+            "maxy": region["n"],
+            "miny": region["s"],
+        }
 
         updated_cats = []
 
@@ -273,7 +272,7 @@ class CatRastUpdater:
             region = self.an_data.GetRegion()
             ret = UpdateCatRast(patch_rast, region, self.scatts_dt.GetCatRastCond(cat))
             if ret < 0:
-                GException(_("Patching category raster conditions file failed."))
+                raise GException(_("Patching category raster conditions file failed."))
             RunCommand("g.remove", flags="f", type="raster", name=patch_rast)
 
     def _rasterize(self, grass_region, layer, cat, out_rast):
@@ -295,7 +294,7 @@ class CatRastUpdater:
         )
 
         if ret != 0:
-            GException(_("v.build failed:\n%s") % msg)
+            raise GException(_("v.build failed:\n%s") % msg)
 
         environs = os.environ.copy()
         environs["GRASS_REGION"] = grass_region["GRASS_REGION"]
@@ -315,7 +314,7 @@ class CatRastUpdater:
         )
 
         if ret != 0:
-            GException(_("v.to.rast failed:\n{messages}").format(messages=msg))
+            raise GException(_("v.to.rast failed:\n{messages}").format(messages=msg))
 
     def _create_grass_region_env(self, bbox):
         r = self.an_data.GetRegion()
@@ -382,7 +381,8 @@ class AnalyzedData:
 
         self.region = GetRegion()
         if self.region["rows"] * self.region["cols"] > MAX_NCELLS:
-            GException("too big region")
+            msg = "too big region"
+            raise GException(msg)
 
         self.bands_info = {}
 
@@ -390,7 +390,7 @@ class AnalyzedData:
             i = GetRasterInfo(b)
 
             if i is None:
-                GException("raster %s is not CELL type" % (b))
+                raise GException("raster %s is not CELL type" % (b))
 
             self.bands_info[b] = i
             # TODO check size of raster
@@ -551,8 +551,7 @@ class ScattPlotsCondsData:
 
 
 class ScattPlotsData(ScattPlotsCondsData):
-    """Data structure for computed points (classes) in scatter plots.\
-    """
+    """Data structure for computed points (classes) in scatter plots."""
 
     def __init__(self, an_data):
         self.cats_rasts = {}
@@ -777,9 +776,7 @@ def idScattToidBands(scatt_id, n_bands):
 def idBandsToidScatt(band_1_id, band_2_id, n_bands):
     """Get scatter plot id from band ids."""
     if band_2_id < band_1_id:
-        tmp = band_1_id
-        band_1_id = band_2_id
-        band_2_id = tmp
+        band_1_id, band_2_id = band_2_id, band_1_id
 
     n_b1 = n_bands - 1
 

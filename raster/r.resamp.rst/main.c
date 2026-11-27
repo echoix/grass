@@ -4,23 +4,11 @@
  * Written by H. Mitasova, I. Kosinovsky, D. Gerdes Summer 1993
  * University of Illinois
  * US Army Construction Engineering Research Lab
- * Copyright 1993, H. Mitasova (University of Illinois),
- * I. Kosinovsky, (USA-CERL), and D.Gerdes (USA-CERL)
- *
- *
- *  This program is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation; either version 2
- *  of the License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * SPDX-FileCopyrightText: 1993 H. Mitasova (University of Illinois)
+ * SPDX-FileCopyrightText: 1993 I. Kosinovsky (USA-CERL)
+ * SPDX-FileCopyrightText: 1993 D.Gerdes (USA-CERL)
+ * SPDX-FileCopyrightText: GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  *
  * modified by McCauley in August 1995
@@ -48,19 +36,18 @@ static double /* pargr */ ns_res, ew_res, inp_ew_res, inp_ns_res;
 static int inp_rows, inp_cols;
 
 static double inp_x_orig, inp_y_orig;
-static double dmin, ertre, deltx, delty;
+static double dmin, deltx, delty;
 static int nsizr, nsizc;
 
 static double /* datgr */ *az, *adx, *ady, *adxx, *adyy, *adxy;
-static double /* error */ ertot, ertre, zminac, zmaxac, zmult;
+static double /* error */ ertot, zminac, zmaxac, zmult;
 
 static int NPOINT;
-static int deriv, overlap, cursegm, dtens;
+static int deriv, overlap, dtens;
 static double fi;
 
 static int cond1, cond2;
-static double fstar2, tfsta2, xmin, xmax, ymin, ymax, zmin, zmax, gmin, gmax,
-    c1min, c1max, c2min, c2max;
+static double zmin, zmax, gmin, gmax, c1min, c1max, c2min, c2max;
 static double dnorm;
 static double smc;
 static double theta, scalex;
@@ -79,7 +66,7 @@ static int fdinp, fdsmooth = -1;
  * for output grid xmin ... - coordinates of corners of output grid
  *
  * subroutines input_data - input of data x,y,z (test function or measured
- * data) iterpolate - interpolation of z-values and derivatives to grid
+ * data) interpolate - interpolation of z-values and derivatives to grid
  * secpar_loop- computation of secondary(morphometric) parameters output -
  * output of gridded data and derivatives/sec.parameters check_at_points -
  * interpolation of z-values to given point x,y
@@ -294,8 +281,6 @@ int main(int argc, char *argv[])
     deriv = flag.deriv->answer;
     dtens = flag.cprght->answer;
 
-    ertre = 0.1;
-
     if (!G_scan_resolution(parm.res_ew->answer, &ew_res, winhd.proj))
         G_fatal_error(_("Unable to read ew_res value"));
 
@@ -409,14 +394,8 @@ int main(int argc, char *argv[])
                      "%d bytes of disk space for temp files.", (int)sdisk),
                   (int)sdisk);
 
-    fstar2 = fi * fi / 4.;
-    tfsta2 = fstar2 + fstar2;
     deltx = winhd.east - winhd.west;
     delty = winhd.north - winhd.south;
-    xmin = winhd.west;
-    xmax = winhd.east;
-    ymin = winhd.south;
-    ymax = winhd.north;
     if (smooth != NULL)
         smc = -9999;
     else
@@ -480,7 +459,6 @@ int main(int argc, char *argv[])
         fdsmooth = Rast_open_old(smooth, "");
 
     ertot = 0.;
-    cursegm = 0;
     G_message(_("Percent complete: "));
 
     NPOINT = IL_resample_interp_segments_2d(

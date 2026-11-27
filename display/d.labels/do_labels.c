@@ -17,8 +17,6 @@
 #define BOT      2
 #define LEFT     0
 #define RITE     2
-#define YES      1
-#define NO       0
 
 #define BUFFSIZE 128
 #define FONTSIZE 256
@@ -34,7 +32,6 @@ static RGBA_Color color, highlight_color, background, border;
 static double size;
 static int fontsize;
 static int highlight_width;
-static int opaque;
 static double width, rotation;
 static char text[MTEXT];
 static char font[FONTSIZE];
@@ -63,7 +60,6 @@ int initialize_options(void)
     fontsize = 0;
     width = 1.;
     highlight_width = 0;
-    opaque = YES;
     rotation = 0.0;
     std_font = getenv("GRASS_FONT");
     if (!std_font)
@@ -115,11 +111,7 @@ int do_labels(FILE *infile, int do_rotation)
             set_RGBA_from_str(&border, buff);
         }
         else if (!strncmp(text, "opa", 3)) {
-            sscanf(text, buff_fmt, buff);
-            if (!strncmp(buff, "YES", 3))
-                opaque = YES;
-            else
-                opaque = NO;
+            /* Accepted so that existing label files still work, but ignored. */
         }
         else if (!strncmp(text, "ref", 3)) {
             if (sscanf(text, "%*s %16[^\n]", buff) < 1 || scan_ref(buff) == 0) {
@@ -223,6 +215,7 @@ int show_it(void)
     /* get the box size for each line of text and expand the bounding box as
      * needed */
     n_lines = 0;
+    Y = north - (line_size * 1.2);
     for (;;) {
         n_chars = 0;
 
@@ -333,7 +326,7 @@ int show_it(void)
     fprintf(stdout, "L 5\n");
     for (i = 0; i < 5; i++)
         fprintf(stdout, " %f %f\n", xarr[i], yarr[i]);
-        /* d.labels labfile | v.in.ascii -n out=labbox format=standard */
+    /* d.labels labfile | v.in.ascii -n out=labbox format=standard */
 #endif
 
     /* draw boxes */
@@ -469,11 +462,11 @@ int scan_ref(char *buf)
     case 2:
         if (!(xmatch(word2) || ymatch(word2)))
             return 0;
-        FALLTHROUGH;
+        G_FALLTHROUGH;
     case 1:
         if (xmatch(word1) || ymatch(word1))
             return 1;
-        FALLTHROUGH;
+        G_FALLTHROUGH;
     case EOF:
     default:
         return 0;

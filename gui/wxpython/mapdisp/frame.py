@@ -9,10 +9,8 @@ Can be used either from Layer Manager or as d.mon backend.
 Classes:
  - mapdisp::MapPanel
 
-(C) 2006-2016 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2006-2016 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Michael Barton
 @author Jachym Cepicky
@@ -29,18 +27,30 @@ import os
 from typing import TYPE_CHECKING
 
 from core import globalvar
+
+# isort: split
 import wx
 import wx.aui
-
-from mapdisp.toolbars import MapToolbar, NvizIcons
-from mapdisp.gprint import PrintOptions
-from core.gcmd import GError, GMessage, RunCommand
-from core.utils import ListOfCatsToRange, GetLayerNameFromCmd
-from gui_core.dialogs import GetImageHandlers, ImageSizeDialog
 from core.debug import Debug
+from core.gcmd import GError, GMessage, RunCommand
+from core.giface import Notification
 from core.settings import UserSettings
-from gui_core.mapdisp import SingleMapPanel, FrameMixin
-from gui_core.query import QueryDialog, PrepareQueryResults
+from core.utils import GetLayerNameFromCmd, ListOfCatsToRange
+from gui_core.dialogs import GetImageHandlers, ImageSizeDialog
+from gui_core.forms import GUI
+from gui_core.mapdisp import FrameMixin, SingleMapPanel
+from gui_core.query import PrepareQueryResults, QueryDialog
+from gui_core.vselect import VectorSelectBase, VectorSelectHighlighter
+from gui_core.wrap import Menu
+from main_window.page import MainPageBase
+from mapdisp import statusbar as sb
+from mapdisp.gprint import PrintOptions
+from mapdisp.toolbars import MapToolbar, NvizIcons
+from mapwin.analysis import (
+    MeasureAreaController,
+    MeasureDistanceController,
+    ProfileController,
+)
 from mapwin.buffered import BufferedMapWindow
 from mapwin.decorations import (
     ArrowController,
@@ -49,20 +59,10 @@ from mapwin.decorations import (
     LegendController,
     LegendVectController,
 )
-from mapwin.analysis import (
-    MeasureAreaController,
-    MeasureDistanceController,
-    ProfileController,
-)
-from gui_core.forms import GUI
-from core.giface import Notification
-from gui_core.vselect import VectorSelectBase, VectorSelectHighlighter
-from gui_core.wrap import Menu
-from mapdisp import statusbar as sb
-from main_window.page import MainPageBase
 
 import grass.script as gs
 from grass.pydispatch.signal import Signal
+from grass.exceptions import ScriptError
 
 if TYPE_CHECKING:
     import lmgr.frame
@@ -247,7 +247,7 @@ class MapPanel(SingleMapPanel, MainPageBase):
         self.printopt = PrintOptions(self, self.MapWindow)
 
         #
-        # Re-use dialogs
+        # Reuse dialogs
         #
         self.dialogs = {}
         self.dialogs["attributes"] = None
@@ -537,7 +537,7 @@ class MapPanel(SingleMapPanel, MainPageBase):
 
     def Disable3dMode(self):
         """Disables 3D mode (NVIZ) in user interface."""
-        # TODO: this is broken since item is removed but switch is drived by
+        # TODO: this is broken since item is removed but switch is driven by
         # index
         if "3D" in self.toolbars["map"].combo.GetString(1):
             self.toolbars["map"].combo.Delete(1)
@@ -782,6 +782,10 @@ class MapPanel(SingleMapPanel, MainPageBase):
         if not ltype:
             return
         width, height = self.MapWindow.GetClientSize()
+
+        name = ""
+        extType = "png"
+
         for param in command[1:]:
             try:
                 p, val = param.split("=")
@@ -1093,16 +1097,14 @@ class MapPanel(SingleMapPanel, MainPageBase):
                 map=raster, coord=(east, north), localized=True, env=env
             )
         if vect:
-            encoding = UserSettings.Get(group="atm", key="encoding", subkey="value")
             try:
                 vectQuery = gs.vector_what(
                     map=vect,
                     coord=(east, north),
                     distance=qdist,
-                    encoding=encoding,
                     multiple=True,
                 )
-            except gs.ScriptError:
+            except ScriptError:
                 GError(
                     parent=self,
                     message=_(
@@ -1148,9 +1150,7 @@ class MapPanel(SingleMapPanel, MainPageBase):
             self._highlighter_layer.SetMap(
                 vectQuery[0]["Map"] + "@" + vectQuery[0]["Mapset"]
             )
-            tmp = []
-            for i in vectQuery:
-                tmp.append(i["Category"])
+            tmp = [i["Category"] for i in vectQuery]
 
             self._highlighter_layer.SetCats(tmp)
             self._highlighter_layer.DrawSelected()
@@ -1217,23 +1217,23 @@ class MapPanel(SingleMapPanel, MainPageBase):
                 cmd[-1].append("layer=%d" % layer)
                 cmd[-1].append("cats=%s" % ListOfCatsToRange(lcats))
 
-        if addLayer:
-            args = {}
-            if useId:
-                args["ltype"] = "vector"
-            else:
-                args["ltype"] = "command"
+        if not addLayer:
+            return cmd
 
-            return self.Map.AddLayer(
-                name=globalvar.QUERYLAYER,
-                command=cmd,
-                active=True,
-                hidden=True,
-                opacity=1.0,
-                render=True,
-                **args,
-            )
-        return cmd
+        args = {}
+        if useId:
+            args["ltype"] = "vector"
+        else:
+            args["ltype"] = "command"
+        return self.Map.AddLayer(
+            name=globalvar.QUERYLAYER,
+            command=cmd,
+            active=True,
+            hidden=True,
+            opacity=1.0,
+            render=True,
+            **args,
+        )
 
     def OnMeasureDistance(self, event):
         self._onMeasure(MeasureDistanceController)
@@ -1285,11 +1285,11 @@ class MapPanel(SingleMapPanel, MainPageBase):
 
     def OnHistogramPyPlot(self, event):
         """Init PyPlot histogram display canvas and tools"""
-        raster = []
-
-        for layer in self._giface.GetLayerList().GetSelectedLayers():
-            if layer.maplayer.GetType() == "raster":
-                raster.append(layer.maplayer.GetName())
+        raster = [
+            layer.maplayer.GetName()
+            for layer in self._giface.GetLayerList().GetSelectedLayers()
+            if layer.maplayer.GetType() == "raster"
+        ]
 
         from wxplot.histogram import HistogramPlotFrame
 
@@ -1299,11 +1299,11 @@ class MapPanel(SingleMapPanel, MainPageBase):
 
     def OnScatterplot(self, event):
         """Init PyPlot scatterplot display canvas and tools"""
-        raster = []
-
-        for layer in self._giface.GetLayerList().GetSelectedLayers():
-            if layer.maplayer.GetType() == "raster":
-                raster.append(layer.maplayer.GetName())
+        raster = [
+            layer.maplayer.GetName()
+            for layer in self._giface.GetLayerList().GetSelectedLayers()
+            if layer.maplayer.GetType() == "raster"
+        ]
 
         from wxplot.scatter import ScatterFrame
 
@@ -1712,9 +1712,7 @@ class MapDisplay(FrameMixin, MapPanel):
         )
         # set system icon
         parent.SetIcon(
-            wx.Icon(
-                os.path.join(globalvar.ICONDIR, "grass_map.ico"), wx.BITMAP_TYPE_ICO
-            )
+            wx.Icon(os.path.join(globalvar.ICONDIR, "grass.ico"), wx.BITMAP_TYPE_ICO)
         )
         # use default frame window layout
         client_disp = wx.ClientDisplayRect()

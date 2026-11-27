@@ -12,11 +12,8 @@
  *
  * ALGORITHM:   https://code.google.com/p/lz4/
  * DATE CREATED: Dec 18 2015
- * COPYRIGHT:   (C) 2015 by the GRASS Development Team
- *
- *              This program is free software under the GNU General Public
- *              License (version 2 or greater). Read the file COPYING that
- *              comes with GRASS for details.
+ * SPDX-FileCopyrightText: 2015 GRASS Development Team
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  *****************************************************************************/
 
@@ -40,6 +37,9 @@
  * Errors include:                                                  *
  *        -1 -- Compression failed.                                 *
  *        -2 -- dst is too small.                                   *
+ *                                                                  *
+ * A dst smaller than the compression bound gives a warning, but    *
+ * the call succeeds when the compressed data fit into dst.         *
  *                                                                  *
  * ================================================================ *
  * int                                                              *
@@ -133,6 +133,10 @@ int G_lz4_compress(unsigned char *src, int src_sz, unsigned char *dst,
     nbytes = err;
 
     if (buf != dst) {
+        if (nbytes > dst_sz) {
+            G_free(buf);
+            return -2;
+        }
         /* Copy the data from buf to dst */
         for (err = 0; err < nbytes; err++)
             dst[err] = buf[err];

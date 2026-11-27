@@ -13,10 +13,8 @@ Classes:
  - vnet_data::History
  - vnet_data::VNETGlobalTurnsData
 
-(C) 2013-2014 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013-2014 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Stepan Turek <stepan.turek seznam.cz> (GSoC 2012, mentor: Martin Landa)
 @author Lukas Bocan <silent_bob centrum.cz> (turn costs support)
@@ -427,11 +425,7 @@ class VNETPointsData:
         return pt_list_data
 
     def _ptListDataToPtData(self, pt_list_data):
-        pt_data = {}
-        for i, val in enumerate(pt_list_data):
-            pt_data[self.cols["name"][i]] = val
-
-        return pt_data
+        return {self.cols["name"][i]: val for i, val in enumerate(pt_list_data)}
 
     def _usePoint(self, pt_id, use):
         """Item is checked/unchecked"""
@@ -557,8 +551,7 @@ class VNETPointsData:
     def GetColumns(self, only_relevant=True):
         cols_data = deepcopy(self.cols)
 
-        hidden_cols = []
-        hidden_cols.extend((self.cols["name"].index("e"), self.cols["name"].index("n")))
+        hidden_cols = [self.cols["name"].index("e"), self.cols["name"].index("n")]
 
         analysis, valid = self.an_params.GetParam("analysis")
         if only_relevant and len(self.an_data[analysis]["cmdParams"]["cats"]) <= 1:
@@ -933,14 +926,12 @@ class VNETTmpVectMaps:
         :return: True if was removed
         :return: False if does not contain the map
         """
-        if vectMap:
-            vectMap.DeleteRenderLayer()
-            RunCommand(
-                "g.remove", flags="f", type="vector", name=vectMap.GetVectMapName()
-            )
-            self.RemoveFromTmpMaps(vectMap)
-            return True
-        return False
+        if not vectMap:
+            return False
+        vectMap.DeleteRenderLayer()
+        RunCommand("g.remove", flags="f", type="vector", name=vectMap.GetVectMapName())
+        self.RemoveFromTmpMaps(vectMap)
+        return True
 
     def DeleteAllTmpMaps(self):
         """Delete all temporary maps in the class"""
@@ -1060,16 +1051,11 @@ class VectMap:
             "head",
         )
         try:
-            head = open(headPath)
-            for line in head:
-                i = line.find(
-                    "MAP DATE:",
-                )
-                if i == 0:
-                    head.close()
-                    return line.split(":", 1)[1].strip()
-
-            head.close()
+            with open(headPath) as head:
+                for line in head:
+                    i = line.find("MAP DATE:")
+                    if i == 0:
+                        return line.split(":", 1)[1].strip()
             return ""
         except OSError:
             return ""
@@ -1149,15 +1135,11 @@ class History:
         self.currHistStep = 0
 
         newHistFile = grass.tempfile()
-        newHist = open(newHistFile, "w")
+        with open(newHistFile, "w") as newHist:
+            self._saveNewHistStep(newHist)
+            with open(self.histFile) as oldHist:
+                removedHistData = self._savePreviousHist(newHist, oldHist)
 
-        self._saveNewHistStep(newHist)
-
-        oldHist = open(self.histFile)
-        removedHistData = self._savePreviousHist(newHist, oldHist)
-
-        oldHist.close()
-        newHist.close()
         try_remove(self.histFile)
         self.histFile = newHistFile
 
@@ -1280,27 +1262,25 @@ class History:
 
     def _getHistStepData(self, histStep):
         """Load data saved in history step"""
-        hist = open(self.histFile)
         histStepData = {}
-
         newHistStep = False
         isSearchedHistStep = False
-        for line in hist:
-            if not line.strip() and isSearchedHistStep:
-                break
-            if not line.strip():
-                newHistStep = True
-                continue
-            if isSearchedHistStep:
-                self._parseLine(line, histStepData)
+        with open(self.histFile) as hist:
+            for line in hist:
+                if not line.strip() and isSearchedHistStep:
+                    break
+                if not line.strip():
+                    newHistStep = True
+                    continue
+                if isSearchedHistStep:
+                    self._parseLine(line, histStepData)
 
-            if newHistStep:
-                line = line.split("=")
-                if int(line[1]) == histStep:
-                    isSearchedHistStep = True
-                newHistStep = False
+                if newHistStep:
+                    line = line.split("=")
+                    if int(line[1]) == histStep:
+                        isSearchedHistStep = True
+                    newHistStep = False
 
-        hist.close()
         return histStepData
 
     def _parseLine(self, line, histStepData):
@@ -1347,11 +1327,7 @@ class VNETGlobalTurnsData:
         ]
 
     def GetData(self):
-        data = []
-        for ival in self.turn_data:
-            data.append(ival[1:])
-
-        return data
+        return [ival[1:] for ival in self.turn_data]
 
     def GetValue(self, line, col):
         return self.turn_data[line][col]
@@ -1450,4 +1426,4 @@ class VNETGlobalTurnsData:
         if angle < from_angle:
             angle = math.pi * 2 + angle
 
-        return bool(angle > from_angle and angle < to_angle)
+        return bool(from_angle < angle < to_angle)

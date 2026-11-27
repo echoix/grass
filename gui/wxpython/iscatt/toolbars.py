@@ -6,10 +6,8 @@
 Classes:
  - toolbars::MainToolbar
 
-(C) 2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Stepan Turek <stepan.turek seznam.cz> (mentor: Martin Landa)
 """
@@ -26,8 +24,7 @@ def get_tool_name(tool_name, tool_name_type=tuple):
     """Get tool name
 
     :param str|tuple tool_name: tool name
-    :param type tool_name_type: tool name type with default
-                                tuple type
+    :param type tool_name_type: tool name type with default tuple type
 
     :return str: tool name
     """

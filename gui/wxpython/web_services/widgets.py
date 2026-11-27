@@ -7,10 +7,8 @@ List of classes:
  - widgets::WSPanel
  - widgets::LayersList
 
-(C) 2012-2013 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2012-2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Martin Landa <landa.martin gmail.com>
 @author Stepan Turek <stepan.turek seznam.cz>
@@ -62,7 +60,7 @@ from gui_core.wrap import (
 import grass.script as gs
 from grass.pydispatch.signal import Signal
 
-rinwms_path = os.path.join(os.getenv("GISBASE"), "etc", "r.in.wms")
+rinwms_path = os.path.join(os.getenv("GRASS_ETCBINDIR"), "r.in.wms")
 if rinwms_path not in sys.path:
     sys.path.append(rinwms_path)
 
@@ -514,10 +512,7 @@ class WSPanel(wx.Panel):
 
         self.conn = {"url": url, "password": password, "username": username}
 
-        conn_cmd = []
-        for k, v in self.conn.items():
-            if v:
-                conn_cmd.append("%s=%s" % (k, v))
+        conn_cmd = ["%s=%s" % (k, v) for k, v in self.conn.items() if v]
 
         self.ws_cmdl = self.ws_drvs[self.ws]["cmd"] + conn_cmd
 
@@ -1150,12 +1145,12 @@ class WSManageSettingsWidget(ManageSettingsWidget):
         self.settingsSizer.Add(self.btnAddDefaultServers, flag=wx.RIGHT, border=5)
 
     def OnAddDefaultServers(self, event):
-        setts = self.GetSettings()
+        current_settings = self.GetSettings()
         self.servers_to_add = {}
         for k, v in self.default_servers.items():
-            if k not in setts.keys():
+            if k not in current_settings.keys():
                 self.servers_to_add[k] = v
-            elif v != setts[k]:
+            elif v != current_settings[k]:
                 GMessage(
                     parent=self,
                     message=_(

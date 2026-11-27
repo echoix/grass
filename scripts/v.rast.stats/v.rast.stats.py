@@ -9,11 +9,8 @@
 #               add column choose by Luca Delucchi
 # PURPOSE:      Calculates univariate statistics from a GRASS raster map
 #               only for areas covered by vector objects on a per-category base
-# COPYRIGHT:    (C) 2005-2016 by the GRASS Development Team
-#
-#               This program is free software under the GNU General Public
-#               License (>=v2). Read the file COPYING that comes with GRASS
-#               for details.
+# SPDX-FileCopyrightText: 2005-2016 GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
@@ -74,7 +71,6 @@
 # %end
 
 import sys
-import os
 import atexit
 import grass.script as gs
 from grass.script.utils import decode
@@ -91,15 +87,13 @@ def cleanup():
 
 
 def main():
-    global tmp, sqltmp, tmpname, nuldev, vector, rastertmp
+    global tmp, sqltmp, tmpname, vector, rastertmp
     rastertmp = False
     # setup temporary files
     tmp = gs.tempfile()
     sqltmp = tmp + ".sql"
     # we need a random name
     tmpname = gs.basename(tmp)
-
-    nuldev = open(os.devnull, "w")
 
     rasters = options["raster"].split(",")
     colprefixes = options["column_prefix"].split(",")
@@ -156,8 +150,8 @@ def main():
     # save current settings:
     gs.use_temp_region()
 
-    # Temporarily aligning region resolution to $RASTER resolution
-    # keep boundary settings
+    # Align region cells with the first input raster,
+    # keeping the (approximate) extent settings.
     gs.run_command("g.region", align=rasters[0])
 
     # check if DBF driver used, in this case cut to 10 chars col names:
@@ -292,16 +286,11 @@ def get_nr_of_categories(
     :param rastertmp: name of temporary raster map
     :return: number of raster categories or exit (if no categories found)
     """
-    # dump cats to file to avoid "too many argument" problem:
-    p = gs.pipe_command("r.category", map=rastertmp, sep=";", quiet=True)
-    cats = []
+    categories = gs.parse_command(
+        "r.category", map=rastertmp, format="json", quiet=True
+    )
 
-    for line in p.stdout:
-        line = decode(line)
-        cats.append(line.rstrip("\r\n").split(";")[0])
-    p.wait()
-
-    number = len(cats)
+    number = len(categories)
     if number < 1:
         # create columns and exit
         gs.warning(_("No categories found in raster map"))
@@ -414,8 +403,10 @@ def set_up_columns(vector, layer, percentile, colprefix, basecols, dbfdriver, c)
         if currcolumn in gs.vector_columns(vector, layer).keys():
             if not c:
                 gs.fatal(
-                    (_("Cannot create column <%s> (already present). ") % currcolumn)
-                    + _("Use -c flag to update values in this column.")
+                    _(
+                        "Cannot create column <{column}> (already present)."
+                        " Use -c flag to update values in this column."
+                    ).format(column=currcolumn)
                 )
         else:
             coltype = "INTEGER" if i == "n" else "DOUBLE PRECISION"
@@ -442,17 +433,18 @@ def perform_stats(
     colnames,
     extstat,
 ):
-    with open(sqltmp, "w") as f:
+    with (
+        open(sqltmp, "w") as f,
         # do the stats
-        p = gs.pipe_command(
+        gs.pipe_command(
             "r.univar",
             flags="t" + extstat,
             map=raster,
             zones=rastertmp,
             percentile=percentile,
             sep=";",
-        )
-
+        ) as p,
+    ):
         first_line = 1
 
         f.write("{0}\n".format(gs.db_begin_transaction(fi["driver"])))
@@ -483,7 +475,6 @@ def perform_stats(
 
             f.write(" WHERE %s=%s;\n" % (fi["key"], vars[0]))
         f.write("{0}\n".format(gs.db_commit_transaction(fi["driver"])))
-        p.wait()
 
 
 if __name__ == "__main__":

@@ -1,10 +1,16 @@
 """Test functions in grass.script.utils"""
 
+import multiprocessing
+import sys
+
+import pytest
+
 import grass.script as gs
+from grass.script import utils as gutils
 
 
 def test_named_separators():
-    """Check that named separtors are recognized and correctly evaluated"""
+    """Check that named separators are recognized and correctly evaluated"""
     assert gs.separator("pipe") == "|"
     assert gs.separator("comma") == ","
     assert gs.separator("space") == " "
@@ -13,7 +19,7 @@ def test_named_separators():
 
 
 def test_backslash_separators():
-    """Check that separtors specified as an escape sequence are correctly evaluated"""
+    """Check that separators specified as an escape sequence are correctly evaluated"""
     assert gs.separator(r"\t") == "\t"
     assert gs.separator(r"\n") == "\n"
 
@@ -21,3 +27,112 @@ def test_backslash_separators():
 def test_unrecognized_separator():
     """Check that unknown strings are just passed through"""
     assert gs.separator("apple") == "apple"
+
+
+@pytest.mark.parametrize(
+    ("dms", "expected"),
+    [
+        ("26:45:30", 26.758333333333333),
+        ("+26:45:30", 26.758333333333333),
+        ("-26:45:30", -26.758333333333333),
+        ("26:45:30N", 26.758333333333333),
+        ("26:45:30E", 26.758333333333333),
+        ("26:45:30S", -26.758333333333333),
+        ("26:45:30W", -26.758333333333333),
+        ("-0:30:0", -0.5),
+        ("12.5", 12.5),
+        ("-12.5", -12.5),
+    ],
+)
+def test_float_or_dms(dms, expected):
+    """Check that sign and hemisphere letters are applied to the whole value"""
+    assert gs.float_or_dms(dms) == pytest.approx(expected)
+
+
+def test_float_or_dms_empty():
+    """Check that an empty string is reported as an invalid value"""
+    with pytest.raises(ValueError, match="could not convert"):
+        gs.float_or_dms("")
+
+
+def test_KeyValue_keys():
+    """Check that KeyValue class works like a Dict"""
+    kv = gs.KeyValue()
+    kv["key1"] = "value1"
+    kv["key2"] = "value2"
+
+    assert kv["key1"] == "value1"
+    assert kv["key2"] == "value2"
+
+    # Raises KeyError for non-existing keys
+    with pytest.raises(KeyError):
+        _ = kv["non_existing_key"]
+
+
+def test_KeyValue_values():
+    """Check that keys of KeyValue class can be accessed as attributes"""
+    kv = gs.KeyValue()
+    kv["key1"] = "value1"
+    kv["key2"] = "value2"
+
+    assert kv.key1 == "value1"
+    assert kv.key2 == "value2"
+
+    # Raises AttributeError for non-existing attribute
+    with pytest.raises(AttributeError):
+        _ = kv.non_existing_attribute
+
+
+def test_resolve_nprocs(monkeypatch):
+    """Check G_OPT_M_NPROCS resolution: positive as-is, 0 = all, negative reserves."""
+    monkeypatch.setattr(gutils, "available_cpus", lambda: 8)
+    assert gs.resolve_nprocs(1) == 1
+    assert gs.resolve_nprocs(4) == 4
+    assert gs.resolve_nprocs("3") == 3
+    assert gs.resolve_nprocs(0) == 8
+    assert gs.resolve_nprocs(-2) == 6
+    assert gs.resolve_nprocs(-10) == 1
+    with pytest.raises(ValueError, match="invalid literal for int"):
+        gs.resolve_nprocs("not-a-number")
+
+
+def test_resolve_nprocs_from_gisenv(empty_session):
+    """None takes NPROCS from g.gisenv, or is 0 when NPROCS is not set
+
+    As with the nprocs option of tools, a value given explicitly, 0
+    included, is used instead of NPROCS.
+    """
+    env = empty_session.env
+    assert gs.resolve_nprocs(None, env=env) == gs.resolve_nprocs(0)
+    gs.run_command("g.gisenv", set="NPROCS=3", env=env)
+    assert gs.resolve_nprocs(None, env=env) == 3
+    assert gs.resolve_nprocs(2, env=env) == 2
+    assert gs.resolve_nprocs(0, env=env) == gs.resolve_nprocs(0)
+    for nprocs in (-1, 0):
+        gs.run_command("g.gisenv", set=f"NPROCS={nprocs}", env=env)
+        assert gs.resolve_nprocs(None, env=env) == gs.resolve_nprocs(nprocs)
+
+
+def test_get_multiprocessing_context():
+    """Fork is used where available and safe, the platform default elsewhere."""
+    ctx = gutils._get_multiprocessing_context()
+    if sys.platform != "darwin" and "fork" in multiprocessing.get_all_start_methods():
+        assert ctx.get_start_method() == "fork"
+    else:
+        assert ctx.get_start_method() == multiprocessing.get_start_method()
+
+
+@pytest.mark.parametrize(
+    "name", ["and", "AND", "aNd", "or", "OR", "Or", "not", "NOT", "nOt"]
+)
+def test_legalize_vector_name_keywords(name):
+    """Escape SQL keywords regardless of case, preserving the original case."""
+    assert gs.legalize_vector_name(name) == f"{name}_"
+
+
+@pytest.mark.parametrize(
+    "name", ["my_map", "My_Map", "AND_", "border", "NOTable", "sand"]
+)
+def test_legalize_vector_name_valid(name):
+    """Preserve valid names, including names containing SQL keywords."""
+    assert gs.legalize_vector_name(name) == name

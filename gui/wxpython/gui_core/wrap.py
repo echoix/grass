@@ -7,13 +7,13 @@ Classes:
  - wrap::GSpinCtrl
 
 
-(C) 2016 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2016 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Petrasova <kratochanna gmail.com>
 """
+
+from __future__ import annotations
 
 import sys
 import wx
@@ -80,7 +80,7 @@ def convertToInt(argsOrKwargs, roundVal=False):
     return result
 
 
-def IsDark():
+def IsDark() -> bool:
     """Detects if used theme is dark.
     Wraps wx method for different versions."""
 
@@ -96,25 +96,25 @@ def IsDark():
     return luminance(fg) - luminance(bg) > 0.2
 
 
-def BitmapFromImage(image, depth=-1):
+def BitmapFromImage(image: wx.Image, depth=-1) -> wx.Bitmap:
     if wxPythonPhoenix:
         return wx.Bitmap(img=image, depth=depth)
     return wx.BitmapFromImage(image, depth=depth)
 
 
-def ImageFromBitmap(bitmap):
+def ImageFromBitmap(bitmap: wx.Bitmap) -> wx.Image:
     if wxPythonPhoenix:
         return bitmap.ConvertToImage()
     return wx.ImageFromBitmap(bitmap)
 
 
-def EmptyBitmap(width, height, depth=-1):
+def EmptyBitmap(width, height, depth=-1) -> wx.Bitmap:
     if wxPythonPhoenix:
         return wx.Bitmap(width=width, height=height, depth=depth)
     return wx.EmptyBitmap(width=width, height=height, depth=depth)
 
 
-def EmptyImage(width, height, clear=True):
+def EmptyImage(width, height, clear=True) -> wx.Image:
     if wxPythonPhoenix:
         return wx.Image(width=width, height=height, clear=clear)
     return wx.EmptyImage(width=width, height=height, clear=clear)
@@ -680,17 +680,17 @@ class Rect(wx.Rect):
         kwargs = convertToInt(argsOrKwargs=kwargs)
         wx.Rect.__init__(self, *args, **kwargs)
 
-    def ContainsXY(self, x, y):
+    def ContainsXY(self, x: float, y: float) -> bool:
         if wxPythonPhoenix:
             return wx.Rect.Contains(self, x=int(x), y=int(y))
         return wx.Rect.ContainsXY(self, int(x), int(y))
 
-    def ContainsRect(self, rect):
+    def ContainsRect(self, rect: wx.Rect) -> bool:
         if wxPythonPhoenix:
             return wx.Rect.Contains(self, rect=rect)
         return wx.Rect.ContainsRect(self, rect)
 
-    def OffsetXY(self, dx, dy):
+    def OffsetXY(self, dx: float, dy: float) -> wx.Rect:
         if wxPythonPhoenix:
             return wx.Rect.Offset(self, int(dx), int(dy))
         return wx.Rect.OffsetXY(self, int(dx), int(dy))

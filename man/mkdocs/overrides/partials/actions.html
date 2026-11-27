@@ -1,0 +1,21 @@
+{#
+  The generated pages carry the URL of their Markdown source in the front
+  matter (source_edit_url, written by utils/mkmarkdown.py), so the edit and
+  view buttons can point to the tool directory in the repository rather than
+  to the generated documentation tree, without any Python in the site build.
+#}
+{% if page.meta and page.meta.source_edit_url %}
+    {% set edit_url = page.meta.source_edit_url %}
+    {% if "content.action.edit" in features %}
+        <a href="{{ edit_url }}" title="{{ lang.t('action.edit') }}" class="md-content__button md-icon">
+            {% set icon = config.theme.icon.edit or "material/file-edit-outline" %}
+            {% include ".icons/" ~ icon ~ ".svg" %}
+        </a>
+    {% endif %}
+    {% if "content.action.view" in features %}
+        <a href="{{ edit_url | replace('/edit/', '/tree/') }}" title="{{ lang.t('action.view') }}" class="md-content__button md-icon">
+            {% set icon = config.theme.icon.view or "material/file-eye-outline" %}
+            {% include ".icons/" ~ icon ~ ".svg" %}
+        </a>
+    {% endif %}
+{% endif %}

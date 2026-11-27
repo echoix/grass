@@ -6,10 +6,8 @@
 Classes:
  - giface::LayerManagerGrassInterface
 
-(C) 2012 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2012 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Kratochvilova <kratochanna gmail.com>
 @author Vaclav Petras <wenzeslaus gmail.com>
@@ -121,11 +119,11 @@ class LayerList:
         self._tree.CheckItem(layer._layer, checked=checked)
 
     def SelectLayer(self, layer, select=True):
-        "Select or unselect layer"
+        """Select or unselect layer"""
         self._tree.SelectItem(layer._layer, select)
 
     def ChangeLayer(self, layer, **kwargs):
-        "Change layer (cmd, ltype, opacity)"
+        """Change layer (cmd, ltype, opacity)"""
         if "cmd" in kwargs:
             layer._pydata[0]["cmd"] = kwargs["cmd"]
             layerName, found = GetLayerNameFromCmd(kwargs["cmd"], fullyQualified=True)

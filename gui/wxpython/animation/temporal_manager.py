@@ -9,16 +9,15 @@ Classes:
  - temporal_manager::TemporalManager
 
 
-(C) 2012 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2012 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Kratochvilova <kratochanna gmail.com>
 """
 
 import datetime
 from operator import itemgetter
+from pathlib import Path
 
 import grass.script as gs
 import grass.temporal as tgis
@@ -116,8 +115,7 @@ class TemporalManager:
 
         # check for units for relative type
         if relative:
-            units = set()
-            units.update(infoDict["unit"] for infoDict in self.timeseriesInfo.values())
+            units = {infoDict["unit"] for infoDict in self.timeseriesInfo.values()}
             if len(units) > 1:
                 message = _(
                     "It is not allowed to display data with different units (%s)."
@@ -162,10 +160,11 @@ class TemporalManager:
             return self._getCommonGranularity()
 
     def _getCommonGranularity(self):
-        allMaps = []
-        for dataset in self.timeseriesList:
-            maps = self.timeseriesInfo[dataset]["maps"]
-            allMaps.extend(maps)
+        allMaps = [
+            a
+            for dataset in self.timeseriesList
+            for a in self.timeseriesInfo[dataset]["maps"]
+        ]
 
         if self.temporalType == TemporalType.ABSOLUTE:
             gran = tgis.compute_absolute_time_granularity(allMaps)
@@ -201,7 +200,7 @@ class TemporalManager:
             timestamps = sorted(list(labelListSet), key=itemgetter(0))
 
         newMapLists = []
-        for mapList, labelList in zip(mapLists, labelLists):
+        for mapList, labelList in zip(mapLists, labelLists, strict=False):
             newMapList = [None] * len(timestamps)
             i = 0
             # compare start time
@@ -210,9 +209,9 @@ class TemporalManager:
             newMapList[i : i + len(mapList)] = mapList
             newMapLists.append(newMapList)
 
-        mapDict = {}
-        for i, dataset in enumerate(self.timeseriesList):
-            mapDict[dataset] = newMapLists[i]
+        mapDict = {
+            dataset: newMapLists[i] for i, dataset in enumerate(self.timeseriesList)
+        }
 
         if self.temporalType == TemporalType.ABSOLUTE:
             # ('1996-01-01 00:00:00', '1997-01-01 00:00:00', 'year'),
@@ -411,8 +410,7 @@ def createAbsoluteInterval():
     gs.mapcalc(exp="temp_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
-    fd.write(
+    Path(n1).write_text(
         "prec_1|2001-01-01|2001-02-01\n"
         "prec_2|2001-04-01|2001-05-01\n"
         "prec_3|2001-05-01|2001-09-01\n"
@@ -420,11 +418,9 @@ def createAbsoluteInterval():
         "prec_5|2002-01-01|2002-05-01\n"
         "prec_6|2002-05-01|2002-07-01\n"
     )
-    fd.close()
 
     n2 = gs.read_command("g.tempfile", pid=2, flags="d").strip()
-    fd = open(n2, "w")
-    fd.write(
+    Path(n2).write_text(
         "temp_1|2000-10-01|2001-01-01\n"
         "temp_2|2001-04-01|2001-05-01\n"
         "temp_3|2001-05-01|2001-09-01\n"
@@ -432,7 +428,6 @@ def createAbsoluteInterval():
         "temp_5|2002-01-01|2002-05-01\n"
         "temp_6|2002-05-01|2002-07-01\n"
     )
-    fd.close()
     name1 = "absinterval1"
     name2 = "absinterval2"
     gs.run_command(
@@ -441,7 +436,7 @@ def createAbsoluteInterval():
         maps="prec_1,prec_2,prec_3,prec_4,prec_5,prec_6,"
         "temp_1,temp_2,temp_3,temp_4,temp_5,temp_6",
     )
-    for name, fname in zip((name1, name2), (n1, n2)):
+    for name, fname in zip((name1, name2), (n1, n2), strict=True):
         gs.run_command(
             "t.create",
             overwrite=True,
@@ -486,8 +481,7 @@ def createRelativeInterval():
     gs.mapcalc(exp="temp_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
-    fd.write(
+    Path(n1).write_text(
         "prec_1|1|4\n"
         "prec_2|6|7\n"
         "prec_3|7|10\n"
@@ -495,11 +489,9 @@ def createRelativeInterval():
         "prec_5|11|14\n"
         "prec_6|14|17\n"
     )
-    fd.close()
 
     n2 = gs.read_command("g.tempfile", pid=2, flags="d").strip()
-    fd = open(n2, "w")
-    fd.write(
+    Path(n2).write_text(
         "temp_1|5|6\n"
         "temp_2|6|7\n"
         "temp_3|7|10\n"
@@ -507,7 +499,6 @@ def createRelativeInterval():
         "temp_5|11|18\n"
         "temp_6|19|22\n"
     )
-    fd.close()
     name1 = "relinterval1"
     name2 = "relinterval2"
     gs.run_command(
@@ -516,7 +507,7 @@ def createRelativeInterval():
         maps="prec_1,prec_2,prec_3,prec_4,prec_5,prec_6,"
         "temp_1,temp_2,temp_3,temp_4,temp_5,temp_6",
     )
-    for name, fname in zip((name1, name2), (n1, n2)):
+    for name, fname in zip((name1, name2), (n1, n2), strict=True):
         gs.run_command(
             "t.create",
             overwrite=True,
@@ -560,8 +551,7 @@ def createAbsolutePoint():
     gs.mapcalc(exp="prec_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
-    fd.write(
+    Path(n1).write_text(
         "prec_1|2001-01-01\n"
         "prec_2|2001-03-01\n"
         "prec_3|2001-04-01\n"
@@ -569,7 +559,6 @@ def createAbsolutePoint():
         "prec_5|2001-08-01\n"
         "prec_6|2001-09-01\n"
     )
-    fd.close()
     name = "abspoint"
     gs.run_command(
         "t.create",
@@ -608,9 +597,9 @@ def createRelativePoint():
     gs.mapcalc(exp="prec_6 = rand(0, 650)", overwrite=True)
 
     n1 = gs.read_command("g.tempfile", pid=1, flags="d").strip()
-    fd = open(n1, "w")
-    fd.write("prec_1|1\nprec_2|3\nprec_3|5\nprec_4|7\nprec_5|11\nprec_6|13\n")
-    fd.close()
+    Path(n1).write_text(
+        "prec_1|1\nprec_2|3\nprec_3|5\nprec_4|7\nprec_5|11\nprec_6|13\n"
+    )
     name = "relpoint"
     gs.run_command(
         "t.create",

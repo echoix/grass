@@ -14,10 +14,8 @@ List of classes:
  - cap_interface::OnEarthCapabilities
  - cap_interface::OnEarthLayer
 
-(C) 2012 by the GRASS Development Team
-
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2012 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Stepan Turek <stepan.turek seznam.cz> (Mentor: Martin Landa)
 """
@@ -25,7 +23,7 @@ This program is free software under the GNU General Public License
 import os
 import sys
 
-WMSLibPath = os.path.join(os.getenv("GISBASE"), "etc", "r.in.wms")
+WMSLibPath = os.path.join(os.getenv("GRASS_ETCBINDIR"), "r.in.wms")
 if WMSLibPath not in sys.path:
     sys.path.append(WMSLibPath)
 
@@ -109,11 +107,7 @@ class WMSCapabilities(CapabilitiesBase, WMSCapabilitiesTree):
         get_map_node = request_node.find(self.xml_ns.Ns("GetMap"))
         format_nodes = get_map_node.findall(self.xml_ns.Ns("Format"))
 
-        formats = []
-        for node in format_nodes:
-            formats.append(node.text)
-
-        return formats
+        return [node.text for node in format_nodes]
 
 
 class WMSLayer(LayerBase):
@@ -265,10 +259,10 @@ class WMTSLayer(LayerBase):
             return styles
 
         if param == "format":
-            formats = []
-            for frmt in self.layer_node.findall(self.xml_ns.NsWmts("Format")):
-                formats.append(frmt.text.strip())
-            return formats
+            return [
+                frmt.text.strip()
+                for frmt in self.layer_node.findall(self.xml_ns.NsWmts("Format"))
+            ]
 
         if param == "srs":
             return self.projs

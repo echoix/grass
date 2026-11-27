@@ -4,8 +4,7 @@
 @brief   GUI per r.li.setup module
 
 Classes:
- - RLiSetupFrame (first frame to show existing conf file and choose some
-                 operation)
+ - RLiSetupFrame (first frame to show existing conf file and choose some operation)
  - RLIWizard (the main wizard)
  - FirstPage (first page of wizard, choose name of conf file, raster, vector,
               sampling region)
@@ -13,9 +12,8 @@ Classes:
  - SamplingAreas (define sampling area)
  - SummaryPage (show chosen options)
 
-(C) 2011 by the GRASS Development Team
-This program is free software under the GNU General Public License
-(>=v2). Read the file COPYING that comes with GRASS for details.
+SPDX-FileCopyrightText: 2011 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Luca Delucchi <lucadeluge gmail com>
 """
@@ -159,11 +157,10 @@ class RLIWizard:
 
     def _write_confile(self):
         """Write the configuration file"""
-        f = open(os.path.join(self.rlipath, self.startpage.conf_name), "w")
-        self.rasterinfo = grast.raster_info(self.startpage.rast)
-        self._write_region(f)
-        self._write_area(f)
-        f.close()
+        with open(os.path.join(self.rlipath, self.startpage.conf_name), "w") as f:
+            self.rasterinfo = grast.raster_info(self.startpage.rast)
+            self._write_region(f)
+            self._write_area(f)
 
     def _temp_region(self):
         # save current settings:
@@ -728,9 +725,7 @@ class FirstPage(TitledPage):
             )
             return False, []
         if links > 0:
-            layers = []
-            for i in range(1, links + 1):
-                layers.append(str(i))
+            layers = [str(i) for i in range(1, links + 1)]
             return True, layers
         return False, []
 
@@ -1409,7 +1404,7 @@ class SampleUnitsKeyPage(TitledPage):
     def OnEnterPage(self, event: WizardEvent | None = None) -> None:
         """Function during entering"""
         # This is an hack to force the user to choose Rectangle or Circle
-        self.typeBox.SetSelection(2),
+        self.typeBox.SetSelection(2)
         self.typeBox.ShowItem(2, False)
         self.panelSizer.Layout()
 
@@ -1612,7 +1607,7 @@ class UnitsMousePage(TitledPage):
             choices=[_("Rectangle"), _("Circle"), ("")],
         )
         # This is an hack to force the user to choose Rectangle or Circle
-        self.typeBox.SetSelection(2),
+        self.typeBox.SetSelection(2)
         self.typeBox.ShowItem(2, False)
         self.sizer.Add(self.typeBox, flag=wx.ALIGN_LEFT, pos=(0, 0), span=(1, 2))
 
@@ -1859,11 +1854,11 @@ class VectorAreasPage(TitledPage):
             GError(
                 parent=self,
                 message=_(
-                    "The raster map <%s> already exists."
+                    "The raster map <{map_name}> already exists."
                     " Please remove or rename the maps "
-                    "with the prefix '%s' or select the "
+                    "with the prefix '{prefix}' or select the "
                     "option to overwrite existing maps"
-                ).format(self.outname, self.outpref),
+                ).format(map_name=self.outname, prefix=self.outpref),
             )
             self.parent.wizard.ShowPage(self.parent.samplingareapage)
             return
@@ -1917,7 +1912,11 @@ class VectorAreasPage(TitledPage):
             GError(parent=self, message=_("The polygon seems to have 0 areas"))
             self.parent.wizard.ShowPage(self.parent.samplingareapage)
             return
-        self.title.SetLabel(_("Select sample area 1 of " + str(self.areanum)))
+        self.title.SetLabel(
+            _("Select sample area {areas_count} of {area_num}").format(
+                areas_count=1, area_num=self.areanum
+            )
+        )
         grass.use_temp_region()
         if self._raster != self.rast:
             self.map_ = self.mapPanel.GetMap()

@@ -9,10 +9,8 @@ Usage:
 
     tgis.register_maps_in_space_time_dataset(type, name, maps)
 
-(C) 2012-2013 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2012-2013 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 :authors: Soeren Gebbert
 """
@@ -49,10 +47,8 @@ def sample_stds_by_stds_topology(
 
      Attention: Do not use the comma as separator for printing
 
-     :param intype: Type of the input space time dataset (strds, stvds or
-                    str3ds)
-     :param sampletype: Type of the sample space time datasets (strds,
-                        stvds or str3ds)
+     :param intype: Type of the input space time dataset (strds, stvds or str3ds)
+     :param sampletype: Type of the sample space time datasets (strds, stvds or str3ds)
      :param inputs: Name or comma separated names of space time datasets or
                     a list of map names
      :param sampler: Name of a space time dataset used for temporal sampling

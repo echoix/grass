@@ -5,20 +5,18 @@
 # MODULE:       mkrest.py
 # AUTHOR(S):    Luca Delucchi
 # PURPOSE:      Create HTML manual page snippets
-# COPYRIGHT:    (C) 2012 by Luca Delucchi
-#                and the GRASS Development Team
-#
-#               This program is free software under the GNU General
-#               Public License (>=v2). Read the file COPYING that
-#               comes with GRASS for details.
+# SPDX-FileCopyrightText: 2012 Luca Delucchi
+# SPDX-FileCopyrightText: GRASS Development Team
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 #############################################################################
 
-import sys
-import string
 import re
+import string
 import subprocess
+import sys
 from datetime import datetime
+from pathlib import Path
 
 pgm = sys.argv[1]
 year = sys.argv[2] if len(sys.argv) > 1 else str(datetime.now().year)
@@ -47,10 +45,7 @@ footer_noindex = string.Template(
 
 def read_file(name):
     try:
-        f = open(name, "rb")
-        s = f.read()
-        f.close()
-        return s
+        return Path(name).read_bytes()
     except OSError:
         return ""
 
@@ -79,8 +74,9 @@ if tmp_data:
     sys.stdout.write(tmp_data)
 
 arguments = ["pandoc", "-s", "-r", "html", src_file, "-w", "rst"]
-process = subprocess.Popen(arguments, stdout=subprocess.PIPE)
-html_text = process.communicate()[0]
+with subprocess.Popen(arguments, stdout=subprocess.PIPE) as process:
+    html_text = process.communicate()[0]
+
 if html_text:
     for k, v in replacement.iteritems():
         html_text = html_text.replace(k, v)

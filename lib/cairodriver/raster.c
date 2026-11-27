@@ -3,10 +3,9 @@
 
    \brief GRASS cairo display driver - draw raster
 
-   (C) 2007-2014 by Lars Ahlzen and the GRASS Development Team
-
-   This program is free software under the GNU General Public License
-   (>=v2). Read the file COPYING that comes with GRASS for details.
+   SPDX-FileCopyrightText: 2007-2014 Lars Ahlzen
+   SPDX-FileCopyrightText: GRASS Development Team
+   SPDX-License-Identifier: GPL-2.0-or-later
 
    \author Lars Ahlzen <lars ahlzen.com> (original contributor)
    \author Glynn Clements
@@ -27,7 +26,7 @@ static int *trans;
 
 static cairo_surface_t *src_surf;
 static unsigned char *src_data;
-static int src_stride, ca_row;
+static int src_stride;
 
 static int masked;
 
@@ -110,7 +109,6 @@ void Cairo_begin_raster(int mask, int s[2][2], double d[2][2])
 
     src_data = cairo_image_surface_get_data(src_surf);
     src_stride = cairo_image_surface_get_stride(src_surf);
-    ca_row = 0;
 
     /* allocate buffer for down-sampling data */
     trans = G_malloc(dst_w * sizeof(int));
@@ -169,7 +167,6 @@ int Cairo_raster(int n, int row, const unsigned char *red,
     }
 
     ca.modified = 1;
-    ca_row++;
 
     return next_row(row, d_y1);
 }

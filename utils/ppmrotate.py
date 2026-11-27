@@ -7,16 +7,16 @@
 #      Earlier Bourne script version by Hamish Bowman,
 #      https://grasswiki.osgeo.org/wiki/Talk:Color_tables
 #
-#   (C) 2009-2017 by the GRASS Development Team
-#       This program is free software under the GNU General Public
-#       License (>=v2). Read the file COPYING that comes with GRASS
-#       for details.
+#   SPDX-FileCopyrightText: 2009-2017 GRASS Development Team
+#   SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-import sys
-import os
-import atexit
 import array
+import atexit
+import os
+import sys
+from pathlib import Path
+
 import grass.script as gs
 
 tmp_img = None
@@ -36,10 +36,8 @@ def cleanup():
 
 def read_ppm(src):
     global width, height
+    text = Path(src).read_bytes()
 
-    fh = open(src, "rb")
-    text = fh.read()
-    fh.close()
     i = 0
     j = text.find("\n", i)
     if text[i:j] != "P6":
@@ -62,10 +60,9 @@ def read_ppm(src):
 def write_ppm(dst, data):
     w = height
     h = width
-    fh = open(dst, "wb")
-    fh.write("P6\n%d %d\n%d\n" % (w, h, 255))
-    data.tofile(fh)
-    fh.close()
+    with open(dst, "wb") as fh:
+        fh.write("P6\n%d %d\n%d\n" % (w, h, 255))
+        data.tofile(fh)
 
 
 def rotate_ppm(srcd):
@@ -92,9 +89,8 @@ def ppmtopng(dst, src):
     if gs.find_program("g.ppmtopng", "--help"):
         gs.run_command("g.ppmtopng", input=src, output=dst, quiet=True)
     elif gs.find_program("pnmtopng"):
-        fh = open(dst, "wb")
-        gs.call(["pnmtopng", src], stdout=fh)
-        fh.close()
+        with open(dst, "wb") as fh:
+            gs.call(["pnmtopng", src], stdout=fh)
     elif gs.find_program("convert"):
         gs.call(["convert", src, dst])
     else:

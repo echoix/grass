@@ -413,7 +413,7 @@ off_t AMI_STREAM<T>::stream_len(void)
     }
 
     // debug stream_len:
-    DEBUG_STREAM_LEN fprintf(stderr, "%s: length = %lld   sizeof(T)=%lud\n",
+    DEBUG_STREAM_LEN fprintf(stderr, "%s: length = %lld   sizeof(T)=%zud\n",
                              path, (long long int)statbuf.st_size, sizeof(T));
 
     return (statbuf.st_size / sizeof(T));
@@ -503,7 +503,7 @@ AMI_STREAM<T>::~AMI_STREAM(void)
     DEBUG_DELETE cerr << "~AMI_STREAM: " << path << "(" << this << ")\n";
     assert(fp);
     fclose(fp);
-    delete buf;
+    delete[] buf;
 
     // Get rid of the file if not persistent and if not substream.
     if ((per != PERSIST_PERSISTENT) && (substream_level == 0)) {

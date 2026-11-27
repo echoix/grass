@@ -6,10 +6,8 @@
 Classes:
  - controller::RDigitController
 
-(C) 2014 by the GRASS Development Team
-This program is free software under the GNU General Public
-License (>=v2). Read the file COPYING that comes with GRASS
-for details.
+SPDX-FileCopyrightText: 2014 GRASS Development Team
+SPDX-License-Identifier: GPL-2.0-or-later
 
 @author Anna Petrasova <kratochanna gmail.com>
 """
@@ -467,8 +465,8 @@ class RDigitController(wx.EvtHandler):
                     ).strip()
                     if values:
                         self.uploadMapCategories.emit(values=values.split("\n"))
-        except CalledModuleError:
-            raise ScriptError
+        except CalledModuleError as e:
+            raise ScriptError(e.msg) from e
         self._backupRaster(name)
 
         name = name + "@" + gcore.gisenv()["MAPSET"]
@@ -494,8 +492,8 @@ class RDigitController(wx.EvtHandler):
         backup = name + "_backupcopy_" + str(os.getpid())
         try:
             gcore.run_command("g.copy", raster=[name, backup], quiet=True)
-        except CalledModuleError:
-            raise ScriptError
+        except CalledModuleError as e:
+            raise ScriptError(e.msg) from e
 
         self._backupRasterName = backup
 
@@ -648,9 +646,8 @@ class RDigitController(wx.EvtHandler):
         :return: output raster map name as a result of digitization
         """
         output = "x" + str(uuid.uuid4())[:8]
-        asciiFile = tempfile.NamedTemporaryFile(mode="w", delete=False)
-        asciiFile.write("\n".join(text))
-        asciiFile.close()
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as asciiFile:
+            asciiFile.write("\n".join(text))
 
         if bufferDist:
             bufferDist /= 2.0
