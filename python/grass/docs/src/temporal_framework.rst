@@ -269,10 +269,11 @@ The temporal framework starts server processes (see ``tgis.init()``). They are
 started with the default start method of the Python *multiprocessing* module:
 *spawn* on Windows and macOS and, since Python 3.14, *forkserver* on Linux.
 These methods import the main script again in the server process, so the code
-which uses the temporal framework (or *pygrass* tools such as ``Messenger``
+which uses the temporal framework (or *pygrass* classes such as ``Messenger``
 and ``DataProvider``) needs to be in a function called under
-``if __name__ == "__main__":``, as in the examples below. Without it, a script
-fails with an error such as ``Connection reset by peer``.
+``if __name__ == "__main__":``, as in the examples below. Without it, the
+server processes fail, so a script fails with an error such as
+``Connection reset by peer`` or its messages are not printed.
 
 Howto start example
 ^^^^^^^^^^^^^^^^^^^
