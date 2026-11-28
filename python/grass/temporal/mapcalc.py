@@ -8,12 +8,9 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 import copy
-import sys
 from datetime import datetime
 
 import grass.script as gs
-from grass.exceptions import CalledModuleError
-from grass.script.utils import _get_multiprocessing_context
 
 from .core import (
     SQLDatabaseInterfaceConnection,
@@ -234,102 +231,122 @@ def dataset_mapcalculator(
         num = len(map_matrix[0])
 
         # Parallel processing
-        ctx = _get_multiprocessing_context()
         proc_list = []
         proc_count = 0
 
-        # For all samples
-        for i in range(num):
-            count += 1
-            msgr.percent(count, num, 10)
+        try:
+            # For all samples
+            for i in range(num):
+                count += 1
+                msgr.percent(count, num, 10)
 
-            # Create the r.mapcalc statement for the current time step
-            map_name = "{base}_{suffix}".format(
-                base=base, suffix=gs.get_num_suffix(count, num)
-            )
-            # Remove spaces and new lines
-            expr = expression.replace(" ", "")
+                # Create the r.mapcalc statement for the current time step
+                map_name = "{base}_{suffix}".format(
+                    base=base, suffix=gs.get_num_suffix(count, num)
+                )
+                # Remove spaces and new lines
+                expr = expression.replace(" ", "")
 
-            # Check that all maps are in the sample
-            valid_maps = True
-            # Replace all dataset names with their map names of the
-            # current time step
-            for j in range(len(map_matrix)):
-                if map_matrix[j][i] is None:
-                    valid_maps = False
-                    break
-                # Substitute the dataset name with the map name
-                expr = expr.replace(id_list[j], map_matrix[j][i])
+                # Check that all maps are in the sample
+                valid_maps = True
+                # Replace all dataset names with their map names of the
+                # current time step
+                for j in range(len(map_matrix)):
+                    if map_matrix[j][i] is None:
+                        valid_maps = False
+                        break
+                    # Substitute the dataset name with the map name
+                    expr = expr.replace(id_list[j], map_matrix[j][i])
 
-            # Proceed with the next sample
-            if not valid_maps:
-                continue
-
-            # Create the new map id and check if the map is already
-            # in the database
-            map_id = map_name + "@" + mapset
-
-            new_map = first_input.get_new_map_instance(map_id)
-
-            # Check if new map is in the temporal database
-            if new_map.is_in_db(dbif):
-                if gs.overwrite():
-                    # Remove the existing temporal database entry
-                    new_map.delete(dbif)
-                    new_map = first_input.get_new_map_instance(map_id)
-                else:
-                    msgr.error(
-                        _(
-                            "Map <%s> is already in temporal database, "
-                            "use overwrite flag to overwrite"
-                        )
-                    )
+                # Proceed with the next sample
+                if not valid_maps:
                     continue
 
-            # Set the time stamp
-            if sample_map_list[i].is_time_absolute():
-                start, end = sample_map_list[i].get_absolute_time()
-                new_map.set_absolute_time(start, end)
-            else:
-                start, end, unit = sample_map_list[i].get_relative_time()
-                new_map.set_relative_time(start, end, unit)
+                # Create the new map id and check if the map is already
+                # in the database
+                map_id = map_name + "@" + mapset
 
-            # Set the semantic label
-            semantic_label = sample_map_list[i].metadata.get_semantic_label()
-            if semantic_label is not None:
-                new_map.set_semantic_label(semantic_label)
+                new_map = first_input.get_new_map_instance(map_id)
 
-            # Parse the temporal expressions
-            expr = _operator_parser(expr, sample_map_list[0], sample_map_list[i])
-            # Add the output map name
-            expr = "%s=%s" % (map_name, expr)
+                # Check if new map is in the temporal database
+                if new_map.is_in_db(dbif):
+                    if gs.overwrite():
+                        # Remove the existing temporal database entry
+                        new_map.delete(dbif)
+                        new_map = first_input.get_new_map_instance(map_id)
+                    else:
+                        msgr.error(
+                            _(
+                                "Map <%s> is already in temporal database, "
+                                "use overwrite flag to overwrite"
+                            )
+                        )
+                        continue
 
-            map_list.append(new_map)
+                # Set the time stamp
+                if sample_map_list[i].is_time_absolute():
+                    start, end = sample_map_list[i].get_absolute_time()
+                    new_map.set_absolute_time(start, end)
+                else:
+                    start, end, unit = sample_map_list[i].get_relative_time()
+                    new_map.set_relative_time(start, end, unit)
 
-            msgr.verbose(_('Apply mapcalc expression: "%s"') % expr)
+                # Set the semantic label
+                semantic_label = sample_map_list[i].metadata.get_semantic_label()
+                if semantic_label is not None:
+                    new_map.set_semantic_label(semantic_label)
 
-            # Start the parallel r.mapcalc computation
-            if type == "raster":
-                proc_list.append(ctx.Process(target=_run_mapcalc2d, args=(expr,)))
-            else:
-                proc_list.append(ctx.Process(target=_run_mapcalc3d, args=(expr,)))
-            proc_list[proc_count].start()
-            proc_count += 1
+                # Parse the temporal expressions
+                expr = _operator_parser(expr, sample_map_list[0], sample_map_list[i])
+                # Add the output map name
+                expr = "%s=%s" % (map_name, expr)
 
-            if proc_count not in {nprocs, num} and count != num:
-                continue
-            proc_count = 0
-            exitcodes = 0
-            for proc in proc_list:
-                proc.join()
-                exitcodes += proc.exitcode
+                map_list.append(new_map)
 
-            if exitcodes != 0:
-                dbif.close()
-                msgr.fatal(_("Error while mapcalc computation"))
+                msgr.verbose(_('Apply mapcalc expression: "%s"') % expr)
 
-            # Empty process list
-            proc_list = []
+                # Start the parallel r.mapcalc computation
+                if type == "raster":
+                    proc_list.append(
+                        gs.start_command(
+                            "r.mapcalc",
+                            expression=expr,
+                            nprocs=1,
+                            overwrite=gs.overwrite(),
+                            quiet=True,
+                        )
+                    )
+                else:
+                    proc_list.append(
+                        gs.start_command(
+                            "r3.mapcalc",
+                            expression=expr,
+                            overwrite=gs.overwrite(),
+                            quiet=True,
+                        )
+                    )
+                proc_count += 1
+
+                if proc_count != nprocs:
+                    continue
+                proc_count = 0
+                exitcodes = 0
+                for proc in proc_list:
+                    exitcodes += proc.wait()
+
+                if exitcodes != 0:
+                    dbif.close()
+                    msgr.fatal(_("Error while mapcalc computation"))
+
+                # Empty process list
+                proc_list = []
+        finally:
+            # Wait for the last batch, which may be incomplete or follow skipped
+            # samples, and for the started tools if an exception is raised
+            exitcodes = sum(proc.wait() for proc in proc_list)
+        if exitcodes != 0:
+            dbif.close()
+            msgr.fatal(_("Error while mapcalc computation"))
 
         # Register the new maps in the output space time dataset
         msgr.message(_("Starting map registration in temporal database..."))
@@ -408,32 +425,6 @@ def dataset_mapcalculator(
                 )
 
     dbif.close()
-
-
-###############################################################################
-
-
-def _run_mapcalc2d(expr) -> None:
-    """Helper function to run r.mapcalc in parallel"""
-    try:
-        gs.run_command(
-            "r.mapcalc", expression=expr, nprocs=1, overwrite=gs.overwrite(), quiet=True
-        )
-    except CalledModuleError:
-        sys.exit(1)
-
-
-###############################################################################
-
-
-def _run_mapcalc3d(expr) -> None:
-    """Helper function to run r3.mapcalc in parallel"""
-    try:
-        gs.run_command(
-            "r3.mapcalc", expression=expr, overwrite=gs.overwrite(), quiet=True
-        )
-    except CalledModuleError:
-        sys.exit(1)
 
 
 ###############################################################################

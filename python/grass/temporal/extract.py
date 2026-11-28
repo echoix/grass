@@ -13,7 +13,6 @@ import sys
 
 import grass.script as gs
 from grass.exceptions import CalledModuleError
-from grass.script.utils import _get_multiprocessing_context
 
 from .abstract_map_dataset import AbstractMapDataset
 
@@ -207,7 +206,6 @@ def extract_dataset(
 
     # Run the mapcalc expression
     if expression:
-        ctx = _get_multiprocessing_context()
         proc_count = 0
         proc_list = []
 
@@ -217,105 +215,114 @@ def extract_dataset(
             sp.base.get_name(),
             sp.base.get_map_id(),
         )
-        for count, row in enumerate(rows, 1):
-            if count % 10 == 0:
-                msgr.percent(count, num_rows, 1)
+        try:
+            for count, row in enumerate(rows, 1):
+                if count % 10 == 0:
+                    msgr.percent(count, num_rows, 1)
 
-            map_name = compile_new_map_name(
-                sp,
-                base,
-                count,
-                row["id"],
-                row["semantic_label"] if has_semantic_labels else None,
-                time_suffix,
-                dbif,
-            )
+                map_name = compile_new_map_name(
+                    sp,
+                    base,
+                    count,
+                    row["id"],
+                    row["semantic_label"] if has_semantic_labels else None,
+                    time_suffix,
+                    dbif,
+                )
 
-            # We need to modify the r(3).mapcalc expression
-            if type != "vector":
-                expr = expression
-                expr = expr.replace(sp.base.get_map_id(), row["id"])
-                expr = f"{map_name} = {expr}"
+                # We need to modify the r(3).mapcalc expression
+                if type != "vector":
+                    expr = expression
+                    expr = expr.replace(sp.base.get_map_id(), row["id"])
+                    expr = f"{map_name} = {expr}"
 
-                # We need to build the id
-                map_id = AbstractMapDataset.build_id(map_name, mapset)
-            else:
-                map_id = AbstractMapDataset.build_id(map_name, mapset, row["layer"])
-
-            new_map = sp.get_new_map_instance(map_id)
-
-            # Check if new map is in the temporal database
-            if new_map.is_in_db(dbif):
-                if gs.overwrite():
-                    # Remove the existing temporal database entry
-                    new_map.delete(dbif)
-                    new_map = sp.get_new_map_instance(map_id)
+                    # We need to build the id
+                    map_id = AbstractMapDataset.build_id(map_name, mapset)
                 else:
-                    msgr.error(
-                        _(
-                            "Map <%s> is already in temporal database"
-                            ", use overwrite flag to overwrite",
+                    map_id = AbstractMapDataset.build_id(map_name, mapset, row["layer"])
+
+                new_map = sp.get_new_map_instance(map_id)
+
+                # Check if new map is in the temporal database
+                if new_map.is_in_db(dbif):
+                    if gs.overwrite():
+                        # Remove the existing temporal database entry
+                        new_map.delete(dbif)
+                        new_map = sp.get_new_map_instance(map_id)
+                    else:
+                        msgr.error(
+                            _(
+                                "Map <%s> is already in temporal database"
+                                ", use overwrite flag to overwrite",
+                            )
+                            % (new_map.get_map_id()),
                         )
-                        % (new_map.get_map_id()),
-                    )
-                    continue
+                        continue
 
-            # Add process to the process list
-            if type == "raster":
-                msgr.verbose(_('Applying r.mapcalc expression: "%s"') % expr)
-                proc_list.append(ctx.Process(target=run_mapcalc2d, args=(expr,)))
-            elif type == "raster3d":
-                msgr.verbose(_('Applying r3.mapcalc expression: "%s"') % expr)
-                proc_list.append(ctx.Process(target=run_mapcalc3d, args=(expr,)))
-            elif type == "vector":
-                msgr.verbose(_('Applying v.extract where statement: "%s"') % expression)
-                if row["layer"]:
+                # Start the tool, it runs in parallel with the previously started ones
+                if type == "raster":
+                    msgr.verbose(_('Applying r.mapcalc expression: "%s"') % expr)
                     proc_list.append(
-                        ctx.Process(
-                            target=run_vector_extraction,
-                            args=(
-                                row["name"] + "@" + row["mapset"],
-                                map_name,
-                                row["layer"],
-                                vtype,
-                                expression,
-                            ),
-                        ),
+                        gs.start_command(
+                            "r.mapcalc",
+                            expression=expr,
+                            nprocs=1,
+                            overwrite=gs.overwrite(),
+                            quiet=True,
+                        )
                     )
-                else:
+                elif type == "raster3d":
+                    msgr.verbose(_('Applying r3.mapcalc expression: "%s"') % expr)
                     proc_list.append(
-                        ctx.Process(
-                            target=run_vector_extraction,
-                            args=(
-                                row["name"] + "@" + row["mapset"],
-                                map_name,
-                                layer,
-                                vtype,
-                                expression,
-                            ),
-                        ),
+                        gs.start_command(
+                            "r3.mapcalc",
+                            expression=expr,
+                            nprocs=1,
+                            overwrite=gs.overwrite(),
+                            quiet=True,
+                        )
+                    )
+                elif type == "vector":
+                    msgr.verbose(
+                        _('Applying v.extract where statement: "%s"') % expression
+                    )
+                    proc_list.append(
+                        gs.start_command(
+                            "v.extract",
+                            input=row["name"] + "@" + row["mapset"],
+                            output=map_name,
+                            layer=row["layer"] or layer,
+                            type=vtype,
+                            where=expression,
+                            overwrite=gs.overwrite(),
+                            quiet=True,
+                        )
                     )
 
-            proc_list[proc_count].start()
-            proc_count += 1
+                proc_count += 1
 
-            # Join processes if the maximum number of processes are
-            # reached or the end of the loop is reached
-            if proc_count == nprocs or count == num_rows:
-                proc_count = 0
-                exitcodes = 0
-                for proc in proc_list:
-                    proc.join()
-                    exitcodes += proc.exitcode
-                if exitcodes != 0:
-                    dbif.close()
-                    msgr.fatal(_("Error in computation process"))
+                # Wait for the tools when the maximum number of them is running
+                if proc_count == nprocs:
+                    proc_count = 0
+                    exitcodes = 0
+                    for proc in proc_list:
+                        exitcodes += proc.wait()
+                    if exitcodes != 0:
+                        dbif.close()
+                        msgr.fatal(_("Error in computation process"))
 
-                # Empty process list
-                proc_list = []
+                    # Empty process list
+                    proc_list = []
 
-            # Store the new maps
-            new_maps[row["id"]] = new_map
+                # Store the new maps
+                new_maps[row["id"]] = new_map
+        finally:
+            # Wait for the last batch, which may be incomplete or follow skipped
+            # rows, and for the started tools if an exception is raised
+            exitcodes = sum(proc.wait() for proc in proc_list)
+        if exitcodes != 0:
+            dbif.close()
+            msgr.fatal(_("Error in computation process"))
 
     msgr.percent(0, num_rows, 1)
 
@@ -416,8 +423,9 @@ def extract_dataset(
 def run_mapcalc2d(expr: str) -> None:
     """Run r.mapcalc on a single core in quiet mode.
 
-    Wrapper function setting nprocs to 1 and verbosity to quiet. It is
-    intended to be run in parallel in `extract_dataset`.
+    Wrapper function setting nprocs to 1 and verbosity to quiet. On error,
+    it exits with status 1, so it can be used as the target of a separate
+    process.
     """
     try:
         gs.run_command(
@@ -434,8 +442,9 @@ def run_mapcalc2d(expr: str) -> None:
 def run_mapcalc3d(expr: str) -> None:
     """Run r3.mapcalc on a single core in quiet mode.
 
-    Wrapper function setting nprocs to 1 and verbosity to quiet. It is
-    intended to be run in parallel in `extract_dataset`.
+    Wrapper function setting nprocs to 1 and verbosity to quiet. On error,
+    it exits with status 1, so it can be used as the target of a separate
+    process.
     """
     try:
         gs.run_command(
@@ -458,9 +467,10 @@ def run_vector_extraction(
 ) -> None:
     """Run v.extract in quiet mode.
 
-    Wrapper function setting verbosity to quiet. It is intended to be
-    run in parallel in `extract_dataset`. Parallel execution requires
-    a database backend that support it, like PostgreSQL.
+    Wrapper function setting verbosity to quiet. On error, it exits with
+    status 1, so it can be used as the target of a separate process.
+    Parallel execution requires a database backend that supports it, like
+    PostgreSQL.
     """
     try:
         gs.run_command(
