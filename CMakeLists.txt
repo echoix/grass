@@ -258,7 +258,7 @@ if(WIN32)
     set(path_env
         "${BIN_DIR}/$<CONFIG>${sep}${BIN_DIR}${sep}${SCRIPTS_DIR}${sep}${env_path}${sep}${LIB_DIR}"
     )
-    set(platform_env "GRASS_PYTHON=${PYTHON_EXECUTABLE}")
+    set(platform_env "GRASS_PYTHON=${Python3_EXECUTABLE}")
 else()
     set(path_env
         "${BIN_DIR}/$<CONFIG>${sep}${BIN_DIR}${sep}${SCRIPTS_DIR}${sep}${env_path}"
@@ -366,7 +366,7 @@ add_custom_target(
         ${CMAKE_COMMAND} -E make_directory
         ${OUTDIR}/${GRASS_INSTALL_GRAPHICSDIR}/colortables
     COMMAND
-        ${grass_env_command} ${PYTHON_EXECUTABLE} ${THUMBNAILS_PY}
+        ${grass_env_command} ${Python3_EXECUTABLE} ${THUMBNAILS_PY}
         ${OUTDIR}/${GRASS_INSTALL_GRAPHICSDIR}/colortables
     COMMAND
         ${CMAKE_COMMAND} -E copy_directory

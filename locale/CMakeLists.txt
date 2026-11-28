@@ -188,7 +188,7 @@ add_custom_command(
     PRE_BUILD
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMAND
-        ${grass_env_command} ${PYTHON_EXECUTABLE}
+        ${grass_env_command} ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/grass_po_stats.py
     BYPRODUCTS ${OUTDIR}/${GRASS_INSTALL_MISCDIR}/translation_status.json
 )

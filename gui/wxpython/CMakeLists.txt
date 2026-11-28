@@ -90,8 +90,8 @@ set_target_properties(copy_wxpython_xml PROPERTIES FOLDER GUI)
 add_custom_target(
     compile_python_files
     COMMAND
-        ${PYTHON_EXECUTABLE} -m compileall ${OUTDIR}/${GRASS_INSTALL_SCRIPTDIR}
-    COMMAND ${PYTHON_EXECUTABLE} -m compileall ${OUTDIR}/${WXPYTHON_DIR}
+        ${Python3_EXECUTABLE} -m compileall ${OUTDIR}/${GRASS_INSTALL_SCRIPTDIR}
+    COMMAND ${Python3_EXECUTABLE} -m compileall ${OUTDIR}/${WXPYTHON_DIR}
 )
 
 add_dependencies(compile_python_files ALL_MODULES)
@@ -105,7 +105,7 @@ add_custom_command(
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_SOURCE_DIR}/tools/build_modules_xml.py tools
     COMMAND
-        ${grass_env_command} ${PYTHON_EXECUTABLE} tools/build_modules_xml.py >
+        ${grass_env_command} ${Python3_EXECUTABLE} tools/build_modules_xml.py >
         "${OUTDIR}/${WXPYTHON_DIR}/xml/module_items.xml"
     COMMENT "Generating interface description for all modules..."
 )
@@ -129,11 +129,11 @@ if(NOT WITH_FHS)
     add_custom_target(
         build_xml_menudata
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/toolboxes.py >
             ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/menudata.xml
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/toolboxes.py "validate"
             ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/menudata.xml
         COMMAND
@@ -148,11 +148,11 @@ if(NOT WITH_FHS)
     add_custom_target(
         build_module_tree_menudata
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/toolboxes.py "module_tree" >
             ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/module_tree_menudata.xml
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/toolboxes.py "validate"
             ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/module_tree_menudata.xml
         COMMAND
@@ -168,15 +168,15 @@ if(NOT WITH_FHS)
         build_menustrings
         ALL
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/menutree.py "manager" >>
             ${CMAKE_CURRENT_SOURCE_DIR}/menustrings.py
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/menutree.py "module_tree" >>
             ${CMAKE_CURRENT_SOURCE_DIR}/menustrings.py
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/core/menutree.py "psmap" >>
             ${CMAKE_CURRENT_SOURCE_DIR}/menustrings.py
         DEPENDS build_module_tree_menudata

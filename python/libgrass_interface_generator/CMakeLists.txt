@@ -111,7 +111,7 @@ foreach(module ${MODULES})
         DEPENDS ${${module}_LIBS}
         COMMAND
             ${CMAKE_COMMAND} -DCTYPESGEN_PY=${CMAKE_CURRENT_SOURCE_DIR}/run.py
-            -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
+            -DPYTHON_EXECUTABLE=${Python3_EXECUTABLE}
             -DCOMPILER=${CMAKE_C_COMPILER} "-DHDRS=${${module}_HDRS}"
             "-DLIBS=${${module}_LIBS}" -DOUTDIR=${OUTDIR}
             "-DINCHDRS=${${module}_INCHDRS}" -DC_FLAGS=${_c_flags}

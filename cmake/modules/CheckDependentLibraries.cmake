@@ -346,14 +346,6 @@ if(WITH_LIBLAS)
 endif()
 
 find_package(Python3 REQUIRED)
-if(Python3_FOUND)
-    set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
-    set(PYTHON_SITEARCH ${Python3_SITEARCH})
-    #[[
-  find_package(PythonLibs REQUIRED)
-  find_package(Numpy)
-  #]]
-endif()
 
 check_target(ZLIB::ZLIB HAVE_ZLIB_H)
 check_target(Iconv::Iconv HAVE_ICONV_H)

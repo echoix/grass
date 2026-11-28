@@ -98,6 +98,9 @@ function(build_addon name)
     set(_src_dir ${CMAKE_CURRENT_SOURCE_DIR})
     set(G_NAME ${name})
     find_package(GRASS REQUIRED)
+    # An installed GRASS does not run CheckDependentLibraries.
+    # g.extension passes its interpreter as Python3_EXECUTABLE.
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
     set(MKHTML_PY ${GRASS_UTILS_DIR}/mkhtml.py)
     if(NOT EXISTS ${MKHTML_PY})
@@ -130,7 +133,7 @@ function(build_addon name)
                     ${CMAKE_CURRENT_BINARY_DIR}/${G_NAME}.html
                 COMMAND
                     ${_pythonpath} MODULE_TOPDIR=$ENV{GISBASE}
-                    ${PYTHON_EXECUTABLE} ${MKHTML_PY} ${G_NAME} >
+                    ${Python3_EXECUTABLE} ${MKHTML_PY} ${G_NAME} >
                     ${_out_html_file}
                 COMMAND
                     ${_pythonpath} ${CMAKE_COMMAND} -E copy
@@ -139,10 +142,10 @@ function(build_addon name)
                 COMMAND
                     ${_pythonpath} MODULE_TOPDIR=$ENV{GISBASE}
                     SOURCE_URL=${SOURCE_URL}
-                    VERSION_NUMBER=${GRASS_VERSION_STRING} ${PYTHON_EXECUTABLE}
+                    VERSION_NUMBER=${GRASS_VERSION_STRING} ${Python3_EXECUTABLE}
                     ${MKMARKDOWN_PY} ${G_NAME} > ${_out_md_file}
                 COMMAND
-                    VERSION_NUMBER=${GRASS_VERSION_STRING} ${PYTHON_EXECUTABLE}
+                    VERSION_NUMBER=${GRASS_VERSION_STRING} ${Python3_EXECUTABLE}
                     ${MD2MAN_PY} ${_out_md_file} ${_out_man_file}
                 COMMAND
                     ${CMAKE_COMMAND} -E remove ${_tmp_html_file}
@@ -177,7 +180,6 @@ function(build_addon name)
 
     if(_is_script)
         set(install_dest ${GRASSAddon_ScriptDIR})
-        set(PYTHON_EXECUTABLE $ENV{PYTHON_EXECUTABLE})
         _build_addon(
             NAME ${G_NAME}
             ${ARGN}
@@ -205,7 +207,7 @@ function(_build_addon)
 
     if(G_IS_SCRIPT)
         set(SRC_SCRIPT_FILE ${G_NAME}.py)
-        set(_execute ${PYTHON_EXECUTABLE})
+        set(_execute ${Python3_EXECUTABLE})
         list(FIND G_SOURCES "${SRC_SCRIPT_FILE}" has_script_file)
         if(
             has_script_file LESS "0"
@@ -359,7 +361,7 @@ function(_build_addon)
                 ${html_search_str} > ${_tmp_html_file}
             COMMAND
                 MODULE_TOPDIR=$ENV{GISBASE} SOURCE_URL=${SOURCE_URL}
-                VERSION_NUMBER=${GRASS_VERSION_STRING} ${PYTHON_EXECUTABLE}
+                VERSION_NUMBER=${GRASS_VERSION_STRING} ${Python3_EXECUTABLE}
                 ${MKHTML_PY} ${G_NAME} > ${_out_html_file}
             COMMAND
                 ${CMAKE_COMMAND} -E copy ${G_SRC_DIR}/${G_NAME}.md
@@ -372,10 +374,10 @@ function(_build_addon)
                 --md-description < ${null_device} > ${_tmp_md_file}
             COMMAND
                 MODULE_TOPDIR=$ENV{GISBASE} SOURCE_URL=${SOURCE_URL}
-                VERSION_NUMBER=${GRASS_VERSION_STRING} ${PYTHON_EXECUTABLE}
+                VERSION_NUMBER=${GRASS_VERSION_STRING} ${Python3_EXECUTABLE}
                 ${MKMARKDOWN_PY} ${G_NAME} > ${_out_md_file}
             COMMAND
-                VERSION_NUMBER=${GRASS_VERSION_STRING} ${PYTHON_EXECUTABLE}
+                VERSION_NUMBER=${GRASS_VERSION_STRING} ${Python3_EXECUTABLE}
                 ${MD2MAN_PY} ${_out_md_file} ${_out_man_file}
             COMMAND ${copy_images_command}
             COMMAND ${copy_images_command_md}

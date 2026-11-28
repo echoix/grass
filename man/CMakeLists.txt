@@ -16,7 +16,7 @@ if(NOT WITH_FHS)
     add_custom_target(
         build_full_index
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/build_full_index.py ${YEAR}
         BYPRODUCTS ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/full_index.html
         DEPENDS ALL_MODULES LIB_PYTHON GUI_WXPYTHON
@@ -36,7 +36,7 @@ if(NOT WITH_FHS)
     add_custom_target(
         build_index
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/build_index.py
             ${OUTDIR}/${GRASS_INSTALL_DOCDIR}
         BYPRODUCTS ${OUTDIR}/${GRASS_INSTALL_DOCDIR}/index.html
@@ -55,7 +55,7 @@ if(NOT WITH_FHS)
         add_custom_target(
             ${target_name}
             COMMAND
-                ${grass_env_command} ${PYTHON_EXECUTABLE}
+                ${grass_env_command} ${Python3_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/${target_name}.py
             DEPENDS build_index
             COMMENT "man generation: ${target_name}"
@@ -66,11 +66,11 @@ if(NOT WITH_FHS)
     add_custom_target(
         build_class_graphical
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/build_class_graphical.py html
             ${OUTDIR}/${GRASS_INSTALL_DOCDIR}
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/build_class_graphical.py md
             ${OUTDIR}/${GRASS_INSTALL_MKDOCSDIR}/source
         DEPENDS build_index
@@ -81,13 +81,13 @@ if(NOT WITH_FHS)
     add_custom_target(
         build_pso
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/parser_standard_options.py -t
             "${CMAKE_SOURCE_DIR}/lib/gis/parser_standard_options.c" -f "grass"
             -o "${OUTDIR}/${GRASS_INSTALL_DOCDIR}/parser_standard_options.html"
             -p "id='opts_table' class='scroolTable'"
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/parser_standard_options.py -t
             "${CMAKE_SOURCE_DIR}/lib/gis/parser_standard_options.c" -f "grass"
             -o
@@ -118,7 +118,7 @@ if(NOT WITH_FHS)
         add_custom_target(
             build_class_${class_name}
             COMMAND
-                ${grass_env_command} ${PYTHON_EXECUTABLE}
+                ${grass_env_command} ${Python3_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/build_class.py ${prefix}
                 ${class_name} ${YEAR}
             DEPENDS build_pso
@@ -188,7 +188,7 @@ if(NOT WITH_FHS)
     add_custom_target(
         build_manpages
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/build_manpages.py
             ${OUTDIR}/${GRASS_INSTALL_MKDOCSDIR}/source
             ${OUTDIR}/${GRASS_INSTALL_MANDIR} ${MD2MAN} --exclude
@@ -203,7 +203,7 @@ if(NOT WITH_FHS)
         build_check
         ALL
         COMMAND
-            ${grass_env_command} ${PYTHON_EXECUTABLE}
+            ${grass_env_command} ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/build_check.py
             ${OUTDIR}/${GRASS_INSTALL_DOCDIR}
         DEPENDS
