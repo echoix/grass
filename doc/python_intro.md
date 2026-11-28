@@ -685,21 +685,16 @@ class for more advanced operations.
 from grass.pygrass.vector import VectorTopo
 
 # Open the roads vector map as a VectorTopo object
-roads = VectorTopo("roadsmajor")
-roads.open("r")
+with VectorTopo("roadsmajor") as roads:
+    # Query the vector map for all features where the
+    # ROAD_NAME attribute is 'NC-50'
+    roads.table_to_dict(where="ROAD_NAME = 'NC-50'")
+    sql_1 = roads.table.filters.get_sql()
 
-# Query the vector map for all features where the
-# ROAD_NAME attribute is 'NC-50'
-roads.table_to_dict(where="ROAD_NAME = 'NC-50'")
-sql_1 = roads.table.filters.get_sql()
-
-# Query the vector map for the first 5 features where the
-# ROAD_NAME attribute is 'NC-70'
-roads.table.filters.where("ROAD_NAME = 'NC-70'").limit(5)
-sql_2 = roads.table.filters.get_sql()
-
-# Close the vector map
-roads.close()
+    # Query the vector map for the first 5 features where the
+    # ROAD_NAME attribute is 'NC-70'
+    roads.table.filters.where("ROAD_NAME = 'NC-70'").limit(5)
+    sql_2 = roads.table.filters.get_sql()
 ```
 
 The values of the `sql_1` and `sql_2` variable will be the SQL query that was
