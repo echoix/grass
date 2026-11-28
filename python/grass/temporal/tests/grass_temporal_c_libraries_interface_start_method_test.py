@@ -35,7 +35,7 @@ def main():
     mapset = gs.gisenv()["MAPSET"]
 
     messenger = Messenger()
-    messenger.message("test")
+    messenger.message("Message from the server")
     messenger.stop()
 
     server = RPCServerBase()
@@ -79,6 +79,7 @@ def test_servers_start_with_start_method(tmp_path, start_method):
         check=False,
     )
     assert result.returncode == 0, result.stderr
+    assert "Message from the server" in result.stderr, result.stderr
     # A failing server check thread does not change the exit code.
     assert "Traceback" not in result.stderr, result.stderr
     assert "leaked semaphore" not in result.stderr, result.stderr
