@@ -5,7 +5,6 @@ from __future__ import annotations
 import multiprocessing
 import os
 import sys
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -15,6 +14,7 @@ from grass.script import utils as gutils
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from pathlib import Path
 
 
 def test_named_separators():
@@ -123,7 +123,7 @@ def test_resolve_nprocs_from_gisenv(empty_session):
 
 def write_environ_value(path: Path) -> None:
     """Write a variable from the environment to a file (worker process target)"""
-    Path(path).write_text(os.environ["GRASS_TEST_ENVIRON_PROCESS"])
+    path.write_text(os.environ["GRASS_TEST_ENVIRON_PROCESS"])
 
 
 # Fork is unsafe on macOS, which is why spawn is the default there.
