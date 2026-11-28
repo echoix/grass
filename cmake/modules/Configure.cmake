@@ -1,3 +1,9 @@
+list(
+    TRANSFORM GRASS_COMPILE_DEFINITIONS
+    PREPEND -D
+    OUTPUT_VARIABLE CMAKE_REQUIRED_DEFINITIONS
+)
+
 include(CheckIncludeFile)
 include(CheckSymbolExists)
 include(CheckCSourceCompiles)
@@ -110,8 +116,6 @@ set(GDEBUG 0)
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     set(GDEBUG 1)
 endif()
-
-set(CMAKE_REQUIRED_FLAGS ${CMAKE_C_FLAGS})
 
 check_c_source_compiles(
     "
