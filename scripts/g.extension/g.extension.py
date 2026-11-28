@@ -2126,7 +2126,7 @@ def install_extension_std_platforms(name, source, url, branch):
             f"-DCMAKE_PREFIX_PATH={c_prefix_path}",
             f"-DCMAKE_MODULE_PATH={c_mod_path}",
             f"-DCMAKE_INSTALL_PREFIX={grass_addon_base}",
-            f"-DPYTHON_EXECUTABLE={sys.executable}",
+            f"-DPython3_EXECUTABLE={sys.executable}",
             f"-DSOURCE_URL={url}",
             c_compiler,
             cxx_compiler,

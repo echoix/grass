@@ -333,7 +333,7 @@ function(build_module)
         add_test(
             NAME ${G_NAME}-test
             COMMAND
-                ${grass_env_command} ${PYTHON_EXECUTABLE}
+                ${grass_env_command} ${Python3_EXECUTABLE}
                 ${G_SRC_DIR}/testsuite/${test_SOURCE}
         )
         message("[build_module] ADDING TEST ${G_NAME}-test")

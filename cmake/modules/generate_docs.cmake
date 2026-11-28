@@ -211,13 +211,13 @@ function(generate_docs name)
         )
     endif()
 
-    set(mkhtml_cmd ${grass_env_command} ${PYTHON_EXECUTABLE} ${MKHTML_PY})
+    set(mkhtml_cmd ${grass_env_command} ${Python3_EXECUTABLE} ${MKHTML_PY})
     set(mkmarkdown_cmd
         ${grass_env_command}
-        ${PYTHON_EXECUTABLE}
+        ${Python3_EXECUTABLE}
         ${MKMARKDOWN_PY}
     )
-    set(md2man_cmd ${grass_env_command} ${PYTHON_EXECUTABLE} ${MD2MAN})
+    set(md2man_cmd ${grass_env_command} ${Python3_EXECUTABLE} ${MD2MAN})
 
     if(D_TARGET AND D_MD_ONLY)
         add_custom_command(
@@ -259,7 +259,7 @@ function(generate_docs name)
             OUTPUT ${out_html_file}
             WORKING_DIRECTORY ${sourcedir}
             COMMAND
-                ${grass_env_command} ${PYTHON_EXECUTABLE} ${py_script_file}
+                ${grass_env_command} ${Python3_EXECUTABLE} ${py_script_file}
                 --html-description < ${null_device} | ${search_cmd}
                 ${html_search_str} > ${tmp_html_file}
             COMMAND ${mkhtml_cmd} ${D_GUI_TARGET_NAME} > ${out_html_file}
@@ -267,7 +267,7 @@ function(generate_docs name)
             COMMAND ${CMAKE_COMMAND} -E remove ${tmp_html_file}
             COMMAND ${mkhtml_cmd} ${D_GUI_TARGET_NAME} > ${gui_html_file}
             COMMAND
-                ${grass_env_command} ${PYTHON_EXECUTABLE} ${py_script_file}
+                ${grass_env_command} ${Python3_EXECUTABLE} ${py_script_file}
                 --md-description < ${null_device} > ${tmp_md_file}
             COMMAND ${mkmarkdown_cmd} ${D_GUI_TARGET_NAME} > ${out_md_file}
             COMMAND ${md2man_cmd} ${out_md_file} ${out_man_file}
@@ -291,12 +291,12 @@ function(generate_docs name)
             OUTPUT ${out_html_file}
             WORKING_DIRECTORY ${sourcedir}
             COMMAND
-                ${grass_env_command} ${PYTHON_EXECUTABLE} ${py_script_file}
+                ${grass_env_command} ${Python3_EXECUTABLE} ${py_script_file}
                 --html-description < ${null_device} | ${search_cmd}
                 ${html_search_str} > ${tmp_html_file}
             COMMAND ${mkhtml_cmd} ${name} > ${out_html_file}
             COMMAND
-                ${grass_env_command} ${PYTHON_EXECUTABLE} ${py_script_file}
+                ${grass_env_command} ${Python3_EXECUTABLE} ${py_script_file}
                 --md-description < ${null_device} > ${tmp_md_file}
             COMMAND ${mkmarkdown_cmd} ${name} > ${out_md_file}
             COMMAND ${md2man_cmd} ${out_md_file} ${out_man_file}
