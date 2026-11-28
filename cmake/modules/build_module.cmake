@@ -17,7 +17,7 @@ function(build_module)
     # gersemi: hints { PRIMARY_DEPENDS: sort+unique }
     # gersemi: hints { DEFS: sort+unique }
     # gersemi: hints { HEADERS: sort+unique }
-    # gersemi: hints { TEST_SOURCE: sort+unique }
+    # gersemi: hints { TEST_SOURCES: sort+unique }
     set(options EXE NO_DOCS)
     set(oneValueArgs
         NAME
@@ -35,7 +35,7 @@ function(build_module)
         PRIMARY_DEPENDS
         DEFS
         HEADERS
-        TEST_SOURCE
+        TEST_SOURCES
     )
 
     cmake_parse_arguments(
