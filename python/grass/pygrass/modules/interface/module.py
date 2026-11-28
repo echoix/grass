@@ -917,7 +917,7 @@ class MultiModule:
 
         >>> from grass.pygrass.modules import Module
         >>> from grass.pygrass.modules import MultiModule
-        >>> from multiprocessing import Process
+        >>> from multiprocessing.process import BaseProcess
         >>> import copy
 
     Synchronous module run
@@ -955,7 +955,7 @@ class MultiModule:
         ...     sync=False,
         ... )
         >>> t = mm.run()
-        >>> isinstance(t, Process)
+        >>> isinstance(t, BaseProcess)
         True
         >>> m_list = mm.wait()
         >>> m_list[0].returncode
@@ -981,7 +981,7 @@ class MultiModule:
         >>> str(mm)
         'g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p'
         >>> t = mm.run()
-        >>> isinstance(t, Process)
+        >>> isinstance(t, BaseProcess)
         True
         >>> m_list = mm.wait()
         >>> m_list[0].returncode
@@ -1043,7 +1043,7 @@ class MultiModule:
         be run one after the another.
 
         :return: None in case of ``self.finish_`` is True,
-                 otherwise a multiprocessing.Process object that invokes the modules
+                 otherwise a multiprocessing process object that invokes the modules
         """
 
         if self.finish_ is True:
@@ -1077,7 +1077,7 @@ class MultiModule:
 def run_modules_in_temp_region(module_list, q):
     """Run the modules in a temporary region environment
 
-    This function is the argument for multiprocessing.Process class
+    This function is the target of the multiprocessing process
     in the MultiModule asynchronous execution.
 
     :param module_list: The list of modules to run in serial
@@ -1096,7 +1096,7 @@ def run_modules_in_temp_region(module_list, q):
 def run_modules(module_list, q):
     """Run the modules
 
-    This function is the argument for multiprocessing.Process class
+    This function is the target of the multiprocessing process
     in the MultiModule asynchronous execution.
 
     :param module_list: The list of modules to run in serial

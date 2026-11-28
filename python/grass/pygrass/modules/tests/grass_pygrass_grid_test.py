@@ -43,9 +43,16 @@ def run_grid_module(
 # and thus can't easily change location/mapset, so we use a subprocess
 # to separate individual GridModule calls.
 def run_in_subprocess(
-    name: str, run_kwargs: dict[str, object] | None = None, **kwargs: object
+    name: str,
+    run_kwargs: dict[str, object] | None = None,
+    *,
+    succeeds: bool = True,
+    **kwargs: object,
 ) -> None:
-    """Run GridModule with the given arguments in a separate process"""
+    """Run GridModule with the given arguments in a separate process
+
+    The process is expected to succeed unless *succeeds* is false.
+    """
     process = multiprocessing.Process(
         target=run_grid_module,
         args=(os.environ.copy(), name),
@@ -53,6 +60,7 @@ def run_in_subprocess(
     )
     process.start()
     process.join()
+    assert (process.exitcode == 0) == succeeds
 
 
 @pytest.mark.needs_solo_run
@@ -160,6 +168,8 @@ def test_cleans(tmp_path, clean, surface):
             aspect="aspect",
             mapset_prefix=mapset_prefix,
             run_kwargs={"clean": clean},
+            # A missing input map makes the module fail.
+            succeeds=surface == "surface",
         )
 
         prefixed = 0

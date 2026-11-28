@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import multiprocessing
 import os
+import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -125,7 +126,14 @@ def write_environ_value(path: Path) -> None:
     Path(path).write_text(os.environ["GRASS_TEST_ENVIRON_PROCESS"])
 
 
-@pytest.fixture(params=multiprocessing.get_all_start_methods())
+# Fork is unsafe on macOS, which is why spawn is the default there.
+@pytest.fixture(
+    params=[
+        method
+        for method in multiprocessing.get_all_start_methods()
+        if not (method == "fork" and sys.platform == "darwin")
+    ]
+)
 def start_method(request: pytest.FixtureRequest) -> Iterator[str]:
     """Set each available multiprocessing start method as the default"""
     original = multiprocessing.get_start_method(allow_none=True)
