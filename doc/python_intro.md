@@ -702,10 +702,10 @@ used to filter the features.
 
 ```sql
 -- Value of sql_1
-SELECT * FROM roadsmajor WHERE ROAD_NAME = 'NC-50' ORDER BY cat;
+SELECT cat,MAJORRDS_,ROAD_NAME,MULTILANE,PROPYEAR,OBJECTID,SHAPE_LEN FROM roadsmajor WHERE ROAD_NAME = 'NC-50' ORDER BY cat;
 
 -- Value of sql_2
-SELECT * FROM roadsmajor WHERE ROAD_NAME = 'NC-70' ORDER BY cat LIMIT 5;
+SELECT cat,MAJORRDS_,ROAD_NAME,MULTILANE,PROPYEAR,OBJECTID,SHAPE_LEN FROM roadsmajor WHERE ROAD_NAME = 'NC-70' ORDER BY cat LIMIT 5;
 ```
 
 !!! grass-tip "Used Different SQL Database"
