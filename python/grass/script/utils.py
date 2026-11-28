@@ -30,7 +30,7 @@ import string
 import sys
 
 from pathlib import Path
-from typing import TYPE_CHECKING, AnyStr, TypeVar, cast, overload
+from typing import TYPE_CHECKING, Any, AnyStr, TypeVar, cast, overload
 
 
 if TYPE_CHECKING:
@@ -267,7 +267,7 @@ def _get_encoding() -> str:
     return encoding
 
 
-def decode(bytes_: AnyStr, encoding: str | None = None) -> str:
+def decode(bytes_: bytes | str, encoding: str | None = None) -> str:
     """Decode bytes with default locale and return (unicode) string
 
     No-op if parameter is not bytes (assumed unicode string).
@@ -295,7 +295,7 @@ def decode(bytes_: AnyStr, encoding: str | None = None) -> str:
     raise TypeError(msg)
 
 
-def encode(string: AnyStr, encoding: str | None = None) -> bytes:
+def encode(string: bytes | str, encoding: str | None = None) -> bytes:
     """Encode string with default locale and return bytes with that encoding
 
     No-op if parameter is bytes (assumed already encoded).
@@ -324,7 +324,7 @@ def encode(string: AnyStr, encoding: str | None = None) -> bytes:
     raise TypeError(msg)
 
 
-def text_to_string(text: AnyStr, encoding: str | None = None) -> str:
+def text_to_string(text: bytes | str, encoding: str | None = None) -> str:
     """Convert text to str. Useful when passing text into environments,
     in Python 2 it needs to be bytes on Windows, in Python 3 in needs unicode.
 
@@ -399,14 +399,19 @@ def parse_key_val(
     if not s:
         return result
 
+    # Separators must have the same type as the input to be used with it.
+    sep_: Any = sep
+    vsep_: Any = vsep
     if isinstance(s, bytes):
-        sep = encode(sep)
-        vsep = encode(vsep) if vsep else vsep
+        sep_ = encode(sep)
+        vsep_ = encode(vsep) if vsep else vsep
 
-    if vsep:
-        lines: list[bytes] | list[str] = s.split(vsep)
+    lines: list[Any]
+    if vsep_:
+        lines = s.split(vsep_)
+        newline: Any = "\n"
         try:
-            lines.remove("\n")
+            lines.remove(newline)
         except ValueError:
             pass
     else:
@@ -415,7 +420,7 @@ def parse_key_val(
     if callable(val_type):
         result = cast("KeyValue[T | None]", result)
         for line in lines:
-            kv: list[bytes] | list[str] = line.split(sep, 1)
+            kv: list[Any] = line.split(sep_, 1)
             k: str = decode(kv[0].strip())
             result[k] = val_type(decode(kv[1].strip())) if len(kv) > 1 else dflt
 
@@ -425,7 +430,7 @@ def parse_key_val(
 
     result = cast("KeyValue[str | T | None]", result)
     for line in lines:
-        kv = line.split(sep, 1)
+        kv = line.split(sep_, 1)
         k = decode(kv[0].strip())
         result[k] = decode(kv[1].strip()) if len(kv) > 1 else dflt
 

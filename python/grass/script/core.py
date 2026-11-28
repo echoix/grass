@@ -32,7 +32,7 @@ import io
 from collections.abc import Mapping
 from tempfile import NamedTemporaryFile
 from pathlib import Path
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, TypeVar, cast
 
 from .utils import KeyValue, parse_key_val, basename, decode, try_remove
 from grass.exceptions import ScriptError, CalledModuleError
@@ -1261,23 +1261,16 @@ def _text_to_key_value_dict(
         value_list: list[int | float | str] = []
 
         for value in values:
-            not_float = False
-            not_int = False
-
             # Convert values into correct types
-            # We first try integer then float
+            # We first try integer then float, otherwise keep the stripped string
+            value_converted: float | str
             try:
                 value_converted = int(value)
             except ValueError:
-                not_int = True
-            if not_int:
                 try:
                     value_converted = float(value)
                 except ValueError:
-                    not_float = True
-
-            if not_int and not_float:
-                value_converted = value.strip()
+                    value_converted = value.strip()
 
             value_list.append(value_converted)
 
@@ -1354,7 +1347,7 @@ def compare_key_value_text_files(
 # interface to g.gisenv
 
 
-def gisenv(env: _Env | None = None) -> KeyValue[str | None]:
+def gisenv(env: _Env | None = None) -> KeyValue[str]:
     """Returns the output from running g.gisenv (with no arguments), as a
     dictionary.
 
@@ -1370,7 +1363,8 @@ def gisenv(env: _Env | None = None) -> KeyValue[str | None]:
     :return: list of GRASS variables
     """
     s = read_command("g.gisenv", flags="n", env=env)
-    return parse_key_val(s)
+    # g.gisenv prints plain KEY=value lines, so no value is None.
+    return cast("KeyValue[str]", parse_key_val(s))
 
 
 # interface to g.region
@@ -1386,7 +1380,8 @@ def locn_is_latlong(env: _Env | None = None) -> bool:
     """
     s = read_command("g.region", flags="pu", env=env)
     kv: KeyValue[str | None] = parse_key_val(s, ":")
-    return kv["projection"].split(" ")[0] == "3"
+    projection = kv["projection"]
+    return projection is not None and projection.split(" ")[0] == "3"
 
 
 def region(region3d=False, complete=False, env=None):
@@ -1466,7 +1461,7 @@ def region_env(
     :return: string with region values, or empty string on error
     """
     # read proj/zone from WIND file
-    gis_env: KeyValue[str | None] = gisenv(env)
+    gis_env = gisenv(env)
     windfile = os.path.join(
         gis_env["GISDBASE"], gis_env["LOCATION_NAME"], gis_env["MAPSET"], "WIND"
     )
@@ -1869,7 +1864,7 @@ def verbosity() -> int:
 # Various utilities, not specific to GRASS
 
 
-def find_program(pgm, *args, env: _Env = None):
+def find_program(pgm, *args, env: _Env | None = None):
     """Attempt to run a program, with optional arguments.
 
     You must call the program in a way that will return a successful
@@ -2133,7 +2128,7 @@ def create_mapset(
     name: str | None = None,
     overwrite: bool = False,
     initialize_db: bool = True,
-    env: _Env = None,
+    env: _Env | None = None,
 ) -> None:
     """Create a new mapset in an existing project
 
@@ -2246,7 +2241,7 @@ def create_mapset(
         # and grass.script.setup at module load time.
         from grass.script import setup  # pylint: disable=import-outside-toplevel
 
-        with setup.init(mapset_path.path, env=env.copy()) as session:
+        with setup.init(mapset_path.path, env=dict(env)) as session:
             run_command("db.connect", flags="c", env=session.env)
 
 
@@ -2304,10 +2299,10 @@ def version():
 
 
 # get debug_level
-_debug_level = None
+_debug_level: int | None = None
 
 
-def debug_level(force: bool = False, *, env: _Env = None):
+def debug_level(force: bool = False, *, env: _Env | None = None) -> int:
     global _debug_level
     if not force and _debug_level is not None:
         return _debug_level
@@ -2357,10 +2352,10 @@ def legal_name(s: str) -> bool:
 
     illegal = [c for c in s if c in "/\"'@,=*~" or c <= " " or c >= "\177"]
     if illegal:
-        illegal = "".join(sorted(set(illegal)))
+        illegal_chars = "".join(sorted(set(illegal)))
         warning(
             _("Illegal filename <%(s)s>. <%(il)s> not allowed.\n")
-            % {"s": s, "il": illegal}
+            % {"s": s, "il": illegal_chars}
         )
         return False
 
