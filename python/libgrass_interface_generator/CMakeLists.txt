@@ -64,7 +64,9 @@ set(proj_INCHDRS ${PROJ_INCLUDE_DIRS} ${GDAL_INCLUDE_DIRS})
 set(vector_INCHDRS ${PostgreSQL_INCLUDE_DIRS} ${GDAL_INCLUDE_DIRS})
 set(vedit_INCHDRS ${PostgreSQL_INCLUDE_DIRS} ${GDAL_INCLUDE_DIRS})
 
-set(_c_flags ${CMAKE_C_FLAGS})
+# ctypesgen runs the preprocessor directly, so it needs the definitions as flags.
+list(TRANSFORM GRASS_COMPILE_DEFINITIONS PREPEND -D OUTPUT_VARIABLE _defs)
+string(JOIN " " _c_flags ${CMAKE_C_FLAGS} ${_defs})
 if(MSVC)
     string(APPEND _c_flags " -I${CMAKE_SOURCE_DIR}/msvc")
 elseif(APPLE AND CMAKE_OSX_SYSROOT)
@@ -149,3 +151,4 @@ install(
 )
 
 unset(_c_flags)
+unset(_defs)
