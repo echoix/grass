@@ -298,10 +298,9 @@ for i in `seq 1 23922` ; do
 done
 
 # b) using a Python script
-file = open("map_list.txt", "w")
-for i in range(23922):
-    file.write("temperature_mean.%i\n" % (i + 1))
-file.close()
+with open("map_list.txt", "w") as file:
+    for i in range(23922):
+        file.write(f"temperature_mean.{i + 1}\n")
 
 # register daily maps using the file created above
 t.register -i type=raster input=temperature_mean_1950_2015_daily \

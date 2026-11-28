@@ -598,16 +598,16 @@ with VectorTopo("roadsmajor", mode="rw") as roads:
     last_record = roads.read(-1)
     last_cat = last_record.cat
 
-    # Create an empty feature from the last record
-    new_dict = {key: None for key in last_record.attrs}
-    new_dict["cat"] = last_cat + 1
-    new_dict["MAJORRDS_"] = 2.0
-    new_dict["ROAD_NAME"] = "New Road"
-    new_dict["MULTILINE"] = "No"
-    new_dict["PROPYEAR"] = 2025
+    # Create the attribute values for the new feature
+    # in the table column order, without the cat column
+    new_attrs = {name: None for name in roads.table.columns.names() if name != "cat"}
+    new_attrs["MAJORRDS_"] = 2.0
+    new_attrs["ROAD_NAME"] = "New Road"
+    new_attrs["MULTILANE"] = "No"
+    new_attrs["PROPYEAR"] = 2025
 
     # Write the new feature to the vector map
-    roads.write(new_geom, new_dict)
+    roads.write(new_geom, cat=last_cat + 1, attrs=tuple(new_attrs.values()))
 
     # Write the attributes to the database
     roads.table.conn.commit()
@@ -685,21 +685,16 @@ class for more advanced operations.
 from grass.pygrass.vector import VectorTopo
 
 # Open the roads vector map as a VectorTopo object
-roads = VectorTopo("roadsmajor")
-roads.open("r")
+with VectorTopo("roadsmajor") as roads:
+    # Query the vector map for all features where the
+    # ROAD_NAME attribute is 'NC-50'
+    roads.table_to_dict(where="ROAD_NAME = 'NC-50'")
+    sql_1 = roads.table.filters.get_sql()
 
-# Query the vector map for all features where the
-# ROAD_NAME attribute is 'NC-50'
-roads.table_to_dict(where="ROAD_NAME = 'NC-50'")
-sql_1 = roads.table.filters.get_sql()
-
-# Query the vector map for the first 5 features where the
-# ROAD_NAME attribute is 'NC-70'
-roads.table.filters.where("ROAD_NAME = 'NC-70'").limit(5)
-sql_2 = roads.table.filters.get_sql()
-
-# Close the vector map
-roads.close()
+    # Query the vector map for the first 5 features where the
+    # ROAD_NAME attribute is 'NC-70'
+    roads.table.filters.where("ROAD_NAME = 'NC-70'").limit(5)
+    sql_2 = roads.table.filters.get_sql()
 ```
 
 The values of the `sql_1` and `sql_2` variable will be the SQL query that was
@@ -707,10 +702,10 @@ used to filter the features.
 
 ```sql
 -- Value of sql_1
-SELECT * FROM roadsmajor WHERE ROAD_NAME = 'NC-50' ORDER BY cat;
+SELECT cat,MAJORRDS_,ROAD_NAME,MULTILANE,PROPYEAR,OBJECTID,SHAPE_LEN FROM roadsmajor WHERE ROAD_NAME = 'NC-50' ORDER BY cat;
 
 -- Value of sql_2
-SELECT * FROM roadsmajor WHERE ROAD_NAME = 'NC-70' ORDER BY cat LIMIT 5;
+SELECT cat,MAJORRDS_,ROAD_NAME,MULTILANE,PROPYEAR,OBJECTID,SHAPE_LEN FROM roadsmajor WHERE ROAD_NAME = 'NC-70' ORDER BY cat LIMIT 5;
 ```
 
 !!! grass-tip "Used Different SQL Database"
