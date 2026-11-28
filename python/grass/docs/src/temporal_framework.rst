@@ -262,6 +262,18 @@ Here the full list of all temporal modules:
 Examples
 --------
 
+Scripts using the temporal framework or the *pygrass* servers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The temporal framework starts server processes (see ``tgis.init()``). They are
+started with the default start method of the Python *multiprocessing* module:
+*spawn* on Windows and macOS and, since Python 3.14, *forkserver* on Linux.
+These methods import the main script again in the server process, so the code
+which uses the temporal framework (or *pygrass* tools such as ``Messenger``
+and ``DataProvider``) needs to be in a function called under
+``if __name__ == "__main__":``, as in the examples below. Without it, a script
+fails with an error such as ``Connection reset by peer``.
+
 Howto start example
 ^^^^^^^^^^^^^^^^^^^
 
@@ -275,48 +287,54 @@ to access its registered maps.
     import grass.temporal as tgis
     import grass.script as gs
 
-    # Make sure the temporal database exists
-    # and set the temporal GIS environment
-    tgis.init()
 
-    # We create the temporal database interface for fast processing
-    dbif = tgis.SQLDatabaseInterfaceConnection()
-    dbif.connect()
+    def main():
+        # Make sure the temporal database exists
+        # and set the temporal GIS environment
+        tgis.init()
 
-    # The id of a space time raster dataset is build from its name and its mapset
-    id = "test@PERMANENT"
+        # We create the temporal database interface for fast processing
+        dbif = tgis.SQLDatabaseInterfaceConnection()
+        dbif.connect()
 
-    # We create a space time raster dataset object
-    strds = tgis.SpaceTimeRasterDataset(id)
+        # The id of a space time raster dataset is build from its name and its mapset
+        id = "test@PERMANENT"
 
-    # Check if the space time raster dataset is in the temporal database
-    if strds.is_in_db(dbif=dbif) is False:
+        # We create a space time raster dataset object
+        strds = tgis.SpaceTimeRasterDataset(id)
+
+        # Check if the space time raster dataset is in the temporal database
+        if strds.is_in_db(dbif=dbif) is False:
+            dbif.close()
+            gs.fatal(_("Space time %s dataset <%s> not found") % (
+                strds.get_new_map_instance(None).get_type(), id))
+
+        # Fill the object with the content from the temporal database
+        strds.select(dbif=dbif)
+
+        # Print information about the space time raster dataset to stdout
+        strds.print_info()
+
+        # Get all maps that are registered in the strds and print
+        # information about the maps to stdout
+        maps = strds.get_registered_maps_as_objects(dbif=dbif)
+
+        # We iterate over the temporal sorted map list
+        for map in maps:
+            # We fill the map object with the content
+            # from the temporal database. We use the existing
+            # database connection, otherwise a new connection
+            # will be established for each map object
+            # which slows the processing down
+            map.select(dbif=dbif)
+            map.print_info()
+
+        # Close the database connection
         dbif.close()
-        gs.fatal(_("Space time %s dataset <%s> not found") % (
-            strds.get_new_map_instance(None).get_type(), id))
 
-    # Fill the object with the content from the temporal database
-    strds.select(dbif=dbif)
 
-    # Print information about the space time raster dataset to stdout
-    strds.print_info()
-
-    # Get all maps that are registered in the strds and print
-    # information about the maps to stdout
-    maps = strds.get_registered_maps_as_objects(dbif=dbif)
-
-    # We iterate over the temporal sorted map list
-    for map in maps:
-        # We fill the map object with the content
-        # from the temporal database. We use the existing
-        # database connection, otherwise a new connection
-        # will be established for each map object
-        # which slows the processing down
-        map.select(dbif=dbif)
-        map.print_info()
-
-    # Close the database connection
-    dbif.close()
+    if __name__ == "__main__":
+        main()
 
 
 Creation of a space time dataset
@@ -332,52 +350,58 @@ for different space time datasets (raster, 3D raster and vector):
     import grass.temporal as tgis
     import grass.script as gs
 
-    # The id of the new space time dataset
-    id="test@PERMANENT"
-    # The title of the new space time dataset
-    title="This is a test dataset"
-    # The description of the space time dataset
-    description="The description"
-    # The type of the space time dataset (strds, str3ds or stvds)
-    type="strds"
-    # The temporal type of the space time dataset (absolute or relative)
-    temporal_type="absolute"
 
-    # Make sure the temporal database exists
-    # and set the temporal GIS environment
-    tgis.init()
+    def main():
+        # The id of the new space time dataset
+        id="test@PERMANENT"
+        # The title of the new space time dataset
+        title="This is a test dataset"
+        # The description of the space time dataset
+        description="The description"
+        # The type of the space time dataset (strds, str3ds or stvds)
+        type="strds"
+        # The temporal type of the space time dataset (absolute or relative)
+        temporal_type="absolute"
 
-    # We use the dataset factory to create an new space time dataset instance of a specific type
-    stds = tgis.dataset_factory(type, id)
+        # Make sure the temporal database exists
+        # and set the temporal GIS environment
+        tgis.init()
 
-    # We need a dtabase connection to insert the content of the space time dataset
-    dbif = tgis.SQLDatabaseInterfaceConnection()
-    dbif.connect()
+        # We use the dataset factory to create an new space time dataset instance of a specific type
+        stds = tgis.dataset_factory(type, id)
 
-    # First we check if the dataset is already in the database
-    if stds.is_in_db(dbif=dbif) and overwrite is False:
+        # We need a dtabase connection to insert the content of the space time dataset
+        dbif = tgis.SQLDatabaseInterfaceConnection()
+        dbif.connect()
+
+        # First we check if the dataset is already in the database
+        if stds.is_in_db(dbif=dbif) and overwrite is False:
+            dbif.close()
+            gs.fatal(_("Space time %s dataset <%s> is already in the database. "
+                       "Use the overwrite flag.") %
+                     (stds.get_new_map_instance(None).get_type(), name))
+
+        # We delete the exiting dataset and create a new one in case we are allowed to overwrite it
+        if stds.is_in_db(dbif=dbif) and overwrite is True:
+            gs.warning(_("Overwrite space time %s dataset <%s> "
+                         "and unregister all maps.") %
+                       (stds.get_new_map_instance(None).get_type(), name))
+            stds.delete(dbif=dbif)
+            stds = stds.get_new_instance(id)
+
+        # We set the initial values. This function also created the command history.
+        stds.set_initial_values(temporal_type=temporaltype, semantic_type="mean",
+                                title=title, description=description)
+
+        # Now we can insert the new space time dataset in the database
+        stds.insert(dbif=dbif)
+
+        # Close the database connection
         dbif.close()
-        gs.fatal(_("Space time %s dataset <%s> is already in the database. "
-                   "Use the overwrite flag.") %
-                 (stds.get_new_map_instance(None).get_type(), name))
 
-    # We delete the exiting dataset and create a new one in case we are allowed to overwrite it
-    if stds.is_in_db(dbif=dbif) and overwrite is True:
-        gs.warning(_("Overwrite space time %s dataset <%s> "
-                     "and unregister all maps.") %
-                   (stds.get_new_map_instance(None).get_type(), name))
-        stds.delete(dbif=dbif)
-        stds = stds.get_new_instance(id)
 
-    # We set the initial values. This function also created the command history.
-    stds.set_initial_values(temporal_type=temporaltype, semantic_type="mean",
-                            title=title, description=description)
-
-    # Now we can insert the new space time dataset in the database
-    stds.insert(dbif=dbif)
-
-    # Close the database connection
-    dbif.close()
+    if __name__ == "__main__":
+        main()
 
 
 Temporal shifting
@@ -388,27 +412,33 @@ Temporal shifting
     import grass.script as gs
     import grass.temporal as tgis
 
-    id="test@PERMANENT"
-    type="strds"
 
-    # Make sure the temporal database exists
-    tgis.init()
+    def main():
+        id="test@PERMANENT"
+        type="strds"
 
-    dbif = tgis.SQLDatabaseInterfaceConnection()
-    dbif.connect()
+        # Make sure the temporal database exists
+        tgis.init()
 
-    stds = tgis.dataset_factory(type, id)
+        dbif = tgis.SQLDatabaseInterfaceConnection()
+        dbif.connect()
 
-    if stds.is_in_db(dbif) is False:
+        stds = tgis.dataset_factory(type, id)
+
+        if stds.is_in_db(dbif) is False:
+            dbif.close()
+            gs.fatal(_("Space time dataset <%s> not found in temporal database") % (id))
+
+        stds.select(dbif=dbif)
+
+        stds.snap(dbif=dbif)
+
+        stds.update_command_string(dbif=dbif)
         dbif.close()
-        gs.fatal(_("Space time dataset <%s> not found in temporal database") % (id))
 
-    stds.select(dbif=dbif)
 
-    stds.snap(dbif=dbif)
-
-    stds.update_command_string(dbif=dbif)
-    dbif.close()
+    if __name__ == "__main__":
+        main()
 
 
 References

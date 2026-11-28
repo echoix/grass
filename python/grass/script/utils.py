@@ -176,7 +176,9 @@ def _get_multiprocessing_context() -> BaseContext:
 
 
 def _environ_process(
-    target: Callable[..., object], args: Iterable[object] = ()
+    target: Callable[..., object],
+    args: Iterable[object] = (),
+    ctx: BaseContext | None = None,
 ) -> BaseProcess:
     """Create a worker process which runs with the environment of this process.
 
@@ -188,8 +190,13 @@ def _environ_process(
 
     The target and its arguments need to be picklable, which is required by
     the "spawn" and "forkserver" start methods.
+
+    Locks, pipes, and queues given to the process need to be created in the same
+    context, so pass it as *ctx*. The context from _get_multiprocessing_context()
+    is used by default.
     """
-    ctx = _get_multiprocessing_context()
+    if ctx is None:
+        ctx = _get_multiprocessing_context()
     # The type stubs miss Process in BaseContext, but all contexts have it.
     return ctx.Process(  # type: ignore[attr-defined]  # ty: ignore[missing-attribute]
         target=_run_with_environ, args=(os.environ.copy(), target, args)

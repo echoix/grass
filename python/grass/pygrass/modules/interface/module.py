@@ -1018,7 +1018,8 @@ class MultiModule:
         self.set_temp_region = set_temp_region
         self.finish_ = sync  # We use the same variable name a Module
         self.p = None
-        self.q = _get_multiprocessing_context().Queue()
+        self.ctx = _get_multiprocessing_context()
+        self.q = self.ctx.Queue()
 
     def __str__(self):
         """Return the command string that can be executed in a shell"""
@@ -1053,10 +1054,10 @@ class MultiModule:
             return None
         if self.set_temp_region is True:
             self.p = _environ_process(
-                run_modules_in_temp_region, (self.module_list, self.q)
+                run_modules_in_temp_region, (self.module_list, self.q), self.ctx
             )
         else:
-            self.p = _environ_process(run_modules, (self.module_list, self.q))
+            self.p = _environ_process(run_modules, (self.module_list, self.q), self.ctx)
         self.p.start()
 
         return self.p

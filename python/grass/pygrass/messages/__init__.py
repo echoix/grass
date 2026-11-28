@@ -184,7 +184,7 @@ class Messenger:
         self.client_conn, self.server_conn = ctx.Pipe()
         self.lock = ctx.Lock()
         self.server = _environ_process(
-            target=message_server, args=(self.lock, self.server_conn)
+            target=message_server, args=(self.lock, self.server_conn), ctx=ctx
         )
         self.server.daemon = True
         self.server.start()
@@ -195,7 +195,7 @@ class Messenger:
         self.client_conn, self.server_conn = ctx.Pipe()
         self.lock = ctx.Lock()
         self.server = _environ_process(
-            target=message_server, args=(self.lock, self.server_conn)
+            target=message_server, args=(self.lock, self.server_conn), ctx=ctx
         )
         self.server.daemon = True
         self.server.start()

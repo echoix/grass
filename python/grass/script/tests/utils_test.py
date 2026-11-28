@@ -127,13 +127,14 @@ def write_environ_value(path: Path) -> None:
 
 
 # Fork is unsafe on macOS, which is why spawn is the default there.
-@pytest.fixture(
-    params=[
-        method
-        for method in multiprocessing.get_all_start_methods()
-        if not (method == "fork" and sys.platform == "darwin")
-    ]
-)
+START_METHODS = [
+    method
+    for method in multiprocessing.get_all_start_methods()
+    if not (method == "fork" and sys.platform == "darwin")
+]
+
+
+@pytest.fixture(params=START_METHODS)
 def start_method(request: pytest.FixtureRequest) -> Iterator[str]:
     """Set each available multiprocessing start method as the default"""
     original = multiprocessing.get_start_method(allow_none=True)
@@ -158,6 +159,23 @@ def test_environ_process_sees_current_environment(
         process.join()
         assert process.exitcode == 0
         assert path.read_text() == value
+
+
+@pytest.mark.parametrize("method", START_METHODS)
+def test_environ_process_uses_given_context(
+    method: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Worker is started with the given context, not the default one"""
+    monkeypatch.setenv("GRASS_TEST_ENVIRON_PROCESS", "value")
+    ctx = multiprocessing.get_context(method)
+    path = tmp_path / "result"
+    process = gutils._environ_process(write_environ_value, (path,), ctx)
+    # The type stubs miss Process in BaseContext.
+    assert isinstance(process, ctx.Process)  # type: ignore[attr-defined]  # ty: ignore[missing-attribute]
+    process.start()
+    process.join()
+    assert process.exitcode == 0
+    assert path.read_text() == "value"
 
 
 @pytest.mark.parametrize(

@@ -248,7 +248,7 @@ class DataProvider(RPCServerBase):
         self.client_conn, self.server_conn = ctx.Pipe(True)
         self.lock = ctx.Lock()
         self.server = _environ_process(
-            target=data_provider_server, args=(self.lock, self.server_conn)
+            target=data_provider_server, args=(self.lock, self.server_conn), ctx=ctx
         )
         self.server.daemon = True
         self.server.start()
