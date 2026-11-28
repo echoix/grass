@@ -28,7 +28,7 @@ from grass.pygrass.raster import RasterRow
 from grass.pygrass.rpc.base import RPCServerBase
 from grass.pygrass.utils import decode
 from grass.pygrass.vector import VectorTopo
-from grass.script.utils import _get_multiprocessing_context, encode
+from grass.script.utils import _environ_process, _get_multiprocessing_context, encode
 import grass.script as gs
 
 if TYPE_CHECKING:
@@ -1469,8 +1469,8 @@ class CLibrariesInterface(RPCServerBase):
         ctx = _get_multiprocessing_context()
         self.client_conn, self.server_conn = ctx.Pipe(True)
         self.lock = ctx.Lock()
-        self.server = ctx.Process(
-            target=c_library_server, args=(self.lock, self.server_conn)
+        self.server = _environ_process(
+            target=c_library_server, args=(self.lock, self.server_conn), ctx=ctx
         )
         self.server.daemon = True
         self.server.start()

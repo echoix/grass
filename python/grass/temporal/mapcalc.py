@@ -13,7 +13,7 @@ from datetime import datetime
 
 import grass.script as gs
 from grass.exceptions import CalledModuleError
-from grass.script.utils import _get_multiprocessing_context
+from grass.script.utils import _environ_process
 
 from .core import (
     SQLDatabaseInterfaceConnection,
@@ -234,7 +234,6 @@ def dataset_mapcalculator(
         num = len(map_matrix[0])
 
         # Parallel processing
-        ctx = _get_multiprocessing_context()
         proc_list = []
         proc_count = 0
 
@@ -310,9 +309,9 @@ def dataset_mapcalculator(
 
             # Start the parallel r.mapcalc computation
             if type == "raster":
-                proc_list.append(ctx.Process(target=_run_mapcalc2d, args=(expr,)))
+                proc_list.append(_environ_process(target=_run_mapcalc2d, args=(expr,)))
             else:
-                proc_list.append(ctx.Process(target=_run_mapcalc3d, args=(expr,)))
+                proc_list.append(_environ_process(target=_run_mapcalc3d, args=(expr,)))
             proc_list[proc_count].start()
             proc_count += 1
 
@@ -322,7 +321,7 @@ def dataset_mapcalculator(
             exitcodes = 0
             for proc in proc_list:
                 proc.join()
-                exitcodes += proc.exitcode
+                exitcodes += proc.exitcode or 0
 
             if exitcodes != 0:
                 dbif.close()

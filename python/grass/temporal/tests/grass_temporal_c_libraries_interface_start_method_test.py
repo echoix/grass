@@ -1,12 +1,11 @@
 # Copyright (C) 2026 by the GRASS Development Team
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-"""Test that GRASS server processes start when the default start method is not fork.
+"""Test that GRASS server processes start with every multiprocessing start method.
 
-Python 3.14 made forkserver the default multiprocessing start method on Linux,
-which broke the RPC servers in grass.pygrass and grass.temporal. The servers
-now request a fork context explicitly. This test forces forkserver as the
-default in a subprocess to reproduce the Python 3.14 situation on any version.
+Python 3.14 made forkserver the default start method on Linux, while macOS and
+Windows use spawn. This test sets each available start method as the default in
+a subprocess, so that all of them are tested on any platform and Python version.
 """
 
 import multiprocessing
@@ -36,7 +35,7 @@ def main():
     mapset = gs.gisenv()["MAPSET"]
 
     messenger = Messenger()
-    messenger.message("test")
+    messenger.message("Message from the server")
     messenger.stop()
 
     server = RPCServerBase()
@@ -55,26 +54,32 @@ def main():
 
 
 if __name__ == "__main__":
-    multiprocessing.set_start_method("forkserver")
+    multiprocessing.set_start_method(sys.argv[2])
     main()
 """
 
 
-@pytest.mark.skipif(
-    sys.platform == "darwin" or "fork" not in multiprocessing.get_all_start_methods(),
-    reason="Fork is only requested where it is available and not macOS",
-)
-def test_servers_start_with_forkserver_default(tmp_path):
-    """Servers work and exit cleanly when forkserver is the default start method."""
+# Fork is unsafe on macOS, which is why spawn is the default there.
+START_METHODS = [
+    method
+    for method in multiprocessing.get_all_start_methods()
+    if not (method == "fork" and sys.platform == "darwin")
+]
+
+
+@pytest.mark.parametrize("start_method", START_METHODS)
+def test_servers_start_with_start_method(tmp_path, start_method):
+    """Servers work and exit cleanly with the start method set as the default."""
     script = tmp_path / "script.py"
     script.write_text(SCRIPT)
     result = subprocess.run(
-        [sys.executable, str(script), str(tmp_path / "project")],
+        [sys.executable, str(script), str(tmp_path / "project"), start_method],
         capture_output=True,
         text=True,
         check=False,
     )
     assert result.returncode == 0, result.stderr
+    assert "Message from the server" in result.stderr, result.stderr
     # A failing server check thread does not change the exit code.
     assert "Traceback" not in result.stderr, result.stderr
     assert "leaked semaphore" not in result.stderr, result.stderr

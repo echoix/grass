@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Literal, NoReturn
 
 import grass.lib.gis as libgis
 from grass.exceptions import FatalError
-from grass.script.utils import _get_multiprocessing_context
+from grass.script.utils import _environ_process, _get_multiprocessing_context
 
 if TYPE_CHECKING:
     from multiprocessing.connection import Connection
@@ -183,8 +183,8 @@ class Messenger:
         ctx = _get_multiprocessing_context()
         self.client_conn, self.server_conn = ctx.Pipe()
         self.lock = ctx.Lock()
-        self.server = ctx.Process(
-            target=message_server, args=(self.lock, self.server_conn)
+        self.server = _environ_process(
+            target=message_server, args=(self.lock, self.server_conn), ctx=ctx
         )
         self.server.daemon = True
         self.server.start()
@@ -194,8 +194,8 @@ class Messenger:
         ctx = _get_multiprocessing_context()
         self.client_conn, self.server_conn = ctx.Pipe()
         self.lock = ctx.Lock()
-        self.server = ctx.Process(
-            target=message_server, args=(self.lock, self.server_conn)
+        self.server = _environ_process(
+            target=message_server, args=(self.lock, self.server_conn), ctx=ctx
         )
         self.server.daemon = True
         self.server.start()

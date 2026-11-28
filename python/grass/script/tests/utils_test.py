@@ -1,12 +1,20 @@
 """Test functions in grass.script.utils"""
 
+from __future__ import annotations
+
 import multiprocessing
+import os
 import sys
+from typing import TYPE_CHECKING
 
 import pytest
 
 import grass.script as gs
 from grass.script import utils as gutils
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+    from pathlib import Path
 
 
 def test_named_separators():
@@ -113,13 +121,61 @@ def test_resolve_nprocs_from_gisenv(empty_session):
         assert gs.resolve_nprocs(None, env=env) == gs.resolve_nprocs(nprocs)
 
 
-def test_get_multiprocessing_context():
-    """Fork is used where available and safe, the platform default elsewhere."""
-    ctx = gutils._get_multiprocessing_context()
-    if sys.platform != "darwin" and "fork" in multiprocessing.get_all_start_methods():
-        assert ctx.get_start_method() == "fork"
-    else:
-        assert ctx.get_start_method() == multiprocessing.get_start_method()
+def write_environ_value(path: Path) -> None:
+    """Write a variable from the environment to a file (worker process target)"""
+    path.write_text(os.environ["GRASS_TEST_ENVIRON_PROCESS"])
+
+
+# Fork is unsafe on macOS, which is why spawn is the default there.
+START_METHODS = [
+    method
+    for method in multiprocessing.get_all_start_methods()
+    if not (method == "fork" and sys.platform == "darwin")
+]
+
+
+@pytest.fixture(params=START_METHODS)
+def start_method(request: pytest.FixtureRequest) -> Iterator[str]:
+    """Set each available multiprocessing start method as the default"""
+    original = multiprocessing.get_start_method(allow_none=True)
+    multiprocessing.set_start_method(request.param, force=True)
+    yield request.param
+    multiprocessing.set_start_method(original, force=True)
+
+
+def test_environ_process_sees_current_environment(
+    start_method: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Worker gets the current environment with any start method
+
+    With forkserver, a worker would otherwise get the environment from the time
+    the fork server was started, so start it with a different value first.
+    """
+    for value in ("first", "second"):
+        monkeypatch.setenv("GRASS_TEST_ENVIRON_PROCESS", value)
+        path = tmp_path / value
+        process = gutils._environ_process(write_environ_value, (path,))
+        process.start()
+        process.join()
+        assert process.exitcode == 0
+        assert path.read_text() == value
+
+
+@pytest.mark.parametrize("method", START_METHODS)
+def test_environ_process_uses_given_context(
+    method: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Worker is started with the given context, not the default one"""
+    monkeypatch.setenv("GRASS_TEST_ENVIRON_PROCESS", "value")
+    ctx = multiprocessing.get_context(method)
+    path = tmp_path / "result"
+    process = gutils._environ_process(write_environ_value, (path,), ctx)
+    # The type stubs miss Process in BaseContext.
+    assert isinstance(process, ctx.Process)  # type: ignore[attr-defined]  # ty: ignore[missing-attribute]
+    process.start()
+    process.join()
+    assert process.exitcode == 0
+    assert path.read_text() == "value"
 
 
 @pytest.mark.parametrize(

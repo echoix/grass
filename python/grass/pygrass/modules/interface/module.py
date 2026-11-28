@@ -1,10 +1,15 @@
-from multiprocessing import Process, Queue
 import time
 from xml.etree.ElementTree import fromstring
 
 from grass.exceptions import CalledModuleError, GrassError, ParameterError
 from grass.script.core import Popen, PIPE, use_temp_region, del_temp_region
-from grass.script.utils import available_cpus, decode, resolve_nprocs
+from grass.script.utils import (
+    _environ_process,
+    _get_multiprocessing_context,
+    available_cpus,
+    decode,
+    resolve_nprocs,
+)
 from .docstring import docstring_property
 from .parameter import Parameter
 from .flag import Flag
@@ -912,7 +917,7 @@ class MultiModule:
 
         >>> from grass.pygrass.modules import Module
         >>> from grass.pygrass.modules import MultiModule
-        >>> from multiprocessing import Process
+        >>> from multiprocessing.process import BaseProcess
         >>> import copy
 
     Synchronous module run
@@ -950,7 +955,7 @@ class MultiModule:
         ...     sync=False,
         ... )
         >>> t = mm.run()
-        >>> isinstance(t, Process)
+        >>> isinstance(t, BaseProcess)
         True
         >>> m_list = mm.wait()
         >>> m_list[0].returncode
@@ -976,7 +981,7 @@ class MultiModule:
         >>> str(mm)
         'g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p ; g.region format=plain -p'
         >>> t = mm.run()
-        >>> isinstance(t, Process)
+        >>> isinstance(t, BaseProcess)
         True
         >>> m_list = mm.wait()
         >>> m_list[0].returncode
@@ -1013,7 +1018,8 @@ class MultiModule:
         self.set_temp_region = set_temp_region
         self.finish_ = sync  # We use the same variable name a Module
         self.p = None
-        self.q = Queue()
+        self.ctx = _get_multiprocessing_context()
+        self.q = self.ctx.Queue()
 
     def __str__(self):
         """Return the command string that can be executed in a shell"""
@@ -1038,7 +1044,7 @@ class MultiModule:
         be run one after the another.
 
         :return: None in case of ``self.finish_`` is True,
-                 otherwise a multiprocessing.Process object that invokes the modules
+                 otherwise a multiprocessing process object that invokes the modules
         """
 
         if self.finish_ is True:
@@ -1047,11 +1053,11 @@ class MultiModule:
                 module.run()
             return None
         if self.set_temp_region is True:
-            self.p = Process(
-                target=run_modules_in_temp_region, args=[self.module_list, self.q]
+            self.p = _environ_process(
+                run_modules_in_temp_region, (self.module_list, self.q), self.ctx
             )
         else:
-            self.p = Process(target=run_modules, args=[self.module_list, self.q])
+            self.p = _environ_process(run_modules, (self.module_list, self.q), self.ctx)
         self.p.start()
 
         return self.p
@@ -1072,7 +1078,7 @@ class MultiModule:
 def run_modules_in_temp_region(module_list, q):
     """Run the modules in a temporary region environment
 
-    This function is the argument for multiprocessing.Process class
+    This function is the target of the multiprocessing process
     in the MultiModule asynchronous execution.
 
     :param module_list: The list of modules to run in serial
@@ -1091,7 +1097,7 @@ def run_modules_in_temp_region(module_list, q):
 def run_modules(module_list, q):
     """Run the modules
 
-    This function is the argument for multiprocessing.Process class
+    This function is the target of the multiprocessing process
     in the MultiModule asynchronous execution.
 
     :param module_list: The list of modules to run in serial
