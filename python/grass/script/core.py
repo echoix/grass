@@ -2299,7 +2299,7 @@ def version():
 
 
 # get debug_level
-_debug_level = None
+_debug_level: int | None = None
 
 
 def debug_level(force: bool = False, *, env: _Env | None = None) -> int:
