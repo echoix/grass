@@ -321,7 +321,7 @@ def dataset_mapcalculator(
             exitcodes = 0
             for proc in proc_list:
                 proc.join()
-                exitcodes += proc.exitcode
+                exitcodes += proc.exitcode or 0
 
             if exitcodes != 0:
                 dbif.close()

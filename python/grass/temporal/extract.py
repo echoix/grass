@@ -305,7 +305,7 @@ def extract_dataset(
                 exitcodes = 0
                 for proc in proc_list:
                     proc.join()
-                    exitcodes += proc.exitcode
+                    exitcodes += proc.exitcode or 0
                 if exitcodes != 0:
                     dbif.close()
                     msgr.fatal(_("Error in computation process"))

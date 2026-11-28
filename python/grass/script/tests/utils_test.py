@@ -1,13 +1,19 @@
 """Test functions in grass.script.utils"""
 
+from __future__ import annotations
+
 import multiprocessing
 import os
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 import grass.script as gs
 from grass.script import utils as gutils
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 def test_named_separators():
@@ -114,13 +120,13 @@ def test_resolve_nprocs_from_gisenv(empty_session):
         assert gs.resolve_nprocs(None, env=env) == gs.resolve_nprocs(nprocs)
 
 
-def write_environ_value(path):
+def write_environ_value(path: Path) -> None:
     """Write a variable from the environment to a file (worker process target)"""
     Path(path).write_text(os.environ["GRASS_TEST_ENVIRON_PROCESS"])
 
 
 @pytest.fixture(params=multiprocessing.get_all_start_methods())
-def start_method(request):
+def start_method(request: pytest.FixtureRequest) -> Iterator[str]:
     """Set each available multiprocessing start method as the default"""
     original = multiprocessing.get_start_method(allow_none=True)
     multiprocessing.set_start_method(request.param, force=True)
@@ -128,7 +134,9 @@ def start_method(request):
     multiprocessing.set_start_method(original, force=True)
 
 
-def test_environ_process_sees_current_environment(start_method, tmp_path, monkeypatch):
+def test_environ_process_sees_current_environment(
+    start_method: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Worker gets the current environment with any start method
 
     With forkserver, a worker would otherwise get the environment from the time

@@ -34,7 +34,9 @@ from typing import TYPE_CHECKING, AnyStr, TypeVar, cast, overload
 
 if TYPE_CHECKING:
     from _typeshed import FileDescriptorOrPath, StrOrBytesPath, StrPath
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable, Mapping
+    from multiprocessing.context import BaseContext
+    from multiprocessing.process import BaseProcess
 
 
 # Type variables
@@ -146,14 +148,16 @@ def resolve_nprocs(nprocs: int | str | None = None, env=None) -> int:
     return max(1, available + n)
 
 
-def _run_with_environ(environ, target, args):
+def _run_with_environ(
+    environ: Mapping[str, str], target: Callable[..., object], args: Iterable[object]
+) -> None:
     """Run target in a worker process after setting its environment"""
     os.environ.clear()
     os.environ.update(environ)
     target(*args)
 
 
-def _get_multiprocessing_context():
+def _get_multiprocessing_context() -> BaseContext:
     """Return the multiprocessing context with the default start method.
 
     Unlike using the multiprocessing module directly (e.g., multiprocessing.Lock()),
@@ -171,7 +175,9 @@ def _get_multiprocessing_context():
     )
 
 
-def _environ_process(target, args=()):
+def _environ_process(
+    target: Callable[..., object], args: Iterable[object] = ()
+) -> BaseProcess:
     """Create a worker process which runs with the environment of this process.
 
     Workers need the GRASS session environment (e.g., GISRC) of the parent.
@@ -183,7 +189,9 @@ def _environ_process(target, args=()):
     The target and its arguments need to be picklable, which is required by
     the "spawn" and "forkserver" start methods.
     """
-    return _get_multiprocessing_context().Process(
+    ctx = _get_multiprocessing_context()
+    # The type stubs miss Process in BaseContext, but all contexts have it.
+    return ctx.Process(  # type: ignore[attr-defined]  # ty: ignore[missing-attribute]
         target=_run_with_environ, args=(os.environ.copy(), target, args)
     )
 

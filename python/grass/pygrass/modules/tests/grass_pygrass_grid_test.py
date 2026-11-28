@@ -1,20 +1,32 @@
 """Test main functions of PyGRASS GridModule"""
 
+from __future__ import annotations
+
 import multiprocessing
 import os
+from typing import TYPE_CHECKING
 
 import pytest
 
 import grass.script as gs
 from grass.pygrass.modules.grid import GridModule
 
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
-def max_processes():
+
+def max_processes() -> int:
     """Get max useful number of parallel processes to run"""
     return min(multiprocessing.cpu_count(), 4)
 
 
-def run_grid_module(environ, *args, run_kwargs, **kwargs):
+def run_grid_module(
+    environ: Mapping[str, str],
+    name: str,
+    *,
+    run_kwargs: dict[str, object],
+    **kwargs: object,
+) -> None:
     """Create and run a GridModule
 
     This is a module-level function so that it can be pickled when the start
@@ -24,17 +36,19 @@ def run_grid_module(environ, *args, run_kwargs, **kwargs):
     """
     os.environ.clear()
     os.environ.update(environ)
-    GridModule(*args, **kwargs).run(**run_kwargs)
+    GridModule(name, **kwargs).run(**run_kwargs)
 
 
 # GridModule uses C libraries which can easily initialize only once
 # and thus can't easily change location/mapset, so we use a subprocess
 # to separate individual GridModule calls.
-def run_in_subprocess(*args, run_kwargs=None, **kwargs):
+def run_in_subprocess(
+    name: str, run_kwargs: dict[str, object] | None = None, **kwargs: object
+) -> None:
     """Run GridModule with the given arguments in a separate process"""
     process = multiprocessing.Process(
         target=run_grid_module,
-        args=(os.environ.copy(), *args),
+        args=(os.environ.copy(), name),
         kwargs={"run_kwargs": run_kwargs or {}, **kwargs},
     )
     process.start()

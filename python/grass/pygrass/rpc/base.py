@@ -21,6 +21,7 @@ from grass.script.utils import _environ_process, _get_multiprocessing_context
 
 if TYPE_CHECKING:
     from multiprocessing.connection import Connection
+    from multiprocessing.process import BaseProcess
     from multiprocessing.synchronize import _LockLike
 
 
@@ -105,7 +106,7 @@ class RPCServerBase:
         self.client_conn: Connection | None = None
         self.server_conn: Connection | None = None
         self.queue = None
-        self.server = None
+        self.server: BaseProcess | None = None
         self.checkThread: threading.Thread | None = None
         # Set to ask the current checker thread to return.
         self._checker_stop = threading.Event()
