@@ -598,16 +598,16 @@ with VectorTopo("roadsmajor", mode="rw") as roads:
     last_record = roads.read(-1)
     last_cat = last_record.cat
 
-    # Create an empty feature from the last record
-    new_dict = {key: None for key in last_record.attrs}
-    new_dict["cat"] = last_cat + 1
-    new_dict["MAJORRDS_"] = 2.0
-    new_dict["ROAD_NAME"] = "New Road"
-    new_dict["MULTILINE"] = "No"
-    new_dict["PROPYEAR"] = 2025
+    # Create the attribute values for the new feature
+    # in the table column order, without the cat column
+    new_attrs = {name: None for name in roads.table.columns.names() if name != "cat"}
+    new_attrs["MAJORRDS_"] = 2.0
+    new_attrs["ROAD_NAME"] = "New Road"
+    new_attrs["MULTILANE"] = "No"
+    new_attrs["PROPYEAR"] = 2025
 
     # Write the new feature to the vector map
-    roads.write(new_geom, new_dict)
+    roads.write(new_geom, cat=last_cat + 1, attrs=tuple(new_attrs.values()))
 
     # Write the attributes to the database
     roads.table.conn.commit()
